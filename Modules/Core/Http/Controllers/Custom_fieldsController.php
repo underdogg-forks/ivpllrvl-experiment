@@ -2,104 +2,189 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Modules\Core\Entities\Custom_field;
+use Modules\Core\Entities\Custom_value;
+
 /**
  * Custom_fieldsController
  * 
+ * Manages custom field definitions
  * Migrated from CodeIgniter Custom_Fields controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/custom_fields/controllers/Custom_fields.php
  */
 class Custom_fieldsController
 {
     /**
-     * Display a listing of the resource.
+     * Display all custom fields (redirects to default view)
      */
     public function index()
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('core::index');
+        return redirect()->to(site_url('custom_fields/table/all'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display custom fields for a specific table or all tables
+     *
+     * @param string $name Table name (simple name like 'client', 'invoice', etc.) or 'all'
+     * @param int $page Page number for pagination
      */
-    public function create()
+    public function table(string $name = 'all', int $page = 0)
     {
-        // TODO: Implement create/form method if exists in original
+        $perPage = 15;
+        $query = Custom_field::query();
         
-        return view('core::form');
+        // Filter by table if not 'all'
+        $customTables = Custom_field::customTables();
+        if ($name != 'all' && in_array($name, $customTables)) {
+            $query->byTableName($name);
+        }
+        
+        // Order and paginate
+        $customFields = $query->orderBy('custom_field_table')
+            ->orderBy('custom_field_order')
+            ->orderBy('custom_field_label')
+            ->paginate($perPage, ['*'], 'page', $page);
+        
+        $positions = $this->getPositions();
+        $customValueFields = Custom_value::customValueFields();
+        
+        $data = [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_custom_fields'),
+            'filter_method' => 'filter_custom_fields',
+            'custom_fields' => $customFields,
+            'custom_tables' => $customTables,
+            'custom_value_fields' => $customValueFields,
+            'positions' => $positions,
+        ];
+        
+        return view('core::custom_fields.index', $data);
     }
 
     /**
-     * Store a newly created resource.
+     * Show form to create or edit a custom field
+     *
+     * @param int|null $id Custom field ID (null for create)
      */
-    public function store()
+    public function form(?int $id = null)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
+        // Handle cancel button
+        if (request()->post('btn_cancel')) {
+            return redirect()->to(site_url('custom_fields'));
+        }
         
-        return redirect()->back();
+        // Handle form submission
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            // Validate
+            $validated = request()->validate([
+                'custom_field_table' => 'required',
+                'custom_field_label' => 'required|max:50',
+                'custom_field_type' => 'required',
+                'custom_field_order' => 'nullable|integer',
+                'custom_field_location' => 'nullable|integer',
+            ]);
+            
+            // Prepare column name
+            $label = $validated['custom_field_label'];
+            if (strtolower($label) == 'id') {
+                $validated['custom_field_column'] = 'field_id';
+            } else {
+                $validated['custom_field_column'] = strtolower(str_replace(' ', '_', $label));
+            }
+            
+            // Save or update
+            if ($id) {
+                $customField = Custom_field::findOrFail($id);
+                $customField->update($validated);
+            } else {
+                Custom_field::create($validated);
+            }
+            
+            session()->flash('alert_success', trans($id ? 'record_successfully_updated' : 'record_successfully_created'));
+            return redirect()->to(site_url('custom_fields'));
+        }
+        
+        // Load existing field if editing
+        $customField = null;
+        if ($id) {
+            $customField = Custom_field::findOrFail($id);
+        }
+        
+        $customFieldTables = Custom_field::customTables();
+        $customFieldTypes = Custom_field::customTypes();
+        $customFieldUsage = []; // TODO: Implement usage check
+        $customFieldLocation = $customField->custom_field_location ?? 0;
+        $positions = $this->getPositions();
+        
+        $data = [
+            'custom_field_id' => $id,
+            'custom_field_tables' => $customFieldTables,
+            'custom_field_types' => $customFieldTypes,
+            'custom_field_usage' => $customFieldUsage,
+            'custom_field_location' => $customFieldLocation,
+            'positions' => $positions,
+        ];
+        
+        // Add form values if editing
+        if ($customField) {
+            $data['custom_field'] = $customField;
+        }
+        
+        return view('core::custom_fields.form', $data);
     }
 
     /**
-     * Display the specified resource.
+     * Delete a custom field
+     *
+     * @param int $id Custom field ID
      */
-    public function show($id)
+    public function delete(int $id)
     {
-        // TODO: Implement show/view method if exists in original
+        $customField = Custom_field::findOrFail($id);
         
-        return view('core::view');
+        // TODO: Check if field is in use before deleting
+        // For now, delete related values and then the field
+        Custom_value::where('custom_values_field', $id)->delete();
+        $customField->delete();
+        
+        session()->flash('alert_success', trans('record_successfully_deleted'));
+        
+        // Return to referrer or custom fields page
+        $referer = request()->server('HTTP_REFERER');
+        $redirectUrl = $referer ?: site_url('custom_fields');
+        
+        return redirect()->to($redirectUrl);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Get positions for all custom field types
+     *
+     * @return array
      */
-    public function edit($id)
+    private function getPositions(): array
     {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('core::form');
+        return [
+            'client' => [
+                0 => trans('custom_fields'),
+                1 => trans('address'),
+                2 => trans('contact_information'),
+                3 => trans('personal_information'),
+                4 => trans('tax_information'),
+            ],
+            'invoice' => [
+                0 => trans('custom_fields'),
+                1 => trans('after_due_date'),
+            ],
+            'payment' => [
+                0 => trans('custom_fields'),
+            ],
+            'quote' => [
+                0 => trans('custom_fields'),
+                1 => trans('after_expires'),
+            ],
+            'user' => [
+                0 => trans('custom_fields'),
+                1 => trans('after_email'),
+            ],
+        ];
     }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-

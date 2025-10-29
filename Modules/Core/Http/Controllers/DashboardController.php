@@ -2,104 +2,82 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Modules\Invoices\Entities\Invoice;
+use Modules\Invoices\Entities\Invoice_amount;
+use Modules\Quotes\Entities\Quote;
+use Modules\Quotes\Entities\Quote_amount;
+use Modules\Crm\Entities\Project;
+use Modules\Crm\Entities\Task;
+
 /**
  * DashboardController
  * 
+ * Displays the main dashboard with overview of invoices, quotes, projects, and tasks
  * Migrated from CodeIgniter Dashboard controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/dashboard/controllers/Dashboard.php
  */
 class DashboardController
 {
     /**
-     * Display a listing of the resource.
+     * Display the dashboard
      */
     public function index()
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
+        // Get overview periods from settings
+        $quoteOverviewPeriod = get_setting('quote_overview_period');
+        $invoiceOverviewPeriod = get_setting('invoice_overview_period');
         
-        return view('core::index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // TODO: Implement create/form method if exists in original
+        // Get status totals
+        $invoiceStatusTotals = Invoice_amount::getStatusTotals($invoiceOverviewPeriod);
+        $quoteStatusTotals = Quote_amount::getStatusTotals($quoteOverviewPeriod);
         
-        return view('core::form');
-    }
-
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
-    {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
+        // Get recent invoices and quotes
+        $invoices = Invoice::with('client')
+            ->orderBy('invoice_date_created', 'desc')
+            ->limit(10)
+            ->get();
         
-        return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
+        $quotes = Quote::with('client')
+            ->orderBy('quote_date_created', 'desc')
+            ->limit(10)
+            ->get();
         
-        return view('core::view');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
+        // Get overdue invoices
+        $overdueInvoices = Invoice::with('client')
+            ->whereRaw('invoice_date_due < CURDATE()')
+            ->where('invoice_status_id', '<>', 4) // Not paid
+            ->get();
         
-        return view('core::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
+        // Get recent projects and tasks
+        $projects = Project::orderBy('project_date_created', 'desc')
+            ->limit(10)
+            ->get();
         
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
+        $tasks = Task::orderBy('task_date_created', 'desc')
+            ->limit(10)
+            ->get();
         
-        return redirect()->back();
+        // Get statuses
+        $invoiceStatuses = Invoice::statuses();
+        $quoteStatuses = Quote::statuses();
+        $taskStatuses = Task::statuses();
+        
+        // Prepare view data
+        $data = [
+            'invoice_status_totals' => $invoiceStatusTotals,
+            'quote_status_totals' => $quoteStatusTotals,
+            'invoice_status_period' => str_replace('-', '_', $invoiceOverviewPeriod),
+            'quote_status_period' => str_replace('-', '_', $quoteOverviewPeriod),
+            'invoices' => $invoices,
+            'quotes' => $quotes,
+            'invoice_statuses' => $invoiceStatuses,
+            'quote_statuses' => $quoteStatuses,
+            'overdue_invoices' => $overdueInvoices,
+            'projects' => $projects,
+            'tasks' => $tasks,
+            'task_statuses' => $taskStatuses,
+        ];
+        
+        return view('core::dashboard.index', $data);
     }
-    
-    // TODO: Add other methods from original controller
 }
 
