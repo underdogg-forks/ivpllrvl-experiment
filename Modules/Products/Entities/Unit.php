@@ -98,4 +98,17 @@ class Unit extends BaseModel
     {
         return $this->hasMany('Modules\Products\Entities\Product', 'unit_id', 'unit_id');
     }
+
+    /**
+     * Get validation rules for units.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'unit_name' => 'required|string|max:255',
+            'unit_name_plrl' => 'required|string|max:255',
+        ];
+    }
 }

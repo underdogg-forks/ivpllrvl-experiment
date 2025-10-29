@@ -69,4 +69,16 @@ class Family extends BaseModel
     {
         return $this->hasMany('Modules\Products\Entities\Product', 'family_id', 'family_id');
     }
+
+    /**
+     * Get validation rules for families.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'family_name' => 'required|string|max:255',
+        ];
+    }
 }
