@@ -9,24 +9,27 @@ use Modules\Payments\Entities\PaymentLog;
 /**
  * PaymentsController
  * 
- * Handles payment management
- * Migrated from CodeIgniter Payments controller
+ * Handles payment recording and tracking
  */
 class PaymentsController
 {
     /**
-     * Display a listing of payments.
-     *
-     * @param int $page
-     * @return \Illuminate\Contracts\View\View
+     * Display a paginated list of payments
+     * 
+     * @param int $page Page number for pagination
+     * @return \Illuminate\View\View
+     * 
+     * @legacy-function index
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     * @legacy-line 32
      */
-    public function index($page = 0)
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        $payments = Payment::with(['invoice.client', 'invoice.invoiceAmount', 'paymentMethod'])
-            ->ordered()
-            ->paginate(15);
+        $payments = Payment::with(['invoice', 'paymentMethod'])
+            ->orderBy('payment_date', 'desc')
+            ->paginate(15, ['*'], 'page', $page);
 
-        return view('payments::payments.index', [
+        return view('payments::index', [
             'filter_display' => true,
             'filter_placeholder' => trans('filter_payments'),
             'filter_method' => 'filter_payments',
@@ -35,109 +38,127 @@ class PaymentsController
     }
 
     /**
-     * Show the form for creating/editing a payment.
-     *
-     * @param int|null $id
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * Display form for creating or editing a payment
+     * 
+     * Note: Simplified custom fields handling - full implementation pending
+     * 
+     * @param int|null $id Payment ID (null for create)
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * 
+     * @legacy-function form
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     * @legacy-line 50
      */
-    public function form($id = null)
+    public function form(?int $id = null)
     {
         // Handle cancel button
-        if (request()->has('btn_cancel')) {
-            return redirect()->to('payments');
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('payments.index');
         }
 
         // Handle form submission
-        if (request()->has('btn_submit')) {
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
             $validated = request()->validate([
-                'invoice_id' => 'required|integer',
+                'invoice_id' => 'required|integer|exists:ip_invoices,invoice_id',
                 'payment_date' => 'required|date',
-                'payment_amount' => 'required|numeric',
-                'payment_method_id' => 'nullable|integer',
+                'payment_amount' => 'required|numeric|min:0',
+                'payment_method_id' => 'nullable|integer|exists:ip_payment_methods,payment_method_id',
                 'payment_note' => 'nullable|string',
             ]);
 
-            // Handle custom fields if present
-            $custom = request()->input('custom', []);
-
-            // Create or update payment
             if ($id) {
+                // Update existing
                 $payment = Payment::findOrFail($id);
                 $payment->update($validated);
             } else {
+                // Create new
                 $payment = Payment::create($validated);
                 $id = $payment->payment_id;
             }
 
-            // Save custom fields (TODO: implement custom field handling)
-            // $this->saveCustomFields($id, $custom);
+            // Handle custom fields if present
+            // Note: Custom field handling deferred to Custom module implementation
+            $customData = request()->input('custom', []);
+            // TODO: Save custom fields when Custom module is fully integrated
 
-            return redirect()->to('payments');
+            return redirect()->route('payments.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
 
         // Load payment for editing
-        $payment = null;
         if ($id) {
             $payment = Payment::with(['invoice', 'paymentMethod'])->find($id);
             if (!$payment) {
                 abort(404);
             }
+        } else {
+            $payment = new Payment();
         }
 
         // Load related data
-        $payment_methods = PaymentMethod::ordered()->get();
+        $paymentMethods = PaymentMethod::orderBy('payment_method_name')->get();
         
-        // TODO: Load open invoices
-        // $open_invoices = Invoice::isOpen()->get();
-        $open_invoices = [];
+        // Load open invoices (invoices with balance > 0)
+        $openInvoices = \Modules\Invoices\Entities\Invoice::where('invoice_balance', '>', 0)
+            ->with('client')
+            ->orderBy('invoice_date_created', 'desc')
+            ->get();
 
-        // TODO: Load custom fields
-        $custom_fields = [];
-        $custom_values = [];
+        // Custom fields - deferred to Custom module
+        $customFields = [];
+        $customValues = [];
 
-        return view('payments::payments.form', [
+        return view('payments::form', [
             'payment_id' => $id,
             'payment' => $payment,
-            'payment_methods' => $payment_methods,
-            'open_invoices' => $open_invoices,
-            'custom_fields' => $custom_fields,
-            'custom_values' => $custom_values,
+            'payment_methods' => $paymentMethods,
+            'open_invoices' => $openInvoices,
+            'custom_fields' => $customFields,
+            'custom_values' => $customValues,
         ]);
     }
 
     /**
-     * Display online payment logs.
-     *
-     * @param int $page
-     * @return \Illuminate\Contracts\View\View
+     * Display online payment logs (PayPal, Stripe, etc.)
+     * 
+     * @param int $page Page number for pagination
+     * @return \Illuminate\View\View
+     * 
+     * @legacy-function online_logs
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     * @legacy-line 156
      */
-    public function online_logs($page = 0)
+    public function onlineLogs(int $page = 0): \Illuminate\View\View
     {
-        $payment_logs = PaymentLog::with('invoice')
-            ->ordered()
-            ->paginate(15);
+        $paymentLogs = PaymentLog::with('invoice')
+            ->orderBy('payment_log_date', 'desc')
+            ->paginate(15, ['*'], 'page', $page);
 
-        return view('payments::payments.online_logs', [
+        return view('payments::online_logs', [
             'filter_display' => true,
             'filter_placeholder' => trans('filter_online_logs'),
             'filter_method' => 'filter_online_logs',
-            'payment_logs' => $payment_logs,
+            'payment_logs' => $paymentLogs,
         ]);
     }
 
     /**
-     * Delete a payment.
-     *
-     * @param int $id
+     * Delete a payment
+     * 
+     * @param int $id Payment ID
      * @return \Illuminate\Http\RedirectResponse
+     * 
+     * @legacy-function delete
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     * @legacy-line 179
      */
-    public function delete($id)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
         $payment = Payment::findOrFail($id);
         $payment->delete();
 
-        return redirect()->to('payments');
+        return redirect()->route('payments.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }
-
