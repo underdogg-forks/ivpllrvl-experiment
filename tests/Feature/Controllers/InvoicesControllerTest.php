@@ -7,16 +7,16 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Invoices\Http\Controllers\InvoicesController;
-use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\Item;
-use Modules\Invoices\Entities\InvoiceTaxRate;
-use Modules\Invoices\Entities\InvoiceAmount;
-use Modules\Crm\Entities\Client;
-use Modules\Users\Entities\User;
-use Modules\Products\Entities\TaxRate;
-use Modules\Core\Entities\InvoiceGroup;
-use Modules\Crm\Entities\Task;
+use Modules\Invoices\Controllers\InvoicesController;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\InvoiceAmount;
+use Modules\Crm\Models\Client;
+use Modules\Users\Models\User;
+use Modules\Products\Models\TaxRate;
+use Modules\Core\Models\InvoiceGroup;
+use Modules\Crm\Models\Task;
 
 /**
  * Test suite for InvoicesController

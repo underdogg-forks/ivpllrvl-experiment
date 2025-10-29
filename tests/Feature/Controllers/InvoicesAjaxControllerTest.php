@@ -7,13 +7,13 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Invoices\Http\Controllers\InvoicesAjaxController;
-use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\Item;
-use Modules\Invoices\Entities\InvoiceTaxRate;
-use Modules\Invoices\Entities\InvoicesRecurring;
-use Modules\Crm\Entities\Client;
-use Modules\Users\Entities\User;
+use Modules\Invoices\Controllers\InvoicesAjaxController;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\InvoicesRecurring;
+use Modules\Crm\Models\Client;
+use Modules\Users\Models\User;
 
 /**
  * Test suite for InvoicesAjaxController

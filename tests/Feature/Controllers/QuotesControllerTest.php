@@ -5,13 +5,13 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Quotes\Http\Controllers\QuotesController;
-use Modules\Quotes\Entities\Quote;
-use Modules\Quotes\Entities\QuoteAmount;
-use Modules\Quotes\Entities\QuoteItem;
-use Modules\Quotes\Entities\QuoteTaxRate;
-use Modules\Crm\Entities\Client;
-use Modules\Users\Entities\User;
+use Modules\Quotes\Controllers\QuotesController;
+use Modules\Quotes\Models\Quote;
+use Modules\Quotes\Models\QuoteAmount;
+use Modules\Quotes\Models\QuoteItem;
+use Modules\Quotes\Models\QuoteTaxRate;
+use Modules\Crm\Models\Client;
+use Modules\Users\Models\User;
 
 /**
  * QuotesController Feature Tests
