@@ -2,104 +2,79 @@
 
 namespace Modules\Users\Http\Controllers;
 
+use Modules\Users\Entities\User;
+
 /**
  * UsersController
  * 
- * Migrated from CodeIgniter Users controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/users/controllers/Users.php
+ * Manages user accounts
  */
 class UsersController
 {
     /**
-     * Display a listing of the resource.
+     * @legacy-function index
+     * @legacy-file application/modules/users/controllers/Users.php
+     * @legacy-line 32
      */
-    public function index()
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('users::index');
+        $users = User::orderBy('user_name')->paginate(15, ['*'], 'page', $page);
+        return view('users::index', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_users'),
+            'filter_method' => 'filter_users',
+            'users' => $users,
+            'user_types' => User::USER_TYPES,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @legacy-function form
+     * @legacy-file application/modules/users/controllers/Users.php
+     * @legacy-line 50
      */
-    public function create()
+    public function form(?int $id = null)
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('users::form');
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('users.index');
+        }
+
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $rules = $id ? User::validationRulesExisting() : User::validationRules();
+            $validated = request()->validate($rules);
+
+            if ($id) {
+                $user = User::findOrFail($id);
+                $user->update($validated);
+            } else {
+                $user = User::create($validated);
+                $id = $user->user_id;
+            }
+
+            return redirect()->route('users.index')
+                ->with('alert_success', trans('record_successfully_saved'));
+        }
+
+        if ($id) {
+            $user = User::find($id);
+            if (!$user) abort(404);
+        } else {
+            $user = new User();
+        }
+
+        return view('users::form', ['user' => $user]);
     }
 
     /**
-     * Store a newly created resource.
+     * @legacy-function delete
+     * @legacy-file application/modules/users/controllers/Users.php
+     * @legacy-line 204
      */
-    public function store()
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('users.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('users::view');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('users::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-

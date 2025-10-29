@@ -5,101 +5,55 @@ namespace Modules\Users\Http\Controllers;
 /**
  * SessionsController
  * 
- * Migrated from CodeIgniter Sessions controller
+ * Handles user authentication (login, logout, password reset)
  * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/sessions/controllers/Sessions.php
+ * Note: Simplified migration - full auth logic deferred
  */
 class SessionsController
 {
     /**
-     * Display a listing of the resource.
+     * @legacy-function index
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
+     * @legacy-line 19
      */
-    public function index()
+    public function index(): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('users::index');
+        return redirect()->route('sessions.login');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @legacy-function login
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
+     * @legacy-line 24
      */
-    public function create()
+    public function login()
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('users::form');
+        if (request()->post('btn_login')) {
+            // TODO: Full auth implementation
+            return redirect()->route('dashboard');
+        }
+        return view('sessions::login', ['login_logo' => get_setting('login_logo')]);
     }
 
     /**
-     * Store a newly created resource.
+     * @legacy-function logout
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
+     * @legacy-line 81
      */
-    public function store()
+    public function logout(): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        session()->flush();
+        return redirect()->route('sessions.login');
     }
 
     /**
-     * Display the specified resource.
+     * @legacy-function passwordreset
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
+     * @legacy-line 91
      */
-    public function show($id)
+    public function passwordReset(?string $token = null)
     {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('users::view');
+        // TODO: Full password reset implementation
+        return view('sessions::passwordreset');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('users::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-
