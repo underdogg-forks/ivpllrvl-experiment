@@ -63,4 +63,28 @@ class InvoicesRecurring extends BaseModel
     {
         return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
     }
+
+    /**
+     * Get validation rules for recurring invoices.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'invoice_id' => 'required|integer',
+            'recur_start_date' => 'required|date',
+            'recur_end_date' => 'nullable|date',
+            'recur_frequency' => 'required|string',
+            'recur_next_date' => 'nullable|date',
+        ];
+    }
+
+    /**
+     * Scope for active recurring invoices.
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereNotNull('recur_next_date');
+    }
 }
