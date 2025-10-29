@@ -74,4 +74,18 @@ class QuoteCustom extends BaseModel
     {
         return $query->where('quote_id', $quoteId);
     }
+
+    /**
+     * Get validation rules for quote custom fields.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'quote_id' => 'required|integer',
+            'custom_field_id' => 'required|integer',
+            'custom_field_value' => 'nullable|string',
+        ];
+    }
 }

@@ -153,4 +153,19 @@ class CustomField extends BaseModel
         
         return $query;
     }
+
+    /**
+     * Get validation rules for custom fields.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'custom_field_table' => 'required|string|max:50',
+            'custom_field_label' => 'required|string|max:255',
+            'custom_field_type' => 'required|string|max:50',
+            'custom_field_order' => 'nullable|integer',
+        ];
+    }
 }

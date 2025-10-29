@@ -77,4 +77,18 @@ class ClientCustom extends BaseModel
     {
         return $query->where('client_id', $clientId);
     }
+
+    /**
+     * Get validation rules for client custom fields.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|integer',
+            'custom_field_id' => 'required|integer',
+            'custom_field_value' => 'nullable|string',
+        ];
+    }
 }

@@ -52,5 +52,17 @@ class EmailTemplate extends BaseModel
         // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get validation rules for email templates.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'email_template_title' => 'required|string|max:255',
+            'email_template_subject' => 'required|string|max:255',
+            'email_template_body' => 'required|string',
+        ];
+    }
 }

@@ -103,4 +103,17 @@ class Setting extends BaseModel
     {
         return static::all()->pluck('setting_value', 'setting_key')->toArray();
     }
+
+    /**
+     * Get validation rules for settings.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'setting_key' => 'required|string|max:255',
+            'setting_value' => 'nullable|string',
+        ];
+    }
 }
