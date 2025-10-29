@@ -1,0 +1,10 @@
+{
+    "name": "invoiceplane/core-module",
+    "description": "Core module for InvoicePlane",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Core\\": ""
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "name": "invoiceplane/products-module",
+    "description": "Products module for InvoicePlane",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Products\\": ""
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "name": "invoiceplane/custom-module",
+    "description": "Custom module for InvoicePlane",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Custom\\": ""
+        }
+    }
+}

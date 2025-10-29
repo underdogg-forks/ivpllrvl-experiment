@@ -11,11 +11,18 @@
         }
     },
     "require": {
-        "codeigniter/framework": "3.1.13",
+        "php": "^8.1",
         "endroid/qr-code": "^4.8",
         "guzzlehttp/guzzle": "^7.9",
+        "illuminate/container": "^10.0",
+        "illuminate/database": "^10.0",
+        "illuminate/events": "^10.0",
+        "illuminate/filesystem": "^10.0",
+        "illuminate/support": "^10.0",
+        "illuminate/view": "^10.0",
         "moneyphp/money": "^4.7",
         "mpdf/mpdf": "^8.2",
+        "nwidart/laravel-modules": "^10.0",
         "paragonie/random_compat": "^2.0",
         "phpmailer/phpmailer": "^6.10",
         "setasign/fpdf": "^1.8",
@@ -29,6 +36,20 @@
         "squizlabs/php_codesniffer": "^3.13",
         "rector/rector": "^2.0",
         "symfony/var-dumper": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Modules\\": "Modules/"
+        },
+        "files": [
+            "bootstrap/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
         "check": [

@@ -1,0 +1,11 @@
+{
+    "name": "Crm",
+    "alias": "crm",
+    "description": "CRM module for managing clients, projects and tasks",
+    "keywords": [],
+    "priority": 6,
+    "providers": [
+        "Modules\\Crm\\Providers\\CrmServiceProvider"
+    ],
+    "files": []
+}
