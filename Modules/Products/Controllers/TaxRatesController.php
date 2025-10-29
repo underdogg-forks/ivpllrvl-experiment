@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Products\Http\Controllers;
+namespace Modules\Products\Controllers;
 
-use Modules\Products\Entities\TaxRate;
+use Modules\Products\Models\TaxRate;
 
 /**
  * TaxRatesController
@@ -66,11 +66,11 @@ class TaxRatesController
 
             if ($id) {
                 // Update existing
-                $taxRate = TaxRate::findOrFail($id);
+                $taxRate = TaxRate::query()->findOrFail($id);
                 $taxRate->update($validated);
             } else {
                 // Create new
-                TaxRate::create($validated);
+                TaxRate::query()->create($validated);
             }
 
             return redirect()->route('tax_rates.index')
@@ -79,7 +79,7 @@ class TaxRatesController
 
         // Load existing record for editing
         if ($id) {
-            $taxRate = TaxRate::find($id);
+            $taxRate = TaxRate::query()->find($id);
             if (!$taxRate) {
                 abort(404);
             }
@@ -104,7 +104,7 @@ class TaxRatesController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $taxRate = TaxRate::findOrFail($id);
+        $taxRate = TaxRate::query()->findOrFail($id);
         $taxRate->delete();
 
         return redirect()->route('tax_rates.index')

@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Products\Http\Controllers;
+namespace Modules\Products\Controllers;
 
-use Modules\Products\Entities\Unit;
+use Modules\Products\Models\Unit;
 
 /**
  * UnitsController
@@ -58,11 +58,11 @@ class UnitsController
 
             if ($id) {
                 // Update existing
-                $unit = Unit::findOrFail($id);
+                $unit = Unit::query()->findOrFail($id);
                 $unit->update($validated);
             } else {
                 // Create new
-                Unit::create($validated);
+                Unit::query()->create($validated);
             }
 
             return redirect()->route('units.index')
@@ -71,7 +71,7 @@ class UnitsController
 
         // Load existing record for editing
         if ($id) {
-            $unit = Unit::find($id);
+            $unit = Unit::query()->find($id);
             if (!$unit) {
                 abort(404);
             }
@@ -99,7 +99,7 @@ class UnitsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $unit = Unit::findOrFail($id);
+        $unit = Unit::query()->findOrFail($id);
         $unit->delete();
 
         return redirect()->route('units.index')

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Products\Http\Controllers;
+namespace Modules\Products\Controllers;
 
-use Modules\Products\Entities\Product;
-use Modules\Products\Entities\Family;
-use Modules\Products\Entities\Unit;
-use Modules\Products\Entities\TaxRate;
+use Modules\Products\Models\Product;
+use Modules\Products\Models\Family;
+use Modules\Products\Models\Unit;
+use Modules\Products\Models\TaxRate;
 
 /**
  * ProductsController
@@ -63,11 +63,11 @@ class ProductsController
             
             if ($id) {
                 // Update existing
-                $product = Product::findOrFail($id);
+                $product = Product::query()->findOrFail($id);
                 $product->update($validated);
             } else {
                 // Create new
-                Product::create($validated);
+                Product::query()->create($validated);
             }
             
             return redirect()->route('products.index')
@@ -76,7 +76,7 @@ class ProductsController
 
         // Load existing record for editing
         if ($id) {
-            $product = Product::find($id);
+            $product = Product::query()->find($id);
             if (!$product) {
                 abort(404);
             }
@@ -86,9 +86,9 @@ class ProductsController
         }
 
         // Load related data for dropdowns
-        $families = Family::orderBy('family_name')->get();
-        $units = Unit::orderBy('unit_name')->get();
-        $taxRates = TaxRate::orderBy('tax_rate_name')->get();
+        $families = Family::query()->orderBy('family_name')->get();
+        $units = Unit::query()->orderBy('unit_name')->get();
+        $taxRates = TaxRate::query()->orderBy('tax_rate_name')->get();
 
         return view('products::form', [
             'product' => $product,
@@ -110,7 +110,7 @@ class ProductsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $product = Product::findOrFail($id);
+        $product = Product::query()->findOrFail($id);
         $product->delete();
         
         return redirect()->route('products.index')

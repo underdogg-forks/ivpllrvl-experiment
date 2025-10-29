@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Products\Http\Controllers;
+namespace Modules\Products\Controllers;
 
-use Modules\Products\Entities\Family;
+use Modules\Products\Models\Family;
 
 /**
  * FamiliesController
@@ -60,11 +60,11 @@ class FamiliesController
 
             if ($id) {
                 // Update existing
-                $family = Family::findOrFail($id);
+                $family = Family::query()->findOrFail($id);
                 $family->update($validated);
             } else {
                 // Create new
-                Family::create($validated);
+                Family::query()->create($validated);
             }
 
             return redirect()->route('families.index')
@@ -73,7 +73,7 @@ class FamiliesController
 
         // Load existing record for editing
         if ($id) {
-            $family = Family::find($id);
+            $family = Family::query()->find($id);
             if (!$family) {
                 abort(404);
             }
@@ -101,7 +101,7 @@ class FamiliesController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $family = Family::findOrFail($id);
+        $family = Family::query()->findOrFail($id);
         $family->delete();
 
         return redirect()->route('families.index')

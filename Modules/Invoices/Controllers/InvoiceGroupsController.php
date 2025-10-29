@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
-use Modules\Invoices\Entities\InvoiceGroup;
+use Modules\Invoices\Models\InvoiceGroup;
 use Illuminate\Http\Request;
 
 /**
@@ -57,11 +57,11 @@ class InvoiceGroupsController
             
             if ($id) {
                 // Update existing
-                $invoiceGroup = InvoiceGroup::findOrFail($id);
+                $invoiceGroup = InvoiceGroup::query()->findOrFail($id);
                 $invoiceGroup->update($validated);
             } else {
                 // Create new
-                InvoiceGroup::create($validated);
+                InvoiceGroup::query()->create($validated);
             }
             
             return redirect()->route('invoice_groups.index')
@@ -70,7 +70,7 @@ class InvoiceGroupsController
 
         // Load existing record for editing
         if ($id) {
-            $invoiceGroup = InvoiceGroup::find($id);
+            $invoiceGroup = InvoiceGroup::query()->find($id);
             if (!$invoiceGroup) {
                 abort(404);
             }
@@ -99,7 +99,7 @@ class InvoiceGroupsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $invoiceGroup = InvoiceGroup::findOrFail($id);
+        $invoiceGroup = InvoiceGroup::query()->findOrFail($id);
         $invoiceGroup->delete();
         
         return redirect()->route('invoice_groups.index')

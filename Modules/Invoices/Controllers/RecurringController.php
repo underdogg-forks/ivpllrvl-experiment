@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
-use Modules\Invoices\Entities\InvoicesRecurring;
+use Modules\Invoices\Models\InvoicesRecurring;
 
 class RecurringController
 {
@@ -44,7 +44,7 @@ class RecurringController
      */
     public function stop(int $invoiceRecurringId)
     {
-        $recurringInvoice = InvoicesRecurring::findOrFail($invoiceRecurringId);
+        $recurringInvoice = InvoicesRecurring::query()->findOrFail($invoiceRecurringId);
         $recurringInvoice->update(['recur_status' => 0]); // 0 = stopped
         
         return redirect()->route('invoices.recurring.index')
@@ -63,7 +63,7 @@ class RecurringController
      */
     public function delete(int $invoiceRecurringId)
     {
-        $recurringInvoice = InvoicesRecurring::findOrFail($invoiceRecurringId);
+        $recurringInvoice = InvoicesRecurring::query()->findOrFail($invoiceRecurringId);
         $recurringInvoice->delete();
         
         return redirect()->route('invoices.recurring.index')

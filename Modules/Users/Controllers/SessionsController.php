@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Users\Http\Controllers;
+namespace Modules\Users\Controllers;
 
 /**
  * SessionsController

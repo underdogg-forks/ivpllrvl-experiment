@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Payments\Http\Controllers;
+namespace Modules\Payments\Controllers;
 
-use Modules\Payments\Entities\Payment;
-use Modules\Payments\Entities\PaymentMethod;
+use Modules\Payments\Models\Payment;
+use Modules\Payments\Models\PaymentMethod;
 
 /**
  * AjaxController
@@ -36,7 +36,7 @@ class AjaxController
             ]);
         }
 
-        $payment = Payment::create($validator->validated());
+        $payment = Payment::query()->create($validator->validated());
 
         return response()->json([
             'success' => 1,

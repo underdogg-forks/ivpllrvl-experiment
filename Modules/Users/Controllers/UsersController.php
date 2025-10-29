@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Users\Http\Controllers;
+namespace Modules\Users\Controllers;
 
-use Modules\Users\Entities\User;
+use Modules\Users\Models\User;
 
 /**
  * UsersController
@@ -18,7 +18,7 @@ class UsersController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $users = User::orderBy('user_name')->paginate(15, ['*'], 'page', $page);
+        $users = User::query()->orderBy('user_name')->paginate(15, ['*'], 'page', $page);
         return view('users::index', [
             'filter_display' => true,
             'filter_placeholder' => trans('filter_users'),
@@ -44,10 +44,10 @@ class UsersController
             $validated = request()->validate($rules);
 
             if ($id) {
-                $user = User::findOrFail($id);
+                $user = User::query()->findOrFail($id);
                 $user->update($validated);
             } else {
-                $user = User::create($validated);
+                $user = User::query()->create($validated);
                 $id = $user->user_id;
             }
 
@@ -56,7 +56,7 @@ class UsersController
         }
 
         if ($id) {
-            $user = User::find($id);
+            $user = User::query()->find($id);
             if (!$user) abort(404);
         } else {
             $user = new User();
@@ -72,7 +72,7 @@ class UsersController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::query()->findOrFail($id);
         $user->delete();
         return redirect()->route('users.index')
             ->with('alert_success', trans('record_successfully_deleted'));

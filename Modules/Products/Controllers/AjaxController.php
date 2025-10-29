@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Products\Http\Controllers;
+namespace Modules\Products\Controllers;
 
-use Modules\Products\Entities\Product;
-use Modules\Products\Entities\Family;
+use Modules\Products\Models\Product;
+use Modules\Products\Models\Family;
 
 /**
  * AjaxController
@@ -64,7 +64,7 @@ class AjaxController
     {
         $product_ids = request()->post('product_ids');
 
-        $products = Product::whereIn('product_id', $product_ids)->get();
+        $products = Product::query()->whereIn('product_id', $product_ids)->get();
 
         foreach ($products as $product) {
             $product->product_price = format_amount($product->product_price);

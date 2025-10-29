@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
-use Modules\Invoices\Entities\Invoice;
+use Modules\Invoices\Models\Invoice;
 
 /**
  * Invoice Controller
@@ -59,7 +59,7 @@ class InvoiceController
      */
     public function store(array $data): Invoice
     {
-        $invoice = Invoice::create($data);
+        $invoice = Invoice::query()->create($data);
 
         // Create invoice amount record
         $invoice->amounts()->create([
@@ -77,7 +77,7 @@ class InvoiceController
      */
     public function edit(int $id)
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::query()->findOrFail($id);
 
         return view('invoices::edit', compact('invoice'));
     }
@@ -91,7 +91,7 @@ class InvoiceController
      */
     public function update(int $id, array $data): bool
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::query()->findOrFail($id);
 
         return $invoice->update($data);
     }
@@ -104,7 +104,7 @@ class InvoiceController
      */
     public function destroy(int $id): bool
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::query()->findOrFail($id);
 
         return $invoice->delete();
     }

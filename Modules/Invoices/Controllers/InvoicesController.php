@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
-use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\Item;
-use Modules\Invoices\Entities\InvoiceTaxRate;
-use Modules\Invoices\Entities\InvoiceAmount;
-use Modules\Products\Entities\TaxRate;
-use Modules\Products\Entities\Unit;
-use Modules\Payments\Entities\PaymentMethod;
-use Modules\Core\Entities\CustomField;
-use Modules\Core\Entities\CustomValue;
-use Modules\Core\Entities\InvoiceCustom;
-use Modules\Crm\Entities\Task;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\InvoiceAmount;
+use Modules\Products\Models\TaxRate;
+use Modules\Products\Models\Unit;
+use Modules\Payments\Models\PaymentMethod;
+use Modules\Core\Models\CustomField;
+use Modules\Core\Models\CustomValue;
+use Modules\Core\Models\InvoiceCustom;
+use Modules\Crm\Models\Task;
 
 /**
  * InvoicesController
@@ -150,22 +150,22 @@ class InvoicesController
             ->findOrFail($invoiceId);
         
         // Get custom fields and values
-        $fields = InvoiceCustom::where('invoice_id', $invoiceId)->get();
-        $customFields = CustomField::where('custom_field_table', 'ip_invoice_custom')->get();
+        $fields = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();
+        $customFields = CustomField::query()->where('custom_field_table', 'ip_invoice_custom')->get();
         $customValues = [];
         
         foreach ($customFields as $customField) {
             if (in_array($customField->custom_field_type, CustomValue::customValueFields())) {
-                $values = CustomValue::where('custom_field_id', $customField->custom_field_id)->get();
+                $values = CustomValue::query()->where('custom_field_id', $customField->custom_field_id)->get();
                 $customValues[$customField->custom_field_id] = $values;
             }
         }
         
         // Check for payment custom fields
-        $paymentCfExist = CustomField::where('custom_field_table', 'ip_payment_custom')->exists() ? 'yes' : 'no';
+        $paymentCfExist = CustomField::query()->where('custom_field_table', 'ip_payment_custom')->exists() ? 'yes' : 'no';
         
         // Get items
-        $items = Item::where('invoice_id', $invoiceId)->orderBy('item_order')->get();
+        $items = Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
         
         // Check if user change is allowed (more than one admin user)
         $changeUser = \DB::table('ip_users')
@@ -178,10 +178,10 @@ class InvoicesController
             'items' => $items,
             'invoice_id' => $invoiceId,
             'change_user' => $changeUser,
-            'tax_rates' => TaxRate::all(),
-            'invoice_tax_rates' => InvoiceTaxRate::where('invoice_id', $invoiceId)->get(),
-            'units' => Unit::all(),
-            'payment_methods' => PaymentMethod::all(),
+            'tax_rates' => TaxRate::query()->all(),
+            'invoice_tax_rates' => InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->get(),
+            'units' => Unit::query()->all(),
+            'payment_methods' => PaymentMethod::query()->all(),
             'custom_fields' => $customFields,
             'custom_values' => $customValues,
             'custom_js_vars' => [
@@ -211,12 +211,12 @@ class InvoicesController
      */
     public function delete(int $invoiceId): RedirectResponse
     {
-        $invoice = Invoice::findOrFail($invoiceId);
+        $invoice = Invoice::query()->findOrFail($invoiceId);
         $invoiceStatus = $invoice->invoice_status_id;
         
         if ($invoiceStatus == 1 || config('settings.enable_invoice_deletion') === true) {
             // If invoice refers to tasks, mark them back to 'Complete'
-            Task::where('invoice_id', $invoiceId)
+            Task::query()->where('invoice_id', $invoiceId)
                 ->update(['task_status' => 3]); // 3 = Complete
             
             // Delete the invoice
@@ -271,8 +271,8 @@ class InvoicesController
      */
     public function generateXml(int $invoiceId): Response
     {
-        $invoice = Invoice::findOrFail($invoiceId);
-        $items = Item::where('invoice_id', $invoiceId)->get();
+        $invoice = Invoice::query()->findOrFail($invoiceId);
+        $items = Item::query()->where('invoice_id', $invoiceId)->get();
         
         // Check e-invoice usage
         $einvoice = get_einvoice_usage($invoice, $items, false);
@@ -334,8 +334,8 @@ class InvoicesController
      */
     public function generateSumexCopy(int $invoiceId): Response
     {
-        $invoice = Invoice::findOrFail($invoiceId);
-        $items = Item::where('invoice_id', $invoiceId)->get();
+        $invoice = Invoice::query()->findOrFail($invoiceId);
+        $items = Item::query()->where('invoice_id', $invoiceId)->get();
         
         $sumex = new \Sumex([
             'invoice' => $invoice,
@@ -363,7 +363,7 @@ class InvoicesController
      */
     public function deleteInvoiceTax(int $invoiceId, int $invoiceTaxRateId): RedirectResponse
     {
-        InvoiceTaxRate::where('invoice_tax_rate_id', $invoiceTaxRateId)->delete();
+        InvoiceTaxRate::query()->where('invoice_tax_rate_id', $invoiceTaxRateId)->delete();
         
         // Recalculate invoice amounts
         $globalDiscount = ['item' => InvoiceAmount::getGlobalDiscount($invoiceId)];

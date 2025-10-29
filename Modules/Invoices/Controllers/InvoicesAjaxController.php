@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
-use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\Item;
-use Modules\Invoices\Entities\InvoiceTaxRate;
-use Modules\Invoices\Entities\InvoicesRecurring;
-use Modules\Crm\Entities\Client;
-use Modules\Users\Entities\User;
-use Modules\Products\Entities\Unit;
-use Modules\Core\Entities\InvoiceCustom;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\InvoicesRecurring;
+use Modules\Crm\Models\Client;
+use Modules\Users\Models\User;
+use Modules\Products\Models\Unit;
+use Modules\Core\Models\InvoiceCustom;
 
 /**
  * AJAX controller for invoice operations
@@ -35,7 +35,7 @@ class InvoicesAjaxController
     public function save(): array
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice = Invoice::findOrFail($invoiceId);
+        $invoice = Invoice::query()->findOrFail($invoiceId);
 
         // Validate invoice
         $validationRules = Invoice::validationRulesSaveInvoice();
@@ -147,7 +147,7 @@ class InvoicesAjaxController
     {
         $itemId = request()->input('item_id');
 
-        $item = Item::where('invoice_id', $invoiceId)
+        $item = Item::query()->where('invoice_id', $invoiceId)
             ->where('item_id', $itemId)
             ->first();
 
@@ -158,7 +158,7 @@ class InvoicesAjaxController
         Item::deleteItem($itemId);
 
         // Recalculate invoice
-        $invoice = Invoice::findOrFail($invoiceId);
+        $invoice = Invoice::query()->findOrFail($invoiceId);
         $invoice->recalculate();
 
         return ['success' => 1];
@@ -176,7 +176,7 @@ class InvoicesAjaxController
     public function getItem(): array
     {
         $itemId = request()->input('item_id');
-        $item = Item::find($itemId);
+        $item = Item::query()->find($itemId);
 
         return $item ? $item->toArray() : [];
     }
@@ -195,8 +195,8 @@ class InvoicesAjaxController
         $invoiceId = request()->input('invoice_id');
         $invoice = Invoice::with(['client', 'user'])->findOrFail($invoiceId);
 
-        $clients = Client::orderBy('client_name')->get();
-        $users = User::all();
+        $clients = Client::query()->orderBy('client_name')->get();
+        $users = User::query()->all();
 
         return view('invoices::modal_copy_invoice', compact('invoice', 'clients', 'users'));
     }
@@ -219,7 +219,7 @@ class InvoicesAjaxController
         $includeInvoiceTaxRates = request()->input('invoice_change_client', 0) == 0;
 
         // Create new invoice
-        $newInvoice = Invoice::create([
+        $newInvoice = Invoice::query()->create([
             'client_id' => $clientId,
             'user_id' => $userId,
             'invoice_date_created' => $invoiceDate,
@@ -247,8 +247,8 @@ class InvoicesAjaxController
     public function modalChangeUser()
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice = Invoice::findOrFail($invoiceId);
-        $users = User::all();
+        $invoice = Invoice::query()->findOrFail($invoiceId);
+        $users = User::query()->all();
 
         return view('invoices::modal_change_user', compact('invoice', 'users'));
     }
@@ -267,12 +267,12 @@ class InvoicesAjaxController
         $invoiceId = request()->input('invoice_id');
         $userId = request()->input('user_id');
 
-        $user = User::find($userId);
+        $user = User::query()->find($userId);
         if (!$user) {
             return ['success' => 0, 'error' => 'User not found'];
         }
 
-        Invoice::where('invoice_id', $invoiceId)->update(['user_id' => $userId]);
+        Invoice::query()->where('invoice_id', $invoiceId)->update(['user_id' => $userId]);
 
         return ['success' => 1];
     }
@@ -290,7 +290,7 @@ class InvoicesAjaxController
     {
         $invoiceId = request()->input('invoice_id');
         $invoice = Invoice::with('client')->findOrFail($invoiceId);
-        $clients = Client::orderBy('client_name')->get();
+        $clients = Client::query()->orderBy('client_name')->get();
 
         return view('invoices::modal_change_client', compact('invoice', 'clients'));
     }
@@ -309,12 +309,12 @@ class InvoicesAjaxController
         $invoiceId = request()->input('invoice_id');
         $clientId = request()->input('client_id');
 
-        $client = Client::find($clientId);
+        $client = Client::query()->find($clientId);
         if (!$client) {
             return ['success' => 0, 'error' => 'Client not found'];
         }
 
-        Invoice::where('invoice_id', $invoiceId)->update(['client_id' => $clientId]);
+        Invoice::query()->where('invoice_id', $invoiceId)->update(['client_id' => $clientId]);
 
         return ['success' => 1];
     }
@@ -330,8 +330,8 @@ class InvoicesAjaxController
      */
     public function modalCreateInvoice()
     {
-        $clients = Client::orderBy('client_name')->get();
-        $users = User::all();
+        $clients = Client::query()->orderBy('client_name')->get();
+        $users = User::query()->all();
 
         return view('invoices::modal_create_invoice', compact('clients', 'users'));
     }
@@ -347,7 +347,7 @@ class InvoicesAjaxController
      */
     public function create(): array
     {
-        $invoice = Invoice::create([
+        $invoice = Invoice::query()->create([
             'client_id' => request()->input('client_id'),
             'user_id' => request()->input('user_id'),
             'invoice_date_created' => request()->input('invoice_date_created'),
@@ -371,7 +371,7 @@ class InvoicesAjaxController
      */
     public function createRecurring(): array
     {
-        $recurring = InvoicesRecurring::create([
+        $recurring = InvoicesRecurring::query()->create([
             'client_id' => request()->input('client_id'),
             'user_id' => request()->input('user_id'),
             'invoice_group_id' => request()->input('invoice_group_id'),
@@ -397,8 +397,8 @@ class InvoicesAjaxController
      */
     public function modalCreateRecurring()
     {
-        $clients = Client::orderBy('client_name')->get();
-        $users = User::all();
+        $clients = Client::query()->orderBy('client_name')->get();
+        $users = User::query()->all();
 
         return view('invoices::modal_create_recurring', compact('clients', 'users'));
     }
@@ -467,10 +467,10 @@ class InvoicesAjaxController
         $sourceId = request()->input('invoice_id');
         $creditDate = request()->input('invoice_date_created');
 
-        $sourceInvoice = Invoice::findOrFail($sourceId);
+        $sourceInvoice = Invoice::query()->findOrFail($sourceId);
 
         // Create credit invoice
-        $creditInvoice = Invoice::create([
+        $creditInvoice = Invoice::query()->create([
             'client_id' => $sourceInvoice->client_id,
             'user_id' => $sourceInvoice->user_id,
             'invoice_date_created' => $creditDate,

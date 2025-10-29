@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Payments\Http\Controllers;
+namespace Modules\Payments\Controllers;
 
-use Modules\Payments\Entities\Payment;
-use Modules\Payments\Entities\PaymentMethod;
-use Modules\Payments\Entities\PaymentLog;
+use Modules\Payments\Models\Payment;
+use Modules\Payments\Models\PaymentMethod;
+use Modules\Payments\Models\PaymentLog;
 
 /**
  * PaymentsController
@@ -69,11 +69,11 @@ class PaymentsController
 
             if ($id) {
                 // Update existing
-                $payment = Payment::findOrFail($id);
+                $payment = Payment::query()->findOrFail($id);
                 $payment->update($validated);
             } else {
                 // Create new
-                $payment = Payment::create($validated);
+                $payment = Payment::query()->create($validated);
                 $id = $payment->payment_id;
             }
 
@@ -97,10 +97,10 @@ class PaymentsController
         }
 
         // Load related data
-        $paymentMethods = PaymentMethod::orderBy('payment_method_name')->get();
+        $paymentMethods = PaymentMethod::query()->orderBy('payment_method_name')->get();
         
         // Load open invoices (invoices with balance > 0)
-        $openInvoices = \Modules\Invoices\Entities\Invoice::where('invoice_balance', '>', 0)
+        $openInvoices = \Modules\Invoices\Entities\Invoice::query()->where('invoice_balance', '>', 0)
             ->with('client')
             ->orderBy('invoice_date_created', 'desc')
             ->get();
@@ -155,7 +155,7 @@ class PaymentsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::query()->findOrFail($id);
         $payment->delete();
 
         return redirect()->route('payments.index')

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Quotes\Http\Controllers;
+namespace Modules\Quotes\Controllers;
 
 /**
  * AjaxController

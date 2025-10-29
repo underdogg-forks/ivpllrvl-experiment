@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
-use Modules\Crm\Entities\Client;
+use Modules\Crm\Models\Client;
 
 class ClientsController
 {
@@ -42,21 +42,21 @@ class ClientsController
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate(Client::validationRules());
             if ($id) {
-                Client::findOrFail($id)->update($validated);
+                Client::query()->findOrFail($id)->update($validated);
             } else {
-                Client::create($validated);
+                Client::query()->create($validated);
             }
             return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $client = $id ? Client::findOrFail($id) : new Client();
+        $client = $id ? Client::query()->findOrFail($id) : new Client();
         return view('crm::clients_form', ['client' => $client]);
     }
 
     /** @legacy-file application/modules/clients/controllers/Clients.php:205 */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        Client::findOrFail($id)->delete();
+        Client::query()->findOrFail($id)->delete();
         return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }

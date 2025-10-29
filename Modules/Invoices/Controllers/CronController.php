@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
-use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\InvoicesRecurring;
-use Modules\Core\Entities\Setting;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\InvoicesRecurring;
+use Modules\Core\Models\Setting;
 
 /**
  * CronController
@@ -89,7 +89,7 @@ class CronController
             ];
 
             // Create the new invoice
-            $newInvoice = Invoice::create($dbArray);
+            $newInvoice = Invoice::query()->create($dbArray);
             $targetId = $newInvoice->invoice_id;
             
             if (defined('IP_DEBUG') && IP_DEBUG) {
@@ -144,7 +144,7 @@ class CronController
     private function getInvoiceNumber(int $invoiceGroupId): string
     {
         // Use the InvoiceGroup model to generate the number
-        $invoiceGroup = \Modules\Invoices\Entities\InvoiceGroup::findOrFail($invoiceGroupId);
+        $invoiceGroup = \Modules\Invoices\Entities\InvoiceGroup::query()->findOrFail($invoiceGroupId);
         return $invoiceGroup->generateInvoiceNumber();
     }
 
@@ -157,7 +157,7 @@ class CronController
     {
         do {
             $urlKey = bin2hex(random_bytes(16));
-            $exists = Invoice::where('invoice_url_key', $urlKey)->exists();
+            $exists = Invoice::query()->where('invoice_url_key', $urlKey)->exists();
         } while ($exists);
         
         return $urlKey;
@@ -202,7 +202,7 @@ class CronController
      */
     private function setNextRecurDate(int $recurringId): void
     {
-        $recurring = InvoicesRecurring::findOrFail($recurringId);
+        $recurring = InvoicesRecurring::query()->findOrFail($recurringId);
         
         // Calculate next date based on frequency
         $currentDate = $recurring->recur_next_date;

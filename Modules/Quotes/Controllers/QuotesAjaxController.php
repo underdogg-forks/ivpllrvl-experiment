@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Modules\Quotes\Http\Controllers;
+namespace Modules\Quotes\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Quotes\Entities\Quote;
-use Modules\Quotes\Entities\QuoteItem;
-use Modules\Quotes\Entities\QuoteTaxRate;
-use Modules\Quotes\Entities\QuoteAmount;
-use Modules\Products\Entities\Unit;
-use Modules\Core\Entities\InvoiceGroup;
-use Modules\Products\Entities\TaxRate;
-use Modules\Crm\Entities\Client;
-use Modules\Users\Entities\User;
-use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\Item;
-use Modules\Invoices\Entities\InvoiceTaxRate;
-use Modules\Core\Entities\QuoteCustom;
+use Modules\Quotes\Models\Quote;
+use Modules\Quotes\Models\QuoteItem;
+use Modules\Quotes\Models\QuoteTaxRate;
+use Modules\Quotes\Models\QuoteAmount;
+use Modules\Products\Models\Unit;
+use Modules\Core\Models\InvoiceGroup;
+use Modules\Products\Models\TaxRate;
+use Modules\Crm\Models\Client;
+use Modules\Users\Models\User;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Core\Models\QuoteCustom;
 
 /**
  * QuotesAjaxController
@@ -40,7 +40,7 @@ class QuotesAjaxController
     public function save(Request $request): JsonResponse
     {
         $quoteId = (int) $request->input('quote_id');
-        $quote = Quote::findOrFail($quoteId);
+        $quote = Quote::query()->findOrFail($quoteId);
         
         // Validate quote
         $validation = Quote::validationRulesSaveQuote();
@@ -216,7 +216,7 @@ class QuotesAjaxController
         $itemId = (int) $request->input('item_id');
         
         // Verify quote exists
-        $quote = Quote::find($quoteId);
+        $quote = Quote::query()->find($quoteId);
         if ($quote || empty($itemId)) {
             $deleted = QuoteItem::deleteItem($itemId);
             if ($deleted) {
@@ -240,7 +240,7 @@ class QuotesAjaxController
     public function getItem(Request $request): JsonResponse
     {
         $itemId = (int) $request->input('item_id');
-        $item = QuoteItem::find($itemId);
+        $item = QuoteItem::query()->find($itemId);
         
         return response()->json($item ?? []);
     }
@@ -261,11 +261,11 @@ class QuotesAjaxController
         $clientId = (int) $request->input('client_id');
         
         $quote = Quote::with('client')->findOrFail($quoteId);
-        $client = Client::find($clientId);
+        $client = Client::query()->find($clientId);
         
         $data = [
-            'invoice_groups' => InvoiceGroup::all(),
-            'tax_rates' => TaxRate::all(),
+            'invoice_groups' => InvoiceGroup::query()->all(),
+            'tax_rates' => TaxRate::query()->all(),
             'quote_id' => $quoteId,
             'quote' => $quote,
             'client' => $client,
@@ -297,7 +297,7 @@ class QuotesAjaxController
         }
         
         // Create new quote
-        $targetId = Quote::createQuote($request->all());
+        $targetId = Quote::query()->createQuote($request->all());
         $sourceId = (int) $request->input('quote_id');
         
         // Copy all related data
@@ -346,7 +346,7 @@ class QuotesAjaxController
     public function changeUser(Request $request): JsonResponse
     {
         $userId = (int) $request->input('user_id');
-        $user = User::find($userId);
+        $user = User::query()->find($userId);
         
         if (!$user) {
             return response()->json([
@@ -356,7 +356,7 @@ class QuotesAjaxController
         }
         
         $quoteId = (int) $request->input('quote_id');
-        Quote::where('quote_id', $quoteId)->update(['user_id' => $userId]);
+        Quote::query()->where('quote_id', $quoteId)->update(['user_id' => $userId]);
         
         return response()->json([
             'success' => 1,
@@ -401,7 +401,7 @@ class QuotesAjaxController
     public function changeClient(Request $request): JsonResponse
     {
         $clientId = (int) $request->input('client_id');
-        $client = Client::find($clientId);
+        $client = Client::query()->find($clientId);
         
         if (!$client) {
             return response()->json([
@@ -411,7 +411,7 @@ class QuotesAjaxController
         }
         
         $quoteId = (int) $request->input('quote_id');
-        Quote::where('quote_id', $quoteId)->update(['client_id' => $clientId]);
+        Quote::query()->where('quote_id', $quoteId)->update(['client_id' => $clientId]);
         
         return response()->json([
             'success' => 1,
@@ -432,11 +432,11 @@ class QuotesAjaxController
     public function modalCreateQuote(Request $request)
     {
         $clientId = (int) $request->input('client_id');
-        $client = Client::find($clientId);
+        $client = Client::query()->find($clientId);
         
         $data = [
-            'invoice_groups' => InvoiceGroup::all(),
-            'tax_rates' => TaxRate::all(),
+            'invoice_groups' => InvoiceGroup::query()->all(),
+            'tax_rates' => TaxRate::query()->all(),
             'client' => $client,
             'clients' => Client::latest()->get(),
         ];
@@ -466,7 +466,7 @@ class QuotesAjaxController
             ]);
         }
         
-        $quoteId = Quote::createQuote($request->all());
+        $quoteId = Quote::query()->createQuote($request->all());
         
         return response()->json([
             'success' => 1,
@@ -486,10 +486,10 @@ class QuotesAjaxController
      */
     public function modalQuoteToInvoice(int $quoteId)
     {
-        $quote = Quote::findOrFail($quoteId);
+        $quote = Quote::query()->findOrFail($quoteId);
         
         $data = [
-            'invoice_groups' => InvoiceGroup::all(),
+            'invoice_groups' => InvoiceGroup::query()->all(),
             'quote_id' => $quoteId,
             'quote' => $quote,
         ];
@@ -530,16 +530,16 @@ class QuotesAjaxController
             'invoice_group_id' => $request->input('invoice_group_id', $quote->invoice_group_id),
         ]);
         
-        $invoiceId = Invoice::createInvoice($invoiceData, false);
+        $invoiceId = Invoice::query()->createInvoice($invoiceData, false);
         
         // Update invoice discounts
-        Invoice::where('invoice_id', $invoiceId)->update([
+        Invoice::query()->where('invoice_id', $invoiceId)->update([
             'invoice_discount_amount' => $quote->quote_discount_amount,
             'invoice_discount_percent' => $quote->quote_discount_percent,
         ]);
         
         // Save invoice ID to quote
-        Quote::where('quote_id', $quoteId)->update(['invoice_id' => $invoiceId]);
+        Quote::query()->where('quote_id', $quoteId)->update(['invoice_id' => $invoiceId]);
         
         // Prepare global discount for items
         $globalDiscount = [

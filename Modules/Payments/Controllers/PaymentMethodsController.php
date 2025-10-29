@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Payments\Http\Controllers;
+namespace Modules\Payments\Controllers;
 
-use Modules\Payments\Entities\PaymentMethod;
+use Modules\Payments\Models\PaymentMethod;
 
 /**
  * PaymentMethodsController
@@ -23,7 +23,7 @@ class PaymentMethodsController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $paymentMethods = PaymentMethod::orderBy('payment_method_name')
+        $paymentMethods = PaymentMethod::query()->orderBy('payment_method_name')
             ->paginate(15, ['*'], 'page', $page);
 
         return view('payments::payment_methods_index', [
@@ -57,11 +57,11 @@ class PaymentMethodsController
 
             if ($id) {
                 // Update existing
-                $paymentMethod = PaymentMethod::findOrFail($id);
+                $paymentMethod = PaymentMethod::query()->findOrFail($id);
                 $paymentMethod->update($validated);
             } else {
                 // Create new
-                PaymentMethod::create($validated);
+                PaymentMethod::query()->create($validated);
             }
 
             return redirect()->route('payment_methods.index')
@@ -70,7 +70,7 @@ class PaymentMethodsController
 
         // Load existing record for editing
         if ($id) {
-            $paymentMethod = PaymentMethod::find($id);
+            $paymentMethod = PaymentMethod::query()->find($id);
             if (!$paymentMethod) {
                 abort(404);
             }
@@ -98,7 +98,7 @@ class PaymentMethodsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $paymentMethod = PaymentMethod::findOrFail($id);
+        $paymentMethod = PaymentMethod::query()->findOrFail($id);
         $paymentMethod->delete();
 
         return redirect()->route('payment_methods.index')

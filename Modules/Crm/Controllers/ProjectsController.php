@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
-use Modules\Crm\Entities\Project;
-use Modules\Crm\Entities\Client;
+use Modules\Crm\Models\Project;
+use Modules\Crm\Models\Client;
 
 class ProjectsController
 {
@@ -27,17 +27,17 @@ class ProjectsController
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate(Project::validationRules());
             if ($id) {
-                Project::findOrFail($id)->update($validated);
+                Project::query()->findOrFail($id)->update($validated);
             } else {
-                Project::create($validated);
+                Project::query()->create($validated);
             }
             return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $project = $id ? Project::find($id) : new Project();
+        $project = $id ? Project::query()->find($id) : new Project();
         if ($id && !$project) abort(404);
         
-        $clients = Client::where('client_active', 1)->orderBy('client_name')->get();
+        $clients = Client::query()->where('client_active', 1)->orderBy('client_name')->get();
         return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
     }
 
@@ -54,7 +54,7 @@ class ProjectsController
     /** @legacy-file application/modules/projects/controllers/Projects.php:106 */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $project = Project::findOrFail($id);
+        $project = Project::query()->findOrFail($id);
         $project->delete();
         return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_deleted'));
     }

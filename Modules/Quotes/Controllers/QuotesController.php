@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Quotes\Http\Controllers;
+namespace Modules\Quotes\Controllers;
 
-use Modules\Quotes\Entities\Quote;
-use Modules\Quotes\Entities\QuoteAmount;
-use Modules\Quotes\Entities\QuoteItem;
-use Modules\Quotes\Entities\QuoteTaxRate;
-use Modules\Products\Entities\TaxRate;
-use Modules\Products\Entities\Unit;
-use Modules\Core\Entities\CustomField;
-use Modules\Core\Entities\CustomValue;
+use Modules\Quotes\Models\Quote;
+use Modules\Quotes\Models\QuoteAmount;
+use Modules\Quotes\Models\QuoteItem;
+use Modules\Quotes\Models\QuoteTaxRate;
+use Modules\Products\Models\TaxRate;
+use Modules\Products\Models\Unit;
+use Modules\Core\Models\CustomField;
+use Modules\Core\Models\CustomValue;
 
 /**
  * QuotesController
@@ -119,7 +119,7 @@ class QuotesController
         }
 
         // Get custom fields for quotes
-        $customFields = CustomField::where('custom_field_table', 'ip_quote_custom')
+        $customFields = CustomField::query()->where('custom_field_table', 'ip_quote_custom')
             ->orderBy('custom_field_order')
             ->get();
 
@@ -127,24 +127,24 @@ class QuotesController
         $customValues = [];
         foreach ($customFields as $field) {
             if (in_array($field->custom_field_type, ['select', 'dropdown'])) {
-                $customValues[$field->custom_field_id] = CustomValue::where('custom_field_id', $field->custom_field_id)->get();
+                $customValues[$field->custom_field_id] = CustomValue::query()->where('custom_field_id', $field->custom_field_id)->get();
             }
         }
 
         // Get all items for this quote
-        $items = QuoteItem::where('quote_id', $quote_id)
+        $items = QuoteItem::query()->where('quote_id', $quote_id)
             ->with(['product', 'unit'])
             ->orderBy('item_order')
             ->get();
 
         // Get tax rates
-        $taxRates = TaxRate::all();
-        $quoteTaxRates = QuoteTaxRate::where('quote_id', $quote_id)
+        $taxRates = TaxRate::query()->all();
+        $quoteTaxRates = QuoteTaxRate::query()->where('quote_id', $quote_id)
             ->with('taxRate')
             ->get();
 
         // Get units
-        $units = Unit::all();
+        $units = Unit::query()->all();
 
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = \DB::table('ip_users')
@@ -229,7 +229,7 @@ class QuotesController
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
     {
         // Delete the tax rate
-        QuoteTaxRate::where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
+        QuoteTaxRate::query()->where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
 
         // Get global discount for recalculation
         $globalDiscount = ['item' => QuoteAmount::getGlobalDiscount($quote_id)];

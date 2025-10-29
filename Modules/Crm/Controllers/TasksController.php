@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
-use Modules\Crm\Entities\Task;
-use Modules\Crm\Entities\Project;
+use Modules\Crm\Models\Task;
+use Modules\Crm\Models\Project;
 
 class TasksController
 {
@@ -28,16 +28,16 @@ class TasksController
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate(Task::validationRules());
             if ($id) {
-                Task::findOrFail($id)->update($validated);
+                Task::query()->findOrFail($id)->update($validated);
             } else {
-                Task::create($validated);
+                Task::query()->create($validated);
             }
             return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $task = $id ? Task::findOrFail($id) : new Task();
-        $projects = Project::orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Entities\TaxRate::orderBy('tax_rate_name')->get();
+        $task = $id ? Task::query()->findOrFail($id) : new Task();
+        $projects = Project::query()->orderBy('project_name')->get();
+        $taxRates = \Modules\Products\Entities\TaxRate::query()->orderBy('tax_rate_name')->get();
         
         return view('crm::tasks_form', [
             'task' => $task,
@@ -50,7 +50,7 @@ class TasksController
     /** @legacy-file application/modules/tasks/controllers/Tasks.php:87 */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        Task::findOrFail($id)->delete();
+        Task::query()->findOrFail($id)->delete();
         return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }

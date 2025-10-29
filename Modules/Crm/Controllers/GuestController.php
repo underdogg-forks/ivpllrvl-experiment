@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
 class GuestController
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
-use Modules\Crm\Entities\UserClient;
+use Modules\Crm\Models\UserClient;
 
 class UserClientsController
 {
@@ -23,20 +23,20 @@ class UserClientsController
                 'client_id' => 'required|integer|exists:ip_clients,client_id',
             ]);
             if ($id) {
-                UserClient::findOrFail($id)->update($validated);
+                UserClient::query()->findOrFail($id)->update($validated);
             } else {
-                UserClient::create($validated);
+                UserClient::query()->create($validated);
             }
             return redirect()->route('user_clients.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $userClient = $id ? UserClient::findOrFail($id) : new UserClient();
+        $userClient = $id ? UserClient::query()->findOrFail($id) : new UserClient();
         return view('crm::user_clients_form', ['user_client' => $userClient]);
     }
 
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        UserClient::findOrFail($id)->delete();
+        UserClient::query()->findOrFail($id)->delete();
         return redirect()->route('user_clients.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }

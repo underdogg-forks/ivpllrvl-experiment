@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
 /**
  * InvoicesController (Guest)
@@ -20,7 +20,7 @@ class InvoicesController
     public function view(string $urlKey)
     {
         // Guest invoice view by URL key
-        $invoice = \Modules\Invoices\Entities\Invoice::where('invoice_url_key', $urlKey)->firstOrFail();
+        $invoice = \Modules\Invoices\Entities\Invoice::query()->where('invoice_url_key', $urlKey)->firstOrFail();
         return view('crm::guest_invoice_view', ['invoice' => $invoice]);
     }
 }

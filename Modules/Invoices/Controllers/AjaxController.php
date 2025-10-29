@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Invoices\Http\Controllers;
+namespace Modules\Invoices\Controllers;
 
 /**
  * AjaxController
