@@ -7,8 +7,8 @@ use App\Models\BaseModel;
 /**
  * Unit Model
  * 
- * Eloquent model for managing ip_units
- * Migrated from CodeIgniter model
+ * Eloquent model for managing ip_units (product units of measure)
+ * Migrated from CodeIgniter Mdl_Units model
  */
 class Unit extends BaseModel
 {
@@ -39,7 +39,8 @@ class Unit extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'unit_name',
+        'unit_name_plrl',
     ];
 
     /**
@@ -49,8 +50,52 @@ class Unit extends BaseModel
      */
     protected $casts = [
         'unit_id' => 'integer',
-        // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('unit_name');
+    }
+
+    /**
+     * Return either the singular unit name or the plural unit name,
+     * depending on the quantity.
+     *
+     * @param int $unitId
+     * @param float $quantity
+     * @return string|null
+     */
+    public static function getName($unitId, $quantity)
+    {
+        if (!$unitId) {
+            return null;
+        }
+
+        $unit = static::find($unitId);
+        
+        if (!$unit) {
+            return null;
+        }
+
+        // Return plural if quantity is less than -1 or greater than 1
+        if ($quantity < -1 || $quantity > 1) {
+            return $unit->unit_name_plrl;
+        }
+
+        return $unit->unit_name;
+    }
+
+    /**
+     * Get products that use this unit
+     */
+    public function products()
+    {
+        return $this->hasMany('Modules\Products\Entities\Product', 'unit_id', 'unit_id');
+    }
 }

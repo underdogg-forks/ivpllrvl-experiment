@@ -2,104 +2,105 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Modules\Products\Entities\Family;
+use Illuminate\Http\Request;
+
 /**
  * FamiliesController
  * 
+ * Handles product family management
  * Migrated from CodeIgniter Families controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/families/controllers/Families.php
  */
 class FamiliesController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of product families.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('products::index');
+        $families = Family::ordered()
+            ->paginate(15);
+
+        return view('products::index', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_families'),
+            'filter_method' => 'filter_families',
+            'families' => $families,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a family.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create()
+    public function form($id = null)
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('products::form');
+        // Handle cancel button
+        if (request()->has('btn_cancel')) {
+            return redirect()->to('families');
+        }
+
+        // Handle form submission
+        if (request()->has('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'family_name' => 'required|string|max:255',
+            ]);
+
+            // Check for duplicates on create
+            if (request()->input('is_update') == 0) {
+                $existing = Family::where('family_name', $validated['family_name'])->first();
+                if ($existing) {
+                    session()->flash('alert_error', trans('family_already_exists'));
+                    return redirect()->to('families/form');
+                }
+            }
+
+            // Create or update family
+            if ($id) {
+                $family = Family::findOrFail($id);
+                $family->update($validated);
+            } else {
+                Family::create($validated);
+            }
+
+            return redirect()->to('families');
+        }
+
+        // Load family for editing
+        $family = null;
+        $is_update = false;
+        if ($id) {
+            $family = Family::find($id);
+            if (!$family) {
+                abort(404);
+            }
+            $is_update = true;
+        }
+
+        return view('products::form', [
+            'family' => $family,
+            'is_update' => $is_update,
+        ]);
     }
 
     /**
-     * Store a newly created resource.
+     * Delete a family.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function delete($id)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $family = Family::findOrFail($id);
+        $family->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('products::view');
+        return redirect()->to('families');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('products::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 

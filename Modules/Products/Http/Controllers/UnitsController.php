@@ -2,104 +2,103 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Modules\Products\Entities\Unit;
+use Illuminate\Http\Request;
+
 /**
  * UnitsController
  * 
+ * Handles product unit of measure management
  * Migrated from CodeIgniter Units controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/units/controllers/Units.php
  */
 class UnitsController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of units.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('products::index');
+        $units = Unit::ordered()
+            ->paginate(15);
+
+        return view('products::index', [
+            'units' => $units,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a unit.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create()
+    public function form($id = null)
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('products::form');
+        // Handle cancel button
+        if (request()->has('btn_cancel')) {
+            return redirect()->to('units');
+        }
+
+        // Handle form submission
+        if (request()->has('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'unit_name' => 'required|string|max:255',
+                'unit_name_plrl' => 'required|string|max:255',
+            ]);
+
+            // Check for duplicates on create
+            if (request()->input('is_update') == 0) {
+                $existing = Unit::where('unit_name', $validated['unit_name'])->first();
+                if ($existing) {
+                    session()->flash('alert_error', trans('unit_already_exists'));
+                    return redirect()->to('units/form');
+                }
+            }
+
+            // Create or update unit
+            if ($id) {
+                $unit = Unit::findOrFail($id);
+                $unit->update($validated);
+            } else {
+                Unit::create($validated);
+            }
+
+            return redirect()->to('units');
+        }
+
+        // Load unit for editing
+        $unit = null;
+        $is_update = false;
+        if ($id) {
+            $unit = Unit::find($id);
+            if (!$unit) {
+                abort(404);
+            }
+            $is_update = true;
+        }
+
+        return view('products::form', [
+            'unit' => $unit,
+            'is_update' => $is_update,
+        ]);
     }
 
     /**
-     * Store a newly created resource.
+     * Delete a unit.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function delete($id)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $unit = Unit::findOrFail($id);
+        $unit->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('products::view');
+        return redirect()->to('units');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('products::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 

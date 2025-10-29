@@ -7,8 +7,8 @@ use App\Models\BaseModel;
 /**
  * Family Model
  * 
- * Eloquent model for managing ip_families
- * Migrated from CodeIgniter model
+ * Eloquent model for managing ip_families (product families)
+ * Migrated from CodeIgniter Mdl_Families model
  */
 class Family extends BaseModel
 {
@@ -39,7 +39,7 @@ class Family extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'family_name',
     ];
 
     /**
@@ -49,8 +49,24 @@ class Family extends BaseModel
      */
     protected $casts = [
         'family_id' => 'integer',
-        // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('family_name');
+    }
+
+    /**
+     * Get products that belong to this family
+     */
+    public function products()
+    {
+        return $this->hasMany('Modules\Products\Entities\Product', 'family_id', 'family_id');
+    }
 }
