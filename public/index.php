@@ -133,13 +133,42 @@ try {
         array_map('unlink', $tempFiles);
     }
     
-    // Temporary: Load CodeIgniter for backward compatibility during migration
-    // TODO: Remove this once all functionality is migrated to Laravel
-    if (defined('BASEPATH') && file_exists(BASEPATH . 'core/CodeIgniter.php')) {
-        require_once BASEPATH . 'core/CodeIgniter.php';
-    } else {
-        // Pure Laravel mode - implement routing here in the future
-        echo "InvoicePlane - Laravel mode (routing to be implemented)";
+    /*
+    |--------------------------------------------------------------------------
+    | Laravel Routing
+    |--------------------------------------------------------------------------
+    |
+    | CodeIgniter has been removed. All routing is now handled by Laravel.
+    | Basic routing implementation below - to be expanded as needed.
+    |
+    */
+    
+    // Get the request URI
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+    $requestUri = parse_url($requestUri, PHP_URL_PATH);
+    
+    // Remove base path if exists
+    $basePath = dirname($_SERVER['SCRIPT_NAME']);
+    if ($basePath !== '/') {
+        $requestUri = substr($requestUri, strlen($basePath));
+    }
+    
+    // Trim slashes
+    $requestUri = trim($requestUri, '/');
+    
+    // Basic routing - to be expanded with proper Laravel routing
+    switch ($requestUri) {
+        case '':
+        case 'index.php':
+            echo view('core::welcome')->render();
+            break;
+            
+        default:
+            http_response_code(404);
+            echo '<h1>404 - Not Found</h1>';
+            echo '<p>The requested page was not found.</p>';
+            echo '<p><small>Route: ' . htmlspecialchars($requestUri) . '</small></p>';
+            echo '<p><a href="/">Go to Home</a></p>';
     }
     
 } catch (\Exception $e) {

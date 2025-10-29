@@ -2,7 +2,7 @@
 
 namespace Modules\Crm\Entities;
 
-use App\Models\BaseModel;
+use Modules\Core\Models\BaseModel;
 
 /**
  * Task Model

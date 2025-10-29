@@ -2,7 +2,7 @@
 
 namespace Modules\Products\Entities;
 
-use App\Models\BaseModel;
+use Modules\Core\Models\BaseModel;
 
 /**
  * Product Model

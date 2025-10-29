@@ -2,7 +2,7 @@
 
 namespace Modules\Invoices\Entities;
 
-use App\Models\BaseModel;
+use Modules\Core\Models\BaseModel;
 
 /**
  * InvoiceSumex Model
