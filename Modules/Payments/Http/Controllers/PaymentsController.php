@@ -3,8 +3,8 @@
 namespace Modules\Payments\Http\Controllers;
 
 use Modules\Payments\Entities\Payment;
-use Modules\Payments\Entities\Payment_method;
-use Modules\Payments\Entities\Payment_log;
+use Modules\Payments\Entities\PaymentMethod;
+use Modules\Payments\Entities\PaymentLog;
 
 /**
  * PaymentsController
@@ -86,7 +86,7 @@ class PaymentsController
         }
 
         // Load related data
-        $payment_methods = Payment_method::ordered()->get();
+        $payment_methods = PaymentMethod::ordered()->get();
         
         // TODO: Load open invoices
         // $open_invoices = Invoice::isOpen()->get();
@@ -114,7 +114,7 @@ class PaymentsController
      */
     public function online_logs($page = 0)
     {
-        $payment_logs = Payment_log::with('invoice')
+        $payment_logs = PaymentLog::with('invoice')
             ->ordered()
             ->paginate(15);
 

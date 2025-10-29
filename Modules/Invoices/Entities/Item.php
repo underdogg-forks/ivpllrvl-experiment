@@ -82,7 +82,7 @@ class Item extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'item_tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
     }
 
     /**

@@ -5,7 +5,7 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * Custom_value Model
+ * CustomValue Model
  * 
  * Eloquent model for managing custom field value options
  * Migrated from CodeIgniter Mdl_Custom_Values model
@@ -14,7 +14,7 @@ use App\Models\BaseModel;
  * @property int $custom_values_field
  * @property string $custom_values_value
  */
-class Custom_value extends BaseModel
+class CustomValue extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -64,7 +64,7 @@ class Custom_value extends BaseModel
      */
     public function customField()
     {
-        return $this->belongsTo(Custom_field::class, 'custom_values_field', 'custom_field_id');
+        return $this->belongsTo(CustomField::class, 'custom_values_field', 'custom_field_id');
     }
 
     /**

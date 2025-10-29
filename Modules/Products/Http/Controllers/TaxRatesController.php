@@ -2,15 +2,15 @@
 
 namespace Modules\Products\Http\Controllers;
 
-use Modules\Products\Entities\Tax_rate;
+use Modules\Products\Entities\TaxRate;
 
 /**
- * Tax_ratesController
+ * TaxRatesController
  * 
  * Handles tax rate management
  * Migrated from CodeIgniter Tax_Rates controller
  */
-class Tax_ratesController
+class TaxRatesController
 {
     /**
      * Display a listing of tax rates.
@@ -20,7 +20,7 @@ class Tax_ratesController
      */
     public function index($page = 0)
     {
-        $tax_rates = Tax_rate::ordered()
+        $tax_rates = TaxRate::ordered()
             ->paginate(15);
 
         return view('products::tax_rates.index', [
@@ -54,10 +54,10 @@ class Tax_ratesController
 
             // Create or update tax rate
             if ($id) {
-                $tax_rate = Tax_rate::findOrFail($id);
+                $tax_rate = TaxRate::findOrFail($id);
                 $tax_rate->update($validated);
             } else {
-                Tax_rate::create($validated);
+                TaxRate::create($validated);
             }
 
             return redirect()->to('tax_rates');
@@ -66,7 +66,7 @@ class Tax_ratesController
         // Load tax rate for editing
         $tax_rate = null;
         if ($id) {
-            $tax_rate = Tax_rate::find($id);
+            $tax_rate = TaxRate::find($id);
             if (!$tax_rate) {
                 abort(404);
             }
@@ -85,7 +85,7 @@ class Tax_ratesController
      */
     public function delete($id)
     {
-        $tax_rate = Tax_rate::findOrFail($id);
+        $tax_rate = TaxRate::findOrFail($id);
         $tax_rate->delete();
 
         return redirect()->to('tax_rates');

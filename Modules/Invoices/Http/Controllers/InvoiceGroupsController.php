@@ -3,7 +3,7 @@
 namespace Modules\Invoices\Http\Controllers;
 
 /**
- * Invoice_groupsController
+ * InvoiceGroupsController
  * 
  * Migrated from CodeIgniter Invoice_Groups controller
  * 
@@ -19,7 +19,7 @@ namespace Modules\Invoices\Http\Controllers;
  * 
  * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/invoice_groups/controllers/Invoice_groups.php
  */
-class Invoice_groupsController
+class InvoiceGroupsController
 {
     /**
      * Display a listing of the resource.

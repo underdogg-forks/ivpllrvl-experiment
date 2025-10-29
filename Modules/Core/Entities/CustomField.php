@@ -5,7 +5,7 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * Custom_field Model
+ * CustomField Model
  * 
  * Eloquent model for managing custom field definitions
  * Migrated from CodeIgniter Mdl_Custom_Fields model
@@ -18,7 +18,7 @@ use App\Models\BaseModel;
  * @property int $custom_field_location
  * @property int $custom_field_order
  */
-class Custom_field extends BaseModel
+class CustomField extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -73,7 +73,7 @@ class Custom_field extends BaseModel
      */
     public function customValues()
     {
-        return $this->hasMany(Custom_value::class, 'custom_values_field', 'custom_field_id');
+        return $this->hasMany(CustomValue::class, 'custom_values_field', 'custom_field_id');
     }
 
     /**

@@ -90,7 +90,7 @@ class Quote extends BaseModel
      */
     public function invoiceGroup()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice_group', 'invoice_group_id', 'invoice_group_id');
+        return $this->belongsTo('Modules\Invoices\Entities\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
     }
 
     /**
@@ -98,7 +98,7 @@ class Quote extends BaseModel
      */
     public function amounts()
     {
-        return $this->hasOne('Modules\Quotes\Entities\Quote_amount', 'quote_id', 'quote_id');
+        return $this->hasOne('Modules\Quotes\Entities\QuoteAmount', 'quote_id', 'quote_id');
     }
 
     /**
@@ -106,7 +106,7 @@ class Quote extends BaseModel
      */
     public function items()
     {
-        return $this->hasMany('Modules\Quotes\Entities\Quote_item', 'quote_id', 'quote_id');
+        return $this->hasMany('Modules\Quotes\Entities\QuoteItem', 'quote_id', 'quote_id');
     }
 
     /**
@@ -114,7 +114,7 @@ class Quote extends BaseModel
      */
     public function taxRates()
     {
-        return $this->hasMany('Modules\Quotes\Entities\Quote_tax_rate', 'quote_id', 'quote_id');
+        return $this->hasMany('Modules\Quotes\Entities\QuoteTaxRate', 'quote_id', 'quote_id');
     }
 
     /**

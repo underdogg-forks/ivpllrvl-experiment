@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Http\Controllers;
 
-use Modules\Core\Entities\Custom_field;
-use Modules\Core\Entities\Custom_value;
+use Modules\Core\Entities\CustomField;
+use Modules\Core\Entities\CustomValue;
 
 /**
- * Custom_valuesController
+ * CustomValuesController
  * 
  * Manages custom field value options (for SINGLE-CHOICE and MULTIPLE-CHOICE fields)
  * Migrated from CodeIgniter Custom_Values controller
  */
-class Custom_valuesController
+class CustomValuesController
 {
     /**
      * Display all custom values grouped by field
@@ -23,14 +23,14 @@ class Custom_valuesController
         $perPage = 15;
         
         // Get custom values with their fields
-        $customValues = Custom_value::with('customField')
+        $customValues = CustomValue::with('customField')
             ->select('custom_values.*', \DB::raw('COUNT(custom_field_label) as count'))
             ->join('ip_custom_fields', 'ip_custom_values.custom_values_field', '=', 'ip_custom_fields.custom_field_id')
             ->groupBy('ip_custom_fields.custom_field_id')
             ->orderBy('custom_values_value')
             ->paginate($perPage, ['*'], 'page', $page);
         
-        $customTables = Custom_field::customTables();
+        $customTables = CustomField::customTables();
         $positions = $this->getPositions();
         
         $data = [
@@ -52,10 +52,10 @@ class Custom_valuesController
      */
     public function field(int $id)
     {
-        $field = Custom_field::findOrFail($id);
-        $elements = Custom_value::where('custom_values_field', $id)->get();
+        $field = CustomField::findOrFail($id);
+        $elements = CustomValue::where('custom_values_field', $id)->get();
         
-        $customTables = Custom_field::customTables();
+        $customTables = CustomField::customTables();
         $positions = $this->getPositions();
         $position = $positions[$field->custom_field_table][$field->custom_field_location] ?? '';
         
@@ -81,7 +81,7 @@ class Custom_valuesController
      */
     public function edit(int $id)
     {
-        $value = Custom_value::with('customField')->findOrFail($id);
+        $value = CustomValue::with('customField')->findOrFail($id);
         $fid = $value->custom_values_field;
         
         // Handle cancel button
@@ -143,14 +143,14 @@ class Custom_valuesController
             ]);
             
             $validated['custom_values_field'] = $fid;
-            Custom_value::create($validated);
+            CustomValue::create($validated);
             
             session()->flash('alert_success', trans('record_successfully_created'));
             return redirect()->to(site_url('custom_values/field/' . $fid));
         }
         
-        $field = Custom_field::findOrFail($id);
-        $customTables = Custom_field::customTables();
+        $field = CustomField::findOrFail($id);
+        $customTables = CustomField::customTables();
         $table = $customTables[$field->custom_field_table] ?? '';
         
         $positions = $this->getPositions();
@@ -173,7 +173,7 @@ class Custom_valuesController
      */
     public function delete(int $id)
     {
-        $customValue = Custom_value::findOrFail($id);
+        $customValue = CustomValue::findOrFail($id);
         
         // TODO: Check if value is in use before deleting
         // For now, just delete

@@ -3,7 +3,7 @@
 namespace Modules\Core\Http\Controllers;
 
 /**
- * Email_templatesController
+ * EmailTemplatesController
  * 
  * Migrated from CodeIgniter Email_Templates controller
  * 
@@ -19,7 +19,7 @@ namespace Modules\Core\Http\Controllers;
  * 
  * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/email_templates/controllers/Email_templates.php
  */
-class Email_templatesController
+class EmailTemplatesController
 {
     /**
      * Display a listing of the resource.

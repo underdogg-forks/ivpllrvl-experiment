@@ -5,22 +5,22 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * Invoice_custom Model
+ * UserCustom Model
  * 
- * Eloquent model for managing invoice custom fields
- * Migrated from CodeIgniter Mdl_Invoice_Custom model
+ * Eloquent model for managing user custom fields
+ * Migrated from CodeIgniter Mdl_User_Custom model
  * 
- * @property int $invoice_custom_id
- * @property int $invoice_id
+ * @property int $user_custom_id
+ * @property int $user_id
  */
-class Invoice_custom extends BaseModel
+class UserCustom extends BaseModel
 {
     /**
-     * Custom field positions for invoices
+     * Custom field positions for users
      */
     public static array $positions = [
         'custom_fields',
-        'after_due_date',
+        'after_email',
     ];
 
     /**
@@ -28,14 +28,14 @@ class Invoice_custom extends BaseModel
      *
      * @var string
      */
-    protected $table = 'ip_invoice_custom';
+    protected $table = 'ip_user_custom';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'invoice_custom_id';
+    protected $primaryKey = 'user_custom_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -50,7 +50,7 @@ class Invoice_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'invoice_id',
+        'user_id',
     ];
 
     /**
@@ -59,19 +59,19 @@ class Invoice_custom extends BaseModel
      * @var array
      */
     protected $casts = [
-        'invoice_custom_id' => 'integer',
-        'invoice_id' => 'integer',
+        'user_custom_id' => 'integer',
+        'user_id' => 'integer',
     ];
 
     /**
-     * Get custom fields for a specific invoice
+     * Get custom fields for a specific user
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $invoiceId
+     * @param int $userId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeByInvoiceId($query, int $invoiceId)
+    public function scopeByUserId($query, int $userId)
     {
-        return $query->where('invoice_id', $invoiceId);
+        return $query->where('user_id', $userId);
     }
 }

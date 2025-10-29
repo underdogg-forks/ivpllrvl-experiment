@@ -5,22 +5,25 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * User_custom Model
+ * ClientCustom Model
  * 
- * Eloquent model for managing user custom fields
- * Migrated from CodeIgniter Mdl_User_Custom model
+ * Eloquent model for managing client custom fields
+ * Migrated from CodeIgniter Mdl_Client_Custom model
  * 
- * @property int $user_custom_id
- * @property int $user_id
+ * @property int $client_custom_id
+ * @property int $client_id
  */
-class User_custom extends BaseModel
+class ClientCustom extends BaseModel
 {
     /**
-     * Custom field positions for users
+     * Custom field positions for clients
      */
     public static array $positions = [
         'custom_fields',
-        'after_email',
+        'address',
+        'contact_information',
+        'personal_information',
+        'tax_information',
     ];
 
     /**
@@ -28,14 +31,14 @@ class User_custom extends BaseModel
      *
      * @var string
      */
-    protected $table = 'ip_user_custom';
+    protected $table = 'ip_client_custom';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'user_custom_id';
+    protected $primaryKey = 'client_custom_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -50,7 +53,7 @@ class User_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'client_id',
     ];
 
     /**
@@ -59,19 +62,19 @@ class User_custom extends BaseModel
      * @var array
      */
     protected $casts = [
-        'user_custom_id' => 'integer',
-        'user_id' => 'integer',
+        'client_custom_id' => 'integer',
+        'client_id' => 'integer',
     ];
 
     /**
-     * Get custom fields for a specific user
+     * Get custom fields for a specific client
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $userId
+     * @param int $clientId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeByUserId($query, int $userId)
+    public function scopeByClientId($query, int $clientId)
     {
-        return $query->where('user_id', $userId);
+        return $query->where('client_id', $clientId);
     }
 }

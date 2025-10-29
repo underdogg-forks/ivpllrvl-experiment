@@ -5,25 +5,22 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * Client_custom Model
+ * InvoiceCustom Model
  * 
- * Eloquent model for managing client custom fields
- * Migrated from CodeIgniter Mdl_Client_Custom model
+ * Eloquent model for managing invoice custom fields
+ * Migrated from CodeIgniter Mdl_Invoice_Custom model
  * 
- * @property int $client_custom_id
- * @property int $client_id
+ * @property int $invoice_custom_id
+ * @property int $invoice_id
  */
-class Client_custom extends BaseModel
+class InvoiceCustom extends BaseModel
 {
     /**
-     * Custom field positions for clients
+     * Custom field positions for invoices
      */
     public static array $positions = [
         'custom_fields',
-        'address',
-        'contact_information',
-        'personal_information',
-        'tax_information',
+        'after_due_date',
     ];
 
     /**
@@ -31,14 +28,14 @@ class Client_custom extends BaseModel
      *
      * @var string
      */
-    protected $table = 'ip_client_custom';
+    protected $table = 'ip_invoice_custom';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'client_custom_id';
+    protected $primaryKey = 'invoice_custom_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -53,7 +50,7 @@ class Client_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'client_id',
+        'invoice_id',
     ];
 
     /**
@@ -62,19 +59,19 @@ class Client_custom extends BaseModel
      * @var array
      */
     protected $casts = [
-        'client_custom_id' => 'integer',
-        'client_id' => 'integer',
+        'invoice_custom_id' => 'integer',
+        'invoice_id' => 'integer',
     ];
 
     /**
-     * Get custom fields for a specific client
+     * Get custom fields for a specific invoice
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $clientId
+     * @param int $invoiceId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeByClientId($query, int $clientId)
+    public function scopeByInvoiceId($query, int $invoiceId)
     {
-        return $query->where('client_id', $clientId);
+        return $query->where('invoice_id', $invoiceId);
     }
 }

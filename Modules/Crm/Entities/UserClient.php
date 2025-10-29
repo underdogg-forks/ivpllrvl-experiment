@@ -1,30 +1,30 @@
 <?php
 
-namespace Modules\Products\Entities;
+namespace Modules\Crm\Entities;
 
 use App\Models\BaseModel;
 
 /**
- * Tax_rate Model
+ * UserClient Model
  * 
- * Eloquent model for managing ip_tax_rates
+ * Eloquent model for managing ip_user_clients
  * Migrated from CodeIgniter model
  */
-class Tax_rate extends BaseModel
+class UserClient extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ip_tax_rates';
+    protected $table = 'ip_user_clients';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'tax_rate_id';
+    protected $primaryKey = 'user_client_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,8 +39,7 @@ class Tax_rate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'tax_rate_name',
-        'tax_rate_percent',
+        // TODO: Add fillable fields from validation_rules or db schema
     ];
 
     /**
@@ -49,18 +48,9 @@ class Tax_rate extends BaseModel
      * @var array
      */
     protected $casts = [
-        'tax_rate_id' => 'integer',
-        'tax_rate_percent' => 'decimal:2',
+        'user_client_id' => 'integer',
+        // TODO: Add more casts as needed
     ];
 
-    /**
-     * Default ordering scope
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('tax_rate_percent');
-    }
+    // TODO: Add relationships, scopes, and methods from original model
 }

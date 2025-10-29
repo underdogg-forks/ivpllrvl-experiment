@@ -5,12 +5,12 @@ namespace Modules\Invoices\Entities;
 use App\Models\BaseModel;
 
 /**
- * Invoice_group Model
+ * InvoiceGroup Model
  * 
  * Eloquent model for managing ip_invoice_groups
  * Migrated from CodeIgniter model
  */
-class Invoice_group extends BaseModel
+class InvoiceGroup extends BaseModel
 {
     /**
      * The table associated with the model.

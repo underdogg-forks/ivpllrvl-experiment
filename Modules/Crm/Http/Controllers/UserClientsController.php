@@ -3,9 +3,9 @@
 namespace Modules\Crm\Http\Controllers;
 
 /**
- * Payment_informationController
+ * UserClientsController
  * 
- * Migrated from CodeIgniter Payment_Information controller
+ * Migrated from CodeIgniter User_Clients controller
  * 
  * TODO: Complete migration:
  * - Replace $this->load->model() with dependency injection or direct Eloquent usage
@@ -17,9 +17,9 @@ namespace Modules\Crm\Http\Controllers;
  * - Convert form validation to Laravel validation
  * - Update flash messages to use Laravel session flash
  * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/guest/controllers/Payment_information.php
+ * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/user_clients/controllers/User_clients.php
  */
-class Payment_informationController
+class UserClientsController
 {
     /**
      * Display a listing of the resource.

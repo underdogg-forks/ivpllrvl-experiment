@@ -3,7 +3,7 @@
 namespace Modules\Payments\Http\Controllers;
 
 use Modules\Payments\Entities\Payment;
-use Modules\Payments\Entities\Payment_method;
+use Modules\Payments\Entities\PaymentMethod;
 
 /**
  * AjaxController
@@ -51,7 +51,7 @@ class AjaxController
      */
     public function modal_add_payment()
     {
-        $payment_methods = Payment_method::ordered()->get();
+        $payment_methods = PaymentMethod::ordered()->get();
 
         $data = [
             'payment_methods' => $payment_methods,

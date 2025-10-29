@@ -3,9 +3,9 @@
 namespace Modules\Core\Http\Controllers;
 
 use Modules\Invoices\Entities\Invoice;
-use Modules\Invoices\Entities\Invoice_amount;
+use Modules\Invoices\Entities\InvoiceAmount;
 use Modules\Quotes\Entities\Quote;
-use Modules\Quotes\Entities\Quote_amount;
+use Modules\Quotes\Entities\QuoteAmount;
 use Modules\Crm\Entities\Project;
 use Modules\Crm\Entities\Task;
 
@@ -27,8 +27,8 @@ class DashboardController
         $invoiceOverviewPeriod = get_setting('invoice_overview_period');
         
         // Get status totals
-        $invoiceStatusTotals = Invoice_amount::getStatusTotals($invoiceOverviewPeriod);
-        $quoteStatusTotals = Quote_amount::getStatusTotals($quoteOverviewPeriod);
+        $invoiceStatusTotals = InvoiceAmount::getStatusTotals($invoiceOverviewPeriod);
+        $quoteStatusTotals = QuoteAmount::getStatusTotals($quoteOverviewPeriod);
         
         // Get recent invoices and quotes
         $invoices = Invoice::with('client')

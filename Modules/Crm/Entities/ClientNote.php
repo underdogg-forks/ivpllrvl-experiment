@@ -5,26 +5,26 @@ namespace Modules\Crm\Entities;
 use App\Models\BaseModel;
 
 /**
- * User_client Model
+ * ClientNote Model
  * 
- * Eloquent model for managing ip_user_clients
+ * Eloquent model for managing ip_client_notes
  * Migrated from CodeIgniter model
  */
-class User_client extends BaseModel
+class ClientNote extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ip_user_clients';
+    protected $table = 'ip_client_notes';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'user_client_id';
+    protected $primaryKey = 'client_note_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -48,7 +48,7 @@ class User_client extends BaseModel
      * @var array
      */
     protected $casts = [
-        'user_client_id' => 'integer',
+        'client_note_id' => 'integer',
         // TODO: Add more casts as needed
     ];
 
