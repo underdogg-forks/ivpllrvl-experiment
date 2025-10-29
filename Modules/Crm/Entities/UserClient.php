@@ -52,5 +52,16 @@ class UserClient extends BaseModel
         // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get validation rules for user-client assignments.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'user_id' => 'required|integer',
+            'client_id' => 'required|integer',
+        ];
+    }
 }

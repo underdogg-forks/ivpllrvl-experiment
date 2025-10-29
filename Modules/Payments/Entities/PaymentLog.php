@@ -72,4 +72,18 @@ class PaymentLog extends BaseModel
     {
         return $query->orderBy('merchant_response_id', 'desc');
     }
+
+    /**
+     * Get validation rules for payment logs.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'invoice_id' => 'required|integer',
+            'merchant_response_data' => 'required|string',
+            'merchant_response_date' => 'nullable|datetime',
+        ];
+    }
 }

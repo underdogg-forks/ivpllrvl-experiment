@@ -123,4 +123,32 @@ class User extends BaseModel
     {
         return $query->where('user_type', 1);
     }
+
+    /**
+     * Get validation rules for users.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'user_type' => 'required|integer',
+            'user_name' => 'required|string|max:255',
+            'user_company' => 'nullable|string|max:255',
+            'user_address_1' => 'nullable|string|max:255',
+            'user_address_2' => 'nullable|string|max:255',
+            'user_city' => 'nullable|string|max:255',
+            'user_state' => 'nullable|string|max:255',
+            'user_zip' => 'nullable|string|max:50',
+            'user_country' => 'nullable|string|max:255',
+            'user_phone' => 'nullable|string|max:50',
+            'user_fax' => 'nullable|string|max:50',
+            'user_mobile' => 'nullable|string|max:50',
+            'user_email' => 'required|email|max:255',
+            'user_web' => 'nullable|url|max:255',
+            'user_vat_id' => 'nullable|string|max:50',
+            'user_tax_code' => 'nullable|string|max:50',
+            'user_pswd' => 'required|string|min:6',
+        ];
+    }
 }

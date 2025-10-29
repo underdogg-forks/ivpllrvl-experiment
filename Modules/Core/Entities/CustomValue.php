@@ -161,4 +161,18 @@ class CustomValue extends BaseModel
     {
         static::where('custom_values_field', $fieldId)->delete();
     }
+
+    /**
+     * Get validation rules for custom values.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'custom_values_field' => 'required|integer',
+            'custom_values_value' => 'required|string|max:255',
+            'custom_values_order' => 'nullable|integer',
+        ];
+    }
 }

@@ -63,4 +63,17 @@ class TaxRate extends BaseModel
     {
         return $query->orderBy('tax_rate_percent');
     }
+
+    /**
+     * Get validation rules for tax rates.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'tax_rate_name' => 'required|string|max:255',
+            'tax_rate_percent' => 'required|numeric|min:0|max:100',
+        ];
+    }
 }

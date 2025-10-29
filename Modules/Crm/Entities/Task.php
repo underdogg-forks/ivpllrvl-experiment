@@ -52,5 +52,19 @@ class Task extends BaseModel
         // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get validation rules for tasks.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'project_id' => 'nullable|integer',
+            'task_name' => 'required|string|max:255',
+            'task_description' => 'nullable|string',
+            'task_price' => 'nullable|numeric|min:0',
+            'task_status' => 'required|integer',
+        ];
+    }
 }

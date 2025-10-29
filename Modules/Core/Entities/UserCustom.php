@@ -74,4 +74,18 @@ class UserCustom extends BaseModel
     {
         return $query->where('user_id', $userId);
     }
+
+    /**
+     * Get validation rules for user custom fields.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'user_id' => 'required|integer',
+            'custom_field_id' => 'required|integer',
+            'custom_field_value' => 'nullable|string',
+        ];
+    }
 }

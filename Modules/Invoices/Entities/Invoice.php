@@ -257,4 +257,212 @@ class Invoice extends BaseModel
 
         return $now->diff($dueDate)->days;
     }
+
+    /**
+     * Get validation rules for creating an invoice.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|integer',
+            'invoice_date_created' => 'required|date',
+            'invoice_group_id' => 'required|integer',
+            'invoice_password' => 'nullable|string',
+            'user_id' => 'required|integer',
+        ];
+    }
+
+    /**
+     * Get validation rules for saving an invoice.
+     *
+     * @param int|null $invoiceId
+     * @return array
+     */
+    public static function validationRulesSaveInvoice(?int $invoiceId = null): array
+    {
+        $uniqueRule = 'unique:ip_invoices,invoice_number';
+        if ($invoiceId) {
+            $uniqueRule .= ',' . $invoiceId . ',invoice_id';
+        }
+
+        return [
+            'invoice_number' => $uniqueRule,
+            'invoice_date_created' => 'required|date',
+            'invoice_date_due' => 'required|date',
+            'invoice_password' => 'nullable|string',
+        ];
+    }
+
+    /**
+     * Get the due date based on creation date.
+     *
+     * @param string $invoiceDateCreated
+     * @return string
+     */
+    public static function getDateDue(string $invoiceDateCreated): string
+    {
+        $dueAfter = get_setting('invoices_due_after');
+        $dueDate = new \DateTime($invoiceDateCreated);
+        $dueDate->add(new \DateInterval('P' . $dueAfter . 'D'));
+
+        return $dueDate->format('Y-m-d');
+    }
+
+    /**
+     * Generate an invoice number.
+     *
+     * @param int $invoiceGroupId
+     * @return string
+     */
+    public static function getInvoiceNumber(int $invoiceGroupId): string
+    {
+        $invoiceGroup = InvoiceGroup::findOrFail($invoiceGroupId);
+        return $invoiceGroup->generateInvoiceNumber();
+    }
+
+    /**
+     * Generate a unique URL key.
+     *
+     * @return string
+     */
+    public static function getUrlKey(): string
+    {
+        return bin2hex(random_bytes(16));
+    }
+
+    /**
+     * Get invoice group ID for an invoice.
+     *
+     * @param int $invoiceId
+     * @return int
+     */
+    public static function getInvoiceGroupId(int $invoiceId): int
+    {
+        $invoice = static::findOrFail($invoiceId);
+        return $invoice->invoice_group_id;
+    }
+
+    /**
+     * Get parent invoice number.
+     *
+     * @param int $parentInvoiceId
+     * @return string
+     */
+    public static function getParentInvoiceNumber(int $parentInvoiceId): string
+    {
+        $parentInvoice = static::findOrFail($parentInvoiceId);
+        return $parentInvoice->invoice_number;
+    }
+
+    /**
+     * Delete invoice and cleanup orphans.
+     *
+     * @param int $invoiceId
+     * @return bool|null
+     */
+    public static function deleteInvoice(int $invoiceId): ?bool
+    {
+        $invoice = static::findOrFail($invoiceId);
+        $deleted = $invoice->delete();
+
+        // Cleanup orphaned records
+        InvoiceAmount::where('invoice_id', $invoiceId)->delete();
+        Item::where('invoice_id', $invoiceId)->delete();
+        InvoiceTaxRate::where('invoice_id', $invoiceId)->delete();
+
+        return $deleted;
+    }
+
+    /**
+     * Mark invoice as viewed (only if currently sent).
+     *
+     * @param int $invoiceId
+     * @return bool
+     */
+    public static function markViewed(int $invoiceId): bool
+    {
+        $invoice = static::select('invoice_status_id')
+            ->where('invoice_id', $invoiceId)
+            ->first();
+
+        if ($invoice && $invoice->invoice_status_id == 2) {
+            return static::where('invoice_id', $invoiceId)
+                ->update(['invoice_status_id' => 3]) > 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Mark invoice as sent (only if currently draft).
+     *
+     * @param int $invoiceId
+     * @return bool
+     */
+    public static function markSent(int $invoiceId): bool
+    {
+        $invoice = static::select('invoice_status_id')
+            ->where('invoice_id', $invoiceId)
+            ->first();
+
+        if ($invoice && $invoice->invoice_status_id == 1) {
+            return static::where('invoice_id', $invoiceId)
+                ->update(['invoice_status_id' => 2]) > 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Generate invoice number if applicable.
+     *
+     * @param int $invoiceId
+     * @return void
+     */
+    public static function generateInvoiceNumberIfApplicable(int $invoiceId): void
+    {
+        $invoice = static::findOrFail($invoiceId);
+
+        // Generate new invoice number if draft with no number and setting is off
+        $generateForDraft = get_setting('generate_invoice_number_for_draft');
+        if ($invoice->invoice_status_id == 1 && empty($invoice->invoice_number) && $generateForDraft == 0) {
+            $invoiceNumber = static::getInvoiceNumber($invoice->invoice_group_id);
+            static::where('invoice_id', $invoiceId)
+                ->update(['invoice_number' => $invoiceNumber]);
+        }
+    }
+
+    /**
+     * Scope for guest-visible invoices.
+     */
+    public function scopeGuestVisible($query)
+    {
+        return $query->whereIn('invoice_status_id', [2, 3, 4]);
+    }
+
+    /**
+     * Scope to filter invoices by client.
+     */
+    public function scopeByClient($query, int $clientId)
+    {
+        return $query->where('client_id', $clientId);
+    }
+
+    /**
+     * Scope for open invoices.
+     */
+    public function scopeOpen($query)
+    {
+        return $query->whereNotIn('invoice_status_id', [1, 4]);
+    }
+
+    /**
+     * Scope for SUMEX invoices.
+     */
+    public function scopeSumex($query)
+    {
+        return $query->whereHas('sumex');
+    }
 }

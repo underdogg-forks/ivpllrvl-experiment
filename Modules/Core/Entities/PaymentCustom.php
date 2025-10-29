@@ -73,4 +73,18 @@ class PaymentCustom extends BaseModel
     {
         return $query->where('payment_id', $paymentId);
     }
+
+    /**
+     * Get validation rules for payment custom fields.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'payment_id' => 'required|integer',
+            'custom_field_id' => 'required|integer',
+            'custom_field_value' => 'nullable|string',
+        ];
+    }
 }

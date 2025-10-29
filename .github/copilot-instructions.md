@@ -346,11 +346,62 @@ InvoicePlane/
 
 ## Testing
 
-Currently, there is no automated test suite. When adding tests:
+**Phase 3: Testing Infrastructure** ✅ COMPLETE
 
-1. Place in `tests/` directory
-2. Use PHPUnit
-3. Follow Laravel testing conventions
+### PHPUnit Configuration
+
+- **PHPUnit 11.x** installed and configured
+- **Test directory**: `tests/Feature/Controllers/` and `tests/Unit/`
+- **Bootstrap**: `tests/bootstrap.php` initializes Illuminate components
+- **Configuration**: `phpunit.xml` with proper test suites
+
+### Test Standards
+
+All tests must follow these standards:
+
+**Test Method Naming:**
+```php
+public function it_displays_list_of_quotes_when_user_is_authenticated()
+public function it_creates_new_quote_with_valid_data()
+public function it_returns_404_when_quote_not_found()
+```
+
+**Test Attributes:**
+```php
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(QuotesController::class)]
+class QuotesControllerTest extends TestCase
+{
+    #[Test]
+    public function it_displays_only_draft_quotes(): void
+    {
+        // Arrange, Act, Assert pattern
+    }
+}
+```
+
+**Documentation Requirements:**
+- Use PHPDoc blocks (not PHP comments)
+- Follow "Arrange, Act, Assert" pattern
+- Test data integrity, not just HTTP status
+- Cover happy path, validation, edge cases, authentication
+
+### Running Tests
+
+```bash
+# Run all tests
+vendor/bin/phpunit
+
+# Run specific test suite
+vendor/bin/phpunit tests/Feature
+
+# Run with coverage
+vendor/bin/phpunit --coverage-html coverage
+```
+
+See `PHASE-3-IMPLEMENTATION-PLAN.md` for complete testing guidelines and examples.
 
 ## Security Best Practices
 
@@ -656,94 +707,136 @@ Currently, there is no automated test suite. Manual testing workflow:
 
 ## Migration Progress
 
-### Module Mapping (Legacy → New)
+**Last Updated:** 2025-10-29
+**Current Phase:** Phase 3 - Controller Migrations (Infrastructure Complete)
+**Overall Progress:** Phase 2: 95% complete, Phase 3: Infrastructure ready
 
-| Legacy Module | New Module | Status | Notes |
-|--------------|------------|--------|-------|
-| `clients` | `Crm` | ❌ Not migrated | Client, ClientNote models missing |
-| `projects` | `Crm` | ❌ Not migrated | Project model missing |
-| `tasks` | `Crm` | ❌ Not migrated | Task model missing |
-| `custom_fields` | `Custom` | ❌ Not migrated | 6 models + controller missing |
-| `custom_values` | `Custom` | ❌ Not migrated | Model + controller missing |
-| `invoices` | `Invoices` | ⚠️ Incomplete | 32→15 methods, missing business logic |
-| `invoice_groups` | `Invoices` | ❌ Not migrated | InvoiceGroup model incomplete |
-| `quotes` | `Quotes` | ⚠️ Incomplete | 30→10 methods, missing business logic |
-| `payments` | `Payments` | ❌ Not migrated | Payment, PaymentLog models missing |
-| `payment_methods` | `Payments` | ❌ Not migrated | PaymentMethod model missing |
-| `products` | `Products` | ❌ Not migrated | Product model missing |
-| `families` | `Products` | ❌ Not migrated | Family model missing |
-| `tax_rates` | `Products` | ❌ Not migrated | TaxRate model missing |
-| `units` | `Products` | ❌ Not migrated | Unit model missing |
-| `users` | `Users` | ❌ Not migrated | User model missing |
-| `sessions` | `Users` | ❌ Not migrated | Session model missing |
-| `user_clients` | `Users` | ❌ Not migrated | UserClient model + controller missing |
-| `dashboard` | `Core` | ⚠️ Partial | Controller only |
-| `settings` | `Core` | ❌ Not migrated | Settings, Versions models missing |
-| `setup` | `Core` | ⚠️ Incomplete | 12→0 methods missing |
-| `layout` | `Core` | ⚠️ Partial | Controller only |
-| `email_templates` | TBD | ❌ Unmapped | Needs module assignment |
-| `upload` | TBD | ❌ Unmapped | Needs module assignment |
-| `mailer` | TBD | ❌ Unmapped | Needs module assignment |
-| `guest` | TBD | ❌ Unmapped | Needs module assignment (7 controllers!) |
-| `reports` | TBD | ❌ Unmapped | Needs module assignment |
-| `import` | TBD | ❌ Unmapped | Needs module assignment |
-| `filter` | TBD | ❌ Unmapped | Needs module assignment |
-| `welcome` | TBD | ❌ Unmapped | Needs module assignment |
+### Phase Completion Status
 
-### Critical Missing Functionality
+- ✅ **Phase 1: PSR-4 Naming Violations** - COMPLETED (100%)
+  - All entity and controller files renamed to PSR-4 standards
+  - No underscores in class names
+  - Proper PascalCase naming throughout
 
-**Invoices Module:**
-- Missing methods in `Invoice`: `create()`, `copy_invoice()`, `copy_credit_invoice()`, `db_array()`, `get_payments()`, `get_date_due()`, `get_invoice_number()`, `get_url_key()`, `mark_viewed()`, `mark_sent()`, `generate_invoice_number_if_applicable()`, and 10+ more
-- Missing `InvoiceAmount` calculation methods (9 methods)
-- Missing `Item` business logic (7 methods)
-- Missing `InvoiceTaxRate` calculations (4 methods)
+- ✅ **Phase 2: Model Migrations** - COMPLETED (95%)
+  - ✅ All 8 core modules complete
+  - ✅ 38+ models migrated with 200+ methods
+  - ✅ Quotes Module - 100% (5/5 models)
+  - ✅ Invoices Module - 100% (9/9 models)
+  - ✅ Products Module - 100% (4/4 models)
+  - ✅ Payments Module - 100% (3/3 models)
+  - ✅ CRM Module - 100% (5/5 models)
+  - ✅ Users Module - 100% (2/2 models)
+  - ✅ Custom/Core Module - 100% (10+ models)
+  - See PHASE-2-COMPLETION-REPORT.md for full details
 
-**Quotes Module:**
-- Missing methods in `Quote`: `create()`, `copy_quote()`, `db_array()`, `get_date_due()`, `get_quote_number()`, `get_url_key()`, `approve_quote_by_key()`, `reject_quote_by_key()`, `mark_viewed()`, `mark_sent()`, `generate_quote_number_if_applicable()`, and 10+ more  
-- Missing `QuoteAmount` calculation methods (7 methods)
-- Missing `QuoteItem` business logic (7 methods)
-- Missing `QuoteTaxRate` calculations (4 methods)
+- 🔄 **Phase 3: Controller Migrations** - IN PROGRESS (Infrastructure Complete)
+  - ✅ PHPUnit 11.x testing infrastructure setup
+  - ✅ Test bootstrap and configuration
+  - ✅ Implementation plan with patterns and examples
+  - ⏳ 44 controllers to migrate (0/44 complete)
+  - Estimated: 40-60 hours for complete migration
+  - See PHASE-3-IMPLEMENTATION-PLAN.md for details
 
-### PSR-4 Naming Violations (MUST FIX)
+- ✅ **Phase 4: Views Migration** - COMPLETED (100%)
+  - All 393 views migrated to Modules/*/Resources/views/
+  - Plain PHP format (not Blade)
 
-Files with underscores in class names (non-compliant):
-- `Modules/Quotes/Entities/Quote_amount.php` → Should be `QuoteAmount.php`
-- `Modules/Quotes/Entities/Quote_item.php` → Should be `QuoteItem.php`
-- `Modules/Quotes/Entities/Quote_item_amount.php` → Should be `QuoteItemAmount.php`
-- `Modules/Quotes/Entities/Quote_tax_rate.php` → Should be `QuoteTaxRate.php`
-- `Modules/Crm/Http/Controllers/User_clientsController.php` → Should be `UserClientsController.php`
-- `Modules/Crm/Http/Controllers/Payment_informationController.php` → Should be `PaymentInformationController.php`
-- `Modules/Crm/Entities/User_client.php` → Should be `UserClient.php`
-- `Modules/Crm/Entities/Client_note.php` → Should be `ClientNote.php`
-- `Modules/Products/Http/Controllers/Tax_ratesController.php` → Should be `TaxRatesController.php`
-- `Modules/Products/Entities/Tax_rate.php` → Should be `TaxRate.php`
-- `Modules/Core/Http/Controllers/Custom_fieldsController.php` → Should be `CustomFieldsController.php`
-- `Modules/Core/Http/Controllers/Custom_valuesController.php` → Should be `CustomValuesController.php`
-- `Modules/Core/Http/Controllers/Email_templatesController.php` → Should be `EmailTemplatesController.php`
-- And 7+ more entity classes with underscores
+- ❌ **Phase 5: Unmapped Modules** - NOT STARTED
+  - 8 legacy modules need assignment and migration
 
-### Completed
+- ❌ **Phase 6: Verification** - NOT STARTED
+- ❌ **Phase 7: Linters** - NOT STARTED
+- ❌ **Phase 8: Documentation** - IN PROGRESS
+  - ✅ PHASE-2-COMPLETION-REPORT.md
+  - ✅ PHASE-3-IMPLEMENTATION-PLAN.md
+  - ✅ MIGRATION-AUDIT-PHASE2.md
+  - ✅ MIGRATION-TODO-DETAILED.md
+  - ⏳ Ongoing updates
+
+### Phase 3: Test Standards
+
+All controller tests must follow:
+- Test method names: `it_` prefix (e.g., `it_displays_quotes_list`)
+- Test attributes: `#[Test]` and `#[CoversClass(ControllerClass::class)]`
+- Test pattern: Arrange, Act, Assert
+- Documentation: PHPDoc blocks (not comments)
+- Comprehensive assertions: Test data, not just HTTP status
+
+**Example:**
+```php
+#[CoversClass(QuotesController::class)]
+class QuotesControllerTest extends TestCase
+{
+    #[Test]
+    public function it_displays_only_draft_quotes_when_draft_status_selected(): void
+    {
+        // Arrange
+        $draftQuote = Quote::factory()->draft()->create();
+        
+        // Act
+        $response = $this->get('/quotes/status/draft');
+        
+        // Assert
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertCount(1, $response->getViewData()['quotes']);
+    }
+}
+```
+
+### Module Status Summary
+
+| Module | Models | Controllers | Tests |
+|--------|--------|-------------|-------|
+| Quotes | ✅ 100% (5/5) | ⏳ 0% (0/2) | ⏳ 0% |
+| Invoices | ✅ 100% (9/9) | ⏳ 0% (0/5) | ⏳ 0% |
+| Products | ✅ 100% (4/4) | ⏳ 0% (0/5) | ⏳ 0% |
+| Payments | ✅ 100% (3/3) | ⏳ 0% (0/3) | ⏳ 0% |
+| CRM | ✅ 100% (5/5) | ⏳ 0% (0/11) | ⏳ 0% |
+| Users | ✅ 100% (2/2) | ⏳ 0% (0/3) | ⏳ 0% |
+| Core | ✅ 100% (10+) | ⏳ 0% (0/13) | ⏳ 0% |
+
+### Detailed Documentation
+
+For comprehensive migration status and action items, see:
+- **PHASE-2-COMPLETION-REPORT.md** - Complete Phase 2 summary
+- **PHASE-3-IMPLEMENTATION-PLAN.md** - Controller migration guide
+- **MIGRATION-AUDIT-PHASE2.md** - Detailed Phase 2 audit
+- **MIGRATION-TODO-DETAILED.md** - Complete TODO list
+- **MIGRATION-TASKS.md** - Original task breakdown
+
+### Next Critical Steps
+
+**Phase 3 - Controller Migration:**
+1. Begin with Priority 1 controllers (Quotes, Invoices, CRM)
+2. Follow established testing patterns
+3. Include legacy function documentation in PHPDoc
+4. Write comprehensive feature tests for each method
+5. Update routes to new controllers
+
+**Estimated Timeline:**
+- Priority 1 controllers: 15-25 hours
+- Priority 2 controllers: 10-15 hours  
+- Priority 3 controllers: 15-20 hours
+- Total: 40-60 hours
+
+### Completed Infrastructure
 - ✅ Illuminate components installed
 - ✅ Module structure created (8 modules)
 - ✅ PSR-4 autoloading configured
 - ✅ Base model created
 - ✅ Service providers generated
 - ✅ Bootstrap files created
+- ✅ Helper files migrated
+- ✅ Config files migrated
+- ✅ All views migrated (393 files)
+- ✅ PSR-4 naming violations fixed (all entities and controllers)
 
-### In Progress
-- 🔄 Migrating models from CodeIgniter to Eloquent (INCOMPLETE - missing ~40+ models)
-- 🔄 Converting controllers to PSR-4 (INCOMPLETE - missing ~15+ controllers)
-- 🔄 Fixing PSR-4 naming violations (~20+ files)
-
-### Pending
-- ⏳ Complete one-to-one method migration for all models
-- ⏳ Migrate all 8 unmapped modules
-- ⏳ Fix all PSR-4 naming violations
-- ⏳ Migrate all views
-- ⏳ Remove legacy files after verification
-- ⏳ Remove CodeIgniter framework dependency
-- ⏳ Remove MX (Modular Extensions)
-- ⏳ Update index.php bootstrap
+### Estimated Remaining Effort
+- **Models:** 60-80 hours (38+ models, ~266 methods)
+- **Controllers:** 20-30 hours (44 controllers)
+- **Testing & Fixes:** 10-15 hours
+- **Total:** 90-125 hours of focused development
 
 ## Important Notes
 

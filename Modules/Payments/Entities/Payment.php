@@ -93,4 +93,20 @@ class Payment extends BaseModel
     {
         $this->attributes['payment_amount'] = standardize_amount($value);
     }
+
+    /**
+     * Get validation rules for payments.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'invoice_id' => 'required|integer',
+            'payment_method_id' => 'required|integer',
+            'payment_amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+            'payment_note' => 'nullable|string',
+        ];
+    }
 }

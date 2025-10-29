@@ -69,4 +69,16 @@ class PaymentMethod extends BaseModel
     {
         return $this->hasMany('Modules\Payments\Entities\Payment', 'payment_method_id', 'payment_method_id');
     }
+
+    /**
+     * Get validation rules for payment methods.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'payment_method_name' => 'required|string|max:255',
+        ];
+    }
 }

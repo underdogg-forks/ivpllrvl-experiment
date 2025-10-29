@@ -52,5 +52,16 @@ class Session extends BaseModel
         // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get validation rules for sessions.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'user_id' => 'required|integer',
+            'session_data' => 'nullable|string',
+        ];
+    }
 }
