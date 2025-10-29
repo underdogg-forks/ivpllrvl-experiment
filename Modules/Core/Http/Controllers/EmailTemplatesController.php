@@ -2,104 +2,38 @@
 
 namespace Modules\Core\Http\Controllers;
 
-/**
- * EmailTemplatesController
- * 
- * Migrated from CodeIgniter Email_Templates controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/email_templates/controllers/Email_templates.php
- */
+use Modules\Core\Entities\EmailTemplate;
+
 class EmailTemplatesController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    /** @legacy-file application/modules/email_templates/controllers/Email_templates.php */
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('core::index');
+        $templates = EmailTemplate::orderBy('email_template_title')->paginate(15, ['*'], 'page', $page);
+        return view('core::email_templates_index', ['email_templates' => $templates]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function form(?int $id = null)
     {
-        // TODO: Implement create/form method if exists in original
+        if (request()->post('btn_cancel')) return redirect()->route('email_templates.index');
         
-        return view('core::form');
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate(EmailTemplate::validationRules());
+            if ($id) {
+                EmailTemplate::findOrFail($id)->update($validated);
+            } else {
+                EmailTemplate::create($validated);
+            }
+            return redirect()->route('email_templates.index')->with('alert_success', trans('record_successfully_saved'));
+        }
+
+        $template = $id ? EmailTemplate::findOrFail($id) : new EmailTemplate();
+        return view('core::email_templates_form', ['email_template' => $template]);
     }
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        EmailTemplate::findOrFail($id)->delete();
+        return redirect()->route('email_templates.index')->with('alert_success', trans('record_successfully_deleted'));
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('core::view');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('core::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-
