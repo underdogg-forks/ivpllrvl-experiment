@@ -2,104 +2,41 @@
 
 namespace Modules\Crm\Http\Controllers;
 
-/**
- * UserClientsController
- * 
- * Migrated from CodeIgniter User_Clients controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/user_clients/controllers/User_clients.php
- */
+use Modules\Crm\Entities\UserClient;
+
 class UserClientsController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    /** @legacy-file application/modules/user_clients/controllers/User_clients.php */
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('crm::index');
+        $userClients = UserClient::with(['user', 'client'])->paginate(15, ['*'], 'page', $page);
+        return view('crm::user_clients_index', ['user_clients' => $userClients]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function form(?int $id = null)
     {
-        // TODO: Implement create/form method if exists in original
+        if (request()->post('btn_cancel')) return redirect()->route('user_clients.index');
         
-        return view('crm::form');
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate([
+                'user_id' => 'required|integer|exists:ip_users,user_id',
+                'client_id' => 'required|integer|exists:ip_clients,client_id',
+            ]);
+            if ($id) {
+                UserClient::findOrFail($id)->update($validated);
+            } else {
+                UserClient::create($validated);
+            }
+            return redirect()->route('user_clients.index')->with('alert_success', trans('record_successfully_saved'));
+        }
+
+        $userClient = $id ? UserClient::findOrFail($id) : new UserClient();
+        return view('crm::user_clients_form', ['user_client' => $userClient]);
     }
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        UserClient::findOrFail($id)->delete();
+        return redirect()->route('user_clients.index')->with('alert_success', trans('record_successfully_deleted'));
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('crm::view');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('crm::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-

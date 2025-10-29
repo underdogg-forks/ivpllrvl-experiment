@@ -2,104 +2,60 @@
 
 namespace Modules\Crm\Http\Controllers;
 
-/**
- * ProjectsController
- * 
- * Migrated from CodeIgniter Projects controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/projects/controllers/Projects.php
- */
+use Modules\Crm\Entities\Project;
+use Modules\Crm\Entities\Client;
+
 class ProjectsController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    /** @legacy-file application/modules/projects/controllers/Projects.php:32 */
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('crm::index');
+        $projects = Project::with('client')->orderBy('project_name')->paginate(15, ['*'], 'page', $page);
+        return view('crm::projects_index', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_projects'),
+            'filter_method' => 'filter_projects',
+            'projects' => $projects,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    /** @legacy-file application/modules/projects/controllers/Projects.php:49 */
+    public function form(?int $id = null)
     {
-        // TODO: Implement create/form method if exists in original
+        if (request()->post('btn_cancel')) return redirect()->route('projects.index');
         
-        return view('crm::form');
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate(Project::validationRules());
+            if ($id) {
+                Project::findOrFail($id)->update($validated);
+            } else {
+                Project::create($validated);
+            }
+            return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_saved'));
+        }
+
+        $project = $id ? Project::find($id) : new Project();
+        if ($id && !$project) abort(404);
+        
+        $clients = Client::where('client_active', 1)->orderBy('client_name')->get();
+        return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
     }
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
+    /** @legacy-file application/modules/projects/controllers/Projects.php:80 */
+    public function view(int $projectId): \Illuminate\View\View
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        $project = Project::with(['client', 'tasks'])->findOrFail($projectId);
+        return view('crm::projects_view', [
+            'project' => $project,
+            'tasks' => $project->tasks,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    /** @legacy-file application/modules/projects/controllers/Projects.php:106 */
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('crm::view');
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_deleted'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('crm::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-
