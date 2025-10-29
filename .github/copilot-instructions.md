@@ -816,16 +816,27 @@ For comprehensive migration status and action items, see:
 
 ### Next Critical Steps
 
-**Phase 3 - Controller Migration:**
-1. ✅ Quotes module complete (2/2 controllers)
-2. ✅ Invoices module complete (5/5 controllers)
-3. ✅ Products module complete (4/4 controllers)
-4. ✅ Payments module complete (2/2 controllers)
-5. ✅ Users module complete (3/3 controllers)
-6. ✅ CRM module complete (10/10 controllers)
-7. ✅ Core module complete (13/13 controllers)
-8. ✅ All Ajax controllers complete (7/7)
-9. ✅ **PHASE 3 COMPLETE! All 44 controllers migrated (100%)**
+**Post-Phase 3 Refactoring (In Progress):**
+1. ✅ **Structural Refactoring (Commit 2483f77)**
+   - Renamed `Entities` → `Models` (all modules)
+   - Renamed `Http/Controllers` → `Controllers` (all modules)
+   - Updated all namespace references
+   
+2. ⏳ **Module Consolidation**
+   - [ ] Merge Users module into Core
+   - [ ] Merge Custom module into Core
+   
+3. ⏳ **Route Definitions**
+   - [ ] Add comprehensive route files for all 7 modules
+   - [ ] Implement POST routes for create/update/delete operations
+   
+4. ⏳ **Test Refactoring**
+   - [ ] Update tests to use route-based testing
+   - [ ] Implement JSON payload testing
+   - [ ] Add PHPDoc annotations for payloads
+   
+5. ⏳ **Query Pattern Standardization**
+   - [ ] Apply `Model::query()->method()` pattern throughout codebase
 3. Include legacy function documentation in PHPDoc
 4. Write comprehensive feature tests for each method
 5. Update routes to new controllers
