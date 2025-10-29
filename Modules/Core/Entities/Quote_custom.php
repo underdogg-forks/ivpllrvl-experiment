@@ -7,11 +7,22 @@ use App\Models\BaseModel;
 /**
  * Quote_custom Model
  * 
- * Eloquent model for managing ip_quote_custom
- * Migrated from CodeIgniter model
+ * Eloquent model for managing quote custom fields
+ * Migrated from CodeIgniter Mdl_Quote_Custom model
+ * 
+ * @property int $quote_custom_id
+ * @property int $quote_id
  */
 class Quote_custom extends BaseModel
 {
+    /**
+     * Custom field positions for quotes
+     */
+    public static array $positions = [
+        'custom_fields',
+        'after_expires',
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -39,7 +50,7 @@ class Quote_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'quote_id',
     ];
 
     /**
@@ -49,8 +60,18 @@ class Quote_custom extends BaseModel
      */
     protected $casts = [
         'quote_custom_id' => 'integer',
-        // TODO: Add more casts as needed
+        'quote_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get custom fields for a specific quote
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $quoteId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByQuoteId($query, int $quoteId)
+    {
+        return $query->where('quote_id', $quoteId);
+    }
 }

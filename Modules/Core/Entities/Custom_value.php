@@ -7,8 +7,12 @@ use App\Models\BaseModel;
 /**
  * Custom_value Model
  * 
- * Eloquent model for managing ip_custom_values
- * Migrated from CodeIgniter model
+ * Eloquent model for managing custom field value options
+ * Migrated from CodeIgniter Mdl_Custom_Values model
+ * 
+ * @property int $custom_values_id
+ * @property int $custom_values_field
+ * @property string $custom_values_value
  */
 class Custom_value extends BaseModel
 {
@@ -39,7 +43,8 @@ class Custom_value extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'custom_values_field',
+        'custom_values_value',
     ];
 
     /**
@@ -49,8 +54,111 @@ class Custom_value extends BaseModel
      */
     protected $casts = [
         'custom_values_id' => 'integer',
-        // TODO: Add more casts as needed
+        'custom_values_field' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the custom field this value belongs to
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function customField()
+    {
+        return $this->belongsTo(Custom_field::class, 'custom_values_field', 'custom_field_id');
+    }
+
+    /**
+     * Get available custom field types
+     *
+     * @return array
+     */
+    public static function customTypes(): array
+    {
+        return array_merge(static::userInputTypes(), static::customValueFields());
+    }
+
+    /**
+     * Get user input types
+     *
+     * @return array
+     */
+    public static function userInputTypes(): array
+    {
+        return [
+            'TEXT',
+            'DATE',
+            'BOOLEAN',
+        ];
+    }
+
+    /**
+     * Get custom value field types
+     *
+     * @return array
+     */
+    public static function customValueFields(): array
+    {
+        return [
+            'SINGLE-CHOICE',
+            'MULTIPLE-CHOICE',
+        ];
+    }
+
+    /**
+     * Get custom tables mapping
+     *
+     * @return array
+     */
+    public static function customTables(): array
+    {
+        return [
+            'ip_client_custom' => 'client',
+            'ip_invoice_custom' => 'invoice',
+            'ip_payment_custom' => 'payment',
+            'ip_quote_custom' => 'quote',
+            'ip_user_custom' => 'user',
+        ];
+    }
+
+    /**
+     * Scope for filtering by field ID
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $fieldId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByFieldId($query, int $fieldId)
+    {
+        return $query->where('custom_values_field', $fieldId);
+    }
+
+    /**
+     * Get custom values by multiple IDs
+     *
+     * @param array|string $ids
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getByIds($ids)
+    {
+        if (empty($ids)) {
+            return collect();
+        }
+        
+        if (!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+        
+        return static::whereIn('custom_values_id', $ids)->get();
+    }
+
+    /**
+     * Delete all values for a specific field
+     *
+     * @param int $fieldId
+     * @return void
+     */
+    public static function deleteAllByField(int $fieldId): void
+    {
+        static::where('custom_values_field', $fieldId)->delete();
+    }
 }
