@@ -5,8 +5,8 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Invoices\Http\Controllers\RecurringController;
-use Modules\Invoices\Entities\InvoicesRecurring;
+use Modules\Invoices\Controllers\RecurringController;
+use Modules\Invoices\Models\InvoicesRecurring;
 
 /**
  * RecurringController Feature Tests

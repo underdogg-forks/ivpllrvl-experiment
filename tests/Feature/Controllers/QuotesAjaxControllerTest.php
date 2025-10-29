@@ -7,16 +7,16 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Quotes\Http\Controllers\QuotesAjaxController;
-use Modules\Quotes\Entities\Quote;
-use Modules\Quotes\Entities\QuoteItem;
-use Modules\Quotes\Entities\QuoteTaxRate;
-use Modules\Quotes\Entities\QuoteAmount;
-use Modules\Crm\Entities\Client;
-use Modules\Users\Entities\User;
-use Modules\Products\Entities\TaxRate;
-use Modules\Core\Entities\InvoiceGroup;
-use Modules\Invoices\Entities\Invoice;
+use Modules\Quotes\Controllers\QuotesAjaxController;
+use Modules\Quotes\Models\Quote;
+use Modules\Quotes\Models\QuoteItem;
+use Modules\Quotes\Models\QuoteTaxRate;
+use Modules\Quotes\Models\QuoteAmount;
+use Modules\Crm\Models\Client;
+use Modules\Users\Models\User;
+use Modules\Products\Models\TaxRate;
+use Modules\Core\Models\InvoiceGroup;
+use Modules\Invoices\Models\Invoice;
 
 /**
  * Test suite for QuotesAjaxController

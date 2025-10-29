@@ -5,7 +5,7 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Products\Http\Controllers\ProductsController;
+use Modules\Products\Controllers\ProductsController;
 
 /**
  * ProductsController Feature Tests

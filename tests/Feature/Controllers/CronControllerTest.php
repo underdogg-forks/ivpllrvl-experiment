@@ -5,7 +5,7 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Invoices\Http\Controllers\CronController;
+use Modules\Invoices\Controllers\CronController;
 
 /**
  * CronController Feature Tests

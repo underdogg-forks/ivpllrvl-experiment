@@ -5,7 +5,7 @@ namespace Tests\Feature\Controllers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Modules\Invoices\Http\Controllers\InvoiceGroupsController;
+use Modules\Invoices\Controllers\InvoiceGroupsController;
 
 /**
  * InvoiceGroupsController Feature Tests
