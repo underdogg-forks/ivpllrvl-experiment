@@ -52,5 +52,17 @@ class Project extends BaseModel
         // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get validation rules for projects.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|integer',
+            'project_name' => 'required|string|max:255',
+            'project_description' => 'nullable|string',
+        ];
+    }
 }
