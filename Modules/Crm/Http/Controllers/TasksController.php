@@ -2,104 +2,55 @@
 
 namespace Modules\Crm\Http\Controllers;
 
-/**
- * TasksController
- * 
- * Migrated from CodeIgniter Tasks controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/tasks/controllers/Tasks.php
- */
+use Modules\Crm\Entities\Task;
+use Modules\Crm\Entities\Project;
+
 class TasksController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    /** @legacy-file application/modules/tasks/controllers/Tasks.php:32 */
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('crm::index');
+        $tasks = Task::with(['project', 'taxRate'])->orderBy('task_name')->paginate(15, ['*'], 'page', $page);
+        return view('crm::tasks_index', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_tasks'),
+            'filter_method' => 'filter_tasks',
+            'tasks' => $tasks,
+            'task_statuses' => Task::STATUSES,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    /** @legacy-file application/modules/tasks/controllers/Tasks.php:50 */
+    public function form(?int $id = null)
     {
-        // TODO: Implement create/form method if exists in original
+        if (request()->post('btn_cancel')) return redirect()->route('tasks.index');
         
-        return view('crm::form');
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate(Task::validationRules());
+            if ($id) {
+                Task::findOrFail($id)->update($validated);
+            } else {
+                Task::create($validated);
+            }
+            return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
+        }
+
+        $task = $id ? Task::findOrFail($id) : new Task();
+        $projects = Project::orderBy('project_name')->get();
+        $taxRates = \Modules\Products\Entities\TaxRate::orderBy('tax_rate_name')->get();
+        
+        return view('crm::tasks_form', [
+            'task' => $task,
+            'projects' => $projects,
+            'task_statuses' => Task::STATUSES,
+            'tax_rates' => $taxRates,
+        ]);
     }
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
+    /** @legacy-file application/modules/tasks/controllers/Tasks.php:87 */
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        Task::findOrFail($id)->delete();
+        return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_deleted'));
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('crm::view');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('crm::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-
