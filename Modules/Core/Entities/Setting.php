@@ -7,8 +7,12 @@ use App\Models\BaseModel;
 /**
  * Setting Model
  * 
- * Eloquent model for managing unknown_table
- * Migrated from CodeIgniter model
+ * Eloquent model for managing application settings
+ * Migrated from CodeIgniter Mdl_Settings model
+ * 
+ * @property int $setting_id
+ * @property string $setting_key
+ * @property string $setting_value
  */
 class Setting extends BaseModel
 {
@@ -17,14 +21,14 @@ class Setting extends BaseModel
      *
      * @var string
      */
-    protected $table = 'unknown_table';
+    protected $table = 'ip_settings';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'setting_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,7 +43,8 @@ class Setting extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'setting_key',
+        'setting_value',
     ];
 
     /**
@@ -48,9 +53,54 @@ class Setting extends BaseModel
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        // TODO: Add more casts as needed
+        'setting_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get a setting value by key
+     *
+     * @param string $key
+     * @return string|null
+     */
+    public static function getValue(string $key): ?string
+    {
+        $setting = static::where('setting_key', $key)->first();
+        return $setting ? $setting->setting_value : null;
+    }
+
+    /**
+     * Save or update a setting
+     *
+     * @param string $key
+     * @param string $value
+     * @return void
+     */
+    public static function setValue(string $key, string $value): void
+    {
+        static::updateOrCreate(
+            ['setting_key' => $key],
+            ['setting_value' => $value]
+        );
+    }
+
+    /**
+     * Delete a setting by key
+     *
+     * @param string $key
+     * @return void
+     */
+    public static function deleteByKey(string $key): void
+    {
+        static::where('setting_key', $key)->delete();
+    }
+
+    /**
+     * Get all settings as key-value array
+     *
+     * @return array
+     */
+    public static function getAllSettings(): array
+    {
+        return static::all()->pluck('setting_value', 'setting_key')->toArray();
+    }
 }

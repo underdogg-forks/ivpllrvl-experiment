@@ -7,11 +7,21 @@ use App\Models\BaseModel;
 /**
  * Payment_custom Model
  * 
- * Eloquent model for managing ip_payment_custom
- * Migrated from CodeIgniter model
+ * Eloquent model for managing payment custom fields
+ * Migrated from CodeIgniter Mdl_Payment_Custom model
+ * 
+ * @property int $payment_custom_id
+ * @property int $payment_id
  */
 class Payment_custom extends BaseModel
 {
+    /**
+     * Custom field positions for payments
+     */
+    public static array $positions = [
+        'custom_fields',
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -39,7 +49,7 @@ class Payment_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'payment_id',
     ];
 
     /**
@@ -49,8 +59,18 @@ class Payment_custom extends BaseModel
      */
     protected $casts = [
         'payment_custom_id' => 'integer',
-        // TODO: Add more casts as needed
+        'payment_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get custom fields for a specific payment
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $paymentId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByPaymentId($query, int $paymentId)
+    {
+        return $query->where('payment_id', $paymentId);
+    }
 }

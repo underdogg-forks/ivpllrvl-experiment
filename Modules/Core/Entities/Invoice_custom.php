@@ -7,11 +7,22 @@ use App\Models\BaseModel;
 /**
  * Invoice_custom Model
  * 
- * Eloquent model for managing ip_invoice_custom
- * Migrated from CodeIgniter model
+ * Eloquent model for managing invoice custom fields
+ * Migrated from CodeIgniter Mdl_Invoice_Custom model
+ * 
+ * @property int $invoice_custom_id
+ * @property int $invoice_id
  */
 class Invoice_custom extends BaseModel
 {
+    /**
+     * Custom field positions for invoices
+     */
+    public static array $positions = [
+        'custom_fields',
+        'after_due_date',
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -39,7 +50,7 @@ class Invoice_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'invoice_id',
     ];
 
     /**
@@ -49,8 +60,18 @@ class Invoice_custom extends BaseModel
      */
     protected $casts = [
         'invoice_custom_id' => 'integer',
-        // TODO: Add more casts as needed
+        'invoice_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get custom fields for a specific invoice
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $invoiceId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByInvoiceId($query, int $invoiceId)
+    {
+        return $query->where('invoice_id', $invoiceId);
+    }
 }

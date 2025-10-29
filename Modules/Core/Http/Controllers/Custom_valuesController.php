@@ -2,104 +2,220 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Modules\Core\Entities\Custom_field;
+use Modules\Core\Entities\Custom_value;
+
 /**
  * Custom_valuesController
  * 
+ * Manages custom field value options (for SINGLE-CHOICE and MULTIPLE-CHOICE fields)
  * Migrated from CodeIgniter Custom_Values controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/custom_values/controllers/Custom_values.php
  */
 class Custom_valuesController
 {
     /**
-     * Display a listing of the resource.
+     * Display all custom values grouped by field
+     *
+     * @param int $page Page number for pagination
      */
-    public function index()
+    public function index(int $page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
+        $perPage = 15;
         
-        return view('core::index');
+        // Get custom values with their fields
+        $customValues = Custom_value::with('customField')
+            ->select('custom_values.*', \DB::raw('COUNT(custom_field_label) as count'))
+            ->join('ip_custom_fields', 'ip_custom_values.custom_values_field', '=', 'ip_custom_fields.custom_field_id')
+            ->groupBy('ip_custom_fields.custom_field_id')
+            ->orderBy('custom_values_value')
+            ->paginate($perPage, ['*'], 'page', $page);
+        
+        $customTables = Custom_field::customTables();
+        $positions = $this->getPositions();
+        
+        $data = [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_custom_values'),
+            'filter_method' => 'filter_custom_values',
+            'custom_tables' => $customTables,
+            'custom_values' => $customValues,
+            'positions' => $positions,
+        ];
+        
+        return view('core::custom_values.index', $data);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display custom values for a specific field
+     *
+     * @param int $id Custom field ID
      */
-    public function create()
+    public function field(int $id)
     {
-        // TODO: Implement create/form method if exists in original
+        $field = Custom_field::findOrFail($id);
+        $elements = Custom_value::where('custom_values_field', $id)->get();
         
-        return view('core::form');
+        $customTables = Custom_field::customTables();
+        $positions = $this->getPositions();
+        $position = $positions[$field->custom_field_table][$field->custom_field_location] ?? '';
+        
+        $data = [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_custom_values'),
+            'filter_method' => 'filter_custom_values_field',
+            'id' => $id,
+            'field' => $field,
+            'elements' => $elements,
+            'custom_field_usage' => [], // TODO: Implement usage check
+            'position' => $position,
+            'table' => $customTables[$field->custom_field_table] ?? '',
+        ];
+        
+        return view('core::custom_values.field', $data);
     }
 
     /**
-     * Store a newly created resource.
+     * Show form to edit a custom value
+     *
+     * @param int $id Custom value ID
      */
-    public function store()
+    public function edit(int $id)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
+        $value = Custom_value::with('customField')->findOrFail($id);
+        $fid = $value->custom_values_field;
         
-        return redirect()->back();
+        // Handle cancel button
+        if (request()->post('btn_cancel')) {
+            return redirect()->to(site_url('custom_values/field/' . $fid));
+        }
+        
+        // Handle form submission
+        if (request()->isMethod('post')) {
+            // Validate
+            $validated = request()->validate([
+                'custom_values_value' => 'required',
+            ]);
+            
+            $value->update($validated);
+            
+            session()->flash('alert_success', trans('record_successfully_updated'));
+            return redirect()->to(site_url('custom_values/field/' . $fid));
+        }
+        
+        $positions = $this->getPositions();
+        $field = $value->customField;
+        $position = $positions[$field->custom_field_table][$field->custom_field_location] ?? '';
+        
+        $data = [
+            'id' => $id,
+            'fid' => $fid,
+            'value' => $value,
+            'position' => $position,
+            'custom_field_usage' => [], // TODO: Implement usage check
+        ];
+        
+        return view('core::custom_values.edit', $data);
     }
 
     /**
-     * Display the specified resource.
+     * Show form to create a new custom value
+     *
+     * @param int $id Custom field ID
      */
-    public function show($id)
+    public function create(int $id)
     {
-        // TODO: Implement show/view method if exists in original
+        if (!$id) {
+            return redirect()->to(site_url('custom_values'));
+        }
         
-        return view('core::view');
+        $fid = $id;
+        
+        // Handle cancel button
+        if (request()->post('btn_cancel')) {
+            return redirect()->to(site_url('custom_values/field/' . $fid));
+        }
+        
+        // Handle form submission
+        if (request()->isMethod('post')) {
+            // Validate
+            $validated = request()->validate([
+                'custom_values_value' => 'required',
+            ]);
+            
+            $validated['custom_values_field'] = $fid;
+            Custom_value::create($validated);
+            
+            session()->flash('alert_success', trans('record_successfully_created'));
+            return redirect()->to(site_url('custom_values/field/' . $fid));
+        }
+        
+        $field = Custom_field::findOrFail($id);
+        $customTables = Custom_field::customTables();
+        $table = $customTables[$field->custom_field_table] ?? '';
+        
+        $positions = $this->getPositions();
+        $position = $positions[$field->custom_field_table][$field->custom_field_location] ?? '';
+        
+        $data = [
+            'id' => $id,
+            'field' => $field,
+            'table' => $table,
+            'position' => $position,
+        ];
+        
+        return view('core::custom_values.new', $data);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Delete a custom value
+     *
+     * @param int $id Custom value ID
      */
-    public function edit($id)
+    public function delete(int $id)
     {
-        // TODO: Implement edit/form method if exists in original
+        $customValue = Custom_value::findOrFail($id);
         
-        return view('core::form');
+        // TODO: Check if value is in use before deleting
+        // For now, just delete
+        $customValue->delete();
+        
+        $fid = request()->post('custom_field_id');
+        $redirectUrl = $fid ? 'custom_values/field/' . $fid : 'custom_values';
+        
+        session()->flash('alert_success', trans('record_successfully_deleted'));
+        return redirect()->to(site_url($redirectUrl));
     }
 
     /**
-     * Update the specified resource.
+     * Get positions for all custom field types
+     *
+     * @return array
      */
-    public function update($id)
+    private function getPositions(): array
     {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        return [
+            'ip_client_custom' => [
+                0 => trans('custom_fields'),
+                1 => trans('address'),
+                2 => trans('contact_information'),
+                3 => trans('personal_information'),
+                4 => trans('tax_information'),
+            ],
+            'ip_invoice_custom' => [
+                0 => trans('custom_fields'),
+                1 => trans('after_due_date'),
+            ],
+            'ip_payment_custom' => [
+                0 => trans('custom_fields'),
+            ],
+            'ip_quote_custom' => [
+                0 => trans('custom_fields'),
+                1 => trans('after_expires'),
+            ],
+            'ip_user_custom' => [
+                0 => trans('custom_fields'),
+                1 => trans('after_email'),
+            ],
+        ];
     }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-
