@@ -1,0 +1,10 @@
+{
+    "name": "invoiceplane/payments-module",
+    "description": "Payments module for InvoicePlane",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Payments\\": ""
+        }
+    }
+}
