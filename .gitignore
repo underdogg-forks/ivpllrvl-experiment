@@ -2,13 +2,13 @@
 /application/config/development
 /application/sessions
 /ipconfig.php
+/.env
 
 # Dependencies
 /node_modules
 /vendor
 
 # Other files
-.htaccess
 .idea
 .todo
 .sass-cache
