@@ -2,104 +2,142 @@
 
 namespace Modules\Payments\Http\Controllers;
 
+use Modules\Payments\Entities\Payment;
+use Modules\Payments\Entities\Payment_method;
+use Modules\Payments\Entities\Payment_log;
+
 /**
  * PaymentsController
  * 
+ * Handles payment management
  * Migrated from CodeIgniter Payments controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/payments/controllers/Payments.php
  */
 class PaymentsController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of payments.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('payments::index');
+        $payments = Payment::with(['invoice.client', 'invoice.invoiceAmount', 'paymentMethod'])
+            ->ordered()
+            ->paginate(15);
+
+        return view('payments::payments.index', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_payments'),
+            'filter_method' => 'filter_payments',
+            'payments' => $payments,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a payment.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create()
+    public function form($id = null)
     {
-        // TODO: Implement create/form method if exists in original
+        // Handle cancel button
+        if (request()->has('btn_cancel')) {
+            return redirect()->to('payments');
+        }
+
+        // Handle form submission
+        if (request()->has('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'invoice_id' => 'required|integer',
+                'payment_date' => 'required|date',
+                'payment_amount' => 'required|numeric',
+                'payment_method_id' => 'nullable|integer',
+                'payment_note' => 'nullable|string',
+            ]);
+
+            // Handle custom fields if present
+            $custom = request()->input('custom', []);
+
+            // Create or update payment
+            if ($id) {
+                $payment = Payment::findOrFail($id);
+                $payment->update($validated);
+            } else {
+                $payment = Payment::create($validated);
+                $id = $payment->payment_id;
+            }
+
+            // Save custom fields (TODO: implement custom field handling)
+            // $this->saveCustomFields($id, $custom);
+
+            return redirect()->to('payments');
+        }
+
+        // Load payment for editing
+        $payment = null;
+        if ($id) {
+            $payment = Payment::with(['invoice', 'paymentMethod'])->find($id);
+            if (!$payment) {
+                abort(404);
+            }
+        }
+
+        // Load related data
+        $payment_methods = Payment_method::ordered()->get();
         
-        return view('payments::form');
+        // TODO: Load open invoices
+        // $open_invoices = Invoice::isOpen()->get();
+        $open_invoices = [];
+
+        // TODO: Load custom fields
+        $custom_fields = [];
+        $custom_values = [];
+
+        return view('payments::payments.form', [
+            'payment_id' => $id,
+            'payment' => $payment,
+            'payment_methods' => $payment_methods,
+            'open_invoices' => $open_invoices,
+            'custom_fields' => $custom_fields,
+            'custom_values' => $custom_values,
+        ]);
     }
 
     /**
-     * Store a newly created resource.
+     * Display online payment logs.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function store()
+    public function online_logs($page = 0)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
+        $payment_logs = Payment_log::with('invoice')
+            ->ordered()
+            ->paginate(15);
+
+        return view('payments::payments.online_logs', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_online_logs'),
+            'filter_method' => 'filter_online_logs',
+            'payment_logs' => $payment_logs,
+        ]);
     }
 
     /**
-     * Display the specified resource.
+     * Delete a payment.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function show($id)
+    public function delete($id)
     {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('payments::view');
-    }
+        $payment = Payment::findOrFail($id);
+        $payment->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('payments::form');
+        return redirect()->to('payments');
     }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 

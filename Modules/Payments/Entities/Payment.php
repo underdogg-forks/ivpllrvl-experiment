@@ -71,6 +71,26 @@ class Payment extends BaseModel
      */
     public function paymentMethod()
     {
-        return $this->belongsTo('Modules\Payments\Entities\PaymentMethod', 'payment_method_id', 'payment_method_id');
+        return $this->belongsTo('Modules\Payments\Entities\Payment_method', 'payment_method_id', 'payment_method_id');
+    }
+
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('payment_date', 'desc')
+            ->orderBy('payment_id', 'desc');
+    }
+
+    /**
+     * Mutator for payment_amount
+     */
+    public function setPaymentAmountAttribute($value)
+    {
+        $this->attributes['payment_amount'] = standardize_amount($value);
     }
 }

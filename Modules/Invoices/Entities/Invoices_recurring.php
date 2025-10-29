@@ -39,7 +39,11 @@ class Invoices_recurring extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'invoice_id',
+        'recur_start_date',
+        'recur_end_date',
+        'recur_frequency',
+        'recur_next_date',
     ];
 
     /**
@@ -49,8 +53,14 @@ class Invoices_recurring extends BaseModel
      */
     protected $casts = [
         'invoice_recurring_id' => 'integer',
-        // TODO: Add more casts as needed
+        'invoice_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the invoice that owns the recurring data.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+    }
 }

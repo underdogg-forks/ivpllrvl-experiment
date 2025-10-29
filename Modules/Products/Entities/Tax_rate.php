@@ -39,7 +39,8 @@ class Tax_rate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'tax_rate_name',
+        'tax_rate_percent',
     ];
 
     /**
@@ -49,8 +50,17 @@ class Tax_rate extends BaseModel
      */
     protected $casts = [
         'tax_rate_id' => 'integer',
-        // TODO: Add more casts as needed
+        'tax_rate_percent' => 'decimal:2',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('tax_rate_percent');
+    }
 }

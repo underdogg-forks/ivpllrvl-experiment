@@ -39,7 +39,10 @@ class Invoice_tax_rate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'invoice_id',
+        'tax_rate_id',
+        'include_item_tax',
+        'invoice_tax_rate_amount',
     ];
 
     /**
@@ -49,8 +52,25 @@ class Invoice_tax_rate extends BaseModel
      */
     protected $casts = [
         'invoice_tax_rate_id' => 'integer',
-        // TODO: Add more casts as needed
+        'invoice_id' => 'integer',
+        'tax_rate_id' => 'integer',
+        'include_item_tax' => 'integer',
+        'invoice_tax_rate_amount' => 'decimal:2',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the invoice that owns the tax rate.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the tax rate.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'tax_rate_id', 'tax_rate_id');
+    }
 }

@@ -2,104 +2,112 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Modules\Products\Entities\Product;
+use Modules\Products\Entities\Family;
+use Modules\Products\Entities\Unit;
+use Modules\Products\Entities\Tax_rate;
+
 /**
  * ProductsController
  * 
+ * Handles product management
  * Migrated from CodeIgniter Products controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/products/controllers/Products.php
  */
 class ProductsController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of products.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('products::index');
+        $products = Product::with(['family', 'unit', 'taxRate'])
+            ->paginate(15);
+
+        return view('products::products.index', [
+            'filter_display' => true,
+            'filter_placeholder' => trans('filter_products'),
+            'filter_method' => 'filter_products',
+            'products' => $products,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a product.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create()
+    public function form($id = null)
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('products::form');
+        // Handle cancel button
+        if (request()->has('btn_cancel')) {
+            return redirect()->to('products');
+        }
+
+        // Handle form submission
+        if (request()->has('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'product_sku' => 'nullable|string|max:255',
+                'product_name' => 'required|string|max:255',
+                'product_description' => 'nullable|string',
+                'product_price' => 'required|numeric',
+                'purchase_price' => 'nullable|numeric',
+                'provider_name' => 'nullable|string|max:255',
+                'family_id' => 'nullable|integer',
+                'unit_id' => 'nullable|integer',
+                'tax_rate_id' => 'nullable|integer',
+                'product_tariff' => 'nullable|string|max:255',
+            ]);
+
+            // Create or update product
+            if ($id) {
+                $product = Product::findOrFail($id);
+                $product->update($validated);
+            } else {
+                Product::create($validated);
+            }
+
+            return redirect()->to('products');
+        }
+
+        // Load product for editing
+        $product = null;
+        if ($id) {
+            $product = Product::find($id);
+            if (!$product) {
+                abort(404);
+            }
+        }
+
+        // Load related data for dropdowns
+        $families = Family::ordered()->get();
+        $units = Unit::ordered()->get();
+        $tax_rates = Tax_rate::ordered()->get();
+
+        return view('products::products.form', [
+            'product' => $product,
+            'families' => $families,
+            'units' => $units,
+            'tax_rates' => $tax_rates,
+        ]);
     }
 
     /**
-     * Store a newly created resource.
+     * Delete a product.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function delete($id)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $product = Product::findOrFail($id);
+        $product->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('products::view');
+        return redirect()->to('products');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('products::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 

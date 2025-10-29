@@ -17,14 +17,14 @@ class Item_amount extends BaseModel
      *
      * @var string
      */
-    protected $table = 'unknown_table';
+    protected $table = 'ip_invoice_item_amounts';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'item_amount_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,7 +39,11 @@ class Item_amount extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'item_id',
+        'item_subtotal',
+        'item_tax_total',
+        'item_discount',
+        'item_total',
     ];
 
     /**
@@ -48,9 +52,19 @@ class Item_amount extends BaseModel
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        // TODO: Add more casts as needed
+        'item_amount_id' => 'integer',
+        'item_id' => 'integer',
+        'item_subtotal' => 'decimal:2',
+        'item_tax_total' => 'decimal:2',
+        'item_discount' => 'decimal:2',
+        'item_total' => 'decimal:2',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the item that owns the amount.
+     */
+    public function item()
+    {
+        return $this->belongsTo('Modules\Invoices\Entities\Item', 'item_id', 'item_id');
+    }
 }

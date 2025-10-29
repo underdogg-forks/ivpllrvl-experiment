@@ -2,104 +2,93 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Modules\Products\Entities\Tax_rate;
+
 /**
  * Tax_ratesController
  * 
+ * Handles tax rate management
  * Migrated from CodeIgniter Tax_Rates controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/tax_rates/controllers/Tax_rates.php
  */
 class Tax_ratesController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of tax rates.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('products::index');
+        $tax_rates = Tax_rate::ordered()
+            ->paginate(15);
+
+        return view('products::tax_rates.index', [
+            'tax_rates' => $tax_rates,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a tax rate.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create()
+    public function form($id = null)
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('products::form');
+        // Handle cancel button
+        if (request()->has('btn_cancel')) {
+            return redirect()->to('tax_rates');
+        }
+
+        // Handle form submission
+        if (request()->has('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'tax_rate_name' => 'required|string|max:255',
+                'tax_rate_percent' => 'required|numeric',
+            ]);
+
+            // Standardize the percent value
+            $validated['tax_rate_percent'] = standardize_amount($validated['tax_rate_percent']);
+
+            // Create or update tax rate
+            if ($id) {
+                $tax_rate = Tax_rate::findOrFail($id);
+                $tax_rate->update($validated);
+            } else {
+                Tax_rate::create($validated);
+            }
+
+            return redirect()->to('tax_rates');
+        }
+
+        // Load tax rate for editing
+        $tax_rate = null;
+        if ($id) {
+            $tax_rate = Tax_rate::find($id);
+            if (!$tax_rate) {
+                abort(404);
+            }
+        }
+
+        return view('products::tax_rates.form', [
+            'tax_rate' => $tax_rate,
+        ]);
     }
 
     /**
-     * Store a newly created resource.
+     * Delete a tax rate.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function delete($id)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $tax_rate = Tax_rate::findOrFail($id);
+        $tax_rate->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('products::view');
+        return redirect()->to('tax_rates');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('products::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 

@@ -2,104 +2,66 @@
 
 namespace Modules\Payments\Http\Controllers;
 
+use Modules\Payments\Entities\Payment;
+use Modules\Payments\Entities\Payment_method;
+
 /**
  * AjaxController
  * 
+ * Handles AJAX requests for payments
  * Migrated from CodeIgniter Ajax controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/payments/controllers/Ajax.php
  */
 class AjaxController
 {
     /**
-     * Display a listing of the resource.
+     * Add a payment via AJAX
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function add()
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('payments::index');
+        // Validate input
+        $validator = validator(request()->all(), [
+            'invoice_id' => 'required|integer',
+            'payment_date' => 'required|date',
+            'payment_amount' => 'required|numeric',
+            'payment_method_id' => 'nullable|integer',
+            'payment_note' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => 0,
+                'validation_errors' => $validator->errors()->toArray(),
+            ]);
+        }
+
+        $payment = Payment::create($validator->validated());
+
+        return response()->json([
+            'success' => 1,
+            'payment_id' => $payment->payment_id,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display modal for adding payment
+     *
+     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function modal_add_payment()
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('payments::form');
-    }
+        $payment_methods = Payment_method::ordered()->get();
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
-    {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $data = [
+            'payment_methods' => $payment_methods,
+            'invoice_id' => request()->post('invoice_id'),
+            'invoice_balance' => request()->post('invoice_balance'),
+            'invoice_payment_method' => request()->post('invoice_payment_method'),
+            'payment_cf_exist' => request()->post('payment_cf_exist'),
+        ];
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('payments::view');
+        return view('payments::modal_add_payment', $data);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('payments::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 
