@@ -5,13 +5,13 @@ namespace Modules\Invoices\Entities;
 use App\Models\BaseModel;
 
 /**
- * Invoice_amount Model
+ * InvoiceAmount Model
  * 
  * Eloquent model for managing ip_invoice_amounts
  * Stores calculated totals for invoices
  * Migrated from CodeIgniter Mdl_Invoice_Amounts
  */
-class Invoice_amount extends BaseModel
+class InvoiceAmount extends BaseModel
 {
     /**
      * The table associated with the model.

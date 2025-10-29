@@ -71,7 +71,7 @@ class Payment extends BaseModel
      */
     public function paymentMethod()
     {
-        return $this->belongsTo('Modules\Payments\Entities\Payment_method', 'payment_method_id', 'payment_method_id');
+        return $this->belongsTo('Modules\Payments\Entities\PaymentMethod', 'payment_method_id', 'payment_method_id');
     }
 
     /**

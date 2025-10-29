@@ -5,26 +5,26 @@ namespace Modules\Payments\Entities;
 use App\Models\BaseModel;
 
 /**
- * Payment_log Model
+ * PaymentMethod Model
  * 
- * Eloquent model for managing ip_merchant_responses
+ * Eloquent model for managing ip_payment_methods
  * Migrated from CodeIgniter model
  */
-class Payment_log extends BaseModel
+class PaymentMethod extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ip_merchant_responses';
+    protected $table = 'ip_payment_methods';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'merchant_response_id';
+    protected $primaryKey = 'payment_method_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,9 +39,7 @@ class Payment_log extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'invoice_id',
-        'merchant_response_data',
-        'merchant_response_date',
+        'payment_method_name',
     ];
 
     /**
@@ -50,17 +48,8 @@ class Payment_log extends BaseModel
      * @var array
      */
     protected $casts = [
-        'merchant_response_id' => 'integer',
-        'invoice_id' => 'integer',
+        'payment_method_id' => 'integer',
     ];
-
-    /**
-     * Get the invoice that owns the log.
-     */
-    public function invoice()
-    {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
-    }
 
     /**
      * Default ordering scope
@@ -70,6 +59,14 @@ class Payment_log extends BaseModel
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('merchant_response_id', 'desc');
+        return $query->orderBy('payment_method_name');
+    }
+
+    /**
+     * Get payments that use this method
+     */
+    public function payments()
+    {
+        return $this->hasMany('Modules\Payments\Entities\Payment', 'payment_method_id', 'payment_method_id');
     }
 }

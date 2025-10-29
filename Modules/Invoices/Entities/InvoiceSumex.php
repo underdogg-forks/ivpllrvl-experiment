@@ -5,12 +5,12 @@ namespace Modules\Invoices\Entities;
 use App\Models\BaseModel;
 
 /**
- * Invoice_sumex Model
+ * InvoiceSumex Model
  * 
  * Eloquent model for managing ip_invoice_sumex
  * Migrated from CodeIgniter model
  */
-class Invoice_sumex extends BaseModel
+class InvoiceSumex extends BaseModel
 {
     /**
      * The table associated with the model.

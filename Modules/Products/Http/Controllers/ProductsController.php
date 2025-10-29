@@ -5,7 +5,7 @@ namespace Modules\Products\Http\Controllers;
 use Modules\Products\Entities\Product;
 use Modules\Products\Entities\Family;
 use Modules\Products\Entities\Unit;
-use Modules\Products\Entities\Tax_rate;
+use Modules\Products\Entities\TaxRate;
 
 /**
  * ProductsController
@@ -86,7 +86,7 @@ class ProductsController
         // Load related data for dropdowns
         $families = Family::ordered()->get();
         $units = Unit::ordered()->get();
-        $tax_rates = Tax_rate::ordered()->get();
+        $tax_rates = TaxRate::ordered()->get();
 
         return view('products::products.form', [
             'product' => $product,

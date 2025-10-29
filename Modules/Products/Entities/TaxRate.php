@@ -1,30 +1,30 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Products\Entities;
 
 use App\Models\BaseModel;
 
 /**
- * Payment_method Model
+ * TaxRate Model
  * 
- * Eloquent model for managing ip_payment_methods
+ * Eloquent model for managing ip_tax_rates
  * Migrated from CodeIgniter model
  */
-class Payment_method extends BaseModel
+class TaxRate extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ip_payment_methods';
+    protected $table = 'ip_tax_rates';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'payment_method_id';
+    protected $primaryKey = 'tax_rate_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,7 +39,8 @@ class Payment_method extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'payment_method_name',
+        'tax_rate_name',
+        'tax_rate_percent',
     ];
 
     /**
@@ -48,7 +49,8 @@ class Payment_method extends BaseModel
      * @var array
      */
     protected $casts = [
-        'payment_method_id' => 'integer',
+        'tax_rate_id' => 'integer',
+        'tax_rate_percent' => 'decimal:2',
     ];
 
     /**
@@ -59,14 +61,6 @@ class Payment_method extends BaseModel
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('payment_method_name');
-    }
-
-    /**
-     * Get payments that use this method
-     */
-    public function payments()
-    {
-        return $this->hasMany('Modules\Payments\Entities\Payment', 'payment_method_id', 'payment_method_id');
+        return $query->orderBy('tax_rate_percent');
     }
 }

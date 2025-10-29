@@ -5,22 +5,21 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * Quote_custom Model
+ * PaymentCustom Model
  * 
- * Eloquent model for managing quote custom fields
- * Migrated from CodeIgniter Mdl_Quote_Custom model
+ * Eloquent model for managing payment custom fields
+ * Migrated from CodeIgniter Mdl_Payment_Custom model
  * 
- * @property int $quote_custom_id
- * @property int $quote_id
+ * @property int $payment_custom_id
+ * @property int $payment_id
  */
-class Quote_custom extends BaseModel
+class PaymentCustom extends BaseModel
 {
     /**
-     * Custom field positions for quotes
+     * Custom field positions for payments
      */
     public static array $positions = [
         'custom_fields',
-        'after_expires',
     ];
 
     /**
@@ -28,14 +27,14 @@ class Quote_custom extends BaseModel
      *
      * @var string
      */
-    protected $table = 'ip_quote_custom';
+    protected $table = 'ip_payment_custom';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'quote_custom_id';
+    protected $primaryKey = 'payment_custom_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -50,7 +49,7 @@ class Quote_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'quote_id',
+        'payment_id',
     ];
 
     /**
@@ -59,19 +58,19 @@ class Quote_custom extends BaseModel
      * @var array
      */
     protected $casts = [
-        'quote_custom_id' => 'integer',
-        'quote_id' => 'integer',
+        'payment_custom_id' => 'integer',
+        'payment_id' => 'integer',
     ];
 
     /**
-     * Get custom fields for a specific quote
+     * Get custom fields for a specific payment
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $quoteId
+     * @param int $paymentId
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeByQuoteId($query, int $quoteId)
+    public function scopeByPaymentId($query, int $paymentId)
     {
-        return $query->where('quote_id', $quoteId);
+        return $query->where('payment_id', $paymentId);
     }
 }

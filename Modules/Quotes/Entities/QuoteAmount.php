@@ -5,12 +5,12 @@ namespace Modules\Quotes\Entities;
 use App\Models\BaseModel;
 
 /**
- * Quote_amount Model
+ * QuoteAmount Model
  * 
- * Eloquent model for managing unknown_table
+ * Eloquent model for managing quote amounts
  * Migrated from CodeIgniter model
  */
-class Quote_amount extends BaseModel
+class QuoteAmount extends BaseModel
 {
     /**
      * The table associated with the model.

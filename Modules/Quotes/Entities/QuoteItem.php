@@ -5,12 +5,12 @@ namespace Modules\Quotes\Entities;
 use App\Models\BaseModel;
 
 /**
- * Quote_item Model
+ * QuoteItem Model
  * 
  * Eloquent model for managing ip_quote_items
  * Migrated from CodeIgniter model
  */
-class Quote_item extends BaseModel
+class QuoteItem extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -82,7 +82,7 @@ class Quote_item extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'item_tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
     }
 
     /**
@@ -98,7 +98,7 @@ class Quote_item extends BaseModel
      */
     public function itemAmount()
     {
-        return $this->hasOne('Modules\Quotes\Entities\Quote_item_amount', 'item_id', 'item_id');
+        return $this->hasOne('Modules\Quotes\Entities\QuoteItemAmount', 'item_id', 'item_id');
     }
 
     /**

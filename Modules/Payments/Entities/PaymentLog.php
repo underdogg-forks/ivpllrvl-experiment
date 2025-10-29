@@ -1,30 +1,30 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Payments\Entities;
 
 use App\Models\BaseModel;
 
 /**
- * Invoice_tax_rate Model
+ * PaymentLog Model
  * 
- * Eloquent model for managing ip_invoice_tax_rates
+ * Eloquent model for managing ip_merchant_responses
  * Migrated from CodeIgniter model
  */
-class Invoice_tax_rate extends BaseModel
+class PaymentLog extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ip_invoice_tax_rates';
+    protected $table = 'ip_merchant_responses';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'invoice_tax_rate_id';
+    protected $primaryKey = 'merchant_response_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -40,9 +40,8 @@ class Invoice_tax_rate extends BaseModel
      */
     protected $fillable = [
         'invoice_id',
-        'tax_rate_id',
-        'include_item_tax',
-        'invoice_tax_rate_amount',
+        'merchant_response_data',
+        'merchant_response_date',
     ];
 
     /**
@@ -51,15 +50,12 @@ class Invoice_tax_rate extends BaseModel
      * @var array
      */
     protected $casts = [
-        'invoice_tax_rate_id' => 'integer',
+        'merchant_response_id' => 'integer',
         'invoice_id' => 'integer',
-        'tax_rate_id' => 'integer',
-        'include_item_tax' => 'integer',
-        'invoice_tax_rate_amount' => 'decimal:2',
     ];
 
     /**
-     * Get the invoice that owns the tax rate.
+     * Get the invoice that owns the log.
      */
     public function invoice()
     {
@@ -67,10 +63,13 @@ class Invoice_tax_rate extends BaseModel
     }
 
     /**
-     * Get the tax rate.
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function taxRate()
+    public function scopeOrdered($query)
     {
-        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'tax_rate_id', 'tax_rate_id');
+        return $query->orderBy('merchant_response_id', 'desc');
     }
 }

@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Http\Controllers;
 
-use Modules\Core\Entities\Custom_field;
-use Modules\Core\Entities\Custom_value;
+use Modules\Core\Entities\CustomField;
+use Modules\Core\Entities\CustomValue;
 
 /**
- * Custom_fieldsController
+ * CustomFieldsController
  * 
  * Manages custom field definitions
  * Migrated from CodeIgniter Custom_Fields controller
  */
-class Custom_fieldsController
+class CustomFieldsController
 {
     /**
      * Display all custom fields (redirects to default view)
@@ -30,10 +30,10 @@ class Custom_fieldsController
     public function table(string $name = 'all', int $page = 0)
     {
         $perPage = 15;
-        $query = Custom_field::query();
+        $query = CustomField::query();
         
         // Filter by table if not 'all'
-        $customTables = Custom_field::customTables();
+        $customTables = CustomField::customTables();
         if ($name != 'all' && in_array($name, $customTables)) {
             $query->byTableName($name);
         }
@@ -45,7 +45,7 @@ class Custom_fieldsController
             ->paginate($perPage, ['*'], 'page', $page);
         
         $positions = $this->getPositions();
-        $customValueFields = Custom_value::customValueFields();
+        $customValueFields = CustomValue::customValueFields();
         
         $data = [
             'filter_display' => true,
@@ -93,10 +93,10 @@ class Custom_fieldsController
             
             // Save or update
             if ($id) {
-                $customField = Custom_field::findOrFail($id);
+                $customField = CustomField::findOrFail($id);
                 $customField->update($validated);
             } else {
-                Custom_field::create($validated);
+                CustomField::create($validated);
             }
             
             session()->flash('alert_success', trans($id ? 'record_successfully_updated' : 'record_successfully_created'));
@@ -106,11 +106,11 @@ class Custom_fieldsController
         // Load existing field if editing
         $customField = null;
         if ($id) {
-            $customField = Custom_field::findOrFail($id);
+            $customField = CustomField::findOrFail($id);
         }
         
-        $customFieldTables = Custom_field::customTables();
-        $customFieldTypes = Custom_field::customTypes();
+        $customFieldTables = CustomField::customTables();
+        $customFieldTypes = CustomField::customTypes();
         $customFieldUsage = []; // TODO: Implement usage check
         $customFieldLocation = $customField->custom_field_location ?? 0;
         $positions = $this->getPositions();
@@ -139,11 +139,11 @@ class Custom_fieldsController
      */
     public function delete(int $id)
     {
-        $customField = Custom_field::findOrFail($id);
+        $customField = CustomField::findOrFail($id);
         
         // TODO: Check if field is in use before deleting
         // For now, delete related values and then the field
-        Custom_value::where('custom_values_field', $id)->delete();
+        CustomValue::where('custom_values_field', $id)->delete();
         $customField->delete();
         
         session()->flash('alert_success', trans('record_successfully_deleted'));

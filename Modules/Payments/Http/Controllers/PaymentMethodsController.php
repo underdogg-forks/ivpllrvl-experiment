@@ -2,15 +2,15 @@
 
 namespace Modules\Payments\Http\Controllers;
 
-use Modules\Payments\Entities\Payment_method;
+use Modules\Payments\Entities\PaymentMethod;
 
 /**
- * Payment_methodsController
+ * PaymentMethodsController
  * 
  * Handles payment method management
  * Migrated from CodeIgniter Payment_Methods controller
  */
-class Payment_methodsController
+class PaymentMethodsController
 {
     /**
      * Display a listing of payment methods.
@@ -20,7 +20,7 @@ class Payment_methodsController
      */
     public function index($page = 0)
     {
-        $payment_methods = Payment_method::ordered()
+        $payment_methods = PaymentMethod::ordered()
             ->paginate(15);
 
         return view('payments::payment_methods.index', [
@@ -50,7 +50,7 @@ class Payment_methodsController
 
             // Check for duplicates on create
             if (request()->input('is_update') == 0) {
-                $existing = Payment_method::where('payment_method_name', $validated['payment_method_name'])->first();
+                $existing = PaymentMethod::where('payment_method_name', $validated['payment_method_name'])->first();
                 if ($existing) {
                     session()->flash('alert_error', trans('payment_method_already_exists'));
                     return redirect()->to('payment_methods/form');
@@ -59,10 +59,10 @@ class Payment_methodsController
 
             // Create or update payment method
             if ($id) {
-                $payment_method = Payment_method::findOrFail($id);
+                $payment_method = PaymentMethod::findOrFail($id);
                 $payment_method->update($validated);
             } else {
-                Payment_method::create($validated);
+                PaymentMethod::create($validated);
             }
 
             return redirect()->to('payment_methods');
@@ -72,7 +72,7 @@ class Payment_methodsController
         $payment_method = null;
         $is_update = false;
         if ($id) {
-            $payment_method = Payment_method::find($id);
+            $payment_method = PaymentMethod::find($id);
             if (!$payment_method) {
                 abort(404);
             }
@@ -93,7 +93,7 @@ class Payment_methodsController
      */
     public function delete($id)
     {
-        $payment_method = Payment_method::findOrFail($id);
+        $payment_method = PaymentMethod::findOrFail($id);
         $payment_method->delete();
 
         return redirect()->to('payment_methods');

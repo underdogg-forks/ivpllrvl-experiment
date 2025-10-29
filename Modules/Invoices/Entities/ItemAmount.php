@@ -1,23 +1,23 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Invoices\Entities;
 
 use App\Models\BaseModel;
 
 /**
- * Quote_item_amount Model
+ * ItemAmount Model
  * 
- * Eloquent model for managing unknown_table
+ * Eloquent model for managing invoice item amounts
  * Migrated from CodeIgniter model
  */
-class Quote_item_amount extends BaseModel
+class ItemAmount extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ip_quote_item_amounts';
+    protected $table = 'ip_invoice_item_amounts';
 
     /**
      * The primary key for the model.
@@ -65,6 +65,6 @@ class Quote_item_amount extends BaseModel
      */
     public function item()
     {
-        return $this->belongsTo('Modules\Quotes\Entities\Quote_item', 'item_id', 'item_id');
+        return $this->belongsTo('Modules\Invoices\Entities\Item', 'item_id', 'item_id');
     }
 }

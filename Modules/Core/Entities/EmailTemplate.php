@@ -5,12 +5,12 @@ namespace Modules\Core\Entities;
 use App\Models\BaseModel;
 
 /**
- * Email_template Model
+ * EmailTemplate Model
  * 
  * Eloquent model for managing ip_email_templates
  * Migrated from CodeIgniter model
  */
-class Email_template extends BaseModel
+class EmailTemplate extends BaseModel
 {
     /**
      * The table associated with the model.
