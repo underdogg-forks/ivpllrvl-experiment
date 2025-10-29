@@ -142,4 +142,19 @@ class InvoiceGroup extends BaseModel
 
         return $identifier_format;
     }
+
+    /**
+     * Get validation rules for invoice groups.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'invoice_group_name' => 'required|string|max:255',
+            'invoice_group_identifier_format' => 'required|string',
+            'invoice_group_next_id' => 'required|integer|min:1',
+            'invoice_group_left_pad' => 'required|integer|min:0',
+        ];
+    }
 }
