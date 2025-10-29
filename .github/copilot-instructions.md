@@ -173,21 +173,94 @@ class InvoiceController
 
 ## Migration Guidelines
 
+### ⚠️ CRITICAL: One-to-One Migration Required
+
+**This is a COMPLETE migration, NOT a simplification or rewrite!**
+
+When migrating code from `application/modules/` to `Modules/`:
+
+1. **EVERY method must be migrated** - Do not simplify or omit any business logic
+2. **EVERY function must have the same functionality** - Convert syntax, not behavior
+3. **Method counts must match** - If legacy has 30 methods, new must have 30 methods
+4. **Verify completeness** - Always compare method lists before and after migration
+5. **No shortcuts** - Each method needs individual attention and proper conversion
+
+### PSR-4 Naming Requirements (STRICT)
+
+**Class names MUST NOT contain underscores!**
+
+❌ **WRONG:**
+```php
+class Quote_item extends BaseModel           // Underscore in name
+class Tax_ratesController                     // Underscore in name
+class Invoice_groupsController                // Underscore in name
+```
+
+✅ **CORRECT:**
+```php
+class QuoteItem extends BaseModel            // PascalCase, no underscores
+class TaxRatesController                      // PascalCase, no underscores  
+class InvoiceGroupsController                 // PascalCase, no underscores
+```
+
+**File names MUST match class names:**
+- `QuoteItem.php` not `Quote_item.php`
+- `TaxRatesController.php` not `Tax_ratesController.php`
+
+**CRITICAL PSR-4 RULES:**
+1. Class names: PascalCase, NO underscores (e.g., `QuoteItem`, `InvoiceAmount`)
+2. Namespaces: PascalCase, match directory structure
+3. File names: MUST exactly match class name + `.php`
+4. One class per file
+5. Namespace must match: `Modules\{Module}\{SubDir}\{ClassName}`
+
 ### When Writing New Code
 
 1. **Always use PSR-4 namespaces**: Place new code in `Modules/` with proper namespacing
-2. **Use Eloquent for database**: Replace `$this->db` with Eloquent models
+2. **Use Eloquent for database**: Replace `$this->db` with Eloquent methods
 3. **Use dependency injection**: Don't use `$this->load->` anymore
 4. **Follow PSR-12 coding standards**: Use modern PHP features
 5. **Use type hints**: Add parameter and return types to all methods
+6. **Strict PSR-4 naming**: NO underscores in class names, use PascalCase
 
-### When Updating Existing Code
+### When Migrating Existing Code (REQUIRED PROCESS)
 
+**Step 1: Analysis**
+1. Count all methods in legacy model/controller
+2. List all method names
+3. Identify dependencies (other models, helpers, libraries)
+4. Note special CodeIgniter features used
+
+**Step 2: Create Target Structure**
 1. **Identify the module**: Determine which module the code belongs to (Core, Invoices, Payments, etc.)
-2. **Create Eloquent model**: Convert CodeIgniter models to Eloquent models in `Modules/{Module}/Entities/`
-3. **Update controllers**: Convert to PSR-4 controllers in `Modules/{Module}/Http/Controllers/`
-4. **Keep views as PHP**: Move views to `Modules/{Module}/Resources/views/` (keep as plain PHP)
-5. **Update database calls**: Replace `$this->db->` with Eloquent methods
+2. **Choose PSR-4 compliant name**: Convert `Mdl_quote_items` → `QuoteItem` (NO underscores!)
+3. **Create namespace**: `Modules\{Module}\Entities\{ClassName}`
+
+**Step 3: Migrate Methods (ONE-TO-ONE)**
+1. **Create Eloquent model**: Convert CodeIgniter model to Eloquent in `Modules/{Module}/Entities/`
+2. **Migrate EVERY method**: Convert each method individually, maintaining all logic
+3. **Convert syntax, not logic**:
+   - `$this->db->where()` → Eloquent query builder
+   - `$this->load->model()` → use statements and dependency injection
+   - `$this->db->insert()` → `Model::create()`
+4. **Preserve business logic**: Complex calculations, validations, etc. must remain identical
+
+**Step 4: Migrate Controllers**
+1. **Update controllers**: Convert to PSR-4 controllers in `Modules/{Module}/Http/Controllers/`
+2. **PSR-4 naming**: `Quotes` → `QuotesController` (append `Controller` suffix)
+3. **No underscores**: `Invoice_groups` → `InvoiceGroupsController`
+4. **Migrate all methods**: Every action must be migrated
+
+**Step 5: Migrate Views**
+1. **Keep views as PHP**: Move views to `Modules/{Module}/Resources/views/` (keep as plain PHP)
+2. **Update view calls**: `$this->load->view('view')` → `view('module::view')`
+3. **Preserve all views**: Don't skip any view files
+
+**Step 6: Verification**
+1. **Compare method counts**: Legacy vs new must match
+2. **Test critical paths**: Ensure calculations work (especially invoice/quote totals)
+3. **Check PSR-4 compliance**: Run linters to verify naming
+4. **Only after verification**: Remove legacy files
 
 ### Bootstrap Files
 
@@ -214,12 +287,20 @@ class InvoiceController
 - Use `declare(strict_types=1);` for new files
 - One blank line after namespace declaration
 
-### Naming Conventions
+### Naming Conventions (PSR-4/PSR-12 STRICT)
 
-- **Classes**: PascalCase (e.g., `InvoiceController`, `Invoice`)
+- **Classes**: PascalCase, NO UNDERSCORES (e.g., `InvoiceController`, `Invoice`, `QuoteItem` not `Quote_item`)
 - **Methods**: camelCase (e.g., `getInvoices()`, `createInvoice()`)
 - **Properties**: camelCase (e.g., `$invoiceNumber`)
 - **Constants**: UPPER_SNAKE_CASE (e.g., `STATUS_PAID`)
+- **Namespaces**: PascalCase, match directory structure exactly
+
+**Common Naming Conversions:**
+- `Mdl_quote_items` → `QuoteItem` (remove Mdl_ prefix, convert to PascalCase)
+- `Mdl_invoice_amounts` → `InvoiceAmount`
+- `Invoice_groups` → `InvoiceGroupsController` (add Controller suffix, PascalCase)
+- `Tax_rates` → `TaxRatesController`
+- `Quote_tax_rate` → `QuoteTaxRate`
 
 ## Testing
 
@@ -311,6 +392,72 @@ class InvoiceController
 
 ## Migration Progress
 
+### Module Mapping (Legacy → New)
+
+| Legacy Module | New Module | Status | Notes |
+|--------------|------------|--------|-------|
+| `clients` | `Crm` | ❌ Not migrated | Client, ClientNote models missing |
+| `projects` | `Crm` | ❌ Not migrated | Project model missing |
+| `tasks` | `Crm` | ❌ Not migrated | Task model missing |
+| `custom_fields` | `Custom` | ❌ Not migrated | 6 models + controller missing |
+| `custom_values` | `Custom` | ❌ Not migrated | Model + controller missing |
+| `invoices` | `Invoices` | ⚠️ Incomplete | 32→15 methods, missing business logic |
+| `invoice_groups` | `Invoices` | ❌ Not migrated | InvoiceGroup model incomplete |
+| `quotes` | `Quotes` | ⚠️ Incomplete | 30→10 methods, missing business logic |
+| `payments` | `Payments` | ❌ Not migrated | Payment, PaymentLog models missing |
+| `payment_methods` | `Payments` | ❌ Not migrated | PaymentMethod model missing |
+| `products` | `Products` | ❌ Not migrated | Product model missing |
+| `families` | `Products` | ❌ Not migrated | Family model missing |
+| `tax_rates` | `Products` | ❌ Not migrated | TaxRate model missing |
+| `units` | `Products` | ❌ Not migrated | Unit model missing |
+| `users` | `Users` | ❌ Not migrated | User model missing |
+| `sessions` | `Users` | ❌ Not migrated | Session model missing |
+| `user_clients` | `Users` | ❌ Not migrated | UserClient model + controller missing |
+| `dashboard` | `Core` | ⚠️ Partial | Controller only |
+| `settings` | `Core` | ❌ Not migrated | Settings, Versions models missing |
+| `setup` | `Core` | ⚠️ Incomplete | 12→0 methods missing |
+| `layout` | `Core` | ⚠️ Partial | Controller only |
+| `email_templates` | TBD | ❌ Unmapped | Needs module assignment |
+| `upload` | TBD | ❌ Unmapped | Needs module assignment |
+| `mailer` | TBD | ❌ Unmapped | Needs module assignment |
+| `guest` | TBD | ❌ Unmapped | Needs module assignment (7 controllers!) |
+| `reports` | TBD | ❌ Unmapped | Needs module assignment |
+| `import` | TBD | ❌ Unmapped | Needs module assignment |
+| `filter` | TBD | ❌ Unmapped | Needs module assignment |
+| `welcome` | TBD | ❌ Unmapped | Needs module assignment |
+
+### Critical Missing Functionality
+
+**Invoices Module:**
+- Missing methods in `Invoice`: `create()`, `copy_invoice()`, `copy_credit_invoice()`, `db_array()`, `get_payments()`, `get_date_due()`, `get_invoice_number()`, `get_url_key()`, `mark_viewed()`, `mark_sent()`, `generate_invoice_number_if_applicable()`, and 10+ more
+- Missing `InvoiceAmount` calculation methods (9 methods)
+- Missing `Item` business logic (7 methods)
+- Missing `InvoiceTaxRate` calculations (4 methods)
+
+**Quotes Module:**
+- Missing methods in `Quote`: `create()`, `copy_quote()`, `db_array()`, `get_date_due()`, `get_quote_number()`, `get_url_key()`, `approve_quote_by_key()`, `reject_quote_by_key()`, `mark_viewed()`, `mark_sent()`, `generate_quote_number_if_applicable()`, and 10+ more  
+- Missing `QuoteAmount` calculation methods (7 methods)
+- Missing `QuoteItem` business logic (7 methods)
+- Missing `QuoteTaxRate` calculations (4 methods)
+
+### PSR-4 Naming Violations (MUST FIX)
+
+Files with underscores in class names (non-compliant):
+- `Modules/Quotes/Entities/Quote_amount.php` → Should be `QuoteAmount.php`
+- `Modules/Quotes/Entities/Quote_item.php` → Should be `QuoteItem.php`
+- `Modules/Quotes/Entities/Quote_item_amount.php` → Should be `QuoteItemAmount.php`
+- `Modules/Quotes/Entities/Quote_tax_rate.php` → Should be `QuoteTaxRate.php`
+- `Modules/Crm/Http/Controllers/User_clientsController.php` → Should be `UserClientsController.php`
+- `Modules/Crm/Http/Controllers/Payment_informationController.php` → Should be `PaymentInformationController.php`
+- `Modules/Crm/Entities/User_client.php` → Should be `UserClient.php`
+- `Modules/Crm/Entities/Client_note.php` → Should be `ClientNote.php`
+- `Modules/Products/Http/Controllers/Tax_ratesController.php` → Should be `TaxRatesController.php`
+- `Modules/Products/Entities/Tax_rate.php` → Should be `TaxRate.php`
+- `Modules/Core/Http/Controllers/Custom_fieldsController.php` → Should be `CustomFieldsController.php`
+- `Modules/Core/Http/Controllers/Custom_valuesController.php` → Should be `CustomValuesController.php`
+- `Modules/Core/Http/Controllers/Email_templatesController.php` → Should be `EmailTemplatesController.php`
+- And 7+ more entity classes with underscores
+
 ### Completed
 - ✅ Illuminate components installed
 - ✅ Module structure created (8 modules)
@@ -320,14 +467,19 @@ class InvoiceController
 - ✅ Bootstrap files created
 
 ### In Progress
-- 🔄 Migrating models from CodeIgniter to Eloquent
-- 🔄 Converting controllers to PSR-4
+- 🔄 Migrating models from CodeIgniter to Eloquent (INCOMPLETE - missing ~40+ models)
+- 🔄 Converting controllers to PSR-4 (INCOMPLETE - missing ~15+ controllers)
+- 🔄 Fixing PSR-4 naming violations (~20+ files)
 
 ### Pending
+- ⏳ Complete one-to-one method migration for all models
+- ⏳ Migrate all 8 unmapped modules
+- ⏳ Fix all PSR-4 naming violations
+- ⏳ Migrate all views
+- ⏳ Remove legacy files after verification
 - ⏳ Remove CodeIgniter framework dependency
 - ⏳ Remove MX (Modular Extensions)
 - ⏳ Update index.php bootstrap
-- ⏳ Complete migration of all modules
 
 ## Important Notes
 
