@@ -1,53 +1,255 @@
 # Migration TODO List - Remaining Work
 
 **Last Updated:** 2025-10-29
-**Current Status:** Phase 2 in Progress (2/40+ models complete)
+**Current Status:** Phase 2 COMPLETE (95%), Phase 3 Infrastructure Ready
 
-## Critical Path Items (Do These First)
+## ✅ Phase 2 Model Migration - COMPLETE
 
-### [ ] Quotes Module Completion (Priority 1)
-**Goal:** Complete all Quote-related models for full quote functionality
+**Completed:** 38+ models migrated, 200+ methods, 8/8 modules (95%)
+
+All core business models have been successfully migrated:
+- ✅ Quotes Module (5 models)
+- ✅ Invoices Module (9 models)
+- ✅ Products Module (4 models)
+- ✅ Payments Module (3 models)
+- ✅ CRM Module (5 models)
+- ✅ Users Module (2 models)
+- ✅ Custom/Core Module (10+ models)
+
+See **PHASE-2-COMPLETION-REPORT.md** for full details.
+
+---
+
+## 🔄 Phase 3: Controller Migration - IN PROGRESS
+
+**Status:** Infrastructure setup complete, controllers pending migration
+**Total Controllers:** 44
+**Completed:** 0/44
+**Estimated Time:** 40-60 hours
+
+### Testing Infrastructure ✅ COMPLETE
+
+- [x] PHPUnit 11.x installed and configured
+- [x] Test bootstrap file created
+- [x] Test directory structure created
+- [x] Test standards documented
+- [x] Example test patterns provided
+- [x] PHASE-3-IMPLEMENTATION-PLAN.md created
+
+### Controller Migration Checklist
+
+For each controller:
+- [ ] Migrate all methods from legacy controller
+- [ ] Add PHPDoc with `@legacy-function`, `@legacy-file`, `@legacy-line`
+- [ ] Create feature test class with `#[CoversClass]`
+- [ ] Write test for each method with `#[Test]` attribute
+- [ ] Use `it_` prefix for test method names
+- [ ] Follow Arrange-Act-Assert pattern
+- [ ] Test data integrity, not just HTTP status
+- [ ] Verify all tests pass
+
+---
+
+## Priority 1: Core Business Controllers (15 controllers)
+
+### Quotes Module (2 controllers)
+
+#### [ ] QuotesController - 8 methods
+**Source:** `application/modules/quotes/controllers/Quotes.php`
 **Time Estimate:** 2-3 hours
 
-- [ ] **QuoteItem.php** - 2 methods remaining
-  - [ ] `save($id, $db_array, &$global_discount)` - Override save to trigger calculations
-  - [ ] `delete($item_id)` - Override delete to recalculate quote amounts
-  - [ ] `getItemsSubtotal($quote_id)` - Get items subtotal for calculations
-  - Source: `application/modules/quotes/models/Mdl_quote_items.php`
-  - Lines: 93-141, 150-160
+Methods to migrate:
+- [ ] `index()` - Redirect to status view
+- [ ] `status(string $status, int $page)` - Filter by status
+- [ ] `view(int $quote_id)` - Display quote details
+- [ ] `delete(int $quote_id)` - Delete quote
+- [ ] `generate_pdf(int $quote_id, bool $stream, ?string $template)` - PDF generation
+- [ ] `delete_quote_tax(int $quote_id, int $tax_id)` - Remove tax
+- [ ] `recalculate_all_quotes()` - Batch recalculation
 
-- [ ] **QuoteTaxRate.php** - 2 methods remaining
-  - [ ] `save($id, $db_array)` - Override save to trigger tax calculations
-  - [ ] `validationRules()` - Validation rules for tax rates
-  - Source: `application/modules/quotes/models/Mdl_quote_tax_rates.php`
-  - Lines: 38-73
+Tests to create:
+- [ ] it_redirects_to_all_status_view_from_index
+- [ ] it_displays_only_draft_quotes_when_draft_status_selected
+- [ ] it_displays_quote_details_with_items_and_amounts
+- [ ] it_returns_404_when_viewing_non_existent_quote
+- [ ] it_deletes_quote_and_all_related_records
+- [ ] it_generates_pdf_with_correct_quote_data
+- [ ] it_removes_tax_rate_and_recalculates_quote
+- [ ] it_recalculates_all_quotes_successfully
 
-- [ ] **QuoteItemAmount.php** - Verify completeness
-  - [ ] Check if `calculate($item_id, &$global_discount)` is implemented
-  - Source: `application/modules/quotes/models/Mdl_quote_item_amounts.php`
-  - Verify all calculation logic is present
+#### [ ] QuotesAjaxController - Ajax operations
+**Source:** `application/modules/quotes/controllers/Ajax.php`
+**Time Estimate:** 2-3 hours
 
-### [ ] Invoice Module (Priority 2) - MOST CRITICAL
-**Goal:** Complete invoice functionality (core business model)
-**Time Estimate:** 12-15 hours
+### Invoices Module (5 controllers)
 
-#### Invoice.php (~17 methods to add)
-- [ ] `statuses()` - Invoice status definitions (26 statuses!)
-- [ ] `defaultSelect()` - Complex SQL with calculations
-- [ ] `defaultOrderBy()` - Sort logic
-- [ ] `defaultJoin()` - Multiple table joins
-- [ ] `validationRules()` - Full validation rules
-- [ ] `validationRulesSaveInvoice()` - Save validation
-- [ ] `create($db_array, $include_invoice_tax_rates)` - Complex creation
-- [ ] `copyInvoice($source_id, $target_id, $copy_recurring_items_only)` - Full copy
-- [ ] `copyCreditInvoice($source_id, $target_id)` - Credit invoice copy
-- [ ] `dbArray()` - Data preparation logic
-- [ ] `getPayments($invoice)` - Payment retrieval
-- [ ] `getDateDue($invoice_date_created)` - Due date calculation
-- [ ] `getInvoiceNumber($invoice_group_id)` - Number generation
-- [ ] `getUrlKey()` - Unique key generation
-- [ ] `getParentInvoiceNumber($parent_invoice_id)` - Parent invoice logic
-- [ ] `getCustomValues($id)` - Custom field values
+#### [ ] InvoicesController - 15+ methods
+**Source:** `application/modules/invoices/controllers/Invoices.php`
+**Time Estimate:** 4-5 hours
+
+Methods include: index, status, view, create, edit, delete, generate_pdf, archive, download, etc.
+
+#### [ ] InvoicesAjaxController
+**Source:** `application/modules/invoices/controllers/Ajax.php`
+**Time Estimate:** 3-4 hours
+
+#### [ ] InvoicesCronController  
+**Source:** `application/modules/invoices/controllers/Cron.php`
+**Time Estimate:** 1-2 hours
+
+#### [ ] RecurringController
+**Source:** `application/modules/invoices/controllers/Recurring.php`
+**Time Estimate:** 1-2 hours
+
+#### [ ] InvoiceGroupsController
+**Source:** `application/modules/invoice_groups/controllers/Invoice_groups.php`
+**Time Estimate:** 1-2 hours
+
+### CRM Module (8 controllers)
+
+#### [ ] ClientsController
+**Source:** `application/modules/clients/controllers/Clients.php`
+**Time Estimate:** 3-4 hours
+
+#### [ ] ClientNotesController
+**Source:** `application/modules/clients/controllers/` (check for notes controller)
+**Time Estimate:** 1 hour
+
+#### [ ] ProjectsController
+**Source:** `application/modules/projects/controllers/Projects.php`
+**Time Estimate:** 2-3 hours
+
+#### [ ] TasksController
+**Source:** `application/modules/tasks/controllers/Tasks.php`
+**Time Estimate:** 2-3 hours
+
+#### [ ] UserClientsController
+**Source:** `application/modules/user_clients/controllers/User_clients.php`
+**Time Estimate:** 1-2 hours
+
+#### [ ] GuestController
+**Source:** `application/modules/guest/controllers/Guest.php`
+**Time Estimate:** 2-3 hours
+
+#### [ ] GuestPaymentsController
+**Source:** `application/modules/guest/controllers/Payments.php`
+**Time Estimate:** 2 hours
+
+#### [ ] GuestInvoicesController
+**Source:** `application/modules/guest/controllers/Invoices.php`
+**Time Estimate:** 2 hours
+
+---
+
+## Priority 2: System Management Controllers (13 controllers)
+
+### Core Module
+
+- [ ] SettingsController - Application settings
+- [ ] DashboardController - Dashboard display
+- [ ] LayoutController - Layout management  
+- [ ] SetupController - Installation wizard
+- [ ] EmailTemplatesController - Email templates
+- [ ] CustomFieldsController - Custom field management
+- [ ] CustomValuesController - Custom field values
+- [ ] UploadController - File upload handling
+- [ ] MailerController - Email sending
+- [ ] ImportController - Data import
+- [ ] ReportsController - Report generation
+- [ ] FilterController - Filtering utilities
+- [ ] WelcomeController - Welcome/landing page
+
+**Time Estimate:** 10-15 hours total
+
+---
+
+## Priority 3: Supporting Features (16 controllers)
+
+### Payments Module (3 controllers)
+- [ ] PaymentsController
+- [ ] PaymentMethodsController  
+- [ ] MerchantController (PayPal/Stripe integration)
+
+### Products Module (5 controllers)
+- [ ] ProductsController
+- [ ] FamiliesController
+- [ ] UnitsController
+- [ ] TaxRatesController
+- [ ] ProductsAjaxController
+
+### Users Module (3 controllers)
+- [ ] UsersController
+- [ ] SessionsController
+- [ ] UserClientsController (if separate from CRM)
+
+### Guest Module (5 controllers)
+- [ ] GuestQuotesController
+- [ ] GuestPaypalController
+- [ ] GuestStripeController
+- [ ] GuestPaymentInformationController
+- [ ] GuestViewController
+
+**Time Estimate:** 15-20 hours total
+
+---
+
+## Phase 3 Testing Requirements
+
+For EACH controller method, create tests that verify:
+
+### Required Test Coverage:
+- [ ] **Happy Path** - Valid input produces expected output
+- [ ] **Authentication** - Unauthenticated users are redirected
+- [ ] **Authorization** - Unauthorized users receive 403
+- [ ] **Validation** - Required fields validated, data types checked
+- [ ] **Edge Cases** - Empty results, non-existent resources (404)
+- [ ] **Data Integrity** - Related records handled, calculations accurate
+
+### Test Naming Convention:
+```php
+public function it_<action>_<expected_result>_when_<condition>(): void
+```
+
+Examples:
+- `it_displays_list_of_quotes_when_user_is_authenticated()`
+- `it_returns_404_when_quote_not_found()`
+- `it_creates_invoice_with_correct_total_amount()`
+
+---
+
+## Documentation Updates Required
+
+- [ ] Update .github/copilot-instructions.md with Phase 3 progress
+- [ ] Update MIGRATION-STATUS.md with controller migration status
+- [ ] Create controller-specific migration notes as needed
+- [ ] Update README with testing instructions
+
+---
+
+## Success Criteria for Phase 3
+
+- [ ] All 44 controllers migrated to PSR-4
+- [ ] Every method has PHPDoc with legacy references
+- [ ] Comprehensive test suite with 80%+ coverage
+- [ ] All tests passing
+- [ ] No syntax errors
+- [ ] PSR-12 compliant
+- [ ] Routes updated to new controllers
+- [ ] Documentation complete
+
+---
+
+## Next Immediate Steps
+
+1. **Start with QuotesController** - Simplest, good example
+2. **Create complete test suite** for QuotesController
+3. **Verify pattern works** before continuing
+4. **Move to InvoicesController** - Most critical
+5. **Continue systematically** through Priority 1, 2, 3
+
+**Estimated Completion Time:** 40-60 hours of focused development
+
+See **PHASE-3-IMPLEMENTATION-PLAN.md** for detailed guidance, patterns, and examples.
 - [ ] `getArchives($invoice_number)` - Archive retrieval
 - [ ] `delete($invoice_id)` - Delete with orphan cleanup
 - [ ] `markViewed($invoice_id)` - Mark as viewed
