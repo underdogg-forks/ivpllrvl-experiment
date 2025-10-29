@@ -11,8 +11,8 @@ use Modules\Core\Controllers\ReportsController;
 use Modules\Core\Controllers\UploadController;
 use Modules\Core\Controllers\LayoutController;
 use Modules\Core\Controllers\MailerController;
-use Modules\Users\Controllers\UsersController;
-use Modules\Users\Controllers\SessionsController;
+use Modules\Core\Controllers\UsersController;
+use Modules\Core\Controllers\SessionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ Route::get('/reports/payment_history', [ReportsController::class, 'paymentHistor
 Route::get('/reports/sales_by_client', [ReportsController::class, 'salesByClient'])->name('reports.sales_by_client');
 Route::get('/reports/sales_by_year', [ReportsController::class, 'salesByYear'])->name('reports.sales_by_year');
 
-// Users (to be merged into Core later)
+// Users (now part of Core module)
 Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 Route::get('/users/index', [UsersController::class, 'index']);
 Route::get('/sessions/index', [SessionsController::class, 'index'])->name('sessions.index');
