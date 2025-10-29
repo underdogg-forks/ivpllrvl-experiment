@@ -45,6 +45,7 @@ class Product extends BaseModel
         'product_description',
         'product_price',
         'purchase_price',
+        'provider_name',
         'tax_rate_id',
         'unit_id',
         'product_tariff',
@@ -77,7 +78,7 @@ class Product extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'tax_rate_id', 'tax_rate_id');
     }
 
     /**
@@ -86,5 +87,62 @@ class Product extends BaseModel
     public function unit()
     {
         return $this->belongsTo('Modules\Products\Entities\Unit', 'unit_id', 'unit_id');
+    }
+
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->join('ip_families', 'ip_families.family_id', '=', 'ip_products.family_id', 'left')
+            ->orderBy('ip_families.family_name')
+            ->orderBy('ip_products.product_name');
+    }
+
+    /**
+     * Search scope for products
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('product_sku', 'like', "%{$search}%")
+              ->orWhere('product_name', 'like', "%{$search}%")
+              ->orWhere('product_description', 'like', "%{$search}%");
+        });
+    }
+
+    /**
+     * Filter by family scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $familyId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByFamily($query, $familyId)
+    {
+        return $query->where('family_id', $familyId);
+    }
+
+    /**
+     * Mutator for product_price
+     */
+    public function setProductPriceAttribute($value)
+    {
+        $this->attributes['product_price'] = empty($value) ? null : standardize_amount($value);
+    }
+
+    /**
+     * Mutator for purchase_price
+     */
+    public function setPurchasePriceAttribute($value)
+    {
+        $this->attributes['purchase_price'] = empty($value) ? null : standardize_amount($value);
     }
 }

@@ -2,104 +2,75 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Modules\Products\Entities\Product;
+use Modules\Products\Entities\Family;
+
 /**
  * AjaxController
  * 
+ * Handles AJAX requests for products
  * Migrated from CodeIgniter Ajax controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/products/controllers/Ajax.php
  */
 class AjaxController
 {
     /**
-     * Display a listing of the resource.
+     * Display modal for product lookups
+     *
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function modal_product_lookups()
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('products::index');
+        $filter_product = request()->get('filter_product');
+        $filter_family = request()->get('filter_family');
+        $reset_table = request()->get('reset_table');
+
+        $query = Product::query();
+
+        if (!empty($filter_family)) {
+            $query->byFamily($filter_family);
+        }
+
+        if (!empty($filter_product)) {
+            $query->search($filter_product);
+        }
+
+        $products = $query->get();
+        $families = Family::ordered()->get();
+
+        $default_item_tax_rate = get_setting('default_item_tax_rate');
+        $default_item_tax_rate = $default_item_tax_rate !== '' ? $default_item_tax_rate : 0;
+
+        $data = [
+            'products' => $products,
+            'families' => $families,
+            'filter_product' => $filter_product,
+            'filter_family' => $filter_family,
+            'default_item_tax_rate' => $default_item_tax_rate,
+        ];
+
+        if ($filter_product || $filter_family || $reset_table) {
+            return view('products::partial_product_table_modal', $data);
+        } else {
+            return view('products::modal_product_lookups', $data);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Process product selections and return JSON
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function process_product_selections()
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('products::form');
-    }
+        $product_ids = request()->post('product_ids');
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
-    {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $products = Product::whereIn('product_id', $product_ids)->get();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('products::view');
-    }
+        foreach ($products as $product) {
+            $product->product_price = format_amount($product->product_price);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('products::form');
+        return response()->json($products);
     }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 
