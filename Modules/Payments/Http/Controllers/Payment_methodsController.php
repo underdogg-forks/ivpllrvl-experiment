@@ -2,104 +2,101 @@
 
 namespace Modules\Payments\Http\Controllers;
 
+use Modules\Payments\Entities\Payment_method;
+
 /**
  * Payment_methodsController
  * 
+ * Handles payment method management
  * Migrated from CodeIgniter Payment_Methods controller
- * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/payment_methods/controllers/Payment_methods.php
  */
 class Payment_methodsController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of payment methods.
+     *
+     * @param int $page
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($page = 0)
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
-        
-        return view('payments::index');
+        $payment_methods = Payment_method::ordered()
+            ->paginate(15);
+
+        return view('payments::payment_methods.index', [
+            'payment_methods' => $payment_methods,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a payment method.
+     *
+     * @param int|null $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function create()
+    public function form($id = null)
     {
-        // TODO: Implement create/form method if exists in original
-        
-        return view('payments::form');
+        // Handle cancel button
+        if (request()->has('btn_cancel')) {
+            return redirect()->to('payment_methods');
+        }
+
+        // Handle form submission
+        if (request()->has('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'payment_method_name' => 'required|string|max:255',
+            ]);
+
+            // Check for duplicates on create
+            if (request()->input('is_update') == 0) {
+                $existing = Payment_method::where('payment_method_name', $validated['payment_method_name'])->first();
+                if ($existing) {
+                    session()->flash('alert_error', trans('payment_method_already_exists'));
+                    return redirect()->to('payment_methods/form');
+                }
+            }
+
+            // Create or update payment method
+            if ($id) {
+                $payment_method = Payment_method::findOrFail($id);
+                $payment_method->update($validated);
+            } else {
+                Payment_method::create($validated);
+            }
+
+            return redirect()->to('payment_methods');
+        }
+
+        // Load payment method for editing
+        $payment_method = null;
+        $is_update = false;
+        if ($id) {
+            $payment_method = Payment_method::find($id);
+            if (!$payment_method) {
+                abort(404);
+            }
+            $is_update = true;
+        }
+
+        return view('payments::payment_methods.form', [
+            'payment_method' => $payment_method,
+            'is_update' => $is_update,
+        ]);
     }
 
     /**
-     * Store a newly created resource.
+     * Delete a payment method.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function delete($id)
     {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
+        $payment_method = Payment_method::findOrFail($id);
+        $payment_method->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
-        
-        return view('payments::view');
+        return redirect()->to('payment_methods');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
-        
-        return view('payments::form');
-    }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
 

@@ -39,7 +39,9 @@ class Payment_log extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'invoice_id',
+        'merchant_response_data',
+        'merchant_response_date',
     ];
 
     /**
@@ -49,8 +51,25 @@ class Payment_log extends BaseModel
      */
     protected $casts = [
         'merchant_response_id' => 'integer',
-        // TODO: Add more casts as needed
+        'invoice_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the invoice that owns the log.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('merchant_response_id', 'desc');
+    }
 }

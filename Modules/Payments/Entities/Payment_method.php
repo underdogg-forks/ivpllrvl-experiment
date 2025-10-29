@@ -39,7 +39,7 @@ class Payment_method extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'payment_method_name',
     ];
 
     /**
@@ -49,8 +49,24 @@ class Payment_method extends BaseModel
      */
     protected $casts = [
         'payment_method_id' => 'integer',
-        // TODO: Add more casts as needed
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Default ordering scope
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('payment_method_name');
+    }
+
+    /**
+     * Get payments that use this method
+     */
+    public function payments()
+    {
+        return $this->hasMany('Modules\Payments\Entities\Payment', 'payment_method_id', 'payment_method_id');
+    }
 }
