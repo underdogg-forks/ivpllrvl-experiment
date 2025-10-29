@@ -17,14 +17,14 @@ class Quote_amount extends BaseModel
      *
      * @var string
      */
-    protected $table = 'unknown_table';
+    protected $table = 'ip_quote_amounts';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'quote_amount_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,7 +39,12 @@ class Quote_amount extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'quote_id',
+        'quote_item_subtotal',
+        'quote_item_tax_total',
+        'quote_tax_total',
+        'quote_total',
+        'quote_item_discount',
     ];
 
     /**
@@ -48,9 +53,20 @@ class Quote_amount extends BaseModel
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        // TODO: Add more casts as needed
+        'quote_amount_id' => 'integer',
+        'quote_id' => 'integer',
+        'quote_item_subtotal' => 'decimal:2',
+        'quote_item_tax_total' => 'decimal:2',
+        'quote_tax_total' => 'decimal:2',
+        'quote_total' => 'decimal:2',
+        'quote_item_discount' => 'decimal:2',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the quote that owns the amount.
+     */
+    public function quote()
+    {
+        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
+    }
 }

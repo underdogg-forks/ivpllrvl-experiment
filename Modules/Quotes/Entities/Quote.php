@@ -39,7 +39,19 @@ class Quote extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'quote_number',
+        'quote_date_created',
+        'quote_date_modified',
+        'quote_date_expires',
+        'quote_status_id',
+        'quote_password',
+        'client_id',
+        'user_id',
+        'invoice_group_id',
+        'quote_discount_amount',
+        'quote_discount_percent',
+        'quote_terms',
+        'quote_url_key',
     ];
 
     /**
@@ -49,8 +61,91 @@ class Quote extends BaseModel
      */
     protected $casts = [
         'quote_id' => 'integer',
-        // TODO: Add more casts as needed
+        'client_id' => 'integer',
+        'user_id' => 'integer',
+        'invoice_group_id' => 'integer',
+        'quote_status_id' => 'integer',
+        'quote_discount_amount' => 'decimal:2',
+        'quote_discount_percent' => 'decimal:2',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the client that owns the quote.
+     */
+    public function client()
+    {
+        return $this->belongsTo('Modules\Crm\Entities\Client', 'client_id', 'client_id');
+    }
+
+    /**
+     * Get the user that created the quote.
+     */
+    public function user()
+    {
+        return $this->belongsTo('Modules\Users\Entities\User', 'user_id', 'user_id');
+    }
+
+    /**
+     * Get the invoice group.
+     */
+    public function invoiceGroup()
+    {
+        return $this->belongsTo('Modules\Invoices\Entities\Invoice_group', 'invoice_group_id', 'invoice_group_id');
+    }
+
+    /**
+     * Get the quote amounts.
+     */
+    public function amounts()
+    {
+        return $this->hasOne('Modules\Quotes\Entities\Quote_amount', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Get the quote items.
+     */
+    public function items()
+    {
+        return $this->hasMany('Modules\Quotes\Entities\Quote_item', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Get the quote tax rates.
+     */
+    public function taxRates()
+    {
+        return $this->hasMany('Modules\Quotes\Entities\Quote_tax_rate', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Scope a query to only include quotes with a given status.
+     */
+    public function scopeByStatus($query, int $statusId)
+    {
+        return $query->where('quote_status_id', $statusId);
+    }
+
+    /**
+     * Scope a query to only include draft quotes.
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('quote_status_id', 1);
+    }
+
+    /**
+     * Scope a query to only include sent quotes.
+     */
+    public function scopeSent($query)
+    {
+        return $query->where('quote_status_id', 2);
+    }
+
+    /**
+     * Scope a query to only include approved quotes.
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('quote_status_id', 4);
+    }
 }

@@ -39,7 +39,17 @@ class Quote_item extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'quote_id',
+        'item_tax_rate_id',
+        'item_product_id',
+        'item_name',
+        'item_description',
+        'item_quantity',
+        'item_price',
+        'item_order',
+        'item_discount_amount',
+        'item_product_unit',
+        'item_product_unit_id',
     ];
 
     /**
@@ -49,8 +59,53 @@ class Quote_item extends BaseModel
      */
     protected $casts = [
         'item_id' => 'integer',
-        // TODO: Add more casts as needed
+        'quote_id' => 'integer',
+        'item_tax_rate_id' => 'integer',
+        'item_product_id' => 'integer',
+        'item_quantity' => 'decimal:2',
+        'item_price' => 'decimal:2',
+        'item_order' => 'integer',
+        'item_discount_amount' => 'decimal:2',
+        'item_product_unit_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the quote that owns the item.
+     */
+    public function quote()
+    {
+        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Get the tax rate.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'item_tax_rate_id', 'tax_rate_id');
+    }
+
+    /**
+     * Get the product.
+     */
+    public function product()
+    {
+        return $this->belongsTo('Modules\Products\Entities\Product', 'item_product_id', 'product_id');
+    }
+
+    /**
+     * Get the item amounts.
+     */
+    public function itemAmount()
+    {
+        return $this->hasOne('Modules\Quotes\Entities\Quote_item_amount', 'item_id', 'item_id');
+    }
+
+    /**
+     * Default ordering scope
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('item_order');
+    }
 }

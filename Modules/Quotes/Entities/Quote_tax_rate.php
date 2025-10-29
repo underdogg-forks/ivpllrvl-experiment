@@ -39,7 +39,10 @@ class Quote_tax_rate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'quote_id',
+        'tax_rate_id',
+        'include_item_tax',
+        'quote_tax_rate_amount',
     ];
 
     /**
@@ -49,8 +52,25 @@ class Quote_tax_rate extends BaseModel
      */
     protected $casts = [
         'quote_tax_rate_id' => 'integer',
-        // TODO: Add more casts as needed
+        'quote_id' => 'integer',
+        'tax_rate_id' => 'integer',
+        'include_item_tax' => 'integer',
+        'quote_tax_rate_amount' => 'decimal:2',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the quote that owns the tax rate.
+     */
+    public function quote()
+    {
+        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Get the tax rate.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo('Modules\Products\Entities\Tax_rate', 'tax_rate_id', 'tax_rate_id');
+    }
 }
