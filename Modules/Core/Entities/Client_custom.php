@@ -7,11 +7,25 @@ use App\Models\BaseModel;
 /**
  * Client_custom Model
  * 
- * Eloquent model for managing ip_client_custom
- * Migrated from CodeIgniter model
+ * Eloquent model for managing client custom fields
+ * Migrated from CodeIgniter Mdl_Client_Custom model
+ * 
+ * @property int $client_custom_id
+ * @property int $client_id
  */
 class Client_custom extends BaseModel
 {
+    /**
+     * Custom field positions for clients
+     */
+    public static array $positions = [
+        'custom_fields',
+        'address',
+        'contact_information',
+        'personal_information',
+        'tax_information',
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -39,7 +53,7 @@ class Client_custom extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'client_id',
     ];
 
     /**
@@ -49,8 +63,18 @@ class Client_custom extends BaseModel
      */
     protected $casts = [
         'client_custom_id' => 'integer',
-        // TODO: Add more casts as needed
+        'client_id' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get custom fields for a specific client
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $clientId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByClientId($query, int $clientId)
+    {
+        return $query->where('client_id', $clientId);
+    }
 }

@@ -7,8 +7,13 @@ use App\Models\BaseModel;
 /**
  * Version Model
  * 
- * Eloquent model for managing ip_versions
- * Migrated from CodeIgniter model
+ * Eloquent model for tracking database version updates
+ * Migrated from CodeIgniter Mdl_Versions model
+ * 
+ * @property int $version_id
+ * @property string $version_date_applied
+ * @property string $version_file
+ * @property int $version_sql_errors
  */
 class Version extends BaseModel
 {
@@ -39,7 +44,9 @@ class Version extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'version_date_applied',
+        'version_file',
+        'version_sql_errors',
     ];
 
     /**
@@ -49,8 +56,32 @@ class Version extends BaseModel
      */
     protected $casts = [
         'version_id' => 'integer',
-        // TODO: Add more casts as needed
+        'version_sql_errors' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the current version from the database
+     *
+     * @return string
+     */
+    public static function getCurrentVersion(): string
+    {
+        $version = static::orderBy('version_date_applied', 'desc')
+            ->orderBy('version_file', 'desc')
+            ->first();
+        
+        if (!$version) {
+            return '1.0.0';
+        }
+        
+        $versionFile = $version->version_file;
+        $underscorePos = strpos($versionFile, '_');
+        
+        if ($underscorePos !== false) {
+            $versionStr = substr($versionFile, $underscorePos + 1);
+            return str_replace('.sql', '', $versionStr);
+        }
+        
+        return '1.0.0';
+    }
 }
