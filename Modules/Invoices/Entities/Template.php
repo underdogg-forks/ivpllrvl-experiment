@@ -2,55 +2,84 @@
 
 namespace Modules\Invoices\Entities;
 
-use App\Models\BaseModel;
-
 /**
  * Template Model
  * 
- * Eloquent model for managing unknown_table
- * Migrated from CodeIgniter model
+ * Utility class for managing invoice and quote templates
+ * Migrated from CodeIgniter Mdl_Templates
+ * 
+ * Note: This is not a database model but a utility class for template management
  */
-class Template extends BaseModel
+class Template
 {
     /**
-     * The table associated with the model.
+     * Get invoice templates of specified type
      *
-     * @var string
+     * @param string $type 'pdf' or 'public'
+     * @return array
      */
-    protected $table = 'unknown_table';
+    public static function getInvoiceTemplates($type = 'pdf')
+    {
+        $path = $type == 'pdf' 
+            ? APPPATH . '/views/invoice_templates/pdf' 
+            : APPPATH . '/views/invoice_templates/public';
+        
+        $templates = self::getTemplatesFromPath($path);
+        
+        return self::removeExtension($templates);
+    }
 
     /**
-     * The primary key for the model.
+     * Get quote templates of specified type
      *
-     * @var string
+     * @param string $type 'pdf' or 'public'
+     * @return array
      */
-    protected $primaryKey = 'id';
+    public static function getQuoteTemplates($type = 'pdf')
+    {
+        $path = $type == 'pdf' 
+            ? APPPATH . '/views/quote_templates/pdf' 
+            : APPPATH . '/views/quote_templates/public';
+        
+        $templates = self::getTemplatesFromPath($path);
+        
+        return self::removeExtension($templates);
+    }
 
     /**
-     * Indicates if the model should be timestamped.
+     * Get templates from path
      *
-     * @var bool
+     * @param string $path
+     * @return array
      */
-    public $timestamps = false;
+    private static function getTemplatesFromPath($path)
+    {
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        $templates = [];
+        $files = scandir($path);
+        
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $templates[] = $file;
+            }
+        }
+        
+        return $templates;
+    }
 
     /**
-     * The attributes that are mass assignable.
+     * Remove file extensions from template names
      *
-     * @var array
+     * @param array $files
+     * @return array
      */
-    protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        // TODO: Add more casts as needed
-    ];
-
-    // TODO: Add relationships, scopes, and methods from original model
+    private static function removeExtension(array $files)
+    {
+        return array_map(function($file) {
+            return pathinfo($file, PATHINFO_FILENAME);
+        }, $files);
+    }
 }

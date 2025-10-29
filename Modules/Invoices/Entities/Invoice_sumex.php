@@ -39,7 +39,14 @@ class Invoice_sumex extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'sumex_invoice',
+        'sumex_reason',
+        'sumex_diagnosis',
+        'sumex_observations',
+        'sumex_treatmentstart',
+        'sumex_treatmentend',
+        'sumex_casedate',
+        'sumex_casenumber',
     ];
 
     /**
@@ -49,8 +56,15 @@ class Invoice_sumex extends BaseModel
      */
     protected $casts = [
         'sumex_id' => 'integer',
-        // TODO: Add more casts as needed
+        'sumex_invoice' => 'integer',
+        'sumex_reason' => 'integer',
     ];
 
-    // TODO: Add relationships, scopes, and methods from original model
+    /**
+     * Get the invoice that owns the sumex data.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'sumex_invoice', 'invoice_id');
+    }
 }
