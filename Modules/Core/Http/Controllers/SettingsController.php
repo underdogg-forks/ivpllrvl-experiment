@@ -2,104 +2,107 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Modules\Core\Entities\Setting;
+
 /**
  * SettingsController
  * 
+ * Manages application settings
  * Migrated from CodeIgniter Settings controller
  * 
- * TODO: Complete migration:
- * - Replace $this->load->model() with dependency injection or direct Eloquent usage
- * - Replace $this->input->post() with Request object handling
- * - Replace $this->session with Laravel session()
- * - Replace redirect() with return redirect()
- * - Replace $this->layout->render() with return view()
- * - Update database queries to use Eloquent models
- * - Convert form validation to Laravel validation
- * - Update flash messages to use Laravel session flash
- * 
- * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/settings/controllers/Settings.php
+ * NOTE: This is a simplified version. Full implementation requires:
+ * - File upload handling for logos
+ * - Encryption for password fields
+ * - Database schema modifications for tax rates
+ * - Integration with payment gateways config
  */
 class SettingsController
 {
     /**
-     * Display a listing of the resource.
+     * Display and handle settings form
      */
     public function index()
     {
-        // TODO: Implement index method from original controller
-        // Original method typically loads data and renders view
+        // Handle form submission
+        if (request()->isMethod('post') && request()->has('settings')) {
+            $settings = request()->post('settings');
+            
+            // Save settings
+            foreach ($settings as $key => $value) {
+                // Skip meta fields
+                if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
+                    continue;
+                }
+                
+                // Skip empty password fields
+                if (isset($settings[$key . '_field_is_password']) && empty($value)) {
+                    continue;
+                }
+                
+                // TODO: Implement encryption for password fields
+                // TODO: Implement amount standardization for amount fields
+                
+                // Save the setting
+                Setting::setValue($key, $value);
+            }
+            
+            // TODO: Handle file uploads for invoice_logo and login_logo
+            
+            session()->flash('alert_success', trans('settings_successfully_saved'));
+            return redirect()->to(site_url('settings'));
+        }
         
-        return view('core::index');
+        // Load required data
+        // TODO: Load payment gateways config
+        $gateways = config('payment_gateways', []);
+        
+        // TODO: Load number formats config
+        $numberFormats = config('number_formats', []);
+        
+        // Get all settings
+        $allSettings = Setting::getAllSettings();
+        
+        // TODO: Load related models and data
+        // - invoice_groups
+        // - tax_rates
+        // - payment_methods
+        // - templates
+        // - email_templates
+        // - custom_fields
+        
+        $data = [
+            'gateway_drivers' => $gateways,
+            'number_formats' => $numberFormats,
+            'languages' => get_available_languages(),
+            'countries' => get_country_list(trans('cldr')),
+            'date_formats' => date_formats(),
+            'current_date' => new \DateTime(),
+            'first_days_of_weeks' => [
+                '0' => lang('sunday'),
+                '1' => lang('monday'),
+            ],
+        ];
+        
+        return view('core::settings.index', $data);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Remove a logo file
+     *
+     * @param string $type Logo type ('invoice' or 'login')
      */
-    public function create()
+    public function removeLogo(string $type)
     {
-        // TODO: Implement create/form method if exists in original
+        $logoFile = get_setting($type . '_logo');
         
-        return view('core::form');
-    }
-
-    /**
-     * Store a newly created resource.
-     */
-    public function store()
-    {
-        // TODO: Implement store/save logic from original
-        // - Add validation
-        // - Create model instance
-        // - Save to database
-        // - Redirect with success message
+        if ($logoFile && file_exists('./uploads/' . $logoFile)) {
+            unlink('./uploads/' . $logoFile);
+        }
         
-        return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // TODO: Implement show/view method if exists in original
+        Setting::setValue($type . '_logo', '');
         
-        return view('core::view');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // TODO: Implement edit/form method if exists in original
+        session()->flash('alert_success', lang($type . '_logo_removed'));
         
-        return view('core::form');
+        return redirect()->to(site_url('settings'));
     }
-
-    /**
-     * Update the specified resource.
-     */
-    public function update($id)
-    {
-        // TODO: Implement update logic from original
-        // - Add validation
-        // - Find model instance
-        // - Update in database
-        // - Redirect with success message
-        
-        return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy($id)
-    {
-        // TODO: Implement delete logic if exists in original
-        
-        return redirect()->back();
-    }
-    
-    // TODO: Add other methods from original controller
 }
-
