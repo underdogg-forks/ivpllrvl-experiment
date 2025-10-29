@@ -3,28 +3,30 @@
 namespace Modules\Products\Http\Controllers;
 
 use Modules\Products\Entities\Family;
-use Illuminate\Http\Request;
 
 /**
  * FamiliesController
  * 
- * Handles product family management
- * Migrated from CodeIgniter Families controller
+ * Handles product family management (product categories/groups)
  */
 class FamiliesController
 {
     /**
-     * Display a listing of product families.
-     *
-     * @param int $page
-     * @return \Illuminate\Contracts\View\View
+     * Display a paginated list of product families
+     * 
+     * @param int $page Page number for pagination
+     * @return \Illuminate\View\View
+     * 
+     * @legacy-function index
+     * @legacy-file application/modules/families/controllers/Families.php
+     * @legacy-line 32
      */
-    public function index($page = 0)
+    public function index(int $page = 0): \Illuminate\View\View
     {
         $families = Family::ordered()
-            ->paginate(15);
+            ->paginate(15, ['*'], 'page', $page);
 
-        return view('products::index', [
+        return view('products::families_index', [
             'filter_display' => true,
             'filter_placeholder' => trans('filter_families'),
             'filter_method' => 'filter_families',
@@ -33,74 +35,76 @@ class FamiliesController
     }
 
     /**
-     * Show the form for creating/editing a family.
-     *
-     * @param int|null $id
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * Display form for creating or editing a product family
+     * 
+     * @param int|null $id Family ID (null for create)
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * 
+     * @legacy-function form
+     * @legacy-file application/modules/families/controllers/Families.php
+     * @legacy-line 47
      */
-    public function form($id = null)
+    public function form(?int $id = null)
     {
         // Handle cancel button
-        if (request()->has('btn_cancel')) {
-            return redirect()->to('families');
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('families.index');
         }
 
         // Handle form submission
-        if (request()->has('btn_submit')) {
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
             $validated = request()->validate([
-                'family_name' => 'required|string|max:255',
+                'family_name' => 'required|string|max:255|unique:ip_families,family_name' . ($id ? ',' . $id . ',family_id' : ''),
             ]);
 
-            // Check for duplicates on create
-            if (request()->input('is_update') == 0) {
-                $existing = Family::where('family_name', $validated['family_name'])->first();
-                if ($existing) {
-                    session()->flash('alert_error', trans('family_already_exists'));
-                    return redirect()->to('families/form');
-                }
-            }
-
-            // Create or update family
             if ($id) {
+                // Update existing
                 $family = Family::findOrFail($id);
                 $family->update($validated);
             } else {
+                // Create new
                 Family::create($validated);
             }
 
-            return redirect()->to('families');
+            return redirect()->route('families.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
 
-        // Load family for editing
-        $family = null;
-        $is_update = false;
+        // Load existing record for editing
         if ($id) {
             $family = Family::find($id);
             if (!$family) {
                 abort(404);
             }
-            $is_update = true;
+            $isUpdate = true;
+        } else {
+            $family = new Family();
+            $isUpdate = false;
         }
 
-        return view('products::form', [
+        return view('products::families_form', [
             'family' => $family,
-            'is_update' => $is_update,
+            'is_update' => $isUpdate,
         ]);
     }
 
     /**
-     * Delete a family.
-     *
-     * @param int $id
+     * Delete a product family
+     * 
+     * @param int $id Family ID
      * @return \Illuminate\Http\RedirectResponse
+     * 
+     * @legacy-function delete
+     * @legacy-file application/modules/families/controllers/Families.php
+     * @legacy-line 84
      */
-    public function delete($id)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
         $family = Family::findOrFail($id);
         $family->delete();
 
-        return redirect()->to('families');
+        return redirect()->route('families.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }
-

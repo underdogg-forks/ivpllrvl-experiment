@@ -3,102 +3,106 @@
 namespace Modules\Products\Http\Controllers;
 
 use Modules\Products\Entities\Unit;
-use Illuminate\Http\Request;
 
 /**
  * UnitsController
  * 
- * Handles product unit of measure management
- * Migrated from CodeIgniter Units controller
+ * Handles product unit management (e.g., hours, items, kg, etc.)
  */
 class UnitsController
 {
     /**
-     * Display a listing of units.
-     *
-     * @param int $page
-     * @return \Illuminate\Contracts\View\View
+     * Display a paginated list of product units
+     * 
+     * @param int $page Page number for pagination
+     * @return \Illuminate\View\View
+     * 
+     * @legacy-function index
+     * @legacy-file application/modules/units/controllers/Units.php
+     * @legacy-line 32
      */
-    public function index($page = 0)
+    public function index(int $page = 0): \Illuminate\View\View
     {
         $units = Unit::ordered()
-            ->paginate(15);
+            ->paginate(15, ['*'], 'page', $page);
 
-        return view('products::index', [
+        return view('products::units_index', [
             'units' => $units,
         ]);
     }
 
     /**
-     * Show the form for creating/editing a unit.
-     *
-     * @param int|null $id
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * Display form for creating or editing a product unit
+     * 
+     * @param int|null $id Unit ID (null for create)
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * 
+     * @legacy-function form
+     * @legacy-file application/modules/units/controllers/Units.php
+     * @legacy-line 42
      */
-    public function form($id = null)
+    public function form(?int $id = null)
     {
         // Handle cancel button
-        if (request()->has('btn_cancel')) {
-            return redirect()->to('units');
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('units.index');
         }
 
         // Handle form submission
-        if (request()->has('btn_submit')) {
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
             $validated = request()->validate([
-                'unit_name' => 'required|string|max:255',
+                'unit_name' => 'required|string|max:255|unique:ip_units,unit_name' . ($id ? ',' . $id . ',unit_id' : ''),
                 'unit_name_plrl' => 'required|string|max:255',
             ]);
 
-            // Check for duplicates on create
-            if (request()->input('is_update') == 0) {
-                $existing = Unit::where('unit_name', $validated['unit_name'])->first();
-                if ($existing) {
-                    session()->flash('alert_error', trans('unit_already_exists'));
-                    return redirect()->to('units/form');
-                }
-            }
-
-            // Create or update unit
             if ($id) {
+                // Update existing
                 $unit = Unit::findOrFail($id);
                 $unit->update($validated);
             } else {
+                // Create new
                 Unit::create($validated);
             }
 
-            return redirect()->to('units');
+            return redirect()->route('units.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
 
-        // Load unit for editing
-        $unit = null;
-        $is_update = false;
+        // Load existing record for editing
         if ($id) {
             $unit = Unit::find($id);
             if (!$unit) {
                 abort(404);
             }
-            $is_update = true;
+            $isUpdate = true;
+        } else {
+            $unit = new Unit();
+            $isUpdate = false;
         }
 
-        return view('products::form', [
+        return view('products::units_form', [
             'unit' => $unit,
-            'is_update' => $is_update,
+            'is_update' => $isUpdate,
         ]);
     }
 
     /**
-     * Delete a unit.
-     *
-     * @param int $id
+     * Delete a product unit
+     * 
+     * @param int $id Unit ID
      * @return \Illuminate\Http\RedirectResponse
+     * 
+     * @legacy-function delete
+     * @legacy-file application/modules/units/controllers/Units.php
+     * @legacy-line 83
      */
-    public function delete($id)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
         $unit = Unit::findOrFail($id);
         $unit->delete();
 
-        return redirect()->to('units');
+        return redirect()->route('units.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }
-
