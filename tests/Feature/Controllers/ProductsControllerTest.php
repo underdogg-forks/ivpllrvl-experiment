@@ -21,13 +21,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_displays_paginated_list_of_products(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('products', $viewData);
@@ -41,15 +41,15 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_loads_products_with_family_unit_and_tax_rate_relationships(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create product with family, unit, and tax rate
+        /** Would create product with family, unit, and tax rate */
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
-        // Would verify eager loading of relationships
+        /** Assert */
+        /** Would verify eager loading of relationships */
         $this->assertTrue(true, 'Should eager load family, unit, and tax rate');
     }
     
@@ -59,15 +59,15 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_orders_products_by_name_alphabetically(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create products with different names
+        /** Would create products with different names */
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
-        // Would verify products are ordered alphabetically
+        /** Assert */
+        /** Would verify products are ordered alphabetically */
         $this->assertTrue(true, 'Products should be ordered by name');
     }
     
@@ -77,13 +77,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_includes_filter_configuration_in_view_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertArrayHasKey('filter_placeholder', $viewData);
         $this->assertArrayHasKey('filter_method', $viewData);
@@ -96,15 +96,15 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_paginates_products_at_15_per_page(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create 20 products
+        /** Would create 20 products */
         
-        // Act
+        /** Act */
         $response = $controller->index(0);
         
-        // Assert
-        // Would verify pagination shows max 15 items
+        /** Assert */
+        /** Would verify pagination shows max 15 items */
         $this->assertTrue(true, 'Should paginate at 15 items per page');
     }
     
@@ -114,13 +114,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_displays_create_form_for_new_product(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         
-        // Act
+        /** Act */
         $response = $controller->form(null);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('product', $viewData);
@@ -135,13 +135,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_displays_edit_form_with_existing_product(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create product with ID
+        /** Would create product with ID */
         $testId = 1;
         
-        // Act & Assert
-        // Would verify form loads with existing data
+        /** Act & Assert */
+        /** Would verify form loads with existing data */
         $this->assertTrue(true, 'Should load existing product for editing');
     }
     
@@ -151,12 +151,12 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_editing_non_existent_product(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         $nonExistentId = 99999;
         
-        // Act & Assert
-        // Would expect 404 abort
+        /** Act & Assert */
+        /** Would expect 404 abort */
         $this->assertTrue(true, 'Should return 404 for non-existent product');
     }
     
@@ -166,16 +166,16 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_loads_families_ordered_by_name_for_dropdown(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create multiple families
+        /** Would create multiple families */
         
-        // Act
+        /** Act */
         $response = $controller->form();
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
-        // Would verify families are ordered alphabetically
+        /** Would verify families are ordered alphabetically */
         $this->assertTrue(true, 'Families should be ordered by name');
     }
     
@@ -185,16 +185,16 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_loads_units_ordered_by_name_for_dropdown(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create multiple units
+        /** Would create multiple units */
         
-        // Act
+        /** Act */
         $response = $controller->form();
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
-        // Would verify units are ordered alphabetically
+        /** Would verify units are ordered alphabetically */
         $this->assertTrue(true, 'Units should be ordered by name');
     }
     
@@ -204,16 +204,16 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_loads_tax_rates_ordered_by_name_for_dropdown(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create multiple tax rates
+        /** Would create multiple tax rates */
         
-        // Act
+        /** Act */
         $response = $controller->form();
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
-        // Would verify tax rates are ordered alphabetically
+        /** Would verify tax rates are ordered alphabetically */
         $this->assertTrue(true, 'Tax rates should be ordered by name');
     }
     
@@ -223,12 +223,12 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_redirects_to_index_when_cancel_button_clicked(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would mock request with btn_cancel = true
+        /** Would mock request with btn_cancel = true */
         
-        // Act & Assert
-        // Would verify redirect to products.index
+        /** Act & Assert */
+        /** Would verify redirect to products.index */
         $this->assertTrue(true, 'Should redirect to index when cancel clicked');
     }
     
@@ -238,7 +238,7 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_creates_new_product_with_valid_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         $validData = [
             'product_sku' => 'PROD-001',
@@ -251,9 +251,9 @@ class ProductsControllerTest extends TestCase
             'tax_rate_id' => 1,
         ];
         
-        // Act & Assert
-        // Would verify new product is created
-        // Would verify redirect to index with success message
+        /** Act & Assert */
+        /** Would verify new product is created */
+        /** Would verify redirect to index with success message */
         $this->assertTrue(true, 'Should create new product with valid data');
     }
     
@@ -263,18 +263,18 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_updates_existing_product_with_valid_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create existing product
+        /** Would create existing product */
         $testId = 1;
         $updateData = [
             'product_name' => 'Updated Product',
             'product_price' => 149.99,
         ];
         
-        // Act & Assert
-        // Would verify product is updated
-        // Would verify redirect to index with success message
+        /** Act & Assert */
+        /** Would verify product is updated */
+        /** Would verify redirect to index with success message */
         $this->assertTrue(true, 'Should update existing product');
     }
     
@@ -284,13 +284,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_validates_required_fields_on_submit(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         
-        // Required fields from Product::validationRules():
-        // - product_name (required)
-        // - product_sku (required, unique)
-        // - product_price (required, numeric, min:0)
+        /** Required fields from Product::validationRules(): */
+        /** - product_name (required) */
+        /** - product_sku (required, unique) */
+        /** - product_price (required, numeric, min:0) */
         
         $this->assertTrue(true, 'Should validate all required fields');
     }
@@ -301,13 +301,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_validates_product_price_is_numeric_and_positive(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         
-        // Test cases:
-        // - Negative price should fail
-        // - Non-numeric price should fail
-        // - Zero or positive should pass
+        /** Test cases: */
+        /** - Negative price should fail */
+        /** - Non-numeric price should fail */
+        /** - Zero or positive should pass */
         
         $this->assertTrue(true, 'Product price should be numeric and >= 0');
     }
@@ -318,13 +318,13 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_validates_product_sku_is_unique(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create product with SKU 'PROD-001'
+        /** Would create product with SKU 'PROD-001' */
         
-        // Act & Assert
-        // Would attempt to create another product with same SKU
-        // Would expect validation error
+        /** Act & Assert */
+        /** Would attempt to create another product with same SKU */
+        /** Would expect validation error */
         $this->assertTrue(true, 'Product SKU should be unique');
     }
     
@@ -334,17 +334,17 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_deletes_product_successfully(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create product
+        /** Would create product */
         $testId = 1;
         
-        // Act
+        /** Act */
         $response = $controller->delete($testId);
         
-        // Assert
-        // Would verify product is deleted
-        // Would verify redirect to index with success message
+        /** Assert */
+        /** Would verify product is deleted */
+        /** Would verify redirect to index with success message */
         $this->assertTrue(true, 'Should delete product and redirect');
     }
     
@@ -354,12 +354,12 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_deleting_non_existent_product(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         $nonExistentId = 99999;
         
-        // Act & Assert
-        // Would expect 404 abort
+        /** Act & Assert */
+        /** Would expect 404 abort */
         $this->assertTrue(true, 'Should return 404 for non-existent product');
     }
     
@@ -372,12 +372,12 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_handles_deletion_of_product_used_in_invoices(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
-        // Would create product used in invoice items
+        /** Would create product used in invoice items */
         
-        // Act & Assert
-        // Would verify appropriate handling (either prevent deletion or cascade)
+        /** Act & Assert */
+        /** Would verify appropriate handling (either prevent deletion or cascade) */
         $this->assertTrue(true, 'Should handle products used in invoices');
     }
     
@@ -387,11 +387,11 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_displays_success_message_after_creating_product(): void
     {
-        // Arrange & Act
-        // Would create new product via form
+        /** Arrange & Act */
+        /** Would create new product via form */
         
-        // Assert
-        // Would verify flash message: 'record_successfully_saved'
+        /** Assert */
+        /** Would verify flash message: 'record_successfully_saved' */
         $this->assertTrue(true, 'Should display success message after create');
     }
     
@@ -401,11 +401,11 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_displays_success_message_after_updating_product(): void
     {
-        // Arrange & Act
-        // Would update existing product via form
+        /** Arrange & Act */
+        /** Would update existing product via form */
         
-        // Assert
-        // Would verify flash message: 'record_successfully_saved'
+        /** Assert */
+        /** Would verify flash message: 'record_successfully_saved' */
         $this->assertTrue(true, 'Should display success message after update');
     }
     
@@ -415,11 +415,11 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_displays_success_message_after_deleting_product(): void
     {
-        // Arrange & Act
-        // Would delete product
+        /** Arrange & Act */
+        /** Would delete product */
         
-        // Assert
-        // Would verify flash message: 'record_successfully_deleted'
+        /** Assert */
+        /** Would verify flash message: 'record_successfully_deleted' */
         $this->assertTrue(true, 'Should display success message after delete');
     }
     
@@ -429,11 +429,11 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_supports_decimal_values_for_product_price(): void
     {
-        // Arrange
-        // Would create product with price 99.99
+        /** Arrange */
+        /** Would create product with price 99.99 */
         
-        // Act & Assert
-        // Would verify price is stored with 2 decimal places
+        /** Act & Assert */
+        /** Would verify price is stored with 2 decimal places */
         $this->assertTrue(true, 'Should support decimal prices');
     }
     
@@ -443,7 +443,7 @@ class ProductsControllerTest extends TestCase
     #[Test]
     public function it_creates_product_without_optional_fields(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new ProductsController();
         $minimalData = [
             'product_sku' => 'MIN-001',
@@ -451,8 +451,8 @@ class ProductsControllerTest extends TestCase
             'product_price' => 10.00,
         ];
         
-        // Act & Assert
-        // Would verify product can be created with only required fields
+        /** Act & Assert */
+        /** Would verify product can be created with only required fields */
         $this->assertTrue(true, 'Should create product with only required fields');
     }
 }

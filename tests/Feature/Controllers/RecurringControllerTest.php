@@ -22,15 +22,15 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_displays_list_of_recurring_invoices(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         $recurring1 = InvoicesRecurring::factory()->create();
         $recurring2 = InvoicesRecurring::factory()->create();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('recurring_invoices', $viewData);
@@ -43,13 +43,13 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_includes_recur_frequencies_in_view_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertArrayHasKey('recur_frequencies', $viewData);
         $this->assertIsArray($viewData['recur_frequencies']);
@@ -61,14 +61,14 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_paginates_recurring_invoices_correctly(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         InvoicesRecurring::factory()->count(20)->create();
         
-        // Act
+        /** Act */
         $response = $controller->index(0);
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertLessThanOrEqual(15, $viewData['recurring_invoices']->count());
     }
@@ -79,14 +79,14 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_stops_recurring_invoice_and_sets_status_to_zero(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         $recurring = InvoicesRecurring::factory()->create(['recur_status' => 1]);
         
-        // Act
+        /** Act */
         $response = $controller->stop($recurring->invoice_recurring_id);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $recurring->refresh();
         $this->assertEquals(0, $recurring->recur_status);
@@ -98,14 +98,14 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_redirects_to_index_after_stopping_recurring_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         $recurring = InvoicesRecurring::factory()->create();
         
-        // Act
+        /** Act */
         $response = $controller->stop($recurring->invoice_recurring_id);
         
-        // Assert
+        /** Assert */
         $this->assertEquals('invoices.recurring.index', $response->getTargetUrl());
     }
     
@@ -115,13 +115,13 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_throws_404_when_stopping_non_existent_recurring_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         
-        // Assert
+        /** Assert */
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         
-        // Act
+        /** Act */
         $controller->stop(99999);
     }
     
@@ -131,15 +131,15 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_deletes_recurring_invoice_from_database(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         $recurring = InvoicesRecurring::factory()->create();
         $recurringId = $recurring->invoice_recurring_id;
         
-        // Act
+        /** Act */
         $response = $controller->delete($recurringId);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $this->assertNull(InvoicesRecurring::find($recurringId));
     }
@@ -150,14 +150,14 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_redirects_to_index_after_deleting_recurring_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         $recurring = InvoicesRecurring::factory()->create();
         
-        // Act
+        /** Act */
         $response = $controller->delete($recurring->invoice_recurring_id);
         
-        // Assert
+        /** Assert */
         $this->assertEquals('invoices.recurring.index', $response->getTargetUrl());
     }
     
@@ -167,13 +167,13 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_throws_404_when_deleting_non_existent_recurring_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         
-        // Assert
+        /** Assert */
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         
-        // Act
+        /** Act */
         $controller->delete(99999);
     }
     
@@ -183,13 +183,13 @@ class RecurringControllerTest extends TestCase
     #[Test]
     public function it_includes_filter_configuration_in_view_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new RecurringController();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertTrue($viewData['filter_display']);
         $this->assertNotEmpty($viewData['filter_placeholder']);

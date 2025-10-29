@@ -38,7 +38,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_saves_invoice_with_items_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $items = [
             [
@@ -64,10 +64,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_discount_amount' => 0,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->save();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $this->assertEquals(2, Item::where('invoice_id', $invoice->invoice_id)->count());
     }
@@ -78,7 +78,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_validation_errors_when_saving_invalid_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         request()->merge([
             'invoice_id' => $invoice->invoice_id,
@@ -86,10 +86,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_date_created' => 'invalid-date',
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->save();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(0, $response['success']);
         $this->assertArrayHasKey('validation_errors', $response);
     }
@@ -100,7 +100,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_prevents_both_discount_types_when_saving_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $items = [
             [
@@ -117,10 +117,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_discount_amount' => 20, // Should be cleared
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->save();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $savedInvoice = Invoice::find($invoice->invoice_id);
         $this->assertEquals(10, $savedInvoice->invoice_discount_percent);
@@ -133,7 +133,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_error_when_item_has_quantity_but_no_name(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $items = [
             [
@@ -148,10 +148,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'items' => json_encode($items),
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->save();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(0, $response['success']);
         $this->assertArrayHasKey('validation_errors', $response);
         $this->assertArrayHasKey('item_name', $response['validation_errors']);
@@ -163,7 +163,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_saves_invoice_tax_rate_in_legacy_calculation_mode(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $taxRate = TaxRate::factory()->create(['tax_rate_percent' => 20]);
 
@@ -173,10 +173,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'include_item_tax' => 1,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->saveInvoiceTaxRate();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $savedTax = InvoiceTaxRate::where('invoice_id', $invoice->invoice_id)
             ->where('tax_rate_id', $taxRate->tax_rate_id)
@@ -191,16 +191,16 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_deletes_invoice_item_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $item = Item::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         request()->merge(['item_id' => $item->item_id]);
 
-        // Act
+        /** Act */
         $response = $this->controller->deleteItem($invoice->invoice_id);
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $this->assertNull(Item::find($item->item_id));
     }
@@ -211,13 +211,13 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_failure_when_deleting_item_for_non_existent_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         request()->merge(['item_id' => 99999]);
 
-        // Act
+        /** Act */
         $response = $this->controller->deleteItem(99999);
 
-        // Assert
+        /** Assert */
         $this->assertEquals(0, $response['success']);
     }
 
@@ -227,7 +227,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_invoice_item_data_when_getting_item(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $item = Item::factory()->create([
             'invoice_id' => $invoice->invoice_id,
@@ -237,10 +237,10 @@ class InvoicesAjaxControllerTest extends TestCase
 
         request()->merge(['item_id' => $item->item_id]);
 
-        // Act
+        /** Act */
         $response = $this->controller->getItem();
 
-        // Assert
+        /** Assert */
         $this->assertIsArray($response);
         $this->assertEquals('Test Item', $response['item_name']);
         $this->assertEquals(100.00, $response['item_price']);
@@ -252,13 +252,13 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_empty_array_when_getting_non_existent_item(): void
     {
-        // Arrange
+        /** Arrange */
         request()->merge(['item_id' => 99999]);
 
-        // Act
+        /** Act */
         $response = $this->controller->getItem();
 
-        // Assert
+        /** Assert */
         $this->assertIsArray($response);
         $this->assertEmpty($response);
     }
@@ -269,7 +269,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_copies_invoice_with_all_items_and_tax_rates(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         $sourceInvoice = Invoice::factory()->draft()->create();
@@ -283,10 +283,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_change_client' => 0,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->copyInvoice();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $this->assertArrayHasKey('invoice_id', $response);
         $newInvoice = Invoice::find($response['invoice_id']);
@@ -301,7 +301,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_changes_invoice_user_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $newUser = User::factory()->create();
 
@@ -310,10 +310,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'user_id' => $newUser->user_id,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->changeUser();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $updatedInvoice = Invoice::find($invoice->invoice_id);
         $this->assertEquals($newUser->user_id, $updatedInvoice->user_id);
@@ -325,7 +325,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_error_when_changing_to_non_existent_user(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
 
         request()->merge([
@@ -333,10 +333,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'user_id' => 99999,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->changeUser();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(0, $response['success']);
         $this->assertArrayHasKey('error', $response);
     }
@@ -347,7 +347,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_changes_invoice_client_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $newClient = Client::factory()->create();
 
@@ -356,10 +356,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'client_id' => $newClient->client_id,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->changeClient();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $updatedInvoice = Invoice::find($invoice->invoice_id);
         $this->assertEquals($newClient->client_id, $updatedInvoice->client_id);
@@ -371,7 +371,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_creates_new_invoice_and_returns_invoice_id(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
 
@@ -381,10 +381,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_date_created' => date('Y-m-d'),
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->create();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $this->assertArrayHasKey('invoice_id', $response);
         $invoice = Invoice::find($response['invoice_id']);
@@ -399,7 +399,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_creates_recurring_invoice_and_returns_id(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
 
@@ -412,10 +412,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'recur_frequency' => '1M',
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->createRecurring();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $this->assertArrayHasKey('invoice_recurring_id', $response);
         $recurring = InvoicesRecurring::find($response['invoice_recurring_id']);
@@ -429,13 +429,13 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_calculates_recurring_start_date_based_on_frequency(): void
     {
-        // Arrange
+        /** Arrange */
         request()->merge(['recur_frequency' => '1M']);
 
-        // Act
+        /** Act */
         $response = $this->controller->getRecurStartDate();
 
-        // Assert
+        /** Assert */
         $this->assertArrayHasKey('recur_start_date', $response);
         $expectedDate = date('Y-m-d', strtotime('+1 month'));
         $this->assertEquals($expectedDate, $response['recur_start_date']);
@@ -447,7 +447,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_creates_credit_invoice_from_existing_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $sourceInvoice = Invoice::factory()->paid()->create();
         Item::factory()->count(2)->create(['invoice_id' => $sourceInvoice->invoice_id]);
 
@@ -456,10 +456,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_date_created' => date('Y-m-d'),
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->createCredit();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $this->assertArrayHasKey('invoice_id', $response);
         $creditInvoice = Invoice::find($response['invoice_id']);
@@ -473,17 +473,17 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_copy_invoice_modal_with_clients_and_users(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         Client::factory()->count(3)->create();
         User::factory()->count(2)->create();
 
         request()->merge(['invoice_id' => $invoice->invoice_id]);
 
-        // Act
+        /** Act */
         $response = $this->controller->modalCopyInvoice();
 
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('invoice', $viewData);
@@ -498,14 +498,14 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_create_invoice_modal_with_clients_list(): void
     {
-        // Arrange
+        /** Arrange */
         Client::factory()->count(5)->create();
         User::factory()->count(2)->create();
 
-        // Act
+        /** Act */
         $response = $this->controller->modalCreateInvoice();
 
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('clients', $viewData);
@@ -519,16 +519,16 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_change_user_modal_with_users_list(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         User::factory()->count(3)->create();
 
         request()->merge(['invoice_id' => $invoice->invoice_id]);
 
-        // Act
+        /** Act */
         $response = $this->controller->modalChangeUser();
 
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('invoice', $viewData);
@@ -542,16 +542,16 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_change_client_modal_with_clients_list(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         Client::factory()->count(4)->create();
 
         request()->merge(['invoice_id' => $invoice->invoice_id]);
 
-        // Act
+        /** Act */
         $response = $this->controller->modalChangeClient();
 
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('invoice', $viewData);
@@ -565,14 +565,14 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_create_recurring_modal_with_form_data(): void
     {
-        // Arrange
+        /** Arrange */
         Client::factory()->count(2)->create();
         User::factory()->count(2)->create();
 
-        // Act
+        /** Act */
         $response = $this->controller->modalCreateRecurring();
 
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('clients', $viewData);
@@ -585,15 +585,15 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_create_credit_modal_with_invoice_data(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->paid()->create();
 
         request()->merge(['invoice_id' => $invoice->invoice_id]);
 
-        // Act
+        /** Act */
         $response = $this->controller->modalCreateCredit();
 
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('invoice', $viewData);
@@ -606,7 +606,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_preserves_item_details_when_saving_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $items = [
             [
@@ -626,10 +626,10 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_discount_amount' => 0,
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->save();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $savedItem = Item::where('invoice_id', $invoice->invoice_id)->first();
         $this->assertEquals('Consulting Services', $savedItem->item_name);
@@ -645,7 +645,7 @@ class InvoicesAjaxControllerTest extends TestCase
     #[Test]
     public function it_distributes_global_discount_across_items_proportionally(): void
     {
-        // Arrange
+        /** Arrange */
         $invoice = Invoice::factory()->draft()->create();
         $items = [
             [
@@ -667,14 +667,14 @@ class InvoicesAjaxControllerTest extends TestCase
             'invoice_discount_amount' => 30.00, // 20% global discount
         ]);
 
-        // Act
+        /** Act */
         $response = $this->controller->save();
 
-        // Assert
+        /** Assert */
         $this->assertEquals(1, $response['success']);
         $invoice->refresh();
         $this->assertEquals(30.00, $invoice->invoice_discount_amount);
-        // Verify proportional distribution
+        /** Verify proportional distribution */
         $itemsTotal = Item::where('invoice_id', $invoice->invoice_id)
             ->sum('item_subtotal');
         $this->assertEquals(120.00, $itemsTotal); // 150 - 30 = 120

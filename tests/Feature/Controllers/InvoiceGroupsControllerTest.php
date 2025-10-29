@@ -22,13 +22,13 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_displays_paginated_list_of_invoice_groups(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('invoice_groups', $viewData);
@@ -40,15 +40,15 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_orders_invoice_groups_by_name(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would create multiple invoice groups with different names
+        /** Would create multiple invoice groups with different names */
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
-        // Would verify groups are ordered alphabetically
+        /** Assert */
+        /** Would verify groups are ordered alphabetically */
         $this->assertTrue(true, 'Invoice groups should be ordered by name');
     }
     
@@ -58,16 +58,16 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_paginates_invoice_groups_at_15_per_page(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would create 20 invoice groups
+        /** Would create 20 invoice groups */
         
-        // Act
+        /** Act */
         $response = $controller->index(0);
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
-        // Would verify pagination shows max 15 items
+        /** Would verify pagination shows max 15 items */
         $this->assertTrue(true, 'Should paginate at 15 items per page');
     }
     
@@ -77,18 +77,18 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_displays_create_form_with_default_values(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
         
-        // Act
+        /** Act */
         $response = $controller->form(null);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         $this->assertArrayHasKey('invoice_group', $viewData);
         
-        // Verify default values
+        /** Verify default values */
         $invoiceGroup = $viewData['invoice_group'];
         $this->assertEquals(0, $invoiceGroup->invoice_group_left_pad);
         $this->assertEquals(1, $invoiceGroup->invoice_group_next_id);
@@ -100,13 +100,13 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_displays_edit_form_with_existing_record(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would create invoice group with ID
+        /** Would create invoice group with ID */
         $testId = 1;
         
-        // Act & Assert
-        // Would verify form loads with existing data
+        /** Act & Assert */
+        /** Would verify form loads with existing data */
         $this->assertTrue(true, 'Should load existing invoice group for editing');
     }
     
@@ -116,12 +116,12 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_editing_non_existent_invoice_group(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
         $nonExistentId = 99999;
         
-        // Act & Assert
-        // Would expect 404 abort
+        /** Act & Assert */
+        /** Would expect 404 abort */
         $this->assertTrue(true, 'Should return 404 for non-existent invoice group');
     }
     
@@ -131,12 +131,12 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_redirects_to_index_when_cancel_button_clicked(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would mock request with btn_cancel = true
+        /** Would mock request with btn_cancel = true */
         
-        // Act & Assert
-        // Would verify redirect to invoice_groups.index
+        /** Act & Assert */
+        /** Would verify redirect to invoice_groups.index */
         $this->assertTrue(true, 'Should redirect to index when cancel clicked');
     }
     
@@ -146,9 +146,9 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_creates_new_invoice_group_with_valid_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would mock valid POST data
+        /** Would mock valid POST data */
         $validData = [
             'invoice_group_name' => 'Test Group',
             'invoice_group_identifier_format' => '{{{year}}}-{{{id}}}',
@@ -156,9 +156,9 @@ class InvoiceGroupsControllerTest extends TestCase
             'invoice_group_left_pad' => 4,
         ];
         
-        // Act & Assert
-        // Would verify new record is created
-        // Would verify redirect to index with success message
+        /** Act & Assert */
+        /** Would verify new record is created */
+        /** Would verify redirect to index with success message */
         $this->assertTrue(true, 'Should create new invoice group with valid data');
     }
     
@@ -168,9 +168,9 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_updates_existing_invoice_group_with_valid_data(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would create existing invoice group
+        /** Would create existing invoice group */
         $testId = 1;
         $updateData = [
             'invoice_group_name' => 'Updated Group',
@@ -179,9 +179,9 @@ class InvoiceGroupsControllerTest extends TestCase
             'invoice_group_left_pad' => 5,
         ];
         
-        // Act & Assert
-        // Would verify record is updated
-        // Would verify redirect to index with success message
+        /** Act & Assert */
+        /** Would verify record is updated */
+        /** Would verify redirect to index with success message */
         $this->assertTrue(true, 'Should update existing invoice group');
     }
     
@@ -191,16 +191,16 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_validates_required_fields_on_submit(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would mock POST with missing required fields
+        /** Would mock POST with missing required fields */
         
-        // Act & Assert
-        // Would verify validation errors for:
-        // - invoice_group_name (required)
-        // - invoice_group_identifier_format (required)
-        // - invoice_group_next_id (required, integer, min:1)
-        // - invoice_group_left_pad (required, integer, min:0)
+        /** Act & Assert */
+        /** Would verify validation errors for: */
+        /** - invoice_group_name (required) */
+        /** - invoice_group_identifier_format (required) */
+        /** - invoice_group_next_id (required, integer, min:1) */
+        /** - invoice_group_left_pad (required, integer, min:0) */
         $this->assertTrue(true, 'Should validate all required fields');
     }
     
@@ -210,13 +210,13 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_validates_field_types_and_constraints(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
         
-        // Test cases:
-        // - invoice_group_name: max 255 chars
-        // - invoice_group_next_id: must be integer, min 1
-        // - invoice_group_left_pad: must be integer, min 0
+        /** Test cases: */
+        /** - invoice_group_name: max 255 chars */
+        /** - invoice_group_next_id: must be integer, min 1 */
+        /** - invoice_group_left_pad: must be integer, min 0 */
         
         $this->assertTrue(true, 'Should validate field types and constraints');
     }
@@ -227,17 +227,17 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_deletes_invoice_group_successfully(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would create invoice group
+        /** Would create invoice group */
         $testId = 1;
         
-        // Act
+        /** Act */
         $response = $controller->delete($testId);
         
-        // Assert
-        // Would verify invoice group is deleted
-        // Would verify redirect to index with success message
+        /** Assert */
+        /** Would verify invoice group is deleted */
+        /** Would verify redirect to index with success message */
         $this->assertTrue(true, 'Should delete invoice group and redirect');
     }
     
@@ -247,12 +247,12 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_deleting_non_existent_invoice_group(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
         $nonExistentId = 99999;
         
-        // Act & Assert
-        // Would expect 404 abort
+        /** Act & Assert */
+        /** Would expect 404 abort */
         $this->assertTrue(true, 'Should return 404 for non-existent invoice group');
     }
     
@@ -265,12 +265,12 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_handles_deletion_of_invoice_group_with_associated_invoices(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new InvoiceGroupsController();
-        // Would create invoice group with associated invoices
+        /** Would create invoice group with associated invoices */
         
-        // Act & Assert
-        // Would verify appropriate handling (either prevent deletion or cascade)
+        /** Act & Assert */
+        /** Would verify appropriate handling (either prevent deletion or cascade) */
         $this->assertTrue(true, 'Should handle invoice groups with associated invoices');
     }
     
@@ -280,11 +280,11 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_displays_success_message_after_creating_invoice_group(): void
     {
-        // Arrange & Act
-        // Would create new invoice group via form
+        /** Arrange & Act */
+        /** Would create new invoice group via form */
         
-        // Assert
-        // Would verify flash message: 'record_successfully_saved'
+        /** Assert */
+        /** Would verify flash message: 'record_successfully_saved' */
         $this->assertTrue(true, 'Should display success message after create');
     }
     
@@ -294,11 +294,11 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_displays_success_message_after_updating_invoice_group(): void
     {
-        // Arrange & Act
-        // Would update existing invoice group via form
+        /** Arrange & Act */
+        /** Would update existing invoice group via form */
         
-        // Assert
-        // Would verify flash message: 'record_successfully_saved'
+        /** Assert */
+        /** Would verify flash message: 'record_successfully_saved' */
         $this->assertTrue(true, 'Should display success message after update');
     }
     
@@ -308,11 +308,11 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_displays_success_message_after_deleting_invoice_group(): void
     {
-        // Arrange & Act
-        // Would delete invoice group
+        /** Arrange & Act */
+        /** Would delete invoice group */
         
-        // Assert
-        // Would verify flash message: 'record_successfully_deleted'
+        /** Assert */
+        /** Would verify flash message: 'record_successfully_deleted' */
         $this->assertTrue(true, 'Should display success message after delete');
     }
     
@@ -322,14 +322,14 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_supports_year_variable_in_identifier_format(): void
     {
-        // Arrange
-        // Would create invoice group with format: '{{{year}}}-{{{id}}}'
+        /** Arrange */
+        /** Would create invoice group with format: '{{{year}}}-{{{id}}}' */
         
-        // Act
-        // Would generate invoice number
+        /** Act */
+        /** Would generate invoice number */
         
-        // Assert
-        // Would verify current year is in invoice number
+        /** Assert */
+        /** Would verify current year is in invoice number */
         $this->assertTrue(true, 'Should support {{{year}}} in format');
     }
     
@@ -339,14 +339,14 @@ class InvoiceGroupsControllerTest extends TestCase
     #[Test]
     public function it_supports_id_with_left_padding_in_identifier_format(): void
     {
-        // Arrange
-        // Would create invoice group with format: '{{{id}}}' and left_pad: 4
+        /** Arrange */
+        /** Would create invoice group with format: '{{{id}}}' and left_pad: 4 */
         
-        // Act
-        // Would generate invoice number with next_id: 1
+        /** Act */
+        /** Would generate invoice number with next_id: 1 */
         
-        // Assert
-        // Would verify invoice number is '0001'
+        /** Assert */
+        /** Would verify invoice number is '0001' */
         $this->assertTrue(true, 'Should support {{{id}}} with left padding');
     }
 }
