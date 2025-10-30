@@ -8,7 +8,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "php-http/discovery": true,
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "wikimedia/composer-merge-plugin": true
         },
         "optimize-autoloader": true,
         "preferred-install": "dist"
@@ -29,7 +30,7 @@
         "stripe/stripe-php": "^14.10"
     },
     "require-dev": {
-        "fakerphp/faker": "^2.0",
+        "fakerphp/faker": "^1.23",
         "filp/whoops": "^2.18",
         "laravel/pint": "^1.20",
         "mockery/mockery": "^1.6",
@@ -55,20 +56,10 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi",
-            "@php artisan filament:upgrade"
-        ],
-        "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate --ansi",
-            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
         ],
         "check": [
             "rector",
@@ -87,5 +78,7 @@
             "Composer\\Config::disableProcessTimeout",
             "vendor/bin/pint"
         ]
-    }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
