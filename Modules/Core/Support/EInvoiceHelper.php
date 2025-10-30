@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * EInvoiceHelper
  * 
@@ -18,9 +20,9 @@ class EInvoiceHelper
      */
     public static function generate_xml_invoice_file($invoice, $items, string $xml_lib, string $filename, $options): string
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        $CI->load->library('XMLtemplates/' . $xml_lib . 'Xml', [
+        $bridge->getRawInstance()->load->library('XMLtemplates/' . $xml_lib . 'Xml', [
             'invoice'  => $invoice,
             'items'    => $items,
             'filename' => $filename,
@@ -91,9 +93,9 @@ class EInvoiceHelper
     {
         if (file_exists(APPPATH . 'helpers/XMLconfigs/' . $xml_id . '.php')) {
             include APPPATH . 'helpers/XMLconfigs/' . $xml_id . '.php';
-            $CI = & get_instance();
+            $bridge = LegacyBridge::getInstance();
             // Shift calculation mode (false by default). Need true? See Dev Note on ipconfig example
-            $CI->config->set_item('legacy_calculation', ! empty($xml_setting['legacy_calculation']));
+            $bridge->config()->set_item('legacy_calculation', ! empty($xml_setting['legacy_calculation']));
     
             return $xml_setting['full-name'] . ' - ' . get_country_name(trans('cldr'), $xml_setting['countrycode']);
         }
@@ -106,7 +108,7 @@ class EInvoiceHelper
      */
     public static function get_admin_active_users($user_id = ''): array
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         $where = ['user_type' => '1', 'user_active' => '1']; // Administrators Active Only
         if ($user_id) {
@@ -294,8 +296,8 @@ class EInvoiceHelper
     
         // Bad: One with 0 Ok (false), No 0 NoOk (true)
         if (count($checks[0]) != 0 && count($checks[1]) != 0) {
-            $CI = & get_instance();
-            $CI->session->set_flashdata(
+            $bridge = LegacyBridge::getInstance();
+            $bridge->session()->set_flashdata(
                 'alert_warning',
                 '<h3 class="pull-right"><a class="btn btn-default" href="javascript:check_items_tax_usages(true);"><i class="fa fa-cogs"></i> ' . trans('view') . '</a></h3>'
                 . trans('items_tax_usages_bad_set')

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * ClientHelper
  * 
@@ -19,9 +21,9 @@ class ClientHelper
     {
         // Get an id
         if ($client && is_numeric($client)) {
-            $CI = & get_instance();
+            $bridge = LegacyBridge::getInstance();
             if ( ! property_exists($CI, 'mdl_clients')) {
-                $CI->load->model('clients/mdl_clients');
+                $bridge->getRawInstance()->load->model('clients/mdl_clients');
             }
     
             $client = $CI->mdl_clients->get_by_id($client);

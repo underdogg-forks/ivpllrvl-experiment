@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * UserHelper
  * 
@@ -18,9 +20,9 @@ class UserHelper
     {
         // Get an id
         if ($user && is_numeric($user)) {
-            $CI = & get_instance();
+            $bridge = LegacyBridge::getInstance();
             if ( ! property_exists($CI, 'mdl_users')) {
-                $CI->load->model('users/mdl_users');
+                $bridge->getRawInstance()->load->model('users/mdl_users');
             }
     
             $user = $CI->mdl_users->get_by_id($user);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * Settings Helper Class
  * 
@@ -16,10 +18,15 @@ class SettingsHelper
      */
     public static function getSetting(string $settingKey, $default = '', bool $escape = false)
     {
-        $CI = &get_instance();
-        $value = $CI->mdl_settings->setting($settingKey, $default);
-
-        return $escape ? htmlsc($value) : $value;
+        $bridge = LegacyBridge::getInstance();
+        $settings = $bridge->settings();
+        
+        if ($settings) {
+            $value = $settings->setting($settingKey, $default);
+            return $escape ? htmlsc($value) : $value;
+        }
+        
+        return $default;
     }
 
     /**
@@ -27,9 +34,14 @@ class SettingsHelper
      */
     public static function getGatewaySettings(string $gateway): array
     {
-        $CI = &get_instance();
-
-        return $CI->mdl_settings->gateway_settings($gateway);
+        $bridge = LegacyBridge::getInstance();
+        $settings = $bridge->settings();
+        
+        if ($settings) {
+            return $settings->gateway_settings($gateway);
+        }
+        
+        return [];
     }
 
     /**

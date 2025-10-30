@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * RedirectHelper
  * 
@@ -21,11 +23,11 @@ class RedirectHelper
      */
     public static function redirect_to($fallback_url_string, $redirect = true)
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        $redirect_url = ($CI->session->userdata('redirect_to')) ? $CI->session->userdata('redirect_to') : $fallback_url_string;
+        $redirect_url = ($bridge->session()->userdata('redirect_to')) ? $bridge->session()->userdata('redirect_to') : $fallback_url_string;
     
-        $CI->session->unset_userdata('redirect_to');
+        $bridge->session()->unset_userdata('redirect_to');
     
         if ($redirect) {
             redirect($redirect_url);
@@ -39,8 +41,8 @@ class RedirectHelper
      */
     public static function redirect_to_set(): void
     {
-        $CI = & get_instance();
-        $CI->session->set_userdata('redirect_to', $CI->uri->uri_string());
+        $bridge = LegacyBridge::getInstance();
+        $bridge->session()->set_userdata('redirect_to', $CI->uri->uri_string());
     }
 
 }

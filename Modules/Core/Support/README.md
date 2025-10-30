@@ -12,6 +12,40 @@ All helper functions have been refactored from procedural functions to static me
 4. **IDE Support**: Better autocomplete and documentation
 5. **Modern PHP**: Follows modern PHP best practices
 6. **Backward Compatibility**: Old procedural functions still work via `bc_helper.php`
+7. **No CodeIgniter Artifacts**: Uses LegacyBridge instead of direct `get_instance()` calls
+
+## CodeIgniter Migration
+
+**Important**: These helper classes no longer directly access CodeIgniter components using `$CI = &get_instance()`. 
+
+Instead, they use the `LegacyBridge` service to access CodeIgniter functionality in a clean, centralized way:
+
+```php
+use Modules\Core\Services\LegacyBridge;
+
+class DateHelper
+{
+    public static function dateFormatSetting()
+    {
+        $bridge = LegacyBridge::getInstance();
+        $settings = $bridge->settings();
+        
+        if ($settings) {
+            return $settings->setting('date_format');
+        }
+        
+        return 'd/m/Y'; // Default fallback
+    }
+}
+```
+
+This approach:
+- ✅ Removes CodeIgniter artifacts from helper classes
+- ✅ Centralizes legacy dependencies in one place
+- ✅ Makes migration path clear and trackable
+- ✅ Provides null safety when CI isn't available
+
+See `Modules/Core/Services/README.md` for more details on LegacyBridge.
 
 ## Helper Classes
 

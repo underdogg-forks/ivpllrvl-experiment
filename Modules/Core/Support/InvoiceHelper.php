@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * InvoiceHelper
  * 
@@ -16,10 +18,10 @@ class InvoiceHelper
      */
     public static function invoice_logo(): string
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        if ($CI->mdl_settings->setting('invoice_logo')) {
-            return '<img src="' . base_url() . 'uploads/' . $CI->mdl_settings->setting('invoice_logo') . '">';
+        if ($bridge->settings()->setting('invoice_logo')) {
+            return '<img src="' . base_url() . 'uploads/' . $bridge->settings()->setting('invoice_logo') . '">';
         }
     
         return '';
@@ -30,12 +32,12 @@ class InvoiceHelper
      */
     public static function invoice_logo_pdf(): string
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        if ($CI->mdl_settings->setting('invoice_logo')) {
+        if ($bridge->settings()->setting('invoice_logo')) {
             $absolutePath = dirname(dirname(__DIR__));
     
-            return '<img src="' . $absolutePath . '/uploads/' . $CI->mdl_settings->setting('invoice_logo') . '" id="invoice-logo">';
+            return '<img src="' . $absolutePath . '/uploads/' . $bridge->settings()->setting('invoice_logo') . '" id="invoice-logo">';
         }
     
         return '';
@@ -109,17 +111,17 @@ class InvoiceHelper
      */
     public static function invoice_qrcode($invoice_id): string
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         if (
-            $CI->mdl_settings->setting('qr_code')
-            && $CI->mdl_settings->setting('qr_code_iban')
-            && $CI->mdl_settings->setting('qr_code_bic')
+            $bridge->settings()->setting('qr_code')
+            && $bridge->settings()->setting('qr_code_iban')
+            && $bridge->settings()->setting('qr_code_bic')
         ) {
             $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
     
             if ((float) $invoice->invoice_balance) {
-                $CI->load->library('QrCode', ['invoice' => $invoice]);
+                $bridge->getRawInstance()->load->library('QrCode', ['invoice' => $invoice]);
                 $qrcode_data_uri = $CI->qrcode->generate();
     
                 return '<img src="' . $qrcode_data_uri . '" alt="QR Code" id="invoice-qr-code">';

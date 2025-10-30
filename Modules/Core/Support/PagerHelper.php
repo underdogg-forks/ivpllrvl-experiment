@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * PagerHelper
  * 
@@ -19,7 +21,7 @@ class PagerHelper
      */
     public static function pager(string $base_url, $model): string
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         $pager = '<div class="model-pager btn-group btn-group-sm">';
     

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * TemplateHelper
  * 
@@ -83,8 +85,8 @@ class TemplateHelper
                         // Check if it's a custom field
                         if (preg_match('/ip_cf_(\d.*)/', $var, $cf_id)) {
                             // Get the custom field
-                            $CI = & get_instance();
-                            $CI->load->model('custom_fields/mdl_custom_fields');
+                            $bridge = LegacyBridge::getInstance();
+                            $bridge->getRawInstance()->load->model('custom_fields/mdl_custom_fields');
                             $cf = $CI->mdl_custom_fields->get_by_id($cf_id[1]);
     
                             if ($cf) {
@@ -92,7 +94,7 @@ class TemplateHelper
                                 $cf_model = str_replace('ip_', 'mdl_', $cf->custom_field_table);
                                 $replace  = $CI->mdl_custom_fields->get_value_for_field($cf_id[1], $cf_model, $object);
                                 if ($cf->custom_field_type == 'SINGLE-CHOICE') {
-                                    $CI->load->model('custom_values/mdl_custom_values', 'cv');
+                                    $bridge->getRawInstance()->load->model('custom_values/mdl_custom_values', 'cv');
                                     $el      = $CI->cv->get_by_id($replace)->row();
                                     $replace = $el->custom_values_value;
                                 }
@@ -120,10 +122,10 @@ class TemplateHelper
      */
     public static function get_invoice_status($id)
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         if (empty($CI->mdl_invoices)) {
-            $CI->load->model('invoices/mdl_invoices');
+            $bridge->getRawInstance()->load->model('invoices/mdl_invoices');
         }
     
         $statuses = $CI->mdl_invoices->statuses();
@@ -140,20 +142,20 @@ class TemplateHelper
      */
     public static function select_pdf_invoice_template($invoice)
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         if ($invoice->is_overdue) {
             // Use the overdue template
-            return $CI->mdl_settings->setting('pdf_invoice_template_overdue');
+            return $bridge->settings()->setting('pdf_invoice_template_overdue');
         }
     
         if ($invoice->invoice_status_id == 4) {
             // Use the paid template
-            return $CI->mdl_settings->setting('pdf_invoice_template_paid');
+            return $bridge->settings()->setting('pdf_invoice_template_paid');
         }
     
         // Use the default template
-        return $CI->mdl_settings->setting('pdf_invoice_template');
+        return $bridge->settings()->setting('pdf_invoice_template');
     }
 
     /**
@@ -165,20 +167,20 @@ class TemplateHelper
      */
     public static function select_email_invoice_template($invoice)
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         if ($invoice->is_overdue) {
             // Use the overdue template
-            return $CI->mdl_settings->setting('email_invoice_template_overdue');
+            return $bridge->settings()->setting('email_invoice_template_overdue');
         }
     
         if ($invoice->invoice_status_id == 4) {
             // Use the paid template
-            return $CI->mdl_settings->setting('email_invoice_template_paid');
+            return $bridge->settings()->setting('email_invoice_template_paid');
         }
     
         // Use the default template
-        return $CI->mdl_settings->setting('email_invoice_template');
+        return $bridge->settings()->setting('email_invoice_template');
     }
 
 }

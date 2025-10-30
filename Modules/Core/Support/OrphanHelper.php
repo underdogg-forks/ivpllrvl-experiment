@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * OrphanHelper
  * 
@@ -16,7 +18,7 @@ class OrphanHelper
      */
     public static function delete_orphans(): void
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
         $queries = [
             'DELETE FROM ip_invoices WHERE client_id NOT IN (SELECT client_id FROM ip_clients)',

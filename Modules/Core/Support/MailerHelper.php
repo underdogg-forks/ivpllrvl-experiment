@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * MailerHelper
  * 
@@ -16,11 +18,11 @@ class MailerHelper
      */
     public static function mailer_configured(): bool
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        return ($CI->mdl_settings->setting('email_send_method') == 'phpmail') ||
-            ($CI->mdl_settings->setting('email_send_method') == 'sendmail') ||
-            (($CI->mdl_settings->setting('email_send_method') == 'smtp') && ($CI->mdl_settings->setting('smtp_server_address')));
+        return ($bridge->settings()->setting('email_send_method') == 'phpmail') ||
+            ($bridge->settings()->setting('email_send_method') == 'sendmail') ||
+            (($bridge->settings()->setting('email_send_method') == 'smtp') && ($bridge->settings()->setting('smtp_server_address')));
     }
 
     /**
@@ -40,8 +42,8 @@ class MailerHelper
             return false;
         }
     
-        $CI = & get_instance();
-        $CI->load->helper('mailer/phpmailer');
+        $bridge = LegacyBridge::getInstance();
+        $bridge->getRawInstance()->load->helper('mailer/phpmailer');
     
         $quote    = $CI->mdl_quotes->where('ip_quotes.quote_id', $quote_id)->get()->row();
         $index    = env('REMOVE_INDEXPHP', true) ? '' : 'index.php';
@@ -97,12 +99,12 @@ class MailerHelper
     public static function check_mail_errors(array $errors = [], $redirect = ''): void
     {
         if ($errors) {
-            $CI = & get_instance();
+            $bridge = LegacyBridge::getInstance();
             foreach ($errors as $i => $e) {
                 $errors[$i] = strtr(trans('form_validation_valid_email'), ['{field}' => trans($e)]);
             }
     
-            $CI->session->set_flashdata('alert_error', implode('<br>', $errors));
+            $bridge->session()->set_flashdata('alert_error', implode('<br>', $errors));
             $redirect = empty($redirect) ? (empty($_SERVER['HTTP_REFERER']) ? '' : $_SERVER['HTTP_REFERER']) : $redirect;
             redirect($redirect);
         }

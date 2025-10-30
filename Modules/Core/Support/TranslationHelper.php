@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * Translation Helper Class
  * 
@@ -16,13 +18,20 @@ class TranslationHelper
      */
     public static function trans($line, ?string $id = '', $default = null): string
     {
-        $CI = &get_instance();
-        $lang_string = $CI->lang->line($line);
+        $bridge = LegacyBridge::getInstance();
+        $lang = $bridge->lang();
+        $session = $bridge->session();
+        
+        if (!$lang) {
+            return $default ?? $line;
+        }
+        
+        $lang_string = $lang->line($line);
 
         // Fall back to default language if the current language has no translated string
-        if (empty($lang_string)) {
+        if (empty($lang_string) && $session) {
             // Save the current application language
-            $current_language = $CI->session->userdata('user_language');
+            $current_language = $session->userdata('user_language');
 
             if (empty($current_language) || $current_language == 'system') {
                 $current_language = get_setting('default_language') ?? 'english';
@@ -30,7 +39,7 @@ class TranslationHelper
 
             // Load the default language and translate the string
             self::setLanguage('english');
-            $lang_string = $CI->lang->line($line);
+            $lang_string = $lang->line($line);
 
             // Restore the application language to its previous setting
             self::setLanguage($current_language);
@@ -53,26 +62,34 @@ class TranslationHelper
      */
     public static function setLanguage(string $language): void
     {
+        $bridge = LegacyBridge::getInstance();
+        $lang = $bridge->lang();
+        $config = $bridge->config();
+        
+        if (!$lang || !$config) {
+            return;
+        }
+        
         // Clear the current loaded language
-        $CI = &get_instance();
-        $CI->lang->is_loaded = [];
-        $CI->lang->language = [];
+        $lang->is_loaded = [];
+        $lang->language = [];
 
         // Load system language if no custom language is set
-        $default_lang = isset($CI->mdl_settings) ? $CI->mdl_settings->setting('default_language') : 'english';
+        $settings = $bridge->settings();
+        $default_lang = $settings ? $settings->setting('default_language', 'english') : 'english';
         $new_language = ($language == 'system' ? $default_lang : $language);
 
-        $app_dir = $CI->config->_config_paths[0];
+        $app_dir = $config->_config_paths[0];
         $lang_dir = $app_dir . DIRECTORY_SEPARATOR . 'language';
 
         // Set the new language
-        $CI->lang->load('ip', $new_language);
-        $CI->lang->load('form_validation', $new_language);
+        $lang->load('ip', $new_language);
+        $lang->load('form_validation', $new_language);
         if (file_exists($lang_dir . DIRECTORY_SEPARATOR . $default_lang . DIRECTORY_SEPARATOR . 'custom_lang.php')) {
-            $CI->lang->load('custom', $new_language);
+            $lang->load('custom', $new_language);
         }
 
-        $CI->lang->load('gateway', $new_language);
+        $lang->load('gateway', $new_language);
     }
 
     /**
@@ -80,8 +97,13 @@ class TranslationHelper
      */
     public static function getAvailableLanguages(): array
     {
-        $CI = &get_instance();
-        $CI->load->helper('directory');
+        $bridge = LegacyBridge::getInstance();
+        
+        if (!$bridge->isAvailable()) {
+            return [];
+        }
+        
+        $bridge->loadHelper('directory');
 
         $languages = directory_map(APPPATH . 'language', true);
         sort($languages);

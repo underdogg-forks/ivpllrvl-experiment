@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * Date Helper Class
  * 
@@ -142,8 +144,14 @@ class DateHelper
      */
     public static function dateFormatSetting()
     {
-        $CI = &get_instance();
-        return $CI->mdl_settings->setting('date_format');
+        $bridge = LegacyBridge::getInstance();
+        $settings = $bridge->settings();
+        
+        if ($settings) {
+            return $settings->setting('date_format');
+        }
+        
+        return 'd/m/Y'; // Default fallback
     }
 
     /**

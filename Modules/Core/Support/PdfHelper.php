@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * PdfHelper
  * 
@@ -52,9 +54,9 @@ class PdfHelper
      */
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        $CI->load->model(
+        $bridge->getRawInstance()->load->model(
             [
                 'invoices/mdl_items',
                 'invoices/mdl_invoices',
@@ -64,7 +66,7 @@ class PdfHelper
             ]
         );
     
-        $CI->load->helper(['country', 'client']);
+        $bridge->getRawInstance()->load->helper(['country', 'client']);
     
         $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
         $invoice = $CI->mdl_invoices->get_payments($invoice);
@@ -73,7 +75,7 @@ class PdfHelper
         set_language($invoice->client_language);
     
         if ( ! $invoice_template) {
-            $CI->load->helper('template');
+            $bridge->getRawInstance()->load->helper('template');
             $invoice_template = select_pdf_invoice_template($invoice);
         }
     
@@ -113,7 +115,7 @@ class PdfHelper
         // For embed file on PDF
         $associatedFiles = null;
         if (get_setting('einvoicing')) {
-            $CI->load->helper('e-invoice');
+            $bridge->getRawInstance()->load->helper('e-invoice');
             // Get eInvoice name (version), user checks & shift legacy_calculation mode
             $einvoice = get_einvoice_usage($invoice, $items, false);
             // Set eInvoice config (false if Client & User not Ok)
@@ -152,10 +154,10 @@ class PdfHelper
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
     
-        $html = $CI->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
+        $html = $bridge->getRawInstance()->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
     
         // Create PDF with or without an embedded XML
-        $CI->load->helper('mpdf');
+        $bridge->getRawInstance()->load->helper('mpdf');
     
         $retval = pdf_create(
             html:             $html,
@@ -195,11 +197,11 @@ class PdfHelper
 
     public static function generate_invoice_sumex($invoice_id, $stream = true, $invoice_template = null, $client = false)
     {
-        $CI = & get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        $CI->load->model('invoices/mdl_items');
+        $bridge->getRawInstance()->load->model('invoices/mdl_items');
         $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
-        $CI->load->library('Sumex', [
+        $bridge->getRawInstance()->load->library('Sumex', [
             'invoice' => $invoice,
             'items'   => $CI->mdl_items->where('invoice_id', $invoice_id)->get()->result(),
         ]);
@@ -257,9 +259,9 @@ class PdfHelper
      */
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
-        $CI = &get_instance();
+        $bridge = LegacyBridge::getInstance();
     
-        $CI->load->model(
+        $bridge->getRawInstance()->load->model(
             [
                 'quotes/mdl_quotes',
                 'quotes/mdl_quote_items',
@@ -267,7 +269,7 @@ class PdfHelper
                 'custom_fields/mdl_custom_fields',
             ]
         );
-        $CI->load->helper(
+        $bridge->getRawInstance()->load->helper(
             [
                 'country',
                 'client',
@@ -280,7 +282,7 @@ class PdfHelper
         set_language($quote->client_language);
     
         if ( ! $quote_template) {
-            $quote_template = $CI->mdl_settings->setting('pdf_quote_template');
+            $quote_template = $bridge->settings()->setting('pdf_quote_template');
         }
     
         // Determine if discounts should be displayed
@@ -303,7 +305,7 @@ class PdfHelper
     
         // Automatic calculation mode
         if (get_setting('einvoicing')) {
-            $CI->load->helper('e-invoice');
+            $bridge->getRawInstance()->load->helper('e-invoice');
             // Only for shift the legacy_calculation mode
             get_einvoice_usage($quote, $items, false);
         }
@@ -318,9 +320,9 @@ class PdfHelper
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
     
-        $html = $CI->load->view('quote_templates/pdf/' . $quote_template, $data, true);
+        $html = $bridge->getRawInstance()->load->view('quote_templates/pdf/' . $quote_template, $data, true);
     
-        $CI->load->helper('mpdf');
+        $bridge->getRawInstance()->load->helper('mpdf');
     
         return pdf_create($html, trans('quote') . '_' . str_replace(['\\', '/'], '_', $quote->quote_number), $stream, $quote->quote_password);
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * DropzoneHelper
  * 
@@ -121,8 +123,8 @@ class DropzoneHelper
         $content_types = [];
         if ($acceptedExts === null) {
             // Default
-            $CI = & get_instance();
-            $CI->load->model('upload/mdl_uploads');
+            $bridge = LegacyBridge::getInstance();
+            $bridge->getRawInstance()->load->model('upload/mdl_uploads');
             $content_types = array_keys($CI->mdl_uploads->content_types);
         } elseif (is_array($acceptedExts)) {
             // User Overide

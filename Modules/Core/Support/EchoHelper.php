@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
+use Modules\Core\Services\LegacyBridge;
+
 /**
  * EchoHelper
  * 
@@ -72,8 +74,8 @@ class EchoHelper
      */
     public static function _csrf_field(): void
     {
-        $CI = & get_instance();
-        echo '<input type="hidden" name="' . $CI->config->item('csrf_token_name');
+        $bridge = LegacyBridge::getInstance();
+        echo '<input type="hidden" name="' . $bridge->config()->item('csrf_token_name');
         echo '" value="' . $CI->security->get_csrf_hash() . '">';
     }
 
