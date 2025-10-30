@@ -1,8 +1,5 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
 
 defined('EXT') || define('EXT', '.php');
 

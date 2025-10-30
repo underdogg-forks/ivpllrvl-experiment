@@ -163,3 +163,69 @@ if (! function_exists('env_bool')) {
         return env($key, $default) === 'true';
     }
 }
+
+// Define constants that may be needed by legacy code
+if (!defined('IP_DEBUG')) {
+    define('IP_DEBUG', env_bool('ENABLE_DEBUG', 'false'));
+}
+if (!defined('SUMEX_SETTINGS')) {
+    define('SUMEX_SETTINGS', env_bool('SUMEX_SETTINGS', 'false'));
+}
+if (!defined('SUMEX_URL')) {
+    define('SUMEX_URL', env('SUMEX_URL', ''));
+}
+
+// Define path constants if not already defined
+if (!defined('FCPATH')) {
+    define('FCPATH', dirname(__DIR__) . '/public' . DIRECTORY_SEPARATOR);
+}
+if (!defined('BASEPATH')) {
+    // For Laravel, we don't need CodeIgniter system path, but legacy code might reference it
+    define('BASEPATH', dirname(__DIR__) . '/vendor/codeigniter/framework/system' . DIRECTORY_SEPARATOR);
+}
+if (!defined('APPPATH')) {
+    define('APPPATH', dirname(__DIR__) . '/application' . DIRECTORY_SEPARATOR);
+}
+if (!defined('VIEWPATH')) {
+    define('VIEWPATH', dirname(__DIR__) . '/application/views' . DIRECTORY_SEPARATOR);
+}
+if (!defined('SELF')) {
+    define('SELF', 'index.php');
+}
+if (!defined('SYSDIR')) {
+    define('SYSDIR', 'system');
+}
+
+// Upload paths
+if (!defined('UPLOADS_FOLDER')) {
+    define('UPLOADS_FOLDER', dirname(__DIR__) . '/uploads' . DIRECTORY_SEPARATOR);
+}
+if (!defined('UPLOADS_ARCHIVE_FOLDER')) {
+    define('UPLOADS_ARCHIVE_FOLDER', UPLOADS_FOLDER . 'archive' . DIRECTORY_SEPARATOR);
+}
+if (!defined('UPLOADS_CFILES_FOLDER')) {
+    define('UPLOADS_CFILES_FOLDER', UPLOADS_FOLDER . 'customer_files' . DIRECTORY_SEPARATOR);
+}
+if (!defined('UPLOADS_TEMP_FOLDER')) {
+    define('UPLOADS_TEMP_FOLDER', UPLOADS_FOLDER . 'temp' . DIRECTORY_SEPARATOR);
+}
+if (!defined('UPLOADS_TEMP_MPDF_FOLDER')) {
+    define('UPLOADS_TEMP_MPDF_FOLDER', UPLOADS_TEMP_FOLDER . 'mpdf' . DIRECTORY_SEPARATOR);
+}
+
+// Other paths
+if (!defined('THEME_FOLDER')) {
+    define('THEME_FOLDER', dirname(__DIR__) . '/public/assets' . DIRECTORY_SEPARATOR);
+}
+if (!defined('MODULES_PATH')) {
+    define('MODULES_PATH', dirname(__DIR__) . '/Modules' . DIRECTORY_SEPARATOR);
+}
+if (!defined('RESOURCES_PATH')) {
+    define('RESOURCES_PATH', dirname(__DIR__) . '/resources' . DIRECTORY_SEPARATOR);
+}
+if (!defined('LOGS_FOLDER')) {
+    define('LOGS_FOLDER', dirname(__DIR__) . '/storage/logs' . DIRECTORY_SEPARATOR);
+}
+if (!defined('CACHE_FOLDER')) {
+    define('CACHE_FOLDER', dirname(__DIR__) . '/storage/cache' . DIRECTORY_SEPARATOR);
+}

@@ -1,8 +1,5 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
 
 /*
  * InvoicePlane
@@ -22,40 +19,42 @@ if ( ! defined('BASEPATH')) {
  *
  * @return string
  */
-function trans($line, ?string $id = '', $default = null)
-{
-    $CI          = & get_instance();
-    $lang_string = $CI->lang->line($line);
-
-    // Fall back to default language if the current language has no translated string
-    if (empty($lang_string)) {
-        // Save the current application language (code borrowed from Base_Controller.php)
-        $current_language = $CI->session->userdata('user_language');
-
-        if (empty($current_language) || $current_language == 'system') {
-            // todo gives error at startup, fix later
-            // #1034: Translation breaks in PDF-template
-            $current_language = get_setting('default_language') ?? 'english';
-        }
-
-        // Load the default language and translate the string
-        set_language('english');
+if (!function_exists('trans')) {
+    function trans($line, ?string $id = '', $default = null)
+    {
+        $CI          = & get_instance();
         $lang_string = $CI->lang->line($line);
 
-        // Restore the application language to its previous setting
-        set_language($current_language);
-    }
+        // Fall back to default language if the current language has no translated string
+        if (empty($lang_string)) {
+            // Save the current application language (code borrowed from Base_Controller.php)
+            $current_language = $CI->session->userdata('user_language');
 
-    // Fall back to the $line value if the default language has no translation either
-    if (empty($lang_string)) {
-        $lang_string = $default != null ? $default : $line;
-    }
+            if (empty($current_language) || $current_language == 'system') {
+                // todo gives error at startup, fix later
+                // #1034: Translation breaks in PDF-template
+                $current_language = get_setting('default_language') ?? 'english';
+            }
 
-    if ($id != '') {
-        $lang_string = '<label for="' . $id . '">' . $lang_string . '</label>';
-    }
+            // Load the default language and translate the string
+            set_language('english');
+            $lang_string = $CI->lang->line($line);
 
-    return $lang_string;
+            // Restore the application language to its previous setting
+            set_language($current_language);
+        }
+
+        // Fall back to the $line value if the default language has no translation either
+        if (empty($lang_string)) {
+            $lang_string = $default != null ? $default : $line;
+        }
+
+        if ($id != '') {
+            $lang_string = '<label for="' . $id . '">' . $lang_string . '</label>';
+        }
+
+        return $lang_string;
+    }
 }
 
 /**

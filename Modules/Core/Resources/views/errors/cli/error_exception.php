@@ -1,4 +1,3 @@
-<?php defined('BASEPATH') || exit('No direct script access allowed'); ?>
 
 An uncaught Exception was encountered
 

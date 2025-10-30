@@ -1,8 +1,5 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;

@@ -14,9 +14,6 @@
  * functions are available throughout the application.
  */
 
-if (!defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
 
 // Get the path to the Modules/Core/Helpers directory
 $helpers_path = dirname(dirname(dirname(__DIR__))) . '/Modules/Core/Helpers/';

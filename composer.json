@@ -17,7 +17,7 @@
     "require": {
         "php": "^8.2",
         "endroid/qr-code": "^4.8",
-        "filament/filament": "^3.2",
+        "filament/filament": "^4.0",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^12.0",
         "moneyphp/money": "^4.7",
@@ -45,7 +45,8 @@
             "Modules\\": "Modules/"
         },
         "files": [
-            "bootstrap/helpers.php"
+            "bootstrap/helpers.php",
+            "Modules/Core/Helpers/bc_helper.php"
         ]
     },
     "autoload-dev": {
