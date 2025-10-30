@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * ItemAmount Model
- * 
+ *
  * Eloquent model for managing invoice item amounts
  * Migrated from CodeIgniter model
  */
@@ -65,7 +65,7 @@ class ItemAmount extends BaseModel
      */
     public function item()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Item', 'item_id', 'item_id');
+        return $this->belongsTo('Modules\Invoices\Models\Item', 'item_id', 'item_id');
     }
 
     /**
@@ -115,11 +115,11 @@ class ItemAmount extends BaseModel
 
             // Calculate with item-level discount
             $itemDiscountTotal = $item->item_discount_amount * $item->item_quantity;
-            
+
             // Tax after all discounts
-            $itemTaxTotal = ($itemSubtotal - $itemDiscount - $itemDiscountTotal) 
+            $itemTaxTotal = ($itemSubtotal - $itemDiscount - $itemDiscountTotal)
                 * (($item->taxRate->tax_rate_percent ?? 0) / 100);
-            
+
             $itemTotal = $itemSubtotal - $itemDiscount - $itemDiscountTotal + $itemTaxTotal;
         }
 

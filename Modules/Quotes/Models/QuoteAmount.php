@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Quotes\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * QuoteAmount Model
- * 
+ *
  * Eloquent model for managing quote amounts
  * Migrated from CodeIgniter model
  */
@@ -67,7 +67,7 @@ class QuoteAmount extends BaseModel
      */
     public function quote()
     {
-        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
+        return $this->belongsTo('Modules\Quotes\Models\Quote', 'quote_id', 'quote_id');
     }
 
     /**
@@ -98,7 +98,7 @@ class QuoteAmount extends BaseModel
 
         // Calculate subtotal and total based on legacy or new calculation mode
         $legacyCalculation = config_item('legacy_calculation');
-        
+
         if ($legacyCalculation) {
             $quoteItemSubtotal = $quoteAmounts->quote_item_subtotal - $quoteAmounts->quote_item_discount;
             $quoteSubtotal = $quoteItemSubtotal + $quoteAmounts->quote_item_tax_total;
@@ -181,7 +181,7 @@ class QuoteAmount extends BaseModel
         $legacyCalculation = config_item('legacy_calculation');
 
         // Only applicable in legacy calculation mode
-        $quoteTaxRates = $legacyCalculation 
+        $quoteTaxRates = $legacyCalculation
             ? QuoteTaxRate::where('quote_id', $quoteId)->get()
             : collect([]);
 
@@ -193,11 +193,11 @@ class QuoteAmount extends BaseModel
             foreach ($quoteTaxRates as $quoteTaxRate) {
                 if ($quoteTaxRate->include_item_tax) {
                     // Include applied item tax
-                    $quoteTaxRateAmount = ($quoteAmount->quote_item_subtotal + $quoteAmount->quote_item_tax_total) 
+                    $quoteTaxRateAmount = ($quoteAmount->quote_item_subtotal + $quoteAmount->quote_item_tax_total)
                         * ($quoteTaxRate->quote_tax_rate_percent / 100);
                 } else {
                     // Don't include applied item tax
-                    $quoteTaxRateAmount = $quoteAmount->quote_item_subtotal 
+                    $quoteTaxRateAmount = $quoteAmount->quote_item_subtotal
                         * ($quoteTaxRate->quote_tax_rate_percent / 100);
                 }
 
@@ -221,8 +221,8 @@ class QuoteAmount extends BaseModel
             $quoteAmount = static::where('quote_id', $quoteId)->first();
 
             // Recalculate quote total
-            $quoteTotal = $quoteAmount->quote_item_subtotal 
-                + $quoteAmount->quote_item_tax_total 
+            $quoteTotal = $quoteAmount->quote_item_subtotal
+                + $quoteAmount->quote_item_tax_total
                 + $quoteAmount->quote_tax_total;
 
             // Apply discount for legacy calculation

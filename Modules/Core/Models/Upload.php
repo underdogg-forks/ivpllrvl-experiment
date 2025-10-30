@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Upload Model
- * 
+ *
  * Eloquent model for managing ip_uploads
  * Migrated from CodeIgniter model
  */

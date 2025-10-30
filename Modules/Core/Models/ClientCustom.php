@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * ClientCustom Model
- * 
+ *
  * Eloquent model for managing client custom fields
  * Migrated from CodeIgniter Mdl_Client_Custom model
- * 
+ *
  * @property int $client_custom_id
  * @property int $client_id
  */

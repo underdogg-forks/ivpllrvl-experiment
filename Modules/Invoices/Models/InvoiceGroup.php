@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * InvoiceGroup Model
- * 
+ *
  * Eloquent model for managing ip_invoice_groups
  * Migrated from CodeIgniter model
  */
@@ -72,7 +72,7 @@ class InvoiceGroup extends BaseModel
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Invoices\Entities\Invoice', 'invoice_group_id', 'invoice_group_id');
+        return $this->hasMany('Modules\Invoices\Models\Invoice', 'invoice_group_id', 'invoice_group_id');
     }
 
     /**

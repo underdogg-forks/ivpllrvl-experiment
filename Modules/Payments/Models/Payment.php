@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Payments\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Payment Model
- * 
+ *
  * Eloquent model for managing payments
  * Migrated from CodeIgniter Mdl_Payments
  */
@@ -63,7 +63,7 @@ class Payment extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -71,7 +71,7 @@ class Payment extends BaseModel
      */
     public function paymentMethod()
     {
-        return $this->belongsTo('Modules\Payments\Entities\PaymentMethod', 'payment_method_id', 'payment_method_id');
+        return $this->belongsTo('Modules\Payments\Models\PaymentMethod', 'payment_method_id', 'payment_method_id');
     }
 
     /**

@@ -1,14 +1,8 @@
 <?php
 
+namespace Modules\Core\Libraries;
 
-/*
- * InvoicePlane
- *
- * @author		InvoicePlane Developers & Contributors
- * @copyright	Copyright (c) 2012 - 2018 InvoicePlane.com
- * @license		https://invoiceplane.com/license.txt
- * @link		https://invoiceplane.com
- */
+
 
 #[AllowDynamicProperties]
 class MY_Form_validation extends CI_Form_validation

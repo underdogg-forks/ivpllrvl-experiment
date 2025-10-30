@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Quotes\Models;
 
 use Modules\Core\Models\BaseModel;
-use Modules\Invoices\Entities\InvoiceGroup;
-use Modules\Core\Entities\QuoteCustom;
+use Modules\Invoices\Models\InvoiceGroup;
+use Modules\Core\Models\QuoteCustom;
 
 /**
  * Quote Model
- * 
+ *
  * Eloquent model for managing ip_quotes
  * Migrated from CodeIgniter model
  */
@@ -76,7 +76,7 @@ class Quote extends BaseModel
      */
     public function client()
     {
-        return $this->belongsTo('Modules\Crm\Entities\Client', 'client_id', 'client_id');
+        return $this->belongsTo('Modules\Crm\Models\Client', 'client_id', 'client_id');
     }
 
     /**
@@ -84,7 +84,7 @@ class Quote extends BaseModel
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Users\Entities\User', 'user_id', 'user_id');
+        return $this->belongsTo('Modules\Users\Models\User', 'user_id', 'user_id');
     }
 
     /**
@@ -92,7 +92,7 @@ class Quote extends BaseModel
      */
     public function invoiceGroup()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
+        return $this->belongsTo('Modules\Invoices\Models\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
     }
 
     /**
@@ -100,7 +100,7 @@ class Quote extends BaseModel
      */
     public function amounts()
     {
-        return $this->hasOne('Modules\Quotes\Entities\QuoteAmount', 'quote_id', 'quote_id');
+        return $this->hasOne('Modules\Quotes\Models\QuoteAmount', 'quote_id', 'quote_id');
     }
 
     /**
@@ -108,7 +108,7 @@ class Quote extends BaseModel
      */
     public function items()
     {
-        return $this->hasMany('Modules\Quotes\Entities\QuoteItem', 'quote_id', 'quote_id');
+        return $this->hasMany('Modules\Quotes\Models\QuoteItem', 'quote_id', 'quote_id');
     }
 
     /**
@@ -116,7 +116,7 @@ class Quote extends BaseModel
      */
     public function taxRates()
     {
-        return $this->hasMany('Modules\Quotes\Entities\QuoteTaxRate', 'quote_id', 'quote_id');
+        return $this->hasMany('Modules\Quotes\Models\QuoteTaxRate', 'quote_id', 'quote_id');
     }
 
     /**

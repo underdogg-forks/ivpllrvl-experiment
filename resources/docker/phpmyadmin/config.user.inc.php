@@ -7,7 +7,7 @@
  * or at <https://docs.phpmyadmin.net/>.
  */
 
-declare(strict_types=1);
+
 
 /**
  * This is needed for cookie based authentication to encrypt password in

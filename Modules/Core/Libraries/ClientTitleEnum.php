@@ -1,5 +1,8 @@
 <?php
 
+namespace Modules\Core\Libraries;
+
+use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
 class ClientTitleEnum

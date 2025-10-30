@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 
 /**
  * ClientHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class ClientHelper
@@ -26,20 +26,20 @@ class ClientHelper
             if ( ! property_exists($CI, 'mdl_clients')) {
                 // TODO: Replace with Laravel equivalent: // load->model('clients/mdl_clients');
             }
-    
+
             $client = $CI->mdl_clients->get_by_id($client);
         }
-    
+
         // Not exist or find, Stop.
         if (empty($client->client_name)) {
             return '';
         }
-    
+
         $client_title = '';
         if ($show_title && ! empty($client->client_title)) {
             $client_title = ucfirst(in_array($client->client_title, ClientTitleEnum::VALUES, true) ? trans($client->client_title) : $client->client_title) . ' ';
         }
-    
+
         return $client_title . $client->client_name . (empty($client->client_surname) ? '' : ' ' . $client->client_surname);
     }
 
@@ -53,11 +53,11 @@ class ClientHelper
         if ($gender == 0) {
             return trans('gender_male');
         }
-    
+
         if ($gender == 1) {
             return trans('gender_female');
         }
-    
+
         return trans('gender_other');
     }
 

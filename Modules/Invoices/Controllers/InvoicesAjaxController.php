@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Invoices\Controllers;
 
@@ -50,11 +50,11 @@ class InvoicesAjaxController
 
         // Get items from JSON
         $items = json_decode(request()->input('items'), true);
-        
+
         // Handle discount precedence - percent by default, prevent both
         $invoiceDiscountPercent = (float) request()->input('invoice_discount_percent', 0);
         $invoiceDiscountAmount = (float) request()->input('invoice_discount_amount', 0);
-        
+
         if ($invoiceDiscountPercent && $invoiceDiscountAmount) {
             $invoiceDiscountAmount = 0.0;
         }

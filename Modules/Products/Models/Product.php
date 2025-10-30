@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Products\Entities;
+namespace Modules\Products\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Product Model
- * 
+ *
  * Eloquent model for managing products
  * Migrated from CodeIgniter Mdl_Products
  */
@@ -70,7 +70,7 @@ class Product extends BaseModel
      */
     public function family()
     {
-        return $this->belongsTo('Modules\Products\Entities\Family', 'family_id', 'family_id');
+        return $this->belongsTo('Modules\Products\Models\Family', 'family_id', 'family_id');
     }
 
     /**
@@ -78,7 +78,7 @@ class Product extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'tax_rate_id', 'tax_rate_id');
     }
 
     /**
@@ -86,7 +86,7 @@ class Product extends BaseModel
      */
     public function unit()
     {
-        return $this->belongsTo('Modules\Products\Entities\Unit', 'unit_id', 'unit_id');
+        return $this->belongsTo('Modules\Products\Models\Unit', 'unit_id', 'unit_id');
     }
 
     /**
@@ -113,8 +113,8 @@ class Product extends BaseModel
     {
         return $query->where(function ($q) use ($search) {
             $q->where('product_sku', 'like', "%{$search}%")
-              ->orWhere('product_name', 'like', "%{$search}%")
-              ->orWhere('product_description', 'like', "%{$search}%");
+                ->orWhere('product_name', 'like', "%{$search}%")
+                ->orWhere('product_description', 'like', "%{$search}%");
         });
     }
 
@@ -148,8 +148,6 @@ class Product extends BaseModel
 
     /**
      * Get validation rules for products.
-     *
-     * @return array
      */
     public static function validationRules(): array
     {

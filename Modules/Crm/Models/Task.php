@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Task Model
- * 
+ *
  * Eloquent model for managing ip_tasks
  * Migrated from CodeIgniter model
  */

@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 /**
  * NumberHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class NumberHelper
@@ -26,15 +26,15 @@ class NumberHelper
         $decimal_point             = Setting::getValue('decimal_point') ?? '.';
         $decimals                  = $decimal_point ? (int) (Setting::getValue('tax_rate_decimal_places') ?? 2) : 0;
         $amount                    = (float) (is_numeric($amount) ? $amount : standardize_amount($amount));
-    
+
         if ($currency_symbol_placement == 'before') {
             return $currency_symbol . number_format($amount, $decimals, $decimal_point, $thousands_separator);
         }
-    
+
         if ($currency_symbol_placement == 'afterspace') {
             return number_format($amount, $decimals, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
         }
-    
+
         return number_format($amount, $decimals, $decimal_point, $thousands_separator) . $currency_symbol;
     }
 
@@ -51,7 +51,7 @@ class NumberHelper
             $decimal_point       = Setting::getValue('decimal_point') ?? '.';
             $decimals            = $decimal_point ? (int) (Setting::getValue('tax_rate_decimal_places') ?? 2) : 0;
             $amount              = is_numeric($amount) ? $amount : standardize_amount($amount);
-    
+
             return number_format($amount, $decimals, $decimal_point, $thousands_separator);
         }
     }
@@ -69,7 +69,7 @@ class NumberHelper
             $decimal_point       = Setting::getValue('decimal_point') ?? '.';
             $decimals            = $decimal_point ? (int) (Setting::getValue('default_item_decimals') ?? 2) : 0;
             $amount              = is_numeric($amount) ? $amount : standardize_amount($amount);
-    
+
             return number_format($amount, $decimals, $decimal_point, $thousands_separator);
         }
     }
@@ -84,18 +84,18 @@ class NumberHelper
         if ($amount && ! is_numeric($amount)) {
             $thousands_separator = Setting::getValue('thousands_separator') ?? ',';
             $decimal_point       = Setting::getValue('decimal_point') ?? '.';
-    
+
             if ($thousands_separator == '.' && ! mb_substr_count($amount, ',') && mb_substr_count($amount, '.') > 1) {
                 $amount[mb_strrpos($amount, '.')] = ','; // Replace last position of dot to comma
             }
-    
+
             if ($thousands_separator) {
                 $amount = strtr($amount, [$thousands_separator => '', $decimal_point => '.']);
             } else {
                 $amount = strtr($amount, [$decimal_point => '.']);
             }
         }
-    
+
         return $amount;
     }
 

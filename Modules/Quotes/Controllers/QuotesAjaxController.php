@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Quotes\Controllers;
 
@@ -22,17 +22,17 @@ use Modules\Core\Models\QuoteCustom;
 
 /**
  * QuotesAjaxController
- * 
+ *
  * Handles AJAX operations for quotes including create, save, copy, and convert to invoice
  */
 class QuotesAjaxController
 {
     /**
      * Save quote with items, tax rates, and custom fields
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function save
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 21
@@ -41,28 +41,28 @@ class QuotesAjaxController
     {
         $quoteId = (int) $request->input('quote_id');
         $quote = Quote::query()->findOrFail($quoteId);
-        
+
         // Validate quote
         $validation = Quote::validationRulesSaveQuote();
         $validator = validator($request->all(), $validation);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => $validator->errors()->toArray()
             ]);
         }
-        
+
         // Process items
         $items = json_decode($request->input('items'), false);
         $quoteDiscountPercent = (float) $request->input('quote_discount_percent', 0);
         $quoteDiscountAmount = (float) $request->input('quote_discount_amount', 0);
-        
+
         // Only one discount allowed
         if ($quoteDiscountPercent && $quoteDiscountAmount) {
             $quoteDiscountAmount = 0.0;
         }
-        
+
         // Calculate items subtotal for global discount distribution
         $itemsSubtotal = 0.0;
         if ($quoteDiscountAmount) {
@@ -72,14 +72,14 @@ class QuotesAjaxController
                 }
             }
         }
-        
+
         $globalDiscount = [
             'amount' => $quoteDiscountAmount,
             'percent' => $quoteDiscountPercent,
             'item' => 0.0,
             'items_subtotal' => $itemsSubtotal,
         ];
-        
+
         // Save each item
         foreach ($items as $item) {
             if (!empty($item->item_name)) {
@@ -96,7 +96,7 @@ class QuotesAjaxController
                     'item_product_unit' => Unit::getName($item->item_product_unit_id ?? null, $item->item_quantity ?? 1),
                     'item_order' => $item->item_order ?? 0,
                 ];
-                
+
                 $itemId = $item->item_id ?? null;
                 QuoteItem::saveItem($itemId, $itemData, $globalDiscount);
             } elseif (empty($item->item_name) && (!empty($item->item_quantity) || !empty($item->item_price))) {
@@ -106,21 +106,21 @@ class QuotesAjaxController
                 ]);
             }
         }
-        
+
         // Generate quote number if needed
         $quoteNumber = $request->input('quote_number');
         $quoteStatusId = $request->input('quote_status_id');
-        
+
         if (empty($quoteNumber) && $quoteStatusId != 1) {
             $quoteGroupId = $quote->invoice_group_id;
             $quoteNumber = Quote::getQuoteNumber($quoteGroupId);
         }
-        
+
         // Adjust discount for non-legacy calculation
         if (!config('legacy_calculation') && $quoteDiscountAmount && $quoteDiscountAmount != $globalDiscount['item']) {
             $quoteDiscountAmount = $globalDiscount['item'];
         }
-        
+
         // Save quote
         $quote->update([
             'quote_number' => $quoteNumber,
@@ -132,17 +132,17 @@ class QuotesAjaxController
             'quote_discount_amount' => $quoteDiscountAmount,
             'quote_discount_percent' => $quoteDiscountPercent,
         ]);
-        
+
         // Recalculate amounts for legacy mode
         if (config('legacy_calculation')) {
             QuoteAmount::calculate($quoteId, $globalDiscount);
         }
-        
+
         // Save custom fields
         if ($request->input('custom')) {
             $customData = [];
             $values = [];
-            
+
             foreach ($request->input('custom') as $custom) {
                 if (preg_match("/^(.*)\[\]$/i", $custom['name'], $matches)) {
                     $values[$matches[1]][] = $custom['value'];
@@ -150,13 +150,13 @@ class QuotesAjaxController
                     $values[$custom['name']] = $custom['value'];
                 }
             }
-            
+
             foreach ($values as $key => $value) {
                 if (preg_match("/^custom\[(.*?)\](?:\[\]|)$/", $key, $matches)) {
                     $customData[$matches[1]] = $value;
                 }
             }
-            
+
             $result = QuoteCustom::saveCustom($quoteId, $customData);
             if ($result !== true) {
                 return response()->json([
@@ -165,16 +165,16 @@ class QuotesAjaxController
                 ]);
             }
         }
-        
+
         return response()->json(['success' => 1]);
     }
-    
+
     /**
      * Save quote tax rate (legacy calculation only)
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function save_quote_tax_rate
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 183
@@ -183,29 +183,29 @@ class QuotesAjaxController
     {
         $validation = QuoteTaxRate::validationRules();
         $validator = validator($request->all(), $validation);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => $validator->errors()->toArray()
             ]);
         }
-        
+
         // Only save for legacy calculation mode
         if (config('legacy_calculation')) {
             QuoteTaxRate::saveTaxRate($request->all());
         }
-        
+
         return response()->json(['success' => 1]);
     }
-    
+
     /**
      * Delete a quote item
-     * 
+     *
      * @param Request $request
      * @param int $quoteId
      * @return JsonResponse
-     * 
+     *
      * @legacy-function delete_item
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 207
@@ -214,7 +214,7 @@ class QuotesAjaxController
     {
         $success = 0;
         $itemId = (int) $request->input('item_id');
-        
+
         // Verify quote exists
         $quote = Quote::query()->find($quoteId);
         if ($quote || empty($itemId)) {
@@ -223,16 +223,16 @@ class QuotesAjaxController
                 $success = 1;
             }
         }
-        
+
         return response()->json(['success' => $success]);
     }
-    
+
     /**
      * Get a quote item by ID
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function get_item
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 229
@@ -241,16 +241,16 @@ class QuotesAjaxController
     {
         $itemId = (int) $request->input('item_id');
         $item = QuoteItem::query()->find($itemId);
-        
+
         return response()->json($item ?? []);
     }
-    
+
     /**
      * Display modal for copying a quote
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function modal_copy_quote
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 238
@@ -259,10 +259,10 @@ class QuotesAjaxController
     {
         $quoteId = (int) $request->input('quote_id');
         $clientId = (int) $request->input('client_id');
-        
+
         $quote = Quote::with('client')->findOrFail($quoteId);
         $client = Client::query()->find($clientId);
-        
+
         $data = [
             'invoice_groups' => InvoiceGroup::query()->all(),
             'tax_rates' => TaxRate::query()->all(),
@@ -270,16 +270,16 @@ class QuotesAjaxController
             'quote' => $quote,
             'client' => $client,
         ];
-        
+
         return view('quotes::modal_copy_quote', $data);
     }
-    
+
     /**
      * Copy a quote with all items, tax rates, and custom fields
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function copy_quote
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 259
@@ -288,33 +288,33 @@ class QuotesAjaxController
     {
         $validation = Quote::validationRules();
         $validator = validator($request->all(), $validation);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => $validator->errors()->toArray()
             ]);
         }
-        
+
         // Create new quote
         $targetId = Quote::query()->createQuote($request->all());
         $sourceId = (int) $request->input('quote_id');
-        
+
         // Copy all related data
         Quote::copyQuote($sourceId, $targetId);
-        
+
         return response()->json([
             'success' => 1,
             'quote_id' => $targetId
         ]);
     }
-    
+
     /**
      * Display modal for changing quote user
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function modal_change_user
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 294
@@ -323,22 +323,22 @@ class QuotesAjaxController
     {
         $userId = (int) $request->input('user_id');
         $quoteId = (int) $request->input('quote_id');
-        
+
         $data = [
             'user_id' => $userId,
             'quote_id' => $quoteId,
             'users' => User::latest()->get(),
         ];
-        
+
         return view('layout::ajax.modal_change_user_client', $data);
     }
-    
+
     /**
      * Change the user assigned to a quote
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function change_user
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 308
@@ -347,29 +347,29 @@ class QuotesAjaxController
     {
         $userId = (int) $request->input('user_id');
         $user = User::query()->find($userId);
-        
+
         if (!$user) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => ['user_id' => 'User not found']
             ]);
         }
-        
+
         $quoteId = (int) $request->input('quote_id');
         Quote::query()->where('quote_id', $quoteId)->update(['user_id' => $userId]);
-        
+
         return response()->json([
             'success' => 1,
             'quote_id' => $quoteId
         ]);
     }
-    
+
     /**
      * Display modal for changing quote client
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function modal_change_client
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 343
@@ -378,22 +378,22 @@ class QuotesAjaxController
     {
         $clientId = (int) $request->input('client_id');
         $quoteId = (int) $request->input('quote_id');
-        
+
         $data = [
             'client_id' => $clientId,
             'quote_id' => $quoteId,
             'clients' => Client::latest()->get(),
         ];
-        
+
         return view('layout::ajax.modal_change_user_client', $data);
     }
-    
+
     /**
      * Change the client assigned to a quote
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function change_client
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 357
@@ -402,29 +402,29 @@ class QuotesAjaxController
     {
         $clientId = (int) $request->input('client_id');
         $client = Client::query()->find($clientId);
-        
+
         if (!$client) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => ['client_id' => 'Client not found']
             ]);
         }
-        
+
         $quoteId = (int) $request->input('quote_id');
         Quote::query()->where('quote_id', $quoteId)->update(['client_id' => $clientId]);
-        
+
         return response()->json([
             'success' => 1,
             'quote_id' => $quoteId
         ]);
     }
-    
+
     /**
      * Display modal for creating a new quote
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function modal_create_quote
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 392
@@ -433,23 +433,23 @@ class QuotesAjaxController
     {
         $clientId = (int) $request->input('client_id');
         $client = Client::query()->find($clientId);
-        
+
         $data = [
             'invoice_groups' => InvoiceGroup::query()->all(),
             'tax_rates' => TaxRate::query()->all(),
             'client' => $client,
             'clients' => Client::latest()->get(),
         ];
-        
+
         return view('quotes::modal_create_quote', $data);
     }
-    
+
     /**
      * Create a new quote
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function create
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 411
@@ -458,28 +458,28 @@ class QuotesAjaxController
     {
         $validation = Quote::validationRules();
         $validator = validator($request->all(), $validation);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => $validator->errors()->toArray()
             ]);
         }
-        
+
         $quoteId = Quote::query()->createQuote($request->all());
-        
+
         return response()->json([
             'success' => 1,
             'quote_id' => $quoteId
         ]);
     }
-    
+
     /**
      * Display modal for converting quote to invoice
-     * 
+     *
      * @param int $quoteId
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function modal_quote_to_invoice
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 433
@@ -487,22 +487,22 @@ class QuotesAjaxController
     public function modalQuoteToInvoice(int $quoteId)
     {
         $quote = Quote::query()->findOrFail($quoteId);
-        
+
         $data = [
             'invoice_groups' => InvoiceGroup::query()->all(),
             'quote_id' => $quoteId,
             'quote' => $quote,
         ];
-        
+
         return view('quotes::modal_quote_to_invoice', $data);
     }
-    
+
     /**
      * Convert a quote to an invoice
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
-     * 
+     *
      * @legacy-function quote_to_invoice
      * @legacy-file application/modules/quotes/controllers/Ajax.php
      * @legacy-line 449
@@ -511,36 +511,36 @@ class QuotesAjaxController
     {
         $validation = Invoice::validationRules();
         $validator = validator($request->all(), $validation);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => 0,
                 'validation_errors' => $validator->errors()->toArray()
             ]);
         }
-        
+
         // Get the quote
         $quoteId = (int) $request->input('quote_id');
         $quote = Quote::with(['items', 'taxRates'])->findOrFail($quoteId);
-        
+
         // Create new invoice
         $invoiceData = array_merge($request->all(), [
             'client_id' => $quote->client_id,
             'user_id' => $quote->user_id,
             'invoice_group_id' => $request->input('invoice_group_id', $quote->invoice_group_id),
         ]);
-        
+
         $invoiceId = Invoice::query()->createInvoice($invoiceData, false);
-        
+
         // Update invoice discounts
         Invoice::query()->where('invoice_id', $invoiceId)->update([
             'invoice_discount_amount' => $quote->quote_discount_amount,
             'invoice_discount_percent' => $quote->quote_discount_percent,
         ]);
-        
+
         // Save invoice ID to quote
         Quote::query()->where('quote_id', $quoteId)->update(['invoice_id' => $invoiceId]);
-        
+
         // Prepare global discount for items
         $globalDiscount = [
             'amount' => $quote->quote_discount_amount,
@@ -548,7 +548,7 @@ class QuotesAjaxController
             'item' => 0.0,
             'items_subtotal' => QuoteItem::getItemsSubtotal($quoteId),
         ];
-        
+
         // Copy quote items to invoice
         foreach ($quote->items as $quoteItem) {
             $itemData = [
@@ -564,10 +564,10 @@ class QuotesAjaxController
                 'item_discount_amount' => $quoteItem->item_discount_amount,
                 'item_order' => $quoteItem->item_order,
             ];
-            
+
             Item::saveItem(null, $itemData, $globalDiscount);
         }
-        
+
         // Copy quote tax rates to invoice
         foreach ($quote->taxRates as $quoteTaxRate) {
             $taxRateData = [
@@ -576,10 +576,10 @@ class QuotesAjaxController
                 'include_item_tax' => $quoteTaxRate->include_item_tax,
                 'invoice_tax_rate_amount' => $quoteTaxRate->quote_tax_rate_amount,
             ];
-            
+
             InvoiceTaxRate::saveTaxRate($taxRateData);
         }
-        
+
         return response()->json([
             'success' => 1,
             'invoice_id' => $invoiceId

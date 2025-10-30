@@ -8,17 +8,17 @@ use Modules\Payments\Models\PaymentLog;
 
 /**
  * PaymentsController
- * 
+ *
  * Handles payment recording and tracking
  */
 class PaymentsController
 {
     /**
      * Display a paginated list of payments
-     * 
+     *
      * @param int $page Page number for pagination
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function index
      * @legacy-file application/modules/payments/controllers/Payments.php
      * @legacy-line 32
@@ -39,12 +39,12 @@ class PaymentsController
 
     /**
      * Display form for creating or editing a payment
-     * 
+     *
      * Note: Simplified custom fields handling - full implementation pending
-     * 
+     *
      * @param int|null $id Payment ID (null for create)
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function form
      * @legacy-file application/modules/payments/controllers/Payments.php
      * @legacy-line 50
@@ -98,9 +98,9 @@ class PaymentsController
 
         // Load related data
         $paymentMethods = PaymentMethod::query()->orderBy('payment_method_name')->get();
-        
+
         // Load open invoices (invoices with balance > 0)
-        $openInvoices = \Modules\Invoices\Entities\Invoice::query()->where('invoice_balance', '>', 0)
+        $openInvoices = \Modules\Invoices\Models\Invoice::query()->where('invoice_balance', '>', 0)
             ->with('client')
             ->orderBy('invoice_date_created', 'desc')
             ->get();
@@ -121,10 +121,10 @@ class PaymentsController
 
     /**
      * Display online payment logs (PayPal, Stripe, etc.)
-     * 
+     *
      * @param int $page Page number for pagination
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function online_logs
      * @legacy-file application/modules/payments/controllers/Payments.php
      * @legacy-line 156
@@ -145,10 +145,10 @@ class PaymentsController
 
     /**
      * Delete a payment
-     * 
+     *
      * @param int $id Payment ID
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function delete
      * @legacy-file application/modules/payments/controllers/Payments.php
      * @legacy-line 179

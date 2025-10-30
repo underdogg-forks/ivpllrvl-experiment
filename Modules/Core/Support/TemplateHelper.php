@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 
 /**
  * TemplateHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class TemplateHelper
@@ -80,7 +80,7 @@ class TemplateHelper
                         if (isset($object->sumex_casedate)) {
                             $replace = date_from_mysql($object->sumex_casedate, true);
                         }
-    
+
                         break;
                     default:
                         // Check if it's a custom field
@@ -89,7 +89,7 @@ class TemplateHelper
                             // TODO: Migrate remaining CodeIgniter dependencies to Laravel
                             // TODO: Replace with Laravel equivalent: // load->model('custom_fields/mdl_custom_fields');
                             $cf = $CI->mdl_custom_fields->get_by_id($cf_id[1]);
-    
+
                             if ($cf) {
                                 // Get the values for the custom field
                                 $cf_model = str_replace('ip_', 'mdl_', $cf->custom_field_table);
@@ -106,11 +106,11 @@ class TemplateHelper
                             $replace = $object->{$var} ?? $var;
                         }
                 }
-    
+
                 $body = str_replace('{{{' . $var . '}}}', $replace, $body);
             }
         }
-    
+
         return $body;
     }
 
@@ -124,13 +124,13 @@ class TemplateHelper
     public static function get_invoice_status($id)
     {
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-    
+
         if (empty($CI->mdl_invoices)) {
             // TODO: Replace with Laravel equivalent: // load->model('invoices/mdl_invoices');
         }
-    
+
         $statuses = $CI->mdl_invoices->statuses();
-    
+
         return $statuses[$id]['label'];
     }
 
@@ -144,17 +144,17 @@ class TemplateHelper
     public static function select_pdf_invoice_template($invoice)
     {
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-    
+
         if ($invoice->is_overdue) {
             // Use the overdue template
             return $bridge->settings()->setting('pdf_invoice_template_overdue');
         }
-    
+
         if ($invoice->invoice_status_id == 4) {
             // Use the paid template
             return $bridge->settings()->setting('pdf_invoice_template_paid');
         }
-    
+
         // Use the default template
         return $bridge->settings()->setting('pdf_invoice_template');
     }
@@ -169,17 +169,17 @@ class TemplateHelper
     public static function select_email_invoice_template($invoice)
     {
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-    
+
         if ($invoice->is_overdue) {
             // Use the overdue template
             return $bridge->settings()->setting('email_invoice_template_overdue');
         }
-    
+
         if ($invoice->invoice_status_id == 4) {
             // Use the paid template
             return $bridge->settings()->setting('email_invoice_template_paid');
         }
-    
+
         // Use the default template
         return $bridge->settings()->setting('email_invoice_template');
     }

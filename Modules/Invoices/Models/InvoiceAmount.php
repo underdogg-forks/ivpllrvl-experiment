@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * InvoiceAmount Model
- * 
+ *
  * Eloquent model for managing ip_invoice_amounts
  * Stores calculated totals for invoices
  * Migrated from CodeIgniter Mdl_Invoice_Amounts
@@ -72,7 +72,7 @@ class InvoiceAmount extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -103,7 +103,7 @@ class InvoiceAmount extends BaseModel
 
         // Calculate subtotal and total based on legacy or new calculation mode
         $legacyCalculation = config_item('legacy_calculation');
-        
+
         if ($legacyCalculation) {
             $invoiceItemSubtotal = $invoiceAmounts->invoice_item_subtotal - $invoiceAmounts->invoice_item_discount;
             $invoiceSubtotal = $invoiceItemSubtotal + $invoiceAmounts->invoice_item_tax_total;
@@ -194,7 +194,7 @@ class InvoiceAmount extends BaseModel
         $legacyCalculation = config_item('legacy_calculation');
 
         // Only applicable in legacy calculation mode
-        $invoiceTaxRates = $legacyCalculation 
+        $invoiceTaxRates = $legacyCalculation
             ? InvoiceTaxRate::where('invoice_id', $invoiceId)->get()
             : collect([]);
 
@@ -206,11 +206,11 @@ class InvoiceAmount extends BaseModel
             foreach ($invoiceTaxRates as $invoiceTaxRate) {
                 if ($invoiceTaxRate->include_item_tax) {
                     // Include applied item tax
-                    $invoiceTaxRateAmount = ($invoiceAmount->invoice_item_subtotal + $invoiceAmount->invoice_item_tax_total) 
+                    $invoiceTaxRateAmount = ($invoiceAmount->invoice_item_subtotal + $invoiceAmount->invoice_item_tax_total)
                         * ($invoiceTaxRate->invoice_tax_rate_percent / 100);
                 } else {
                     // Don't include applied item tax
-                    $invoiceTaxRateAmount = $invoiceAmount->invoice_item_subtotal 
+                    $invoiceTaxRateAmount = $invoiceAmount->invoice_item_subtotal
                         * ($invoiceTaxRate->invoice_tax_rate_percent / 100);
                 }
 
@@ -234,8 +234,8 @@ class InvoiceAmount extends BaseModel
             $invoiceAmount = static::where('invoice_id', $invoiceId)->first();
 
             // Recalculate invoice total
-            $invoiceTotal = $invoiceAmount->invoice_item_subtotal 
-                + $invoiceAmount->invoice_item_tax_total 
+            $invoiceTotal = $invoiceAmount->invoice_item_subtotal
+                + $invoiceAmount->invoice_item_tax_total
                 + $invoiceAmount->invoice_tax_total;
 
             // Apply discount for legacy calculation

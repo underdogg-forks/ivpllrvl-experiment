@@ -1,6 +1,8 @@
 <?php
 
+namespace Modules\Core\Libraries\Gateways;
 
+use AllowDynamicProperties;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 

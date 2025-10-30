@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 
 /**
  * RedirectHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class RedirectHelper
@@ -25,15 +25,15 @@ class RedirectHelper
     public static function redirect_to($fallback_url_string, $redirect = true)
     {
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-    
+
         $redirect_url = ($bridge->session()->userdata('redirect_to')) ? $bridge->session()->userdata('redirect_to') : $fallback_url_string;
-    
+
         $bridge->session()->unset_userdata('redirect_to');
-    
+
         if ($redirect) {
             redirect($redirect_url);
         }
-    
+
         return $redirect_url;
     }
 

@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 /**
  * Settings Helper Class
- * 
+ *
  * Provides static methods for retrieving application settings.
  */
 class SettingsHelper
@@ -30,14 +30,14 @@ class SettingsHelper
         // Get all settings related to this gateway
         $prefix = $gateway . '_';
         $allSettings = Setting::getAllSettings();
-        
+
         $gatewaySettings = [];
         foreach ($allSettings as $key => $value) {
             if (str_starts_with($key, $prefix)) {
                 $gatewaySettings[$key] = $value;
             }
         }
-        
+
         return $gatewaySettings;
     }
 

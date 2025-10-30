@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 
 /**
  * OrphanHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class OrphanHelper
@@ -20,7 +20,7 @@ class OrphanHelper
     public static function delete_orphans(): void
     {
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-    
+
         $queries = [
             'DELETE FROM ip_invoices WHERE client_id NOT IN (SELECT client_id FROM ip_clients)',
             'DELETE FROM ip_quotes WHERE client_id NOT IN (SELECT client_id FROM ip_clients)',
@@ -41,7 +41,7 @@ class OrphanHelper
             'DELETE FROM ip_invoice_tax_rates WHERE invoice_id NOT IN (SELECT invoice_id FROM ip_invoices)',
             'DELETE FROM ip_invoices_recurring WHERE invoice_id NOT IN (SELECT invoice_id FROM ip_invoices)',
         ];
-    
+
         foreach ($queries as $query) {
             $CI->db->query($query);
         }

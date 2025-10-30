@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * InvoiceCustom Model
- * 
+ *
  * Eloquent model for managing invoice custom fields
  * Migrated from CodeIgniter Mdl_Invoice_Custom model
- * 
+ *
  * @property int $invoice_custom_id
  * @property int $invoice_id
  */

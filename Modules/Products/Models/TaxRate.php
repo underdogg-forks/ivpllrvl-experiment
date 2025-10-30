@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Products\Entities;
+namespace Modules\Products\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * TaxRate Model
- * 
+ *
  * Eloquent model for managing ip_tax_rates
  * Migrated from CodeIgniter model
  */

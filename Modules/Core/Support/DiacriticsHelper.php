@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
 /**
  * DiacriticsHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class DiacriticsHelper
@@ -40,7 +40,7 @@ class DiacriticsHelper
             else {
                 return false;
             }
-    
+
             // Does not match any model
             for ($j = 0; $j < $n; $j++) { // n bytes matching 10bbbbbb follow ?
                 if ((++$i === $length) || ((ord($str[$i]) & 0xC0) != 0x80)) {
@@ -48,7 +48,7 @@ class DiacriticsHelper
                 }
             }
         }
-    
+
         return true;
     }
 
@@ -66,7 +66,7 @@ class DiacriticsHelper
         if ( ! preg_match('/[\x80-\xff]/', $string)) {
             return $string;
         }
-    
+
         if (diacritics_seems_utf8($string)) {
             $chars = [
                 // Decompositions for Latin-1 Supplement
@@ -166,7 +166,7 @@ class DiacriticsHelper
                 chr(226) . chr(130) . chr(172) => 'E',
                 // GBP (Pound) Sign
                 chr(194) . chr(163) => ''];
-    
+
             $string = strtr($string, $chars);
         } else {
             // Assume ISO-8859-1 if not UTF-8
@@ -180,15 +180,15 @@ class DiacriticsHelper
                 . chr(236) . chr(237) . chr(238) . chr(239) . chr(241) . chr(242) . chr(243)
                 . chr(244) . chr(245) . chr(246) . chr(248) . chr(249) . chr(250) . chr(251)
                 . chr(252) . chr(253) . chr(255);
-    
+
             $chars['out'] = 'EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy';
-    
+
             $string              = strtr($string, $chars['in'], $chars['out']);
             $double_chars['in']  = [chr(140), chr(156), chr(198), chr(208), chr(222), chr(223), chr(230), chr(240), chr(254)];
             $double_chars['out'] = ['OE', 'oe', 'AE', 'DH', 'TH', 'ss', 'ae', 'dh', 'th'];
             $string              = str_replace($double_chars['in'], $double_chars['out'], $string);
         }
-    
+
         return $string;
     }
 
@@ -303,7 +303,7 @@ class DiacriticsHelper
             'ｅ' => 'e', 'ｆ' => 'f', 'ｇ' => 'g', 'ｈ' => 'h', 'ｉ' => 'i', 'ｊ' => 'j', 'ｋ' => 'k', 'ｌ' => 'l',
             'ｍ' => 'm', 'ｎ' => 'n', 'ｏ' => 'o', 'ｐ' => 'p', 'ｑ' => 'q', 'ｒ' => 'r', 'ｓ' => 's', 'ｔ' => 't',
             'ｕ' => 'u', 'ｖ' => 'v', 'ｗ' => 'w', 'ｘ' => 'x', 'ｙ' => 'y', 'ｚ' => 'z'];
-    
+
         return strtr($text, $trans);
     }
 

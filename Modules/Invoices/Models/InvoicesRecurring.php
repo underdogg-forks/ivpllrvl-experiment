@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * InvoicesRecurring Model
- * 
+ *
  * Eloquent model for managing ip_invoices_recurring
  * Migrated from CodeIgniter model
  */
@@ -61,7 +61,7 @@ class InvoicesRecurring extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**

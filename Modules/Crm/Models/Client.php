@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Client Model
- * 
+ *
  * Eloquent model for managing clients
  * Migrated from CodeIgniter Mdl_Clients
  */
@@ -73,7 +73,7 @@ class Client extends BaseModel
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Invoices\Entities\Invoice', 'client_id', 'client_id');
+        return $this->hasMany('Modules\Invoices\Models\Invoice', 'client_id', 'client_id');
     }
 
     /**
@@ -81,7 +81,7 @@ class Client extends BaseModel
      */
     public function quotes()
     {
-        return $this->hasMany('Modules\Quotes\Entities\Quote', 'client_id', 'client_id');
+        return $this->hasMany('Modules\Quotes\Models\Quote', 'client_id', 'client_id');
     }
 
     /**
@@ -90,8 +90,8 @@ class Client extends BaseModel
     public function payments()
     {
         return $this->hasManyThrough(
-            'Modules\Payments\Entities\Payment',
-            'Modules\Invoices\Entities\Invoice',
+            'Modules\Payments\Models\Payment',
+            'Modules\Invoices\Models\Invoice',
             'client_id',
             'invoice_id',
             'client_id',

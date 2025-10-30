@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Version Model
- * 
+ *
  * Eloquent model for tracking database version updates
  * Migrated from CodeIgniter Mdl_Versions model
- * 
+ *
  * @property int $version_id
  * @property string $version_date_applied
  * @property string $version_file
@@ -69,19 +69,19 @@ class Version extends BaseModel
         $version = static::orderBy('version_date_applied', 'desc')
             ->orderBy('version_file', 'desc')
             ->first();
-        
+
         if (!$version) {
             return '1.0.0';
         }
-        
+
         $versionFile = $version->version_file;
         $underscorePos = strpos($versionFile, '_');
-        
+
         if ($underscorePos !== false) {
             $versionStr = substr($versionFile, $underscorePos + 1);
             return str_replace('.sql', '', $versionStr);
         }
-        
+
         return '1.0.0';
     }
 }

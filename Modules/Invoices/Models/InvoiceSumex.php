@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * InvoiceSumex Model
- * 
+ *
  * Eloquent model for managing ip_invoice_sumex
  * Migrated from CodeIgniter model
  */
@@ -65,7 +65,7 @@ class InvoiceSumex extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'sumex_invoice', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'sumex_invoice', 'invoice_id');
     }
 
     /**

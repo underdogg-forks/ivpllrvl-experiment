@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Item Model
- * 
+ *
  * Eloquent model for managing ip_invoice_items
  * Migrated from CodeIgniter model
  */
@@ -74,7 +74,7 @@ class Item extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -82,7 +82,7 @@ class Item extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
     }
 
     /**
@@ -90,7 +90,7 @@ class Item extends BaseModel
      */
     public function product()
     {
-        return $this->belongsTo('Modules\Products\Entities\Product', 'item_product_id', 'product_id');
+        return $this->belongsTo('Modules\Products\Models\Product', 'item_product_id', 'product_id');
     }
 
     /**
@@ -98,7 +98,7 @@ class Item extends BaseModel
      */
     public function itemAmount()
     {
-        return $this->hasOne('Modules\Invoices\Entities\Item_amount', 'item_id', 'item_id');
+        return $this->hasOne('Modules\Invoices\Models\Item_amount', 'item_id', 'item_id');
     }
 
     /**

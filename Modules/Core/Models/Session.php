@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Users\Entities;
+namespace Modules\Users\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Session Model
- * 
+ *
  * Eloquent model for managing unknown_table
  * Migrated from CodeIgniter model
  */

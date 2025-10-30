@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * CustomField Model
- * 
+ *
  * Eloquent model for managing custom field definitions
  * Migrated from CodeIgniter Mdl_Custom_Fields model
- * 
+ *
  * @property int $custom_field_id
  * @property string $custom_field_table
  * @property string $custom_field_label
@@ -119,7 +119,7 @@ class CustomField extends BaseModel
         if (in_array($element, static::customTypes())) {
             return strtolower(str_replace('-', '', $element));
         }
-        
+
         return 'fallback';
     }
 
@@ -146,11 +146,11 @@ class CustomField extends BaseModel
     {
         $tables = array_flip(static::customTables());
         $table = $tables[$name] ?? null;
-        
+
         if ($table) {
             return $query->where('custom_field_table', $table);
         }
-        
+
         return $query;
     }
 

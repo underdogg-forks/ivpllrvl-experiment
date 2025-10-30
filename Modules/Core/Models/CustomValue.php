@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * CustomValue Model
- * 
+ *
  * Eloquent model for managing custom field value options
  * Migrated from CodeIgniter Mdl_Custom_Values model
- * 
+ *
  * @property int $custom_values_id
  * @property int $custom_values_field
  * @property string $custom_values_value
@@ -143,11 +143,11 @@ class CustomValue extends BaseModel
         if (empty($ids)) {
             return collect();
         }
-        
+
         if (!is_array($ids)) {
             $ids = explode(',', $ids);
         }
-        
+
         return static::whereIn('custom_values_id', $ids)->get();
     }
 

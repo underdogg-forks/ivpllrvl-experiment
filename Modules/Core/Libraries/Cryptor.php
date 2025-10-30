@@ -1,5 +1,6 @@
 <?php
 
+namespace Modules\Core\Libraries;
 
 /*******************
  * Cryptor Class

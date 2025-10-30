@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Payments\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * PaymentLog Model
- * 
+ *
  * Eloquent model for managing ip_merchant_responses
  * Migrated from CodeIgniter model
  */
@@ -59,7 +59,7 @@ class PaymentLog extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**

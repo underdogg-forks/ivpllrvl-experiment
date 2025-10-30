@@ -8,20 +8,20 @@ use Modules\Core\Models\Setting;
 
 /**
  * CronController
- * 
+ *
  * Handles cron job operations for invoices, particularly recurring invoice generation
  */
 class CronController
 {
     /**
      * Process recurring invoices and generate new instances
-     * 
+     *
      * This method is called via cron to automatically generate invoices
      * from recurring invoice templates at scheduled intervals.
-     * 
+     *
      * @param string|null $cronKey Security key to verify cron authenticity
      * @return void
-     * 
+     *
      * @legacy-function recur
      * @legacy-file application/modules/invoices/controllers/Cron.php
      * @legacy-line 22
@@ -40,7 +40,7 @@ class CronController
         $invoicesRecurring = InvoicesRecurring::active()
             ->with(['invoice', 'client'])
             ->get();
-        
+
         foreach ($invoicesRecurring as $invoiceRecurring) {
             $recurInfo = [
                 'invoice_id' => $invoiceRecurring->invoice_id,
@@ -91,21 +91,21 @@ class CronController
             // Create the new invoice
             $newInvoice = Invoice::query()->create($dbArray);
             $targetId = $newInvoice->invoice_id;
-            
+
             if (defined('IP_DEBUG') && IP_DEBUG) {
                 log_message('debug', '[Cron Recurring Invoices] Recurring Invoice with id ' . $targetId . ' was created');
             }
 
             // Copy items and related data from source to new invoice
             $this->copyInvoice($sourceId, $targetId);
-            
+
             if (defined('IP_DEBUG') && IP_DEBUG) {
                 log_message('debug', '[Cron Recurring Invoices] Recurring Invoice with sourceId ' . $sourceId . ' was copied to id ' . $targetId);
             }
 
             // Update the next recur date for the recurring invoice
             $this->setNextRecurDate($invoiceRecurring->invoice_recurring_id);
-            
+
             if (defined('IP_DEBUG') && IP_DEBUG) {
                 log_message('debug', '[Cron Recurring Invoices] Next Recurring date was set');
             }
@@ -125,7 +125,7 @@ class CronController
 
     /**
      * Calculate due date based on creation date
-     * 
+     *
      * @param string $createdDate Invoice creation date
      * @return string Due date
      */
@@ -137,20 +137,20 @@ class CronController
 
     /**
      * Generate a unique invoice number for the given group
-     * 
+     *
      * @param int $invoiceGroupId Invoice group ID
      * @return string Generated invoice number
      */
     private function getInvoiceNumber(int $invoiceGroupId): string
     {
         // Use the InvoiceGroup model to generate the number
-        $invoiceGroup = \Modules\Invoices\Entities\InvoiceGroup::query()->findOrFail($invoiceGroupId);
+        $invoiceGroup = \Modules\Invoices\Models\InvoiceGroup::query()->findOrFail($invoiceGroupId);
         return $invoiceGroup->generateInvoiceNumber();
     }
 
     /**
      * Generate a unique URL key for the invoice
-     * 
+     *
      * @return string Unique URL key
      */
     private function getUrlKey(): string
@@ -159,13 +159,13 @@ class CronController
             $urlKey = bin2hex(random_bytes(16));
             $exists = Invoice::query()->where('invoice_url_key', $urlKey)->exists();
         } while ($exists);
-        
+
         return $urlKey;
     }
 
     /**
      * Copy invoice items and related data from source to target
-     * 
+     *
      * @param int $sourceId Source invoice ID
      * @param int $targetId Target invoice ID
      * @return void
@@ -173,41 +173,41 @@ class CronController
     private function copyInvoice(int $sourceId, int $targetId): void
     {
         $sourceInvoice = Invoice::with(['items', 'taxRates'])->findOrFail($sourceId);
-        
+
         // Copy items
         foreach ($sourceInvoice->items as $item) {
             $newItem = $item->replicate();
             $newItem->invoice_id = $targetId;
             $newItem->save();
         }
-        
+
         // Copy tax rates
         foreach ($sourceInvoice->taxRates as $taxRate) {
             $newTaxRate = $taxRate->replicate();
             $newTaxRate->invoice_id = $targetId;
             $newTaxRate->save();
         }
-        
+
         // Recalculate amounts for new invoice
-        if (class_exists('\Modules\Invoices\Entities\InvoiceAmount')) {
-            \Modules\Invoices\Entities\InvoiceAmount::calculate($targetId);
+        if (class_exists('\Modules\Invoices\Models\InvoiceAmount')) {
+            \Modules\Invoices\Models\InvoiceAmount::calculate($targetId);
         }
     }
 
     /**
      * Set the next recur date for a recurring invoice
-     * 
+     *
      * @param int $recurringId Recurring invoice ID
      * @return void
      */
     private function setNextRecurDate(int $recurringId): void
     {
         $recurring = InvoicesRecurring::query()->findOrFail($recurringId);
-        
+
         // Calculate next date based on frequency
         $currentDate = $recurring->recur_next_date;
         $frequency = $recurring->recur_frequency;
-        
+
         // Frequency mapping: 1=weekly, 2=biweekly, 3=monthly, 4=quarterly, 5=semiannually, 6=annually
         $intervals = [
             1 => '+1 week',
@@ -217,16 +217,16 @@ class CronController
             5 => '+6 months',
             6 => '+1 year',
         ];
-        
+
         $interval = $intervals[$frequency] ?? '+1 month';
         $nextDate = date('Y-m-d', strtotime($currentDate . ' ' . $interval));
-        
+
         $recurring->update(['recur_next_date' => $nextDate]);
     }
 
     /**
      * Email the new invoice to the client
-     * 
+     *
      * @param int $invoiceId New invoice ID
      * @param Invoice $originalInvoice Original invoice with user/client data
      * @return void
@@ -244,7 +244,7 @@ class CronController
         // In a full migration, this would use Illuminate Mail
         if (function_exists('email_invoice')) {
             $newInvoice = Invoice::with(['client', 'user'])->findOrFail($invoiceId);
-            
+
             // Use legacy email helper function
             // This is a temporary bridge until full email system migration
             $emailSent = email_invoice(

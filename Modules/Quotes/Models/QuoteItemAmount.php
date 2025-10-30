@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Quotes\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * QuoteItemAmount Model
- * 
+ *
  * Eloquent model for managing quote item amounts
  * Migrated from CodeIgniter model
  */
@@ -65,7 +65,7 @@ class QuoteItemAmount extends BaseModel
      */
     public function item()
     {
-        return $this->belongsTo('Modules\Quotes\Entities\QuoteItem', 'item_id', 'item_id');
+        return $this->belongsTo('Modules\Quotes\Models\QuoteItem', 'item_id', 'item_id');
     }
 
     /**
@@ -115,11 +115,11 @@ class QuoteItemAmount extends BaseModel
 
             // Calculate with item-level discount
             $itemDiscountTotal = $item->item_discount_amount * $item->item_quantity;
-            
+
             // Tax after all discounts
-            $itemTaxTotal = ($itemSubtotal - $itemDiscount - $itemDiscountTotal) 
+            $itemTaxTotal = ($itemSubtotal - $itemDiscount - $itemDiscountTotal)
                 * (($item->taxRate->tax_rate_percent ?? 0) / 100);
-            
+
             $itemTotal = $itemSubtotal - $itemDiscount - $itemDiscountTotal + $itemTaxTotal;
         }
 

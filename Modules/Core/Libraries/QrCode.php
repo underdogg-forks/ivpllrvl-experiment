@@ -1,6 +1,8 @@
 <?php
 
+namespace Modules\Core\Libraries;
 
+use AllowDynamicProperties;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelMedium;
 use SepaQr\Data;

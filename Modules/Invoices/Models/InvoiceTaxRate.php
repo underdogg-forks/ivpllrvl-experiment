@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * InvoiceTaxRate Model
- * 
+ *
  * Eloquent model for managing ip_invoice_tax_rates
  * Migrated from CodeIgniter model
  */
@@ -63,7 +63,7 @@ class InvoiceTaxRate extends BaseModel
      */
     public function invoice()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -71,7 +71,7 @@ class InvoiceTaxRate extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'tax_rate_id', 'tax_rate_id');
     }
 
     /**

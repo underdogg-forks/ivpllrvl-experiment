@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Report Model
- * 
+ *
  * Eloquent model for managing unknown_table
  * Migrated from CodeIgniter model
  */

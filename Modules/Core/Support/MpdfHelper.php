@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
 /**
  * MpdfHelper
- * 
+ *
  * Auto-generated helper class.
  */
 class MpdfHelper

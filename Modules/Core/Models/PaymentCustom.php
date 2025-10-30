@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * PaymentCustom Model
- * 
+ *
  * Eloquent model for managing payment custom fields
  * Migrated from CodeIgniter Mdl_Payment_Custom model
- * 
+ *
  * @property int $payment_custom_id
  * @property int $payment_id
  */

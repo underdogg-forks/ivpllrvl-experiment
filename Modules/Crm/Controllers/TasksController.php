@@ -24,7 +24,7 @@ class TasksController
     public function form(?int $id = null)
     {
         if (request()->post('btn_cancel')) return redirect()->route('tasks.index');
-        
+
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate(Task::validationRules());
             if ($id) {
@@ -37,8 +37,8 @@ class TasksController
 
         $task = $id ? Task::query()->findOrFail($id) : new Task();
         $projects = Project::query()->orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Entities\TaxRate::query()->orderBy('tax_rate_name')->get();
-        
+        $taxRates = \Modules\Products\Models\TaxRate::query()->orderBy('tax_rate_name')->get();
+
         return view('crm::tasks_form', [
             'task' => $task,
             'projects' => $projects,

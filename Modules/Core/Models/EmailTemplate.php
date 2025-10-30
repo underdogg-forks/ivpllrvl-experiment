@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * EmailTemplate Model
- * 
+ *
  * Eloquent model for managing ip_email_templates
  * Migrated from CodeIgniter model
  */

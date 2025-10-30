@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Quotes\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * QuoteTaxRate Model
- * 
+ *
  * Eloquent model for managing ip_quote_tax_rates
  * Migrated from CodeIgniter model
  */
@@ -63,7 +63,7 @@ class QuoteTaxRate extends BaseModel
      */
     public function quote()
     {
-        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
+        return $this->belongsTo('Modules\Quotes\Models\Quote', 'quote_id', 'quote_id');
     }
 
     /**
@@ -71,7 +71,7 @@ class QuoteTaxRate extends BaseModel
      */
     public function taxRate()
     {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'tax_rate_id', 'tax_rate_id');
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'tax_rate_id', 'tax_rate_id');
     }
 
     /**

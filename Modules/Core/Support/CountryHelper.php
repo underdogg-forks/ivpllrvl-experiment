@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
 /**
  * CountryHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class CountryHelper
@@ -24,7 +24,7 @@ class CountryHelper
         if (file_exists(APPPATH . 'helpers/country-list/' . $cldr . '/country.php')) {
             return include APPPATH . 'helpers/country-list/' . $cldr . '/country.php';
         }
-    
+
         return include APPPATH . 'helpers/country-list/en/country.php';
     }
 
@@ -39,7 +39,7 @@ class CountryHelper
     public static function get_country_name($cldr, $countrycode)
     {
         $countries = get_country_list($cldr);
-    
+
         return $countries[$countrycode] ?? $countrycode;
     }
 

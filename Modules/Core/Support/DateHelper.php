@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 /**
  * Date Helper Class
- * 
+ *
  * Provides static methods for date formatting and manipulation.
  */
 class DateHelper

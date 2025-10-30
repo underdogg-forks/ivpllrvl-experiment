@@ -1,16 +1,16 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 /**
  * PdfHelper
- * 
+ *
  * Static helper class - REQUIRES COMPREHENSIVE MIGRATION
- * 
+ *
  * @todo This helper is the most complex and requires complete migration:
  *       - CodeIgniter views -> Laravel Blade views
  *       - CodeIgniter models -> Laravel Eloquent models
@@ -38,7 +38,7 @@ class PdfHelper
         } elseif ($obj->{$type['a']} != '0.00') { // discount_amount
             $discount = format_currency($obj->{$type['a']});
         }
-    
+
         if ($discount) {
     ?>
                 <tr>
@@ -62,7 +62,7 @@ class PdfHelper
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
         // TODO: Migrate to Laravel - comprehensive refactoring needed
-    
+
         // TODO: Replace with Laravel equivalent->load->model(
             [
                 'invoices/mdl_items',
@@ -72,28 +72,28 @@ class PdfHelper
                 'payment_methods/mdl_payment_methods',
             ]
         );
-    
+
         // TODO: Replace with Laravel equivalent->load->helper(['country', 'client']);
-    
+
         $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
         $invoice = $CI->mdl_invoices->get_payments($invoice);
-    
+
         // Override system language with client language
         set_language($invoice->client_language);
-    
+
         if ( ! $invoice_template) {
             // TODO: Replace with Laravel equivalent->load->helper('template');
             $invoice_template = select_pdf_invoice_template($invoice);
         }
-    
+
         $payment_method = $CI->mdl_payment_methods->where('payment_method_id', $invoice->payment_method)->get()->row();
         if ($invoice->payment_method == 0) {
             $payment_method = false;
         }
-    
+
         // Determine if discounts should be displayed
         $items = $CI->mdl_items->where('invoice_id', $invoice_id)->get()->result();
-    
+
         // Discount settings
         $show_item_discounts = false;
         foreach ($items as $item) {
@@ -102,20 +102,20 @@ class PdfHelper
                 break;
             }
         }
-    
+
         // Get all custom fields
         $custom_fields = [
             'invoice' => $CI->mdl_custom_fields->get_values_for_fields('mdl_invoice_custom', $invoice->invoice_id),
             'client'  => $CI->mdl_custom_fields->get_values_for_fields('mdl_client_custom', $invoice->client_id),
             'user'    => $CI->mdl_custom_fields->get_values_for_fields('mdl_user_custom', $invoice->user_id),
         ];
-    
+
         if ($invoice->quote_id) {
             $custom_fields['quote'] = $CI->mdl_custom_fields->get_values_for_fields('mdl_quote_custom', $invoice->quote_id);
         }
-    
+
         $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number);
-    
+
         // START eInvoicing
         $xml_id    = false;
         $embed_xml = false;
@@ -137,7 +137,7 @@ class PdfHelper
                 $options   = (empty($xml_setting['options']) ? $options : $xml_setting['options']); // Optional
                 $generator = (empty($xml_setting['generator']) ? $generator : $xml_setting['generator']); // Optional
             }
-    
+
             if ($xml_id && $embed_xml) {
                 // Create the CII XML file
                 $associatedFiles = [[
@@ -149,7 +149,7 @@ class PdfHelper
                 ]];
             }
         }
-    
+
         $data = [
             'invoice'             => $invoice,
             'invoice_tax_rates'   => $CI->mdl_invoice_tax_rates->where('invoice_id', $invoice_id)->get()->result(),
@@ -160,12 +160,12 @@ class PdfHelper
             'custom_fields'       => $custom_fields,
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
-    
+
         $html = // TODO: Replace with Laravel equivalent->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
-    
+
         // Create PDF with or without an embedded XML
         // TODO: Replace with Laravel equivalent->load->helper('mpdf');
-    
+
         $retval = pdf_create(
             html:             $html,
             filename:         $filename,
@@ -176,7 +176,7 @@ class PdfHelper
             embed_xml:        $embed_xml,
             associated_files: $associatedFiles
         );
-    
+
         if ($embed_xml && file_exists(UPLOADS_TEMP_FOLDER . $filename . '.xml')) {
             if (IP_DEBUG) {
                 // To simplify xml validation Copy to uploads/temp/einvoice_test.xml. Same file but Always new (when get/send pdf)
@@ -185,7 +185,7 @@ class PdfHelper
             // Delete the tmp CII-XML file
             unlink(UPLOADS_TEMP_FOLDER . $filename . '.xml');
         }
-    
+
         // eInvoice Ok & not in pdf, create the UBL XML file
         if ($xml_id && $embed_xml !== true) {
             // Need Specific eInvoice filename?
@@ -198,26 +198,26 @@ class PdfHelper
             generate_xml_invoice_file($invoice, $items, $generator, $filename, $options);
         }
         // END eInvoicing
-    
+
         return $retval;
     }
 
     public static function generate_invoice_sumex($invoice_id, $stream = true, $invoice_template = null, $client = false)
     {
         // TODO: Migrate to Laravel - comprehensive refactoring needed
-    
+
         // TODO: Replace with Laravel equivalent->load->model('invoices/mdl_items');
         $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
         // TODO: Replace with Laravel equivalent->load->library('Sumex', [
             'invoice' => $invoice,
             'items'   => $CI->mdl_items->where('invoice_id', $invoice_id)->get()->result(),
         ]);
-    
+
         $sumexPDF = $CI->sumex->pdf($invoice_template);
         $sha1sum  = sha1($sumexPDF);
         $shortsum = mb_substr($sha1sum, 0, 8);
         $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number) . '_' . $shortsum;
-    
+
         if ( ! $client) {
             $temp = tempnam('/tmp', 'invsumex_');
             file_put_contents($temp, $sumexPDF);
@@ -229,28 +229,28 @@ class PdfHelper
                 $pdf->addPage($size['orientation'], [$size['width'], $size['height']]);
                 $pdf->useTemplate($templateId);
             }
-    
+
             unlink($temp);
-    
+
             if ($stream) {
                 header('Content-Type', 'application/pdf');
                 $pdf->Output($filename . '.pdf', 'I');
-    
+
                 return;
             }
-    
+
             $filePath = UPLOADS_TEMP_FOLDER . $filename . '.pdf';
             $pdf->Output($filePath, 'F');
-    
+
             return $filePath;
         }
         if ($stream) {
             return $sumexPDF;
         }
-    
+
         $filePath = UPLOADS_TEMP_FOLDER . $filename . '.pdf';
         file_put_contents($filePath, $sumexPDF);
-    
+
         return $filePath;
     }
 
@@ -267,7 +267,7 @@ class PdfHelper
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
         // TODO: Migrate to Laravel - comprehensive refactoring needed
-    
+
         // TODO: Replace with Laravel equivalent->load->model(
             [
                 'quotes/mdl_quotes',
@@ -282,19 +282,19 @@ class PdfHelper
                 'client',
             ]
         );
-    
+
         $quote = $CI->mdl_quotes->get_by_id($quote_id);
-    
+
         // Override language with system language
         set_language($quote->client_language);
-    
+
         if ( ! $quote_template) {
             $quote_template = Setting::getValue->setting('pdf_quote_template');
         }
-    
+
         // Determine if discounts should be displayed
         $items = $CI->mdl_quote_items->where('quote_id', $quote_id)->get()->result();
-    
+
         $show_item_discounts = false;
         foreach ($items as $item) {
             if ($item->item_discount != '0.00') {
@@ -302,21 +302,21 @@ class PdfHelper
                 break;
             }
         }
-    
+
         // Get all custom fields
         $custom_fields = [
             'quote'  => $CI->mdl_custom_fields->get_values_for_fields('mdl_quote_custom', $quote->quote_id),
             'client' => $CI->mdl_custom_fields->get_values_for_fields('mdl_client_custom', $quote->client_id),
             'user'   => $CI->mdl_custom_fields->get_values_for_fields('mdl_user_custom', $quote->user_id),
         ];
-    
+
         // Automatic calculation mode
         if (get_setting('einvoicing')) {
             // TODO: Replace with Laravel equivalent->load->helper('e-invoice');
             // Only for shift the legacy_calculation mode
             get_einvoice_usage($quote, $items, false);
         }
-    
+
         $data = [
             'quote'               => $quote,
             'quote_tax_rates'     => $CI->mdl_quote_tax_rates->where('quote_id', $quote_id)->get()->result(),
@@ -326,11 +326,11 @@ class PdfHelper
             'custom_fields'       => $custom_fields,
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
-    
+
         $html = // TODO: Replace with Laravel equivalent->load->view('quote_templates/pdf/' . $quote_template, $data, true);
-    
+
         // TODO: Replace with Laravel equivalent->load->helper('mpdf');
-    
+
         return pdf_create($html, trans('quote') . '_' . str_replace(['\\', '/'], '_', $quote->quote_number), $stream, $quote->quote_password);
     }
 

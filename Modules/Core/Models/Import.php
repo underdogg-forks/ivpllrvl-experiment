@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Import Model
- * 
+ *
  * Eloquent model for managing ip_imports
  * Migrated from CodeIgniter model
  */

@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Setting Model
- * 
+ *
  * Eloquent model for managing application settings
  * Migrated from CodeIgniter Mdl_Settings model
- * 
+ *
  * @property int $setting_id
  * @property string $setting_key
  * @property string $setting_value

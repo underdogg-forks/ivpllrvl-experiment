@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * QuoteCustom Model
- * 
+ *
  * Eloquent model for managing quote custom fields
  * Migrated from CodeIgniter Mdl_Quote_Custom model
- * 
+ *
  * @property int $quote_custom_id
  * @property int $quote_id
  */

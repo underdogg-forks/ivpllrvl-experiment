@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * UserClient Model
- * 
+ *
  * Eloquent model for managing ip_user_clients
  * Migrated from CodeIgniter model
  */

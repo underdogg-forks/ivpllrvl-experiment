@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Payments\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * PaymentMethod Model
- * 
+ *
  * Eloquent model for managing ip_payment_methods
  * Migrated from CodeIgniter model
  */
@@ -67,7 +67,7 @@ class PaymentMethod extends BaseModel
      */
     public function payments()
     {
-        return $this->hasMany('Modules\Payments\Entities\Payment', 'payment_method_id', 'payment_method_id');
+        return $this->hasMany('Modules\Payments\Models\Payment', 'payment_method_id', 'payment_method_id');
     }
 
     /**

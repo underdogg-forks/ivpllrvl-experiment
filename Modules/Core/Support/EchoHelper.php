@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 
 /**
  * EchoHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class EchoHelper
@@ -26,7 +26,7 @@ class EchoHelper
         if ($output == null) {
             return '';
         }
-    
+
         echo htmlspecialchars($output, ENT_QUOTES | ENT_IGNORE);
     }
 
@@ -42,7 +42,7 @@ class EchoHelper
         if ($output == null) {
             return '';
         }
-    
+
         echo htmlentities($output, ENT_COMPAT);
     }
 

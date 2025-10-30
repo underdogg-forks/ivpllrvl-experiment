@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 
 /**
  * CustomValuesHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class CustomValuesHelper
@@ -24,7 +24,7 @@ class CustomValuesHelper
         if ($txt == null) {
             return '';
         }
-    
+
         return date_from_mysql($txt);
     }
 
@@ -38,7 +38,7 @@ class CustomValuesHelper
         if ($txt == null) {
             return '';
         }
-    
+
         return $txt;
     }
 
@@ -52,11 +52,11 @@ class CustomValuesHelper
         if ($txt == null) {
             return '';
         }
-    
+
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
         // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
         $el = $CI->cv->get_by_id($txt)->row();
-    
+
         return $el->custom_values_value;
     }
 
@@ -68,18 +68,18 @@ class CustomValuesHelper
         if ($txt == null) {
             return '';
         }
-    
+
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
         // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
-    
+
         $values      = explode(',', $txt);
         $values      = $CI->cv->where_in('custom_values_id', $values)->get()->result();
         $values_text = [];
-    
+
         foreach ($values as $value) {
             $values_text[] = $value->custom_values_value;
         }
-    
+
         return implode("\n", $values_text);
     }
 
@@ -93,14 +93,14 @@ class CustomValuesHelper
         if ($txt == null) {
             return '';
         }
-    
+
         if ($txt == '1') {
             return trans('true');
         }
         if ($txt == '0') {
             return trans('false');
         }
-    
+
         return '';
     }
 
@@ -114,7 +114,7 @@ class CustomValuesHelper
         if ( ! $txt || ! preg_match('/(\d{3})(\d{4})(\d{4})(\d{2})/', $txt, $matches)) {
             return $txt; // do noting or null
         }
-    
+
         return $matches[1] . '.' . $matches[2] . '.' . $matches[3] . '.' . $matches[4];
     }
 
@@ -150,7 +150,7 @@ class CustomValuesHelper
                     <?php _htmlsc($custom_field->custom_field_label); ?>
                 </label>
             </div>
-    
+
             <div class="<?php echo $class_bottom; ?>">
     <?php
         switch ($custom_field->custom_field_type) {

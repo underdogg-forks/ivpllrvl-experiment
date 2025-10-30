@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Invoice Model
- * 
+ *
  * Eloquent model for managing invoices
  * Migrated from CodeIgniter Mdl_Invoices
  */
@@ -74,7 +74,7 @@ class Invoice extends BaseModel
      */
     public function client()
     {
-        return $this->belongsTo('Modules\Crm\Entities\Client', 'client_id', 'client_id');
+        return $this->belongsTo('Modules\Crm\Models\Client', 'client_id', 'client_id');
     }
 
     /**
@@ -82,7 +82,7 @@ class Invoice extends BaseModel
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Users\Entities\User', 'user_id', 'user_id');
+        return $this->belongsTo('Modules\Users\Models\User', 'user_id', 'user_id');
     }
 
     /**
@@ -90,7 +90,7 @@ class Invoice extends BaseModel
      */
     public function invoiceGroup()
     {
-        return $this->belongsTo('Modules\Invoices\Entities\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
+        return $this->belongsTo('Modules\Invoices\Models\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
     }
 
     /**
@@ -98,7 +98,7 @@ class Invoice extends BaseModel
      */
     public function amounts()
     {
-        return $this->hasOne('Modules\Invoices\Entities\InvoiceAmount', 'invoice_id', 'invoice_id');
+        return $this->hasOne('Modules\Invoices\Models\InvoiceAmount', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -106,7 +106,7 @@ class Invoice extends BaseModel
      */
     public function items()
     {
-        return $this->hasMany('Modules\Invoices\Entities\InvoiceItem', 'invoice_id', 'invoice_id');
+        return $this->hasMany('Modules\Invoices\Models\InvoiceItem', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -114,7 +114,7 @@ class Invoice extends BaseModel
      */
     public function taxRates()
     {
-        return $this->hasMany('Modules\Invoices\Entities\InvoiceTaxRate', 'invoice_id', 'invoice_id');
+        return $this->hasMany('Modules\Invoices\Models\InvoiceTaxRate', 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -122,7 +122,7 @@ class Invoice extends BaseModel
      */
     public function quote()
     {
-        return $this->hasOne('Modules\Quotes\Entities\Quote', 'invoice_id', 'invoice_id');
+        return $this->hasOne('Modules\Quotes\Models\Quote', 'invoice_id', 'invoice_id');
     }
 
     /**

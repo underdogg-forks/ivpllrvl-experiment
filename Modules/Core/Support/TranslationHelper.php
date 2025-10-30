@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 /**
  * Translation Helper Class
- * 
+ *
  * Provides static methods for language translation and management.
  * Now uses Laravel's translation system.
  */
@@ -16,7 +16,7 @@ class TranslationHelper
 {
     /**
      * Output a language string, supports language fallback if a string wasn't found.
-     * 
+     *
      * Note: This now uses Laravel's translation system.
      * Translation files should be in resources/lang/
      */
@@ -24,7 +24,7 @@ class TranslationHelper
     {
         // Use Laravel's translation system
         $lang_string = __($line, [], Setting::getValue('default_language') ?? config('app.locale', 'en'));
-        
+
         // If translation key not found, Laravel returns the key itself
         // Check if we got back the same key (meaning no translation exists)
         if ($lang_string === $line && $default !== null) {
@@ -40,7 +40,7 @@ class TranslationHelper
 
     /**
      * Load the translations for the given language.
-     * 
+     *
      * Note: Laravel handles language loading automatically.
      * This method sets the application locale.
      */
@@ -49,33 +49,33 @@ class TranslationHelper
         // Get default language from settings
         $default_lang = Setting::getValue('default_language') ?? 'en';
         $new_language = ($language == 'system' ? $default_lang : $language);
-        
+
         // Set Laravel's application locale
         app()->setLocale($new_language);
     }
 
     /**
      * Returns all available languages.
-     * 
+     *
      * Note: Scans the resources/lang directory for available languages.
      */
     public static function getAvailableLanguages(): array
     {
         $lang_path = resource_path('lang');
-        
+
         if (!is_dir($lang_path)) {
             return [];
         }
-        
+
         $languages = [];
         $directories = scandir($lang_path);
-        
+
         foreach ($directories as $dir) {
             if ($dir !== '.' && $dir !== '..' && is_dir($lang_path . '/' . $dir)) {
                 $languages[] = $dir;
             }
         }
-        
+
         sort($languages);
         return $languages;
     }

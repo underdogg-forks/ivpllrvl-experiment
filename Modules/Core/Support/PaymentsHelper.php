@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
 /**
  * PaymentsHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class PaymentsHelper
@@ -19,7 +19,7 @@ class PaymentsHelper
         foreach ($currencies as $currency) {
             $ISOCurrencies[$currency->getCode()] = $currency->getCode();
         }
-    
+
         return $ISOCurrencies;
     }
 

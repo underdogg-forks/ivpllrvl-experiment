@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Project Model
- * 
+ *
  * Eloquent model for managing ip_projects
  * Migrated from CodeIgniter model
  */

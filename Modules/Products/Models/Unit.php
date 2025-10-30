@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Products\Entities;
+namespace Modules\Products\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Unit Model
- * 
+ *
  * Eloquent model for managing ip_units (product units of measure)
  * Migrated from CodeIgniter Mdl_Units model
  */
@@ -78,7 +78,7 @@ class Unit extends BaseModel
         }
 
         $unit = static::find($unitId);
-        
+
         if (!$unit) {
             return null;
         }
@@ -96,7 +96,7 @@ class Unit extends BaseModel
      */
     public function products()
     {
-        return $this->hasMany('Modules\Products\Entities\Product', 'unit_id', 'unit_id');
+        return $this->hasMany('Modules\Products\Models\Product', 'unit_id', 'unit_id');
     }
 
     /**

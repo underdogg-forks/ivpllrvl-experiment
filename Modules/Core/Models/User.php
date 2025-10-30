@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Users\Entities;
+namespace Modules\Users\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * User Model
- * 
+ *
  * Eloquent model for managing users
  * Migrated from CodeIgniter Mdl_Users
  */
@@ -91,7 +91,7 @@ class User extends BaseModel
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Invoices\Entities\Invoice', 'user_id', 'user_id');
+        return $this->hasMany('Modules\Invoices\Models\Invoice', 'user_id', 'user_id');
     }
 
     /**
@@ -99,7 +99,7 @@ class User extends BaseModel
      */
     public function quotes()
     {
-        return $this->hasMany('Modules\Quotes\Entities\Quote', 'user_id', 'user_id');
+        return $this->hasMany('Modules\Quotes\Models\Quote', 'user_id', 'user_id');
     }
 
     /**

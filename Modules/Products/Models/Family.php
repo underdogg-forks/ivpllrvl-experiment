@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Products\Entities;
+namespace Modules\Products\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * Family Model
- * 
+ *
  * Eloquent model for managing ip_families (product families)
  * Migrated from CodeIgniter Mdl_Families model
  */
@@ -67,7 +67,7 @@ class Family extends BaseModel
      */
     public function products()
     {
-        return $this->hasMany('Modules\Products\Entities\Product', 'family_id', 'family_id');
+        return $this->hasMany('Modules\Products\Models\Product', 'family_id', 'family_id');
     }
 
     /**

@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Entities;
+namespace Modules\Core\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
  * UserCustom Model
- * 
+ *
  * Eloquent model for managing user custom fields
  * Migrated from CodeIgniter Mdl_User_Custom model
- * 
+ *
  * @property int $user_custom_id
  * @property int $user_id
  */

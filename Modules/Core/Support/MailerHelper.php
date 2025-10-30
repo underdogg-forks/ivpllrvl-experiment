@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Entities\Setting;
+use Modules\Core\Models\Setting;
 
 /**
  * MailerHelper
- * 
+ *
  * Static helper class converted from procedural functions.
  */
 class MailerHelper
@@ -19,7 +19,7 @@ class MailerHelper
     public static function mailer_configured(): bool
     {
         $emailMethod = Setting::getValue('email_send_method');
-        
+
         return ($emailMethod == 'phpmail') ||
             ($emailMethod == 'sendmail') ||
             (($emailMethod == 'smtp') && Setting::getValue('smtp_server_address'));
@@ -32,7 +32,7 @@ class MailerHelper
      * @param string $status   string "accepted" or "rejected"
      *
      * @return bool if the email was sent
-     * 
+     *
      * @todo This method requires full migration of Quote model and mail sending system
      */
     public static function email_quote_status(string $quote_id, $status)
@@ -56,20 +56,20 @@ class MailerHelper
         if (str_contains($email, ',')) {
             $emails = explode(',', $email);
         }
-    
+
         foreach ($emails as $emailItem) {
             if ( ! filter_var($emailItem, FILTER_VALIDATE_EMAIL)) {
                 return false;
             }
         }
-    
+
         return true;
     }
 
     /**
      * @param []  $errors
      * @param string $redirect
-     * 
+     *
      * @todo This method requires Laravel session/flash system
      */
     public static function check_mail_errors(array $errors = [], $redirect = ''): void
@@ -78,10 +78,10 @@ class MailerHelper
             foreach ($errors as $i => $e) {
                 $errors[$i] = strtr(trans('form_validation_valid_email'), ['{field}' => trans($e)]);
             }
-    
+
             // TODO: Use Laravel flash messages
             session()->flash('alert_error', implode('<br>', $errors));
-            
+
             $redirect = empty($redirect) ? (empty($_SERVER['HTTP_REFERER']) ? '' : $_SERVER['HTTP_REFERER']) : $redirect;
             redirect($redirect);
         }
