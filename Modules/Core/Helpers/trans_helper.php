@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * Output a language string, supports language fallback if a string wasn't found.
  *
@@ -12,7 +9,7 @@
  *
  * @return string
  */
-if (!function_exists('trans')) {
+if ( ! function_exists('trans')) {
     function trans($line, ?string $id = '', $default = null)
     {
         $CI          = & get_instance();

@@ -3,7 +3,7 @@
 namespace Modules\Crm\Controllers;
 
 /**
- * InvoicesController (Guest)
+ * InvoicesController (Guest).
  *
  * Guest portal invoice viewing
  *
@@ -21,6 +21,7 @@ class InvoicesController
     {
         // Guest invoice view by URL key
         $invoice = \Modules\Invoices\Models\Invoice::query()->where('invoice_url_key', $urlKey)->firstOrFail();
+
         return view('crm::guest_invoice_view', ['invoice' => $invoice]);
     }
 }

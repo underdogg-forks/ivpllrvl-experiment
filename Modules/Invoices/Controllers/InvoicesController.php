@@ -1,38 +1,40 @@
 <?php
 
-
-
 namespace Modules\Invoices\Controllers;
 
+use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
-use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\Item;
-use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\InvoiceAmount;
-use Modules\Products\Models\TaxRate;
-use Modules\Products\Models\Unit;
-use Modules\Payments\Models\PaymentMethod;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
 use Modules\Core\Models\InvoiceCustom;
 use Modules\Crm\Models\Task;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\InvoiceAmount;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\Item;
+use Modules\Payments\Models\PaymentMethod;
+use Modules\Products\Models\TaxRate;
+use Modules\Products\Models\Unit;
+use Sumex;
 
 /**
- * InvoicesController
+ * InvoicesController.
  *
  * Handles invoice viewing, status filtering, PDF generation, and management operations
  */
 class InvoicesController
 {
     /**
-     * Redirect to all invoices status view
+     * Redirect to all invoices status view.
      *
      * @return RedirectResponse
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 29
      */
     public function index(): RedirectResponse
@@ -41,14 +43,17 @@ class InvoicesController
     }
 
     /**
-     * Display invoices filtered by status with pagination
+     * Display invoices filtered by status with pagination.
      *
      * @param string $status Invoice status filter (all, draft, sent, viewed, paid, overdue)
-     * @param int $page Page number for pagination
+     * @param int    $page   Page number for pagination
+     *
      * @return View
      *
      * @legacy-function status
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 38
      */
     public function status(string $status = 'all', int $page = 0): View
@@ -57,36 +62,38 @@ class InvoicesController
         $query = Invoice::with(['client', 'user']);
 
         match ($status) {
-            'draft' => $query->draft(),
-            'sent' => $query->sent(),
-            'viewed' => $query->viewed(),
-            'paid' => $query->paid(),
+            'draft'   => $query->draft(),
+            'sent'    => $query->sent(),
+            'viewed'  => $query->viewed(),
+            'paid'    => $query->paid(),
             'overdue' => $query->overdue(),
-            default => $query
+            default   => $query
         };
 
         // Paginate results
         $invoices = $query->paginate(15);
 
         $data = [
-            'invoices' => $invoices,
-            'status' => $status,
-            'filter_display' => true,
+            'invoices'           => $invoices,
+            'status'             => $status,
+            'filter_display'     => true,
             'filter_placeholder' => trans('filter_invoices'),
-            'filter_method' => 'filter_invoices',
-            'invoice_statuses' => Invoice::statuses(),
+            'filter_method'      => 'filter_invoices',
+            'invoice_statuses'   => Invoice::statuses(),
         ];
 
         return view('invoices::index', $data);
     }
 
     /**
-     * Display archived invoices
+     * Display archived invoices.
      *
      * @return View
      *
      * @legacy-function archive
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 77
      */
     public function archive(): View
@@ -94,23 +101,26 @@ class InvoicesController
         $invoiceArray = Invoice::getArchives(0);
 
         $data = [
-            'filter_display' => true,
+            'filter_display'     => true,
             'filter_placeholder' => trans('filter_archives'),
-            'filter_method' => 'filter_archives',
-            'invoices_archive' => $invoiceArray,
+            'filter_method'      => 'filter_archives',
+            'invoices_archive'   => $invoiceArray,
         ];
 
         return view('invoices::archive', $data);
     }
 
     /**
-     * Download an archived invoice PDF file
+     * Download an archived invoice PDF file.
      *
      * @param string $invoice Filename of the invoice to download
+     *
      * @return Response
      *
      * @legacy-function download
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 92
      */
     public function download(string $invoice): Response
@@ -121,12 +131,12 @@ class InvoicesController
         $filePath = realpath($safeBaseDir . DIRECTORY_SEPARATOR . $fileName);
 
         // Security: Prevent directory traversal
-        if ($filePath === false || !str_starts_with($filePath, $safeBaseDir)) {
+        if ($filePath === false || ! str_starts_with($filePath, $safeBaseDir)) {
             logger()->error('Invalid file access attempt: ' . $fileName);
             abort(404);
         }
 
-        if (!file_exists($filePath)) {
+        if ( ! file_exists($filePath)) {
             logger()->error('File not found while downloading: ' . $filePath);
             abort(404);
         }
@@ -135,13 +145,16 @@ class InvoicesController
     }
 
     /**
-     * Display detailed invoice view with items, taxes, and custom fields
+     * Display detailed invoice view with items, taxes, and custom fields.
      *
      * @param int $invoiceId Invoice ID to view
+     *
      * @return View
      *
      * @legacy-function view
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 120
      */
     public function view(int $invoiceId): View
@@ -150,13 +163,13 @@ class InvoicesController
             ->findOrFail($invoiceId);
 
         // Get custom fields and values
-        $fields = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();
+        $fields       = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();
         $customFields = CustomField::query()->where('custom_field_table', 'ip_invoice_custom')->get();
         $customValues = [];
 
         foreach ($customFields as $customField) {
             if (in_array($customField->custom_field_type, CustomValue::customValueFields())) {
-                $values = CustomValue::query()->where('custom_field_id', $customField->custom_field_id)->get();
+                $values                                      = CustomValue::query()->where('custom_field_id', $customField->custom_field_id)->get();
                 $customValues[$customField->custom_field_id] = $values;
             }
         }
@@ -168,29 +181,29 @@ class InvoicesController
         $items = Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
 
         // Check if user change is allowed (more than one admin user)
-        $changeUser = \DB::table('ip_users')
+        $changeUser = DB::table('ip_users')
             ->where('user_type', 1)
             ->where('user_active', 1)
             ->count() > 1;
 
         $data = [
-            'invoice' => $invoice,
-            'items' => $items,
-            'invoice_id' => $invoiceId,
-            'change_user' => $changeUser,
-            'tax_rates' => TaxRate::query()->all(),
+            'invoice'           => $invoice,
+            'items'             => $items,
+            'invoice_id'        => $invoiceId,
+            'change_user'       => $changeUser,
+            'tax_rates'         => TaxRate::query()->all(),
             'invoice_tax_rates' => InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->get(),
-            'units' => Unit::query()->all(),
-            'payment_methods' => PaymentMethod::query()->all(),
-            'custom_fields' => $customFields,
-            'custom_values' => $customValues,
-            'custom_js_vars' => [
-                'currency_symbol' => config('settings.currency_symbol'),
+            'units'             => Unit::query()->all(),
+            'payment_methods'   => PaymentMethod::query()->all(),
+            'custom_fields'     => $customFields,
+            'custom_values'     => $customValues,
+            'custom_js_vars'    => [
+                'currency_symbol'           => config('settings.currency_symbol'),
                 'currency_symbol_placement' => config('settings.currency_symbol_placement'),
-                'decimal_point' => config('settings.decimal_point'),
+                'decimal_point'             => config('settings.decimal_point'),
             ],
-            'invoice_statuses' => Invoice::statuses(),
-            'payment_cf_exist' => $paymentCfExist,
+            'invoice_statuses'   => Invoice::statuses(),
+            'payment_cf_exist'   => $paymentCfExist,
             'legacy_calculation' => config('legacy_calculation'),
         ];
 
@@ -200,18 +213,21 @@ class InvoicesController
     }
 
     /**
-     * Delete an invoice (only drafts or if deletion is enabled)
+     * Delete an invoice (only drafts or if deletion is enabled).
      *
      * @param int $invoiceId Invoice ID to delete
+     *
      * @return RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 228
      */
     public function delete(int $invoiceId): RedirectResponse
     {
-        $invoice = Invoice::query()->findOrFail($invoiceId);
+        $invoice       = Invoice::query()->findOrFail($invoiceId);
         $invoiceStatus = $invoice->invoice_status_id;
 
         if ($invoiceStatus == 1 || config('settings.enable_invoice_deletion') === true) {
@@ -229,15 +245,18 @@ class InvoicesController
     }
 
     /**
-     * Generate and stream/download invoice PDF
+     * Generate and stream/download invoice PDF.
      *
-     * @param int $invoiceId Invoice ID
-     * @param bool $stream Whether to stream (true) or download (false)
+     * @param int         $invoiceId       Invoice ID
+     * @param bool        $stream          Whether to stream (true) or download (false)
      * @param string|null $invoiceTemplate Optional template name
+     *
      * @return Response
      *
      * @legacy-function generate_pdf
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 254
      */
     public function generatePdf(int $invoiceId, bool $stream = true, ?string $invoiceTemplate = null): Response
@@ -254,48 +273,51 @@ class InvoicesController
             return response($pdfContent)
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="invoice-' . $invoiceId . '.pdf"');
-        } else {
-            return response()->download($pdfContent);
         }
+
+        return response()->download($pdfContent);
     }
 
     /**
-     * Generate XML invoice file (e-invoicing)
+     * Generate XML invoice file (e-invoicing).
      *
      * @param int $invoiceId Invoice ID
+     *
      * @return Response
      *
      * @legacy-function generate_xml
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 266
      */
     public function generateXml(int $invoiceId): Response
     {
         $invoice = Invoice::query()->findOrFail($invoiceId);
-        $items = Item::query()->where('invoice_id', $invoiceId)->get();
+        $items   = Item::query()->where('invoice_id', $invoiceId)->get();
 
         // Check e-invoice usage
         $einvoice = get_einvoice_usage($invoice, $items, false);
-        if (!$einvoice->user) {
+        if ( ! $einvoice->user) {
             abort(404);
         }
 
         // Generate XML file
-        $xmlId = $einvoice->name;
-        $options = [];
+        $xmlId     = $einvoice->name;
+        $options   = [];
         $generator = $xmlId;
-        $path = app_path('helpers/XMLconfigs/');
+        $path      = app_path('helpers/XMLconfigs/');
 
         if ($xmlId && file_exists($path . $xmlId . '.php')) {
             include $path . $xmlId . '.php';
-            $embedXml = $xml_setting['embedXML'] ?? false;
-            $XMLname = $xml_setting['XMLname'] ?? 'invoice';
-            $options = $xml_setting['options'] ?? [];
+            $embedXml  = $xml_setting['embedXML'] ?? false;
+            $XMLname   = $xml_setting['XMLname'] ?? 'invoice';
+            $options   = $xml_setting['options'] ?? [];
             $generator = $xml_setting['generator'] ?? $generator;
         }
 
         $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number);
-        $xmlPath = generate_xml_invoice_file($invoice, $items, $generator, $filename, $options);
+        $xmlPath  = generate_xml_invoice_file($invoice, $items, $generator, $filename, $options);
 
         $content = file_get_contents($xmlPath);
         unlink($xmlPath);
@@ -304,13 +326,16 @@ class InvoicesController
     }
 
     /**
-     * Generate SUMEX PDF for Swiss medical billing
+     * Generate SUMEX PDF for Swiss medical billing.
      *
      * @param int $invoiceId Invoice ID
+     *
      * @return Response
      *
      * @legacy-function generate_sumex_pdf
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 301
      */
     public function generateSumexPdf(int $invoiceId): Response
@@ -323,25 +348,28 @@ class InvoicesController
     }
 
     /**
-     * Generate SUMEX copy PDF
+     * Generate SUMEX copy PDF.
      *
      * @param int $invoiceId Invoice ID
+     *
      * @return Response
      *
      * @legacy-function generate_sumex_copy
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 308
      */
     public function generateSumexCopy(int $invoiceId): Response
     {
         $invoice = Invoice::query()->findOrFail($invoiceId);
-        $items = Item::query()->where('invoice_id', $invoiceId)->get();
+        $items   = Item::query()->where('invoice_id', $invoiceId)->get();
 
-        $sumex = new \Sumex([
+        $sumex = new Sumex([
             'invoice' => $invoice,
-            'items' => $items,
+            'items'   => $items,
             'options' => [
-                'copy' => '1',
+                'copy'   => '1',
                 'storno' => '0',
             ],
         ]);
@@ -351,14 +379,17 @@ class InvoicesController
     }
 
     /**
-     * Delete invoice tax rate and recalculate invoice amounts
+     * Delete invoice tax rate and recalculate invoice amounts.
      *
-     * @param int $invoiceId Invoice ID
+     * @param int $invoiceId        Invoice ID
      * @param int $invoiceTaxRateId Tax rate ID to delete
+     *
      * @return RedirectResponse
      *
      * @legacy-function delete_invoice_tax
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 324
      */
     public function deleteInvoiceTax(int $invoiceId, int $invoiceTaxRateId): RedirectResponse
@@ -373,12 +404,14 @@ class InvoicesController
     }
 
     /**
-     * Recalculate all invoices in the system
+     * Recalculate all invoices in the system.
      *
      * @return RedirectResponse
      *
      * @legacy-function recalculate_all_invoices
+     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
      * @legacy-line 337
      */
     public function recalculateAllInvoices(): RedirectResponse

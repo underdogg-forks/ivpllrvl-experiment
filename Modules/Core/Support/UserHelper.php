@@ -1,13 +1,11 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 use Modules\Core\Models\User;
 
 /**
- * UserHelper
+ * UserHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -33,5 +31,4 @@ class UserHelper
 
         return ucfirst($user->user_name) . $user_company . $contact;
     }
-
 }

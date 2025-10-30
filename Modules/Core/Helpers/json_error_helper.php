@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * Returns all errors prepared for JSON.
  */

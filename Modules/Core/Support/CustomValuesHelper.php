@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * CustomValuesHelper
+ * CustomValuesHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -227,5 +222,4 @@ class CustomValuesHelper
         </div>
     <?php
     }
-
 }

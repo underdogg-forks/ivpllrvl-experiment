@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * Returns a printable pagination.
  *

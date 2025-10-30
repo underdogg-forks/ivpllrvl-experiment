@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 use Money\Currencies\ISOCurrencies;
 
 function get_currencies(): array

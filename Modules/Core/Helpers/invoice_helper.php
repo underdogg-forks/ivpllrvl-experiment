@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * Returns the invoice image.
  */

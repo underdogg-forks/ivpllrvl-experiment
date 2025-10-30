@@ -2,16 +2,21 @@
 
 namespace Modules\Core\Models;
 
-use Modules\Core\Models\BaseModel;
-
 /**
- * EmailTemplate Model
+ * EmailTemplate Model.
  *
  * Eloquent model for managing ip_email_templates
  * Migrated from CodeIgniter model
  */
 class EmailTemplate extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class EmailTemplate extends BaseModel
      * @var string
      */
     protected $primaryKey = 'email_template_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,9 +58,9 @@ class EmailTemplate extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'email_template_title' => 'required|string|max:255',
+            'email_template_title'   => 'required|string|max:255',
             'email_template_subject' => 'required|string|max:255',
-            'email_template_body' => 'required|string',
+            'email_template_body'    => 'required|string',
         ];
     }
 }

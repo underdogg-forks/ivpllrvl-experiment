@@ -1,11 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 /**
- * PaymentsHelper
+ * PaymentsHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -22,5 +20,4 @@ class PaymentsHelper
 
         return $ISOCurrencies;
     }
-
 }

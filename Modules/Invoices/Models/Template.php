@@ -3,7 +3,7 @@
 namespace Modules\Invoices\Models;
 
 /**
- * Template Model
+ * Template Model.
  *
  * Utility class for managing invoice and quote templates
  * Migrated from CodeIgniter Mdl_Templates
@@ -13,9 +13,10 @@ namespace Modules\Invoices\Models;
 class Template
 {
     /**
-     * Get invoice templates of specified type
+     * Get invoice templates of specified type.
      *
      * @param string $type 'pdf' or 'public'
+     *
      * @return array
      */
     public static function getInvoiceTemplates($type = 'pdf')
@@ -30,9 +31,10 @@ class Template
     }
 
     /**
-     * Get quote templates of specified type
+     * Get quote templates of specified type.
      *
      * @param string $type 'pdf' or 'public'
+     *
      * @return array
      */
     public static function getQuoteTemplates($type = 'pdf')
@@ -47,19 +49,20 @@ class Template
     }
 
     /**
-     * Get templates from path
+     * Get templates from path.
      *
      * @param string $path
+     *
      * @return array
      */
     private static function getTemplatesFromPath($path)
     {
-        if (!is_dir($path)) {
+        if ( ! is_dir($path)) {
             return [];
         }
 
         $templates = [];
-        $files = scandir($path);
+        $files     = scandir($path);
 
         foreach ($files as $file) {
             if ($file != '.' && $file != '..') {
@@ -71,14 +74,15 @@ class Template
     }
 
     /**
-     * Remove file extensions from template names
+     * Remove file extensions from template names.
      *
      * @param array $files
+     *
      * @return array
      */
     private static function removeExtension(array $files)
     {
-        return array_map(function($file) {
+        return array_map(function ($file) {
             return pathinfo($file, PATHINFO_FILENAME);
         }, $files);
     }

@@ -2,8 +2,6 @@
 
 namespace Modules\Core\Libraries;
 
-
-
 use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
@@ -11,12 +9,11 @@ class Crypt
 {
     public function salt(): string
     {
-        return substr(sha1(mt_rand()), 0, 22);
+        return mb_substr(sha1(mt_rand()), 0, 22);
     }
 
     /**
      * @param string $password
-     *
      */
     public function generate_password($password, string $salt): string
     {

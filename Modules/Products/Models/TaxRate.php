@@ -5,13 +5,20 @@ namespace Modules\Products\Models;
 use Modules\Core\Models\BaseModel;
 
 /**
- * TaxRate Model
+ * TaxRate Model.
  *
  * Eloquent model for managing ip_tax_rates
  * Migrated from CodeIgniter model
  */
 class TaxRate extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class TaxRate extends BaseModel
      * @var string
      */
     protected $primaryKey = 'tax_rate_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -49,20 +49,9 @@ class TaxRate extends BaseModel
      * @var array
      */
     protected $casts = [
-        'tax_rate_id' => 'integer',
+        'tax_rate_id'      => 'integer',
         'tax_rate_percent' => 'decimal:2',
     ];
-
-    /**
-     * Default ordering scope
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('tax_rate_percent');
-    }
 
     /**
      * Get validation rules for tax rates.
@@ -72,8 +61,20 @@ class TaxRate extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'tax_rate_name' => 'required|string|max:255',
+            'tax_rate_name'    => 'required|string|max:255',
             'tax_rate_percent' => 'required|numeric|min:0|max:100',
         ];
+    }
+
+    /**
+     * Default ordering scope.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('tax_rate_percent');
     }
 }

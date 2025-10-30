@@ -1,11 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 /**
- * CountryHelper
+ * CountryHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -42,5 +40,4 @@ class CountryHelper
 
         return $countries[$countrycode] ?? $countrycode;
     }
-
 }

@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * Returns an array list of cldr => country, translated in the language $cldr.
  * If there is no translated country list, return the english one.

@@ -1,6 +1,5 @@
 <?php
 
 return [
-    'name' => 'Core'
+    'name' => 'Core',
 ];
-

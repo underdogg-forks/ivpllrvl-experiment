@@ -1,5 +1,8 @@
 <?php
 
+namespace Modules\Core\Libraries\XMLtemplates;
+
+use AllowDynamicProperties;
 
 /*
  * InvoicePlane
@@ -16,7 +19,7 @@
 /**
  * Class Zugferdv10Xml.
  */
-#[\AllowDynamicProperties]
+#[AllowDynamicProperties]
 class Zugferdv10Xml
 {
     public $invoice;

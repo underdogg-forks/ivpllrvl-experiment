@@ -1,96 +1,88 @@
 <?php
 
 /**
- * Backward Compatibility Helper
- * 
+ * Backward Compatibility Helper.
+ *
  * This file provides procedural function wrappers that call static methods
- * from helper classes in Modules/Core/Support/. This maintains backward 
- * compatibility with existing CodeIgniter code that expects procedural 
+ * from helper classes in Modules/Core/Support/. This maintains backward
+ * compatibility with existing CodeIgniter code that expects procedural
  * helper functions while moving towards a more modern, object-oriented approach.
- * 
+ *
  * All helper logic is now in static class methods, and these functions
  * simply delegate to those methods.
- * 
+ *
  * This file is autoloaded via composer.json to ensure all helper
  * functions are available throughout the application.
  */
 
-use Modules\Core\Support\ClientHelper;
-use Modules\Core\Support\CountryHelper;
-use Modules\Core\Support\CustomValuesHelper;
 use Modules\Core\Support\DateHelper;
-use Modules\Core\Support\DiacriticsHelper;
-use Modules\Core\Support\DropzoneHelper;
-use Modules\Core\Support\EchoHelper;
-use Modules\Core\Support\EInvoiceHelper;
-use Modules\Core\Support\InvoiceHelper;
-use Modules\Core\Support\JsonErrorHelper;
-use Modules\Core\Support\MailerHelper;
 use Modules\Core\Support\NumberHelper;
-use Modules\Core\Support\OrphanHelper;
-use Modules\Core\Support\PagerHelper;
-use Modules\Core\Support\PaymentsHelper;
-use Modules\Core\Support\PdfHelper;
-use Modules\Core\Support\RedirectHelper;
 use Modules\Core\Support\SettingsHelper;
-use Modules\Core\Support\TemplateHelper;
 use Modules\Core\Support\TranslationHelper;
-use Modules\Core\Support\UserHelper;
 
 // ============================================================================
 // Date Helper Functions
 // ============================================================================
 
-if (!function_exists('date_formats')) {
-    function date_formats(): array {
+if ( ! function_exists('date_formats')) {
+    function date_formats(): array
+    {
         return DateHelper::dateFormats();
     }
 }
 
-if (!function_exists('date_from_mysql')) {
-    function date_from_mysql($date, $ignore_post_check = false) {
+if ( ! function_exists('date_from_mysql')) {
+    function date_from_mysql($date, $ignore_post_check = false)
+    {
         return DateHelper::dateFromMysql($date, $ignore_post_check);
     }
 }
 
-if (!function_exists('date_from_timestamp')) {
-    function date_from_timestamp($timestamp): string {
+if ( ! function_exists('date_from_timestamp')) {
+    function date_from_timestamp($timestamp): string
+    {
         return DateHelper::dateFromTimestamp($timestamp);
     }
 }
 
-if (!function_exists('date_to_mysql')) {
-    function date_to_mysql($date) {
+if ( ! function_exists('date_to_mysql')) {
+    function date_to_mysql($date)
+    {
         return DateHelper::dateToMysql($date);
     }
 }
 
-if (!function_exists('is_date')) {
-    function is_date($date): bool {
+if ( ! function_exists('is_date')) {
+    function is_date($date): bool
+    {
         return DateHelper::isDate($date);
     }
 }
 
-if (!function_exists('date_format_setting')) {
-    function date_format_setting() {
+if ( ! function_exists('date_format_setting')) {
+    function date_format_setting()
+    {
         return DateHelper::dateFormatSetting();
     }
 }
 
-if (!function_exists('date_format_datepicker')) {
-    function date_format_datepicker() {
+if ( ! function_exists('date_format_datepicker')) {
+    function date_format_datepicker()
+    {
         return DateHelper::dateFormatDatepicker();
     }
 }
 
-if (!function_exists('increment_user_date')) {
-    function increment_user_date($date, string $increment): string {
+if ( ! function_exists('increment_user_date')) {
+    function increment_user_date($date, string $increment): string
+    {
         return DateHelper::incrementUserDate($date, $increment);
     }
 }
 
-if (!function_exists('increment_date')) {
-    function increment_date($date, string $increment): string {
+if ( ! function_exists('increment_date')) {
+    function increment_date($date, string $increment): string
+    {
         return DateHelper::incrementDate($date, $increment);
     }
 }
@@ -99,20 +91,23 @@ if (!function_exists('increment_date')) {
 // Translation Helper Functions
 // ============================================================================
 
-if (!function_exists('trans')) {
-    function trans($line, ?string $id = '', $default = null) {
+if ( ! function_exists('trans')) {
+    function trans($line, ?string $id = '', $default = null)
+    {
         return TranslationHelper::trans($line, $id, $default);
     }
 }
 
-if (!function_exists('set_language')) {
-    function set_language($language): void {
+if ( ! function_exists('set_language')) {
+    function set_language($language): void
+    {
         TranslationHelper::setLanguage($language);
     }
 }
 
-if (!function_exists('get_available_languages')) {
-    function get_available_languages() {
+if ( ! function_exists('get_available_languages')) {
+    function get_available_languages()
+    {
         return TranslationHelper::getAvailableLanguages();
     }
 }
@@ -121,20 +116,23 @@ if (!function_exists('get_available_languages')) {
 // Settings Helper Functions
 // ============================================================================
 
-if (!function_exists('get_setting')) {
-    function get_setting($setting_key, $default = '', $escape = false) {
+if ( ! function_exists('get_setting')) {
+    function get_setting($setting_key, $default = '', $escape = false)
+    {
         return SettingsHelper::getSetting($setting_key, $default, $escape);
     }
 }
 
-if (!function_exists('get_gateway_settings')) {
-    function get_gateway_settings($gateway) {
+if ( ! function_exists('get_gateway_settings')) {
+    function get_gateway_settings($gateway)
+    {
         return SettingsHelper::getGatewaySettings($gateway);
     }
 }
 
-if (!function_exists('check_select')) {
-    function check_select($value1, $value2 = null, $operator = '==', $checked = false): void {
+if ( ! function_exists('check_select')) {
+    function check_select($value1, $value2 = null, $operator = '==', $checked = false): void
+    {
         SettingsHelper::checkSelect($value1, $value2, $operator, $checked);
     }
 }
@@ -143,26 +141,30 @@ if (!function_exists('check_select')) {
 // Number Helper Functions
 // ============================================================================
 
-if (!function_exists('format_currency')) {
-    function format_currency($amount): string {
+if ( ! function_exists('format_currency')) {
+    function format_currency($amount): string
+    {
         return NumberHelper::format_currency($amount);
     }
 }
 
-if (!function_exists('format_amount')) {
-    function format_amount($amount = null) {
+if ( ! function_exists('format_amount')) {
+    function format_amount($amount = null)
+    {
         return NumberHelper::format_amount($amount);
     }
 }
 
-if (!function_exists('standardize_amount')) {
-    function standardize_amount($amount) {
+if ( ! function_exists('standardize_amount')) {
+    function standardize_amount($amount)
+    {
         return NumberHelper::standardize_amount($amount);
     }
 }
 
-if (!function_exists('round_tax')) {
-    function round_tax($amount, $decimal_places, $strict = 0): string {
+if ( ! function_exists('round_tax')) {
+    function round_tax($amount, $decimal_places, $strict = 0): string
+    {
         return NumberHelper::round_tax($amount, $decimal_places, $strict);
     }
 }
@@ -202,4 +204,3 @@ foreach ($remaining_helper_files as $helper_file) {
         require_once $file_path;
     }
 }
-

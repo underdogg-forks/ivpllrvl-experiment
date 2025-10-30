@@ -1,11 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 /**
- * DiacriticsHelper
+ * DiacriticsHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -306,5 +304,4 @@ class DiacriticsHelper
 
         return strtr($text, $trans);
     }
-
 }

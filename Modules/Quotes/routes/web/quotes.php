@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Quotes\Controllers\QuotesController;
 use Modules\Quotes\Controllers\QuotesAjaxController;
+use Modules\Quotes\Controllers\QuotesController;
 
 /*
 |--------------------------------------------------------------------------

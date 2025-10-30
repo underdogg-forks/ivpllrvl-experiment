@@ -2,16 +2,21 @@
 
 namespace Modules\Core\Models;
 
-use Modules\Core\Models\BaseModel;
-
 /**
- * Report Model
+ * Report Model.
  *
  * Eloquent model for managing unknown_table
  * Migrated from CodeIgniter model
  */
 class Report extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class Report extends BaseModel
      * @var string
      */
     protected $primaryKey = 'id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

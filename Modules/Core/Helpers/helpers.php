@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Autoload all helper files from Modules/Core/Helpers directory
+ * Autoload all helper files from Modules/Core/Helpers directory.
  */
-
 $helpersDir = __DIR__;
 
 // List of helper files to load

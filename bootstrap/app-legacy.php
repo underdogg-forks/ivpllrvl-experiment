@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Bootstrap the Illuminate application
+ * Bootstrap the Illuminate application.
  */
 
 use Illuminate\Container\Container;
@@ -27,17 +27,17 @@ $capsule = new Capsule();
 
 // Add database connection from environment
 $capsule->addConnection([
-    'driver' => env('DB_DRIVER', 'mysql'),
-    'host' => env('DB_HOSTNAME', 'localhost'),
-    'port' => env('DB_PORT', '3306'),
-    'database' => env('DB_DATABASE', 'invoiceplane'),
-    'username' => env('DB_USERNAME', 'root'),
-    'password' => env('DB_PASSWORD', ''),
-    'charset' => 'utf8mb4',
+    'driver'    => env('DB_DRIVER', 'mysql'),
+    'host'      => env('DB_HOSTNAME', 'localhost'),
+    'port'      => env('DB_PORT', '3306'),
+    'database'  => env('DB_DATABASE', 'invoiceplane'),
+    'username'  => env('DB_USERNAME', 'root'),
+    'password'  => env('DB_PASSWORD', ''),
+    'charset'   => 'utf8mb4',
     'collation' => 'utf8mb4_unicode_ci',
-    'prefix' => '',
-    'strict' => true,
-    'engine' => null,
+    'prefix'    => '',
+    'strict'    => true,
+    'engine'    => null,
 ]);
 
 // Make this Capsule instance available globally via static methods
@@ -84,6 +84,7 @@ $container->singleton('view.engine.resolver', function ($app) {
     // Register Blade engine if needed in future
     $resolver->register('blade', function () use ($app) {
         $compiler = new BladeCompiler($app['files'], __DIR__ . '/../storage/framework/views');
+
         return new CompilerEngine($compiler);
     });
 

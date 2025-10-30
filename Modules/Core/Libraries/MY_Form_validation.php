@@ -2,8 +2,6 @@
 
 namespace Modules\Core\Libraries;
 
-
-
 #[AllowDynamicProperties]
 class MY_Form_validation extends CI_Form_validation
 {

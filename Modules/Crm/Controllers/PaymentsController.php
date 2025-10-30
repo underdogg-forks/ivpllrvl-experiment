@@ -3,10 +3,10 @@
 namespace Modules\Crm\Controllers;
 
 /**
- * PaymentsController (Guest)
- * 
+ * PaymentsController (Guest).
+ *
  * Guest portal payment submission
- * 
+ *
  * @legacy-file application/modules/guest/controllers/Payments.php
  */
 class PaymentsController
@@ -16,7 +16,7 @@ class PaymentsController
         // Guest payment form
         return view('crm::guest_payments');
     }
-    
+
     public function submit()
     {
         // Process guest payment submission

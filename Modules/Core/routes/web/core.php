@@ -1,18 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Controllers\DashboardController;
-use Modules\Core\Controllers\SettingsController;
 use Modules\Core\Controllers\CustomFieldsController;
 use Modules\Core\Controllers\CustomValuesController;
+use Modules\Core\Controllers\DashboardController;
 use Modules\Core\Controllers\EmailTemplatesController;
 use Modules\Core\Controllers\ImportController;
-use Modules\Core\Controllers\ReportsController;
-use Modules\Core\Controllers\UploadController;
 use Modules\Core\Controllers\LayoutController;
 use Modules\Core\Controllers\MailerController;
-use Modules\Core\Controllers\UsersController;
+use Modules\Core\Controllers\ReportsController;
 use Modules\Core\Controllers\SessionsController;
+use Modules\Core\Controllers\SettingsController;
+use Modules\Core\Controllers\UploadController;
+use Modules\Core\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------

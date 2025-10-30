@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * RedirectHelper
+ * RedirectHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -45,5 +40,4 @@ class RedirectHelper
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
         $bridge->session()->set_userdata('redirect_to', $CI->uri->uri_string());
     }
-
 }

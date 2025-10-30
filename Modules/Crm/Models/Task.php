@@ -5,13 +5,20 @@ namespace Modules\Crm\Models;
 use Modules\Core\Models\BaseModel;
 
 /**
- * Task Model
+ * Task Model.
  *
  * Eloquent model for managing ip_tasks
  * Migrated from CodeIgniter model
  */
 class Task extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Task extends BaseModel
      * @var string
      */
     protected $primaryKey = 'task_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,11 +60,11 @@ class Task extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'project_id' => 'nullable|integer',
-            'task_name' => 'required|string|max:255',
+            'project_id'       => 'nullable|integer',
+            'task_name'        => 'required|string|max:255',
             'task_description' => 'nullable|string',
-            'task_price' => 'nullable|numeric|min:0',
-            'task_status' => 'required|integer',
+            'task_price'       => 'nullable|numeric|min:0',
+            'task_status'      => 'required|integer',
         ];
     }
 }

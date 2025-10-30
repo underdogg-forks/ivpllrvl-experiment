@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Payments\Controllers\PaymentsController;
 use Modules\Payments\Controllers\PaymentMethodsController;
+use Modules\Payments\Controllers\PaymentsController;
 
 /*
 |--------------------------------------------------------------------------

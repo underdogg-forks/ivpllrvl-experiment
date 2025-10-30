@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * PagerHelper
+ * PagerHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -44,5 +39,4 @@ class PagerHelper
 
         return $pager . '</div>';
     }
-
 }

@@ -2,21 +2,26 @@
 
 namespace Modules\Core\Models;
 
-use Modules\Core\Models\BaseModel;
-
 /**
- * Version Model
+ * Version Model.
  *
  * Eloquent model for tracking database version updates
  * Migrated from CodeIgniter Mdl_Versions model
  *
- * @property int $version_id
+ * @property int    $version_id
  * @property string $version_date_applied
  * @property string $version_file
- * @property int $version_sql_errors
+ * @property int    $version_sql_errors
  */
 class Version extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -30,13 +35,6 @@ class Version extends BaseModel
      * @var string
      */
     protected $primaryKey = 'version_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -55,12 +53,12 @@ class Version extends BaseModel
      * @var array
      */
     protected $casts = [
-        'version_id' => 'integer',
+        'version_id'         => 'integer',
         'version_sql_errors' => 'integer',
     ];
 
     /**
-     * Get the current version from the database
+     * Get the current version from the database.
      *
      * @return string
      */
@@ -70,15 +68,16 @@ class Version extends BaseModel
             ->orderBy('version_file', 'desc')
             ->first();
 
-        if (!$version) {
+        if ( ! $version) {
             return '1.0.0';
         }
 
-        $versionFile = $version->version_file;
-        $underscorePos = strpos($versionFile, '_');
+        $versionFile   = $version->version_file;
+        $underscorePos = mb_strpos($versionFile, '_');
 
         if ($underscorePos !== false) {
-            $versionStr = substr($versionFile, $underscorePos + 1);
+            $versionStr = mb_substr($versionFile, $underscorePos + 1);
+
             return str_replace('.sql', '', $versionStr);
         }
 

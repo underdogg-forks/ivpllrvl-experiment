@@ -2,10 +2,8 @@
 
 namespace Modules\Core\Models;
 
-use Modules\Core\Models\BaseModel;
-
 /**
- * InvoiceCustom Model
+ * InvoiceCustom Model.
  *
  * Eloquent model for managing invoice custom fields
  * Migrated from CodeIgniter Mdl_Invoice_Custom model
@@ -16,12 +14,19 @@ use Modules\Core\Models\BaseModel;
 class InvoiceCustom extends BaseModel
 {
     /**
-     * Custom field positions for invoices
+     * Custom field positions for invoices.
      */
     public static array $positions = [
         'custom_fields',
         'after_due_date',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The table associated with the model.
@@ -36,13 +41,6 @@ class InvoiceCustom extends BaseModel
      * @var string
      */
     protected $primaryKey = 'invoice_custom_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,20 +58,8 @@ class InvoiceCustom extends BaseModel
      */
     protected $casts = [
         'invoice_custom_id' => 'integer',
-        'invoice_id' => 'integer',
+        'invoice_id'        => 'integer',
     ];
-
-    /**
-     * Get custom fields for a specific invoice
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $invoiceId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByInvoiceId($query, int $invoiceId)
-    {
-        return $query->where('invoice_id', $invoiceId);
-    }
 
     /**
      * Get validation rules for invoice custom fields.
@@ -83,9 +69,22 @@ class InvoiceCustom extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'invoice_id' => 'required|integer',
-            'custom_field_id' => 'required|integer',
+            'invoice_id'         => 'required|integer',
+            'custom_field_id'    => 'required|integer',
             'custom_field_value' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Get custom fields for a specific invoice.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $invoiceId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByInvoiceId($query, int $invoiceId)
+    {
+        return $query->where('invoice_id', $invoiceId);
     }
 }

@@ -3,10 +3,10 @@
 namespace Modules\Invoices\Controllers;
 
 /**
- * AjaxController
- * 
+ * AjaxController.
+ *
  * Migrated from CodeIgniter Ajax controller
- * 
+ *
  * TODO: Complete migration:
  * - Replace $this->load->model() with dependency injection or direct Eloquent usage
  * - Replace $this->input->post() with Request object handling
@@ -16,7 +16,7 @@ namespace Modules\Invoices\Controllers;
  * - Update database queries to use Eloquent models
  * - Convert form validation to Laravel validation
  * - Update flash messages to use Laravel session flash
- * 
+ *
  * Original file: /home/runner/work/ivpllrvl-experiment/ivpllrvl-experiment/application/modules/invoices/controllers/Ajax.php
  */
 class AjaxController
@@ -28,7 +28,7 @@ class AjaxController
     {
         // TODO: Implement index method from original controller
         // Original method typically loads data and renders view
-        
+
         return view('invoices::index');
     }
 
@@ -38,7 +38,7 @@ class AjaxController
     public function create()
     {
         // TODO: Implement create/form method if exists in original
-        
+
         return view('invoices::form');
     }
 
@@ -52,7 +52,7 @@ class AjaxController
         // - Create model instance
         // - Save to database
         // - Redirect with success message
-        
+
         return redirect()->back();
     }
 
@@ -62,7 +62,7 @@ class AjaxController
     public function show($id)
     {
         // TODO: Implement show/view method if exists in original
-        
+
         return view('invoices::view');
     }
 
@@ -72,7 +72,7 @@ class AjaxController
     public function edit($id)
     {
         // TODO: Implement edit/form method if exists in original
-        
+
         return view('invoices::form');
     }
 
@@ -86,7 +86,7 @@ class AjaxController
         // - Find model instance
         // - Update in database
         // - Redirect with success message
-        
+
         return redirect()->back();
     }
 
@@ -96,10 +96,9 @@ class AjaxController
     public function destroy($id)
     {
         // TODO: Implement delete logic if exists in original
-        
+
         return redirect()->back();
     }
-    
+
     // TODO: Add other methods from original controller
 }
-

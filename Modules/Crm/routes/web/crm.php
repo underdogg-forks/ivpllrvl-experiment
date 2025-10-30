@@ -2,12 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Crm\Controllers\ClientsController;
-use Modules\Crm\Controllers\UserClientsController;
+use Modules\Crm\Controllers\GetController;
+use Modules\Crm\Controllers\GuestController;
 use Modules\Crm\Controllers\ProjectsController;
 use Modules\Crm\Controllers\TasksController;
-use Modules\Crm\Controllers\GuestController;
-use Modules\Crm\Controllers\GetController;
-use Modules\Crm\Controllers\ViewController;
+use Modules\Crm\Controllers\UserClientsController;
 
 /*
 |--------------------------------------------------------------------------

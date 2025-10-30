@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Rector\CodeQuality\Rector\ClassMethod\ExplicitReturnNullRector;
 use Rector\CodeQuality\Rector\Equal\UseIdenticalOverEqualWithSameTypeRector;
 use Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector;

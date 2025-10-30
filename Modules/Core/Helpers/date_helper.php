@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * Available date formats
  * The setting value represents the PHP date() formatting, the datepicker value represents the

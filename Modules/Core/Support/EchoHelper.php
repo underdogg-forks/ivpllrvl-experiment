@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * EchoHelper
+ * EchoHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -104,5 +99,4 @@ class EchoHelper
         $asset = IP_DEBUG ? strtr($asset, ['.min.' => '.']) : $asset;
         echo base_url() . 'assets/core/' . $asset . '?v=' . get_setting('current_version');
     }
-
 }

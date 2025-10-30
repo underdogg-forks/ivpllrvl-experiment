@@ -1,8 +1,8 @@
 <?php
 
 /**
- * InvoicePlane - Application Entry Point
- * 
+ * InvoicePlane - Application Entry Point.
+ *
  * Modern Laravel-based front controller replacing legacy CodeIgniter bootstrap.
  * This file initializes the Illuminate container and handles all incoming requests.
  */
@@ -28,7 +28,7 @@ require __DIR__ . '/../vendor/autoload.php';
 |
 */
 
-if (!file_exists(__DIR__ . '/../.env')) {
+if ( ! file_exists(__DIR__ . '/../.env')) {
     exit('The <b>.env</b> file is missing! Please copy <b>.env.example</b> to <b>.env</b> and configure your settings.');
 }
 
@@ -112,7 +112,7 @@ require __DIR__ . '/../bootstrap/paths.php';
 
 try {
     $app = require_once __DIR__ . '/../bootstrap/app.php';
-    
+
     /*
     |--------------------------------------------------------------------------
     | Run The Application
@@ -123,7 +123,7 @@ try {
     | the client's browser, allowing them to enjoy our application.
     |
     */
-    
+
     // Clean up temporary files
     if (defined('UPLOADS_TEMP_FOLDER')) {
         $tempFiles = array_merge(
@@ -132,7 +132,7 @@ try {
         );
         array_map('unlink', $tempFiles);
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | Laravel Routing
@@ -142,27 +142,27 @@ try {
     | Basic routing implementation below - to be expanded as needed.
     |
     */
-    
+
     // Get the request URI
     $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
     $requestUri = parse_url($requestUri, PHP_URL_PATH);
-    
+
     // Remove base path if exists
     $basePath = dirname($_SERVER['SCRIPT_NAME']);
     if ($basePath !== '/') {
-        $requestUri = substr($requestUri, strlen($basePath));
+        $requestUri = mb_substr($requestUri, mb_strlen($basePath));
     }
-    
+
     // Trim slashes
-    $requestUri = trim($requestUri, '/');
-    
+    $requestUri = mb_trim($requestUri, '/');
+
     // Basic routing - to be expanded with proper Laravel routing
     switch ($requestUri) {
         case '':
         case 'index.php':
             echo view('core::welcome')->render();
             break;
-            
+
         default:
             http_response_code(404);
             echo '<h1>404 - Not Found</h1>';
@@ -170,7 +170,6 @@ try {
             echo '<p><small>Route: ' . htmlspecialchars($requestUri) . '</small></p>';
             echo '<p><a href="/">Go to Home</a></p>';
     }
-    
 } catch (\Exception $e) {
     /*
     |--------------------------------------------------------------------------
@@ -181,7 +180,7 @@ try {
     | message and log the exception for debugging.
     |
     */
-    
+
     if (ENVIRONMENT === 'development') {
         echo '<h1>Application Error</h1>';
         echo '<p><strong>Message:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
@@ -193,9 +192,8 @@ try {
         echo '<h1>500 - Internal Server Error</h1>';
         echo '<p>An error occurred. Please try again later.</p>';
     }
-    
+
     exit(1);
-    
 } finally {
     /*
     |--------------------------------------------------------------------------
@@ -205,7 +203,7 @@ try {
     | Perform any necessary cleanup operations before the script terminates.
     |
     */
-    
+
     // Flush output buffers if needed
     if (ob_get_level() > 0) {
         ob_end_flush();

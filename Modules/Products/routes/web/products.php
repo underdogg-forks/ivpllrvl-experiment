@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Products\Controllers\ProductsController;
 use Modules\Products\Controllers\FamiliesController;
+use Modules\Products\Controllers\ProductsController;
 use Modules\Products\Controllers\UnitsController;
-use Modules\Products\Controllers\TaxRatesController;
 
 /*
 |--------------------------------------------------------------------------

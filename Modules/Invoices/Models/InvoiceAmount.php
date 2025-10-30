@@ -2,10 +2,11 @@
 
 namespace Modules\Invoices\Models;
 
+use DB;
 use Modules\Core\Models\BaseModel;
 
 /**
- * InvoiceAmount Model
+ * InvoiceAmount Model.
  *
  * Eloquent model for managing ip_invoice_amounts
  * Stores calculated totals for invoices
@@ -13,6 +14,13 @@ use Modules\Core\Models\BaseModel;
  */
 class InvoiceAmount extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -26,13 +34,6 @@ class InvoiceAmount extends BaseModel
      * @var string
      */
     protected $primaryKey = 'invoice_amount_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -56,30 +57,23 @@ class InvoiceAmount extends BaseModel
      * @var array
      */
     protected $casts = [
-        'invoice_amount_id' => 'integer',
-        'invoice_id' => 'integer',
-        'invoice_item_subtotal' => 'decimal:2',
+        'invoice_amount_id'      => 'integer',
+        'invoice_id'             => 'integer',
+        'invoice_item_subtotal'  => 'decimal:2',
         'invoice_item_tax_total' => 'decimal:2',
-        'invoice_tax_total' => 'decimal:2',
-        'invoice_total' => 'decimal:2',
-        'invoice_paid' => 'decimal:2',
-        'invoice_balance' => 'decimal:2',
-        'invoice_item_discount' => 'decimal:2',
+        'invoice_tax_total'      => 'decimal:2',
+        'invoice_total'          => 'decimal:2',
+        'invoice_paid'           => 'decimal:2',
+        'invoice_balance'        => 'decimal:2',
+        'invoice_item_discount'  => 'decimal:2',
     ];
-
-    /**
-     * Get the invoice that owns the amount.
-     */
-    public function invoice()
-    {
-        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
-    }
 
     /**
      * Calculate invoice amounts including items, taxes, discounts, and payments.
      *
-     * @param int $invoiceId
+     * @param int   $invoiceId
      * @param array $globalDiscount
+     *
      * @return void
      */
     public static function calculate(int $invoiceId, array $globalDiscount = []): void
@@ -87,7 +81,7 @@ class InvoiceAmount extends BaseModel
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
 
         // Get the basic totals from invoice item amounts
-        $invoiceAmounts = \DB::table('ip_invoice_item_amounts')
+        $invoiceAmounts = DB::table('ip_invoice_item_amounts')
             ->selectRaw('
                 SUM(item_subtotal) AS invoice_item_subtotal,
                 SUM(item_tax_total) AS invoice_item_tax_total,
@@ -106,28 +100,28 @@ class InvoiceAmount extends BaseModel
 
         if ($legacyCalculation) {
             $invoiceItemSubtotal = $invoiceAmounts->invoice_item_subtotal - $invoiceAmounts->invoice_item_discount;
-            $invoiceSubtotal = $invoiceItemSubtotal + $invoiceAmounts->invoice_item_tax_total;
-            $invoiceTotal = static::calculateDiscount($invoiceId, $invoiceSubtotal, $decimalPlaces);
+            $invoiceSubtotal     = $invoiceItemSubtotal + $invoiceAmounts->invoice_item_tax_total;
+            $invoiceTotal        = static::calculateDiscount($invoiceId, $invoiceSubtotal, $decimalPlaces);
         } else {
-            $globalDiscountItem = $globalDiscount['item'] ?? 0.0;
+            $globalDiscountItem  = $globalDiscount['item'] ?? 0.0;
             $invoiceItemSubtotal = $invoiceAmounts->invoice_item_subtotal - $invoiceAmounts->invoice_item_discount - $globalDiscountItem;
-            $invoiceTotal = $invoiceItemSubtotal + $invoiceAmounts->invoice_item_tax_total;
+            $invoiceTotal        = $invoiceItemSubtotal + $invoiceAmounts->invoice_item_tax_total;
         }
 
         // Get the amount already paid
-        $invoicePaid = \DB::table('ip_payments')
+        $invoicePaid = DB::table('ip_payments')
             ->where('invoice_id', $invoiceId)
             ->sum('payment_amount');
         $invoicePaid = $invoicePaid ? (float) $invoicePaid : 0.0;
 
         // Save or update invoice amounts
         $dbArray = [
-            'invoice_id' => $invoiceId,
-            'invoice_item_subtotal' => $invoiceItemSubtotal,
+            'invoice_id'             => $invoiceId,
+            'invoice_item_subtotal'  => $invoiceItemSubtotal,
             'invoice_item_tax_total' => $invoiceAmounts->invoice_item_tax_total,
-            'invoice_total' => $invoiceTotal,
-            'invoice_paid' => $invoicePaid,
-            'invoice_balance' => $invoiceTotal - $invoicePaid,
+            'invoice_total'          => $invoiceTotal,
+            'invoice_paid'           => $invoicePaid,
+            'invoice_balance'        => $invoiceTotal - $invoicePaid,
         ];
 
         static::updateOrCreate(
@@ -142,17 +136,18 @@ class InvoiceAmount extends BaseModel
     /**
      * Calculate discount for legacy calculation mode.
      *
-     * @param int $invoiceId
+     * @param int   $invoiceId
      * @param float $invoiceTotal
-     * @param int $decimalPlaces
+     * @param int   $decimalPlaces
+     *
      * @return float
      */
     public static function calculateDiscount(int $invoiceId, float $invoiceTotal, int $decimalPlaces = 2): float
     {
         $invoice = Invoice::findOrFail($invoiceId);
 
-        $total = (float) number_format((float) $invoiceTotal, $decimalPlaces, '.', '');
-        $discountAmount = (float) number_format((float) $invoice->invoice_discount_amount, $decimalPlaces, '.', '');
+        $total           = (float) number_format((float) $invoiceTotal, $decimalPlaces, '.', '');
+        $discountAmount  = (float) number_format((float) $invoice->invoice_discount_amount, $decimalPlaces, '.', '');
         $discountPercent = (float) number_format((float) $invoice->invoice_discount_percent, $decimalPlaces, '.', '');
 
         $total -= $discountAmount;
@@ -164,11 +159,12 @@ class InvoiceAmount extends BaseModel
      * Get global discount for an invoice.
      *
      * @param int $invoiceId
+     *
      * @return float
      */
     public static function getGlobalDiscount(int $invoiceId): float
     {
-        $result = \DB::table('ip_invoice_item_amounts')
+        $result = DB::table('ip_invoice_item_amounts')
             ->selectRaw('
                 SUM(item_subtotal) - (SUM(item_total) - SUM(item_tax_total) + SUM(item_discount)) AS global_discount
             ')
@@ -187,6 +183,7 @@ class InvoiceAmount extends BaseModel
      *
      * @param int $invoiceId
      * @param int $decimalPlaces
+     *
      * @return void
      */
     public static function calculateInvoiceTaxes(int $invoiceId, int $decimalPlaces = 2): void
@@ -220,14 +217,14 @@ class InvoiceAmount extends BaseModel
             }
 
             // Update invoice amount with total tax
-            \DB::table('ip_invoice_amounts')
+            DB::table('ip_invoice_amounts')
                 ->where('invoice_id', $invoiceId)
                 ->update([
-                    'invoice_tax_total' => \DB::raw('(
+                    'invoice_tax_total' => DB::raw('(
                         SELECT SUM(invoice_tax_rate_amount)
                         FROM ip_invoice_tax_rates
                         WHERE invoice_id = ' . $invoiceId . '
-                    )')
+                    )'),
                 ]);
 
             // Get updated invoice amount
@@ -247,7 +244,7 @@ class InvoiceAmount extends BaseModel
             $invoicePaid = $invoiceAmount->invoice_paid ?? 0;
             static::where('invoice_id', $invoiceId)
                 ->update([
-                    'invoice_total' => $invoiceTotal,
+                    'invoice_total'   => $invoiceTotal,
                     'invoice_balance' => $invoiceTotal - $invoicePaid,
                 ]);
         } else {
@@ -261,11 +258,12 @@ class InvoiceAmount extends BaseModel
      * Get total invoiced amount for a period.
      *
      * @param string|null $period
+     *
      * @return float
      */
     public static function getTotalInvoiced(?string $period = null): float
     {
-        $query = \DB::table('ip_invoice_amounts');
+        $query = DB::table('ip_invoice_amounts');
 
         switch ($period) {
             case 'month':
@@ -297,6 +295,7 @@ class InvoiceAmount extends BaseModel
         }
 
         $result = $query->sum('invoice_total');
+
         return (float) ($result ?? 0.0);
     }
 
@@ -304,11 +303,12 @@ class InvoiceAmount extends BaseModel
      * Get total paid amount for a period.
      *
      * @param string|null $period
+     *
      * @return float
      */
     public static function getTotalPaid(?string $period = null): float
     {
-        $query = \DB::table('ip_invoice_amounts');
+        $query = DB::table('ip_invoice_amounts');
 
         switch ($period) {
             case 'month':
@@ -340,6 +340,7 @@ class InvoiceAmount extends BaseModel
         }
 
         $result = $query->sum('invoice_paid');
+
         return (float) ($result ?? 0.0);
     }
 
@@ -347,11 +348,12 @@ class InvoiceAmount extends BaseModel
      * Get total balance for a period.
      *
      * @param string|null $period
+     *
      * @return float
      */
     public static function getTotalBalance(?string $period = null): float
     {
-        $query = \DB::table('ip_invoice_amounts');
+        $query = DB::table('ip_invoice_amounts');
 
         switch ($period) {
             case 'month':
@@ -383,6 +385,7 @@ class InvoiceAmount extends BaseModel
         }
 
         $result = $query->sum('invoice_balance');
+
         return (float) ($result ?? 0.0);
     }
 
@@ -390,13 +393,14 @@ class InvoiceAmount extends BaseModel
      * Get status totals for a period.
      *
      * @param string $period
+     *
      * @return array
      */
     public static function getStatusTotals(string $period = 'this-month'): array
     {
         switch ($period) {
             case 'last-month':
-                $results = \DB::table('ip_invoice_amounts')
+                $results = DB::table('ip_invoice_amounts')
                     ->selectRaw('
                         invoice_status_id,
                         SUM(invoice_total) AS sum_total,
@@ -415,7 +419,7 @@ class InvoiceAmount extends BaseModel
                 break;
 
             case 'this-quarter':
-                $results = \DB::table('ip_invoice_amounts')
+                $results = DB::table('ip_invoice_amounts')
                     ->selectRaw('
                         invoice_status_id,
                         SUM(invoice_total) AS sum_total,
@@ -434,7 +438,7 @@ class InvoiceAmount extends BaseModel
                 break;
 
             case 'last-quarter':
-                $results = \DB::table('ip_invoice_amounts')
+                $results = DB::table('ip_invoice_amounts')
                     ->selectRaw('
                         invoice_status_id,
                         SUM(invoice_total) AS sum_total,
@@ -453,7 +457,7 @@ class InvoiceAmount extends BaseModel
                 break;
 
             case 'this-year':
-                $results = \DB::table('ip_invoice_amounts')
+                $results = DB::table('ip_invoice_amounts')
                     ->selectRaw('
                         invoice_status_id,
                         SUM(invoice_total) AS sum_total,
@@ -471,7 +475,7 @@ class InvoiceAmount extends BaseModel
                 break;
 
             case 'last-year':
-                $results = \DB::table('ip_invoice_amounts')
+                $results = DB::table('ip_invoice_amounts')
                     ->selectRaw('
                         invoice_status_id,
                         SUM(invoice_total) AS sum_total,
@@ -489,7 +493,7 @@ class InvoiceAmount extends BaseModel
                 break;
 
             default: // 'this-month'
-                $results = \DB::table('ip_invoice_amounts')
+                $results = DB::table('ip_invoice_amounts')
                     ->selectRaw('
                         invoice_status_id,
                         SUM(invoice_total) AS sum_total,
@@ -508,30 +512,38 @@ class InvoiceAmount extends BaseModel
                 break;
         }
 
-        $return = [];
+        $return   = [];
         $statuses = Invoice::statuses();
 
         foreach ($statuses as $key => $status) {
             $return[$key] = [
                 'invoice_status_id' => $key,
-                'class' => $status['class'],
-                'label' => $status['label'],
-                'href' => $status['href'],
-                'sum_total' => 0,
-                'sum_paid' => 0,
-                'sum_balance' => 0,
-                'num_total' => 0,
+                'class'             => $status['class'],
+                'label'             => $status['label'],
+                'href'              => $status['href'],
+                'sum_total'         => 0,
+                'sum_paid'          => 0,
+                'sum_balance'       => 0,
+                'num_total'         => 0,
             ];
         }
 
         foreach ($results as $result) {
             $resultArray = (array) $result;
-            $statusId = $resultArray['invoice_status_id'];
+            $statusId    = $resultArray['invoice_status_id'];
             if (isset($return[$statusId])) {
                 $return[$statusId] = array_merge($return[$statusId], $resultArray);
             }
         }
 
         return $return;
+    }
+
+    /**
+     * Get the invoice that owns the amount.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 }

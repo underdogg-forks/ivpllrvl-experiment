@@ -1,6 +1,5 @@
 <?php
 
 return [
-    'name' => 'Invoices'
+    'name' => 'Invoices',
 ];
-

@@ -1,13 +1,11 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 use Modules\Core\Models\Setting;
 
 /**
- * Translation Helper Class
+ * Translation Helper Class.
  *
  * Provides static methods for language translation and management.
  * Now uses Laravel's translation system.
@@ -63,11 +61,11 @@ class TranslationHelper
     {
         $lang_path = resource_path('lang');
 
-        if (!is_dir($lang_path)) {
+        if ( ! is_dir($lang_path)) {
             return [];
         }
 
-        $languages = [];
+        $languages   = [];
         $directories = scandir($lang_path);
 
         foreach ($directories as $dir) {
@@ -77,6 +75,7 @@ class TranslationHelper
         }
 
         sort($languages);
+
         return $languages;
     }
 }

@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 #[AllowDynamicProperties]
 class SetTimezoneClass
 {

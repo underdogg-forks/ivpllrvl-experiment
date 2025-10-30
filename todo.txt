@@ -1,0 +1,6 @@
+Class Modules\Users\Models\User located in ./Modules/Core/Models/User.php does not comply with psr-4 autoloading standard (rule: Modules\ => ./Modules). Skipping.
+Class Modules\Users\Models\Session located in ./Modules/Core/Models/Session.php does not comply with psr-4 autoloading standard (rule: Modules\ => ./Modules). Skipping.
+Class Zugferdv10Xml located in ./Modules/Core/Libraries/XMLtemplates/Zugferdv10Xml.php does not comply with psr-4 autoloading standard (rule: Modules\ => ./Modules). Skipping.
+Class SetTimezoneClass located in ./Modules/Core/Hooks/SetTimezoneClass.php does not comply with psr-4 autoloading standard (rule: Modules\ => ./Modules). Skipping.
+Class Modules\Crm\Http\Controllers\Gateways\StripeController located in ./Modules/Crm/Controllers/Gateways/StripeController.php does not comply with psr-4 autoloading standard (rule: Modules\ => ./Modules). Skipping.
+Class Modules\Crm\Http\Controllers\Gateways\PaypalController located in ./Modules/Crm/Controllers/Gateways/PaypalController.php does not comply with psr-4 autoloading standard (rule: Modules\ => ./Modules). Skipping.

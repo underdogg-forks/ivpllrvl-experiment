@@ -2,10 +2,8 @@
 
 namespace Modules\Core\Models;
 
-use Modules\Core\Models\BaseModel;
-
 /**
- * QuoteCustom Model
+ * QuoteCustom Model.
  *
  * Eloquent model for managing quote custom fields
  * Migrated from CodeIgniter Mdl_Quote_Custom model
@@ -16,12 +14,19 @@ use Modules\Core\Models\BaseModel;
 class QuoteCustom extends BaseModel
 {
     /**
-     * Custom field positions for quotes
+     * Custom field positions for quotes.
      */
     public static array $positions = [
         'custom_fields',
         'after_expires',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The table associated with the model.
@@ -36,13 +41,6 @@ class QuoteCustom extends BaseModel
      * @var string
      */
     protected $primaryKey = 'quote_custom_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,20 +58,8 @@ class QuoteCustom extends BaseModel
      */
     protected $casts = [
         'quote_custom_id' => 'integer',
-        'quote_id' => 'integer',
+        'quote_id'        => 'integer',
     ];
-
-    /**
-     * Get custom fields for a specific quote
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $quoteId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByQuoteId($query, int $quoteId)
-    {
-        return $query->where('quote_id', $quoteId);
-    }
 
     /**
      * Get validation rules for quote custom fields.
@@ -83,9 +69,22 @@ class QuoteCustom extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'quote_id' => 'required|integer',
-            'custom_field_id' => 'required|integer',
+            'quote_id'           => 'required|integer',
+            'custom_field_id'    => 'required|integer',
             'custom_field_value' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Get custom fields for a specific quote.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $quoteId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByQuoteId($query, int $quoteId)
+    {
+        return $query->where('quote_id', $quoteId);
     }
 }

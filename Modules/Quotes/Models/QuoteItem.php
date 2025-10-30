@@ -2,16 +2,24 @@
 
 namespace Modules\Quotes\Models;
 
+use DB;
 use Modules\Core\Models\BaseModel;
 
 /**
- * QuoteItem Model
+ * QuoteItem Model.
  *
  * Eloquent model for managing ip_quote_items
  * Migrated from CodeIgniter model
  */
 class QuoteItem extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +33,6 @@ class QuoteItem extends BaseModel
      * @var string
      */
     protected $primaryKey = 'item_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -58,16 +59,117 @@ class QuoteItem extends BaseModel
      * @var array
      */
     protected $casts = [
-        'item_id' => 'integer',
-        'quote_id' => 'integer',
-        'item_tax_rate_id' => 'integer',
-        'item_product_id' => 'integer',
-        'item_quantity' => 'decimal:2',
-        'item_price' => 'decimal:2',
-        'item_order' => 'integer',
+        'item_id'              => 'integer',
+        'quote_id'             => 'integer',
+        'item_tax_rate_id'     => 'integer',
+        'item_product_id'      => 'integer',
+        'item_quantity'        => 'decimal:2',
+        'item_price'           => 'decimal:2',
+        'item_order'           => 'integer',
         'item_discount_amount' => 'decimal:2',
         'item_product_unit_id' => 'integer',
     ];
+
+    /**
+     * Get validation rules for quote items.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'quote_id'         => 'required|integer',
+            'item_name'        => 'required|string',
+            'item_description' => 'nullable|string',
+            'item_quantity'    => 'nullable|numeric',
+            'item_price'       => 'nullable|numeric',
+            'item_tax_rate_id' => 'nullable|integer',
+            'item_product_id'  => 'nullable|integer',
+        ];
+    }
+
+    /**
+     * Save quote item and trigger calculations.
+     *
+     * @param array $data
+     * @param array $globalDiscount
+     *
+     * @return QuoteItem
+     */
+    public static function saveItem(array $data, array &$globalDiscount = []): self
+    {
+        // Create or update the item
+        if (isset($data['item_id']) && $data['item_id']) {
+            $item = static::findOrFail($data['item_id']);
+            $item->update($data);
+        } else {
+            $item = static::create($data);
+        }
+
+        // Calculate item amounts
+        QuoteItemAmount::calculate($item->item_id, $globalDiscount);
+
+        // Recalculate quote amounts
+        if (isset($data['quote_id'])) {
+            QuoteAmount::calculate($data['quote_id'], $globalDiscount);
+        }
+
+        return $item;
+    }
+
+    /**
+     * Delete quote item and recalculate amounts.
+     *
+     * @param int $itemId
+     *
+     * @return bool
+     */
+    public static function deleteItem(int $itemId): bool
+    {
+        // Get the item to find quote_id
+        $item = static::find($itemId);
+
+        if ( ! $item) {
+            return false;
+        }
+
+        $quoteId = $item->quote_id;
+
+        // Delete the item
+        $item->delete();
+
+        // Delete the item amounts
+        QuoteItemAmount::where('item_id', $itemId)->delete();
+
+        // Recalculate quote amounts with global discount
+        $globalDiscount = [
+            'item' => QuoteAmount::getGlobalDiscount($quoteId),
+        ];
+        QuoteAmount::calculate($quoteId, $globalDiscount);
+
+        return true;
+    }
+
+    /**
+     * Get items subtotal for a quote.
+     *
+     * @param int $quoteId
+     *
+     * @return float
+     */
+    public static function getItemsSubtotal(int $quoteId): float
+    {
+        $result = DB::table('ip_quote_item_amounts')
+            ->selectRaw('SUM(item_subtotal) AS items_subtotal')
+            ->whereIn('item_id', function ($query) use ($quoteId) {
+                $query->select('item_id')
+                    ->from('ip_quote_items')
+                    ->where('quote_id', $quoteId);
+            })
+            ->first();
+
+        return (float) ($result->items_subtotal ?? 0.0);
+    }
 
     /**
      * Get the quote that owns the item.
@@ -102,108 +204,10 @@ class QuoteItem extends BaseModel
     }
 
     /**
-     * Default ordering scope
+     * Default ordering scope.
      */
     public function scopeOrdered($query)
     {
         return $query->orderBy('item_order');
-    }
-
-    /**
-     * Get validation rules for quote items.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'quote_id' => 'required|integer',
-            'item_name' => 'required|string',
-            'item_description' => 'nullable|string',
-            'item_quantity' => 'nullable|numeric',
-            'item_price' => 'nullable|numeric',
-            'item_tax_rate_id' => 'nullable|integer',
-            'item_product_id' => 'nullable|integer',
-        ];
-    }
-
-    /**
-     * Save quote item and trigger calculations.
-     *
-     * @param array $data
-     * @param array $globalDiscount
-     * @return QuoteItem
-     */
-    public static function saveItem(array $data, array &$globalDiscount = []): QuoteItem
-    {
-        // Create or update the item
-        if (isset($data['item_id']) && $data['item_id']) {
-            $item = static::findOrFail($data['item_id']);
-            $item->update($data);
-        } else {
-            $item = static::create($data);
-        }
-
-        // Calculate item amounts
-        QuoteItemAmount::calculate($item->item_id, $globalDiscount);
-
-        // Recalculate quote amounts
-        if (isset($data['quote_id'])) {
-            QuoteAmount::calculate($data['quote_id'], $globalDiscount);
-        }
-
-        return $item;
-    }
-
-    /**
-     * Delete quote item and recalculate amounts.
-     *
-     * @param int $itemId
-     * @return bool
-     */
-    public static function deleteItem(int $itemId): bool
-    {
-        // Get the item to find quote_id
-        $item = static::find($itemId);
-
-        if (!$item) {
-            return false;
-        }
-
-        $quoteId = $item->quote_id;
-
-        // Delete the item
-        $item->delete();
-
-        // Delete the item amounts
-        QuoteItemAmount::where('item_id', $itemId)->delete();
-
-        // Recalculate quote amounts with global discount
-        $globalDiscount = [
-            'item' => QuoteAmount::getGlobalDiscount($quoteId),
-        ];
-        QuoteAmount::calculate($quoteId, $globalDiscount);
-
-        return true;
-    }
-
-    /**
-     * Get items subtotal for a quote.
-     *
-     * @param int $quoteId
-     * @return float
-     */
-    public static function getItemsSubtotal(int $quoteId): float
-    {
-        $result = \DB::table('ip_quote_item_amounts')
-            ->selectRaw('SUM(item_subtotal) AS items_subtotal')
-            ->whereIn('item_id', function ($query) use ($quoteId) {
-                $query->select('item_id')
-                    ->from('ip_quote_items')
-                    ->where('quote_id', $quoteId);
-            })
-            ->first();
-
-        return (float) ($result->items_subtotal ?? 0.0);
     }
 }

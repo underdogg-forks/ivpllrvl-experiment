@@ -5,13 +5,20 @@ namespace Modules\Quotes\Models;
 use Modules\Core\Models\BaseModel;
 
 /**
- * QuoteTaxRate Model
+ * QuoteTaxRate Model.
  *
  * Eloquent model for managing ip_quote_tax_rates
  * Migrated from CodeIgniter model
  */
 class QuoteTaxRate extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class QuoteTaxRate extends BaseModel
      * @var string
      */
     protected $primaryKey = 'quote_tax_rate_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -51,28 +51,12 @@ class QuoteTaxRate extends BaseModel
      * @var array
      */
     protected $casts = [
-        'quote_tax_rate_id' => 'integer',
-        'quote_id' => 'integer',
-        'tax_rate_id' => 'integer',
-        'include_item_tax' => 'integer',
+        'quote_tax_rate_id'     => 'integer',
+        'quote_id'              => 'integer',
+        'tax_rate_id'           => 'integer',
+        'include_item_tax'      => 'integer',
         'quote_tax_rate_amount' => 'decimal:2',
     ];
-
-    /**
-     * Get the quote that owns the tax rate.
-     */
-    public function quote()
-    {
-        return $this->belongsTo('Modules\Quotes\Models\Quote', 'quote_id', 'quote_id');
-    }
-
-    /**
-     * Get the tax rate.
-     */
-    public function taxRate()
-    {
-        return $this->belongsTo('Modules\Products\Models\TaxRate', 'tax_rate_id', 'tax_rate_id');
-    }
 
     /**
      * Get validation rules for quote tax rates.
@@ -82,8 +66,8 @@ class QuoteTaxRate extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'quote_id' => 'required|integer',
-            'tax_rate_id' => 'required|integer',
+            'quote_id'         => 'required|integer',
+            'tax_rate_id'      => 'required|integer',
             'include_item_tax' => 'required|integer',
         ];
     }
@@ -93,12 +77,13 @@ class QuoteTaxRate extends BaseModel
      * Only applicable in legacy calculation mode.
      *
      * @param array $data
+     *
      * @return QuoteTaxRate|null
      */
-    public static function saveTaxRate(array $data): ?QuoteTaxRate
+    public static function saveTaxRate(array $data): ?self
     {
         // Only applicable in legacy calculation mode
-        if (!config_item('legacy_calculation')) {
+        if ( ! config_item('legacy_calculation')) {
             return null;
         }
 
@@ -119,5 +104,21 @@ class QuoteTaxRate extends BaseModel
         }
 
         return $taxRate;
+    }
+
+    /**
+     * Get the quote that owns the tax rate.
+     */
+    public function quote()
+    {
+        return $this->belongsTo('Modules\Quotes\Models\Quote', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Get the tax rate.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'tax_rate_id', 'tax_rate_id');
     }
 }

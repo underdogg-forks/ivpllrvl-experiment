@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * InvoiceHelper
+ * InvoiceHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -131,5 +126,4 @@ class InvoiceHelper
 
         return '';
     }
-
 }

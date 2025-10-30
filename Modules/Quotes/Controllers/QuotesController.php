@@ -2,34 +2,35 @@
 
 namespace Modules\Quotes\Controllers;
 
+use DB;
+use Modules\Core\Models\CustomField;
+use Modules\Core\Models\CustomValue;
+use Modules\Products\Models\TaxRate;
+use Modules\Products\Models\Unit;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
-use Modules\Products\Models\TaxRate;
-use Modules\Products\Models\Unit;
-use Modules\Core\Models\CustomField;
-use Modules\Core\Models\CustomValue;
 
 /**
- * QuotesController
- * 
+ * QuotesController.
+ *
  * Handles quote management including creation, editing, viewing, PDF generation,
  * status filtering, and tax management.
- * 
+ *
  * Migrated from CodeIgniter HMVC to Laravel/Illuminate with PSR-4 compliance
- * 
- * @package Modules\Quotes\Http\Controllers
  */
 class QuotesController
 {
     /**
-     * Redirect to all quotes view
-     * 
+     * Redirect to all quotes view.
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function index
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 29
      */
     public function index()
@@ -38,14 +39,17 @@ class QuotesController
     }
 
     /**
-     * Display quotes filtered by status with pagination
-     * 
+     * Display quotes filtered by status with pagination.
+     *
      * @param string $status Quote status filter (all, draft, sent, viewed, approved, rejected, canceled)
-     * @param int $page Page number for pagination
+     * @param int    $page   Page number for pagination
+     *
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function status
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 38
      */
     public function status(string $status = 'all', int $page = 0)
@@ -82,24 +86,28 @@ class QuotesController
         $quotes = $query->paginate(15);
 
         return view('quotes::index', [
-            'quotes' => $quotes,
-            'status' => $status,
-            'filter_display' => true,
+            'quotes'             => $quotes,
+            'status'             => $status,
+            'filter_display'     => true,
             'filter_placeholder' => trans('filter_quotes'),
-            'filter_method' => 'filter_quotes',
-            'quote_statuses' => Quote::statuses(),
+            'filter_method'      => 'filter_quotes',
+            'quote_statuses'     => Quote::statuses(),
         ]);
     }
 
     /**
-     * Display detailed view of a specific quote with items, tax rates, and custom fields
-     * 
+     * Display detailed view of a specific quote with items, tax rates, and custom fields.
+     *
      * @param int $quote_id The quote ID
+     *
      * @return \Illuminate\View\View
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * 
+     *
      * @legacy-function view
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 83
      */
     public function view(int $quote_id)
@@ -111,10 +119,10 @@ class QuotesController
             'items.product',
             'items.unit',
             'taxRates.taxRate',
-            'amounts'
+            'amounts',
         ])->find($quote_id);
 
-        if (!$quote) {
+        if ( ! $quote) {
             abort(404, 'Quote not found');
         }
 
@@ -138,7 +146,7 @@ class QuotesController
             ->get();
 
         // Get tax rates
-        $taxRates = TaxRate::query()->all();
+        $taxRates      = TaxRate::query()->all();
         $quoteTaxRates = QuoteTaxRate::query()->where('quote_id', $quote_id)
             ->with('taxRate')
             ->get();
@@ -147,39 +155,42 @@ class QuotesController
         $units = Unit::query()->all();
 
         // Check if there are multiple admin users (for user change functionality)
-        $changeUser = \DB::table('ip_users')
+        $changeUser = DB::table('ip_users')
             ->where('user_type', 1)
             ->where('user_active', 1)
             ->count() > 1;
 
         return view('quotes::view', [
-            'quote' => $quote,
-            'items' => $items,
-            'quote_id' => $quote_id,
-            'change_user' => $changeUser,
-            'units' => $units,
-            'tax_rates' => $taxRates,
+            'quote'           => $quote,
+            'items'           => $items,
+            'quote_id'        => $quote_id,
+            'change_user'     => $changeUser,
+            'units'           => $units,
+            'tax_rates'       => $taxRates,
             'quote_tax_rates' => $quoteTaxRates,
-            'quote_statuses' => Quote::statuses(),
-            'custom_fields' => $customFields,
-            'custom_values' => $customValues,
-            'custom_js_vars' => [
-                'currency_symbol' => config('invoiceplane.currency_symbol', '$'),
+            'quote_statuses'  => Quote::statuses(),
+            'custom_fields'   => $customFields,
+            'custom_values'   => $customValues,
+            'custom_js_vars'  => [
+                'currency_symbol'           => config('invoiceplane.currency_symbol', '$'),
                 'currency_symbol_placement' => config('invoiceplane.currency_symbol_placement', 'before'),
-                'decimal_point' => config('invoiceplane.decimal_point', '.'),
+                'decimal_point'             => config('invoiceplane.decimal_point', '.'),
             ],
             'legacy_calculation' => config('invoiceplane.legacy_calculation', false),
         ]);
     }
 
     /**
-     * Delete a quote and all related records
-     * 
+     * Delete a quote and all related records.
+     *
      * @param int $quote_id The quote ID to delete
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 188
      */
     public function delete(int $quote_id)
@@ -191,15 +202,18 @@ class QuotesController
     }
 
     /**
-     * Generate PDF for a quote
-     * 
-     * @param int $quote_id The quote ID
-     * @param bool $stream Whether to stream the PDF or download it
+     * Generate PDF for a quote.
+     *
+     * @param int         $quote_id       The quote ID
+     * @param bool        $stream         Whether to stream the PDF or download it
      * @param string|null $quote_template The template to use for PDF generation
+     *
      * @return mixed PDF response
-     * 
+     *
      * @legacy-function generate_pdf
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 201
      */
     public function generatePdf(int $quote_id, bool $stream = true, ?string $quote_template = null)
@@ -216,14 +230,17 @@ class QuotesController
     }
 
     /**
-     * Delete a tax rate from a quote and recalculate amounts
-     * 
-     * @param int $quote_id The quote ID
+     * Delete a tax rate from a quote and recalculate amounts.
+     *
+     * @param int $quote_id          The quote ID
      * @param int $quote_tax_rate_id The tax rate ID to delete
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function delete_quote_tax
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 217
      */
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
@@ -242,14 +259,16 @@ class QuotesController
     }
 
     /**
-     * Recalculate all quotes in the system
-     * 
+     * Recalculate all quotes in the system.
+     *
      * Used for batch operations or after system configuration changes
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function recalculate_all_quotes
+     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
      * @legacy-line 230
      */
     public function recalculateAllQuotes()
@@ -265,4 +284,3 @@ class QuotesController
             ->with('success', 'All quotes recalculated successfully');
     }
 }
-

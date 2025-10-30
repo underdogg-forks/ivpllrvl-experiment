@@ -6,15 +6,15 @@ use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentMethod;
 
 /**
- * AjaxController
- * 
+ * AjaxController.
+ *
  * Handles AJAX requests for payments
  * Migrated from CodeIgniter Ajax controller
  */
 class AjaxController
 {
     /**
-     * Add a payment via AJAX
+     * Add a payment via AJAX.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -22,16 +22,16 @@ class AjaxController
     {
         // Validate input
         $validator = validator(request()->all(), [
-            'invoice_id' => 'required|integer',
-            'payment_date' => 'required|date',
-            'payment_amount' => 'required|numeric',
+            'invoice_id'        => 'required|integer',
+            'payment_date'      => 'required|date',
+            'payment_amount'    => 'required|numeric',
             'payment_method_id' => 'nullable|integer',
-            'payment_note' => 'nullable|string',
+            'payment_note'      => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'success' => 0,
+                'success'           => 0,
                 'validation_errors' => $validator->errors()->toArray(),
             ]);
         }
@@ -39,13 +39,13 @@ class AjaxController
         $payment = Payment::query()->create($validator->validated());
 
         return response()->json([
-            'success' => 1,
+            'success'    => 1,
             'payment_id' => $payment->payment_id,
         ]);
     }
 
     /**
-     * Display modal for adding payment
+     * Display modal for adding payment.
      *
      * @return \Illuminate\Contracts\View\View
      */
@@ -54,14 +54,13 @@ class AjaxController
         $payment_methods = PaymentMethod::ordered()->get();
 
         $data = [
-            'payment_methods' => $payment_methods,
-            'invoice_id' => request()->post('invoice_id'),
-            'invoice_balance' => request()->post('invoice_balance'),
+            'payment_methods'        => $payment_methods,
+            'invoice_id'             => request()->post('invoice_id'),
+            'invoice_balance'        => request()->post('invoice_balance'),
             'invoice_payment_method' => request()->post('invoice_payment_method'),
-            'payment_cf_exist' => request()->post('payment_cf_exist'),
+            'payment_cf_exist'       => request()->post('payment_cf_exist'),
         ];
 
         return view('payments::modal_add_payment', $data);
     }
 }
-

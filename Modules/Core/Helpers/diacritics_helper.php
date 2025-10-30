@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * @param string $str
  */

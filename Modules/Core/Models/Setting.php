@@ -2,20 +2,25 @@
 
 namespace Modules\Core\Models;
 
-use Modules\Core\Models\BaseModel;
-
 /**
- * Setting Model
+ * Setting Model.
  *
  * Eloquent model for managing application settings
  * Migrated from CodeIgniter Mdl_Settings model
  *
- * @property int $setting_id
+ * @property int    $setting_id
  * @property string $setting_key
  * @property string $setting_value
  */
 class Setting extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -29,13 +34,6 @@ class Setting extends BaseModel
      * @var string
      */
     protected $primaryKey = 'setting_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -57,22 +55,25 @@ class Setting extends BaseModel
     ];
 
     /**
-     * Get a setting value by key
+     * Get a setting value by key.
      *
      * @param string $key
+     *
      * @return string|null
      */
     public static function getValue(string $key): ?string
     {
         $setting = static::where('setting_key', $key)->first();
+
         return $setting ? $setting->setting_value : null;
     }
 
     /**
-     * Save or update a setting
+     * Save or update a setting.
      *
      * @param string $key
      * @param string $value
+     *
      * @return void
      */
     public static function setValue(string $key, string $value): void
@@ -84,9 +85,10 @@ class Setting extends BaseModel
     }
 
     /**
-     * Delete a setting by key
+     * Delete a setting by key.
      *
      * @param string $key
+     *
      * @return void
      */
     public static function deleteByKey(string $key): void
@@ -95,7 +97,7 @@ class Setting extends BaseModel
     }
 
     /**
-     * Get all settings as key-value array
+     * Get all settings as key-value array.
      *
      * @return array
      */
@@ -112,7 +114,7 @@ class Setting extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'setting_key' => 'required|string|max:255',
+            'setting_key'   => 'required|string|max:255',
             'setting_value' => 'nullable|string',
         ];
     }

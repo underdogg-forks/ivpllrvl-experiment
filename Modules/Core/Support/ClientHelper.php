@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * ClientHelper
+ * ClientHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -60,5 +55,4 @@ class ClientHelper
 
         return trans('gender_other');
     }
-
 }

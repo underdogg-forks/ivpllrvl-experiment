@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * OrphanHelper
+ * OrphanHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -46,5 +41,4 @@ class OrphanHelper
             $CI->db->query($query);
         }
     }
-
 }

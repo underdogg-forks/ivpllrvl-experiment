@@ -6,16 +6,23 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Base Model for the application
- * Replaces CodeIgniter's MY_Model with Eloquent Model
+ * Replaces CodeIgniter's MY_Model with Eloquent Model.
  */
 abstract class BaseModel extends EloquentModel
 {
     /**
-     * The connection name for the model.
+     * The name of the "created at" column.
      *
      * @var string|null
      */
-    protected $connection = 'default';
+    public const CREATED_AT = null;
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string|null
+     */
+    public const UPDATED_AT = null;
 
     /**
      * Indicates if the model should be timestamped.
@@ -25,23 +32,17 @@ abstract class BaseModel extends EloquentModel
     public $timestamps = false;
 
     /**
-     * The name of the "created at" column.
+     * The connection name for the model.
      *
      * @var string|null
      */
-    const CREATED_AT = null;
+    protected $connection = 'default';
 
     /**
-     * The name of the "updated at" column.
-     *
-     * @var string|null
-     */
-    const UPDATED_AT = null;
-
-    /**
-     * Get records with pagination
+     * Get records with pagination.
      *
      * @param int $perPage
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function paginate($perPage = 15)
@@ -50,7 +51,7 @@ abstract class BaseModel extends EloquentModel
     }
 
     /**
-     * Get all records
+     * Get all records.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -60,9 +61,10 @@ abstract class BaseModel extends EloquentModel
     }
 
     /**
-     * Get a record by ID
+     * Get a record by ID.
      *
      * @param mixed $id
+     *
      * @return static|null
      */
     public function getById($id)
@@ -71,9 +73,10 @@ abstract class BaseModel extends EloquentModel
     }
 
     /**
-     * Create a new record
+     * Create a new record.
      *
      * @param array $data
+     *
      * @return static
      */
     public function createRecord(array $data)
@@ -82,10 +85,11 @@ abstract class BaseModel extends EloquentModel
     }
 
     /**
-     * Update a record
+     * Update a record.
      *
      * @param mixed $id
      * @param array $data
+     *
      * @return bool
      */
     public function updateRecord($id, array $data)
@@ -94,13 +98,15 @@ abstract class BaseModel extends EloquentModel
         if ($record) {
             return $record->update($data);
         }
+
         return false;
     }
 
     /**
-     * Delete a record
+     * Delete a record.
      *
      * @param mixed $id
+     *
      * @return bool|null
      */
     public function deleteRecord($id)
@@ -109,13 +115,15 @@ abstract class BaseModel extends EloquentModel
         if ($record) {
             return $record->delete();
         }
+
         return false;
     }
 
     /**
-     * Check if a record exists
+     * Check if a record exists.
      *
      * @param mixed $id
+     *
      * @return bool
      */
     public function exists($id)

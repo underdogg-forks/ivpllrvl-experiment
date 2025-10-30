@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Invoices\Controllers\InvoicesController;
-use Modules\Invoices\Controllers\InvoicesAjaxController;
-use Modules\Invoices\Controllers\RecurringController;
 use Modules\Invoices\Controllers\InvoiceGroupsController;
+use Modules\Invoices\Controllers\InvoicesAjaxController;
+use Modules\Invoices\Controllers\InvoicesController;
+use Modules\Invoices\Controllers\RecurringController;
 
 /*
 |--------------------------------------------------------------------------

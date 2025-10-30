@@ -5,13 +5,20 @@ namespace Modules\Products\Models;
 use Modules\Core\Models\BaseModel;
 
 /**
- * Product Model
+ * Product Model.
  *
  * Eloquent model for managing products
  * Migrated from CodeIgniter Mdl_Products
  */
 class Product extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Product extends BaseModel
      * @var string
      */
     protected $primaryKey = 'product_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -57,13 +57,32 @@ class Product extends BaseModel
      * @var array
      */
     protected $casts = [
-        'product_id' => 'integer',
-        'family_id' => 'integer',
-        'tax_rate_id' => 'integer',
-        'unit_id' => 'integer',
-        'product_price' => 'decimal:2',
+        'product_id'     => 'integer',
+        'family_id'      => 'integer',
+        'tax_rate_id'    => 'integer',
+        'unit_id'        => 'integer',
+        'product_price'  => 'decimal:2',
         'purchase_price' => 'decimal:2',
     ];
+
+    /**
+     * Get validation rules for products.
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'product_name'        => 'required|string|max:255',
+            'product_sku'         => 'nullable|string|max:255',
+            'product_description' => 'nullable|string',
+            'product_price'       => 'nullable|numeric|min:0',
+            'purchase_price'      => 'nullable|numeric|min:0',
+            'provider_name'       => 'nullable|string|max:255',
+            'family_id'           => 'nullable|integer',
+            'tax_rate_id'         => 'nullable|integer',
+            'unit_id'             => 'nullable|integer',
+            'product_tariff'      => 'nullable|string',
+        ];
+    }
 
     /**
      * Get the family that owns the product.
@@ -90,9 +109,10 @@ class Product extends BaseModel
     }
 
     /**
-     * Default ordering scope
+     * Default ordering scope.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrdered($query)
@@ -103,10 +123,11 @@ class Product extends BaseModel
     }
 
     /**
-     * Search scope for products
+     * Search scope for products.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $search
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $search
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSearch($query, $search)
@@ -119,10 +140,11 @@ class Product extends BaseModel
     }
 
     /**
-     * Filter by family scope
+     * Filter by family scope.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  int  $familyId
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $familyId
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeByFamily($query, $familyId)
@@ -131,7 +153,7 @@ class Product extends BaseModel
     }
 
     /**
-     * Mutator for product_price
+     * Mutator for product_price.
      */
     public function setProductPriceAttribute($value)
     {
@@ -139,29 +161,10 @@ class Product extends BaseModel
     }
 
     /**
-     * Mutator for purchase_price
+     * Mutator for purchase_price.
      */
     public function setPurchasePriceAttribute($value)
     {
         $this->attributes['purchase_price'] = empty($value) ? null : standardize_amount($value);
-    }
-
-    /**
-     * Get validation rules for products.
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'product_name' => 'required|string|max:255',
-            'product_sku' => 'nullable|string|max:255',
-            'product_description' => 'nullable|string',
-            'product_price' => 'nullable|numeric|min:0',
-            'purchase_price' => 'nullable|numeric|min:0',
-            'provider_name' => 'nullable|string|max:255',
-            'family_id' => 'nullable|integer',
-            'tax_rate_id' => 'nullable|integer',
-            'unit_id' => 'nullable|integer',
-            'product_tariff' => 'nullable|string',
-        ];
     }
 }

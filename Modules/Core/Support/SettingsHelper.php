@@ -1,13 +1,11 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 use Modules\Core\Models\Setting;
 
 /**
- * Settings Helper Class
+ * Settings Helper Class.
  *
  * Provides static methods for retrieving application settings.
  */
@@ -19,6 +17,7 @@ class SettingsHelper
     public static function getSetting(string $settingKey, $default = '', bool $escape = false)
     {
         $value = Setting::getValue($settingKey) ?? $default;
+
         return $escape ? htmlspecialchars($value, ENT_QUOTES, 'UTF-8') : $value;
     }
 
@@ -28,7 +27,7 @@ class SettingsHelper
     public static function getGatewaySettings(string $gateway): array
     {
         // Get all settings related to this gateway
-        $prefix = $gateway . '_';
+        $prefix      = $gateway . '_';
         $allSettings = Setting::getAllSettings();
 
         $gatewaySettings = [];
@@ -52,6 +51,7 @@ class SettingsHelper
         // Instant-validate if $value1 is a bool value
         if (is_bool($value1) && $value2 === null) {
             echo $value1 ? $select : '';
+
             return;
         }
 

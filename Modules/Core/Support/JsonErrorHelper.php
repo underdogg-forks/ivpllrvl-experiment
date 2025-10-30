@@ -1,11 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 /**
- * JsonErrorHelper
+ * JsonErrorHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -28,5 +26,4 @@ class JsonErrorHelper
 
         return $return;
     }
-
 }

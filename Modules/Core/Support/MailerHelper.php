@@ -1,13 +1,12 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
 use Modules\Core\Models\Setting;
+use RuntimeException;
 
 /**
- * MailerHelper
+ * MailerHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -20,9 +19,9 @@ class MailerHelper
     {
         $emailMethod = Setting::getValue('email_send_method');
 
-        return ($emailMethod == 'phpmail') ||
-            ($emailMethod == 'sendmail') ||
-            (($emailMethod == 'smtp') && Setting::getValue('smtp_server_address'));
+        return ($emailMethod == 'phpmail')
+            || ($emailMethod == 'sendmail')
+            || (($emailMethod == 'smtp') && Setting::getValue('smtp_server_address'));
     }
 
     /**
@@ -38,7 +37,7 @@ class MailerHelper
     public static function email_quote_status(string $quote_id, $status)
     {
         // TODO: Implement using Laravel Mail and Eloquent models
-        throw new \RuntimeException('email_quote_status requires migration to Laravel Mail system');
+        throw new RuntimeException('email_quote_status requires migration to Laravel Mail system');
     }
 
     /**
@@ -86,5 +85,4 @@ class MailerHelper
             redirect($redirect);
         }
     }
-
 }

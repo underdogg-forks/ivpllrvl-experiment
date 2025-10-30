@@ -5,20 +5,23 @@ namespace Modules\Products\Controllers;
 use Modules\Products\Models\Unit;
 
 /**
- * UnitsController
- * 
+ * UnitsController.
+ *
  * Handles product unit management (e.g., hours, items, kg, etc.)
  */
 class UnitsController
 {
     /**
-     * Display a paginated list of product units
-     * 
+     * Display a paginated list of product units.
+     *
      * @param int $page Page number for pagination
+     *
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function index
+     *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
      * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -32,13 +35,16 @@ class UnitsController
     }
 
     /**
-     * Display form for creating or editing a product unit
-     * 
+     * Display form for creating or editing a product unit.
+     *
      * @param int|null $id Unit ID (null for create)
+     *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function form
+     *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
      * @legacy-line 42
      */
     public function form(?int $id = null)
@@ -52,7 +58,7 @@ class UnitsController
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
             $validated = request()->validate([
-                'unit_name' => 'required|string|max:255|unique:ip_units,unit_name' . ($id ? ',' . $id . ',unit_id' : ''),
+                'unit_name'      => 'required|string|max:255|unique:ip_units,unit_name' . ($id ? ',' . $id . ',unit_id' : ''),
                 'unit_name_plrl' => 'required|string|max:255',
             ]);
 
@@ -72,29 +78,32 @@ class UnitsController
         // Load existing record for editing
         if ($id) {
             $unit = Unit::query()->find($id);
-            if (!$unit) {
+            if ( ! $unit) {
                 abort(404);
             }
             $isUpdate = true;
         } else {
-            $unit = new Unit();
+            $unit     = new Unit();
             $isUpdate = false;
         }
 
         return view('products::units_form', [
-            'unit' => $unit,
+            'unit'      => $unit,
             'is_update' => $isUpdate,
         ]);
     }
 
     /**
-     * Delete a product unit
-     * 
+     * Delete a product unit.
+     *
      * @param int $id Unit ID
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
      * @legacy-line 83
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

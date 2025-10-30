@@ -5,13 +5,20 @@ namespace Modules\Payments\Models;
 use Modules\Core\Models\BaseModel;
 
 /**
- * Payment Model
+ * Payment Model.
  *
  * Eloquent model for managing payments
  * Migrated from CodeIgniter Mdl_Payments
  */
 class Payment extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Payment extends BaseModel
      * @var string
      */
     protected $primaryKey = 'payment_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -52,11 +52,27 @@ class Payment extends BaseModel
      * @var array
      */
     protected $casts = [
-        'payment_id' => 'integer',
-        'invoice_id' => 'integer',
+        'payment_id'        => 'integer',
+        'invoice_id'        => 'integer',
         'payment_method_id' => 'integer',
-        'payment_amount' => 'decimal:2',
+        'payment_amount'    => 'decimal:2',
     ];
+
+    /**
+     * Get validation rules for payments.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'invoice_id'        => 'required|integer',
+            'payment_method_id' => 'required|integer',
+            'payment_amount'    => 'required|numeric|min:0',
+            'payment_date'      => 'required|date',
+            'payment_note'      => 'nullable|string',
+        ];
+    }
 
     /**
      * Get the invoice that owns the payment.
@@ -75,9 +91,10 @@ class Payment extends BaseModel
     }
 
     /**
-     * Default ordering scope
+     * Default ordering scope.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrdered($query)
@@ -87,26 +104,10 @@ class Payment extends BaseModel
     }
 
     /**
-     * Mutator for payment_amount
+     * Mutator for payment_amount.
      */
     public function setPaymentAmountAttribute($value)
     {
         $this->attributes['payment_amount'] = standardize_amount($value);
-    }
-
-    /**
-     * Get validation rules for payments.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_id' => 'required|integer',
-            'payment_method_id' => 'required|integer',
-            'payment_amount' => 'required|numeric|min:0',
-            'payment_date' => 'required|date',
-            'payment_note' => 'nullable|string',
-        ];
     }
 }

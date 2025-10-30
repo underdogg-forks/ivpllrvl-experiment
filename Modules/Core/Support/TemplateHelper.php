@@ -1,14 +1,9 @@
 <?php
 
-
-
 namespace Modules\Core\Support;
 
-use Modules\Core\Models\Setting;
-
-
 /**
- * TemplateHelper
+ * TemplateHelper.
  *
  * Static helper class converted from procedural functions.
  */
@@ -183,5 +178,4 @@ class TemplateHelper
         // Use the default template
         return $bridge->settings()->setting('email_invoice_template');
     }
-
 }

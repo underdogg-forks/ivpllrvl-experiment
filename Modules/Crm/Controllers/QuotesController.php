@@ -3,7 +3,7 @@
 namespace Modules\Crm\Controllers;
 
 /**
- * QuotesController (Guest)
+ * QuotesController (Guest).
  *
  * Guest portal quote viewing
  *
@@ -21,6 +21,7 @@ class QuotesController
     {
         // Guest quote view by URL key
         $quote = \Modules\Quotes\Models\Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
+
         return view('crm::guest_quote_view', ['quote' => $quote]);
     }
 
@@ -29,6 +30,7 @@ class QuotesController
         // Guest quote approval
         $quote = \Modules\Quotes\Models\Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
         $quote->update(['quote_status_id' => 4]); // Approved
+
         return redirect()->back()->with('alert_success', trans('quote_approved'));
     }
 }
