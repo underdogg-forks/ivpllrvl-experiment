@@ -1,0 +1,10 @@
+{
+    "name": "invoiceplane/quotes-module",
+    "description": "Quotes module for InvoicePlane",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Quotes\\": ""
+        }
+    }
+}
