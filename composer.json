@@ -45,8 +45,7 @@
             "Modules\\": "Modules/"
         },
         "files": [
-            "bootstrap/helpers.php",
-            "Modules/Core/Helpers/helpers.php"
+            "bootstrap/helpers.php"
         ]
     },
     "autoload-dev": {
