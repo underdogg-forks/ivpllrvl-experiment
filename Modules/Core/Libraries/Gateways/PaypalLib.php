@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Libraries\XMLtemplates\Gateways;
+namespace Modules\Core\Libraries\Gateways;
 
 use AllowDynamicProperties;
 use GuzzleHttp\Client;
