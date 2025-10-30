@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\Http\Controllers\Gateways;
+namespace Modules\Crm\Controllers\Gateways;
 
 class PaypalController
 {

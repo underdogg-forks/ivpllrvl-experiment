@@ -1,5 +1,9 @@
 <?php
 
+namespace Modules\Core\Hooks;
+
+use AllowDynamicProperties;
+
 #[AllowDynamicProperties]
 class SetTimezoneClass
 {
