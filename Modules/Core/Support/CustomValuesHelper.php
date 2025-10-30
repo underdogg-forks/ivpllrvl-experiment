@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
+
 
 /**
  * CustomValuesHelper
@@ -52,8 +53,8 @@ class CustomValuesHelper
             return '';
         }
     
-        $bridge = LegacyBridge::getInstance();
-        $bridge->getRawInstance()->load->model('custom_values/mdl_custom_values', 'cv');
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
+        // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
         $el = $CI->cv->get_by_id($txt)->row();
     
         return $el->custom_values_value;
@@ -68,8 +69,8 @@ class CustomValuesHelper
             return '';
         }
     
-        $bridge = LegacyBridge::getInstance();
-        $bridge->getRawInstance()->load->model('custom_values/mdl_custom_values', 'cv');
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
+        // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
     
         $values      = explode(',', $txt);
         $values      = $CI->cv->where_in('custom_values_id', $values)->get()->result();

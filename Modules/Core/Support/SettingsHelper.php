@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
 /**
  * Settings Helper Class
@@ -18,15 +18,8 @@ class SettingsHelper
      */
     public static function getSetting(string $settingKey, $default = '', bool $escape = false)
     {
-        $bridge = LegacyBridge::getInstance();
-        $settings = $bridge->settings();
-        
-        if ($settings) {
-            $value = $settings->setting($settingKey, $default);
-            return $escape ? htmlsc($value) : $value;
-        }
-        
-        return $default;
+        $value = Setting::getValue($settingKey) ?? $default;
+        return $escape ? htmlspecialchars($value, ENT_QUOTES, 'UTF-8') : $value;
     }
 
     /**
@@ -34,14 +27,18 @@ class SettingsHelper
      */
     public static function getGatewaySettings(string $gateway): array
     {
-        $bridge = LegacyBridge::getInstance();
-        $settings = $bridge->settings();
+        // Get all settings related to this gateway
+        $prefix = $gateway . '_';
+        $allSettings = Setting::getAllSettings();
         
-        if ($settings) {
-            return $settings->gateway_settings($gateway);
+        $gatewaySettings = [];
+        foreach ($allSettings as $key => $value) {
+            if (str_starts_with($key, $prefix)) {
+                $gatewaySettings[$key] = $value;
+            }
         }
         
-        return [];
+        return $gatewaySettings;
     }
 
     /**

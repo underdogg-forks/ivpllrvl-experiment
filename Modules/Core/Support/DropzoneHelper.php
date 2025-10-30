@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
-
 /**
  * DropzoneHelper
  * 
@@ -122,12 +120,11 @@ class DropzoneHelper
         // Allow extentions system
         $content_types = [];
         if ($acceptedExts === null) {
-            // Default
-            $bridge = LegacyBridge::getInstance();
-            $bridge->getRawInstance()->load->model('upload/mdl_uploads');
-            $content_types = array_keys($CI->mdl_uploads->content_types);
+            // Default - using common file types
+            // TODO: Move this to a dedicated Upload service class
+            $content_types = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'zip'];
         } elseif (is_array($acceptedExts)) {
-            // User Overide
+            // User Override
             $content_types = $acceptedExts;
         }
     

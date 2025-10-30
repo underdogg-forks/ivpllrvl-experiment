@@ -2,119 +2,62 @@
 
 This directory contains service classes that provide clean interfaces to application functionality.
 
-## LegacyBridge
+## Status
 
-**Purpose:** Temporary bridge to access CodeIgniter components during the migration from CodeIgniter to Laravel.
+All CodeIgniter artifacts have been removed from the application. Helper classes now use pure Laravel code:
 
-**Status:** 🚨 **DEPRECATED** - This class exists only for backward compatibility and will be removed once the migration is complete.
+- **Settings**: Use `Modules\Core\Entities\Setting` Eloquent model
+- **Translations**: Use Laravel's `__()` translation system  
+- **Sessions**: Use Laravel's session() helper
+- **Database**: Use Eloquent models in `Modules/*/Models/`
 
-### Why LegacyBridge?
+## Migration Complete
 
-The user specifically requested that CodeIgniter artifacts like `$CI = &get_instance()` be removed from the codebase. The LegacyBridge pattern centralizes all CodeIgniter dependencies in one place, making them easier to track and remove later.
+The LegacyBridge pattern has been **removed** as part of the complete migration to Laravel. All helper classes now use:
 
-### Before (Unacceptable):
-
+### Before (Deprecated - REMOVED):
 ```php
-class SomeHelper
-{
-    public static function doSomething()
-    {
-        $CI = &get_instance();  // ❌ CodeIgniter artifact
-        return $CI->mdl_settings->setting('key');
-    }
-}
+$bridge = LegacyBridge::getInstance();  // ❌ DELETED
+$value = $bridge->settings()->setting('key');
 ```
 
-### After (Clean):
-
+### After (Current):
 ```php
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
-class SomeHelper
-{
-    public static function doSomething()
-    {
-        $bridge = LegacyBridge::getInstance();  // ✅ Clean interface
-        $settings = $bridge->settings();
-        return $settings ? $settings->setting('key') : null;
-    }
-}
+$value = Setting::getValue('key');  // ✅ Pure Laravel
 ```
 
-### Benefits
+## Available Models
 
-1. **Single Point of Contact** - All CodeIgniter access goes through one class
-2. **Easy to Remove** - When migration is complete, just delete LegacyBridge
-3. **Clean Helper Code** - Helper classes don't directly reference CodeIgniter
-4. **Null Safety** - Bridge methods check if CodeIgniter is available
-5. **Searchable** - Easy to find all legacy dependencies with grep
+The following Eloquent models are available for use:
 
-### Available Methods
-
-```php
-$bridge = LegacyBridge::getInstance();
-
-// Access CodeIgniter components
-$settings = $bridge->settings();     // mdl_settings model
-$lang = $bridge->lang();             // Language instance
-$session = $bridge->session();       // Session instance  
-$config = $bridge->config();         // Config instance
-
-// Utility methods
-$bridge->loadHelper('directory');    // Load a CI helper
-$available = $bridge->isAvailable(); // Check if CI is loaded
-$ci = $bridge->getRawInstance();     // Get raw CI instance (use sparingly)
-```
-
-### Migration Path
-
-As the application migrates from CodeIgniter to Laravel:
-
-1. **Phase 1** (Current): Use LegacyBridge to access CI components
-2. **Phase 2**: Create Laravel service classes that implement the same interface
-3. **Phase 3**: Update helpers to use Laravel services instead of LegacyBridge
-4. **Phase 4**: Delete LegacyBridge once all dependencies are migrated
-
-### Example Migration
-
-```php
-// Phase 1: Use LegacyBridge
-$settings = LegacyBridge::getInstance()->settings();
-$value = $settings->setting('key');
-
-// Phase 2: Create SettingsRepository (Laravel service)
-class SettingsRepository {
-    public function get($key) {
-        // Use Laravel's config or database
-        return config("app_settings.{$key}");
-    }
-}
-
-// Phase 3: Use Laravel service in helpers
-$value = app(SettingsRepository::class)->get('key');
-
-// Phase 4: Delete LegacyBridge ✅
-```
-
-## SettingsRepository
-
-**Purpose:** Provide a clean interface to access application settings.
-
-**Status:** ⏳ Work in Progress
-
-This will eventually replace LegacyBridge for settings access once settings are migrated to Laravel's config system or database.
+**Core Models** (`Modules/Core/Models/`):
+- `Setting` - Application settings with `getValue()`, `setValue()`, `getAllSettings()`
+- `User` - User accounts and authentication
+- `CustomField` - Custom field definitions
+- `CustomValue` - Custom field values
+- `EmailTemplate` - Email templates
+- `Upload` - File uploads
+- And more...
 
 ## Future Services
 
-As the migration progresses, add new service classes here:
+As features are added, create new service classes here:
 
-- `TranslationService` - Replace CodeIgniter language system
-- `SessionService` - Replace CodeIgniter sessions with Laravel sessions
-- `CacheService` - Replace CodeIgniter cache with Laravel cache
+- `MailService` - Email sending with Laravel Mail
+- `PdfService` - PDF generation with Laravel views
+- `InvoiceService` - Invoice business logic
+- `PaymentService` - Payment processing
 - etc.
 
 Each service should:
 - Have a clear, single responsibility
-- Provide a clean, framework-agnostic interface
+- Use Laravel's dependency injection
+- Use Eloquent models for data access
 - Be easy to test
 - Document its purpose and usage
+
+## Notes
+
+Some helpers (PdfHelper, EInvoiceHelper) contain TODO markers where complex CodeIgniter code needs manual migration to Laravel patterns (views, libraries, etc.). These should be migrated as part of future development.

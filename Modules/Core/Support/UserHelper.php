@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\User;
 
 /**
  * UserHelper
@@ -18,18 +18,13 @@ class UserHelper
      */
     public static function format_user($user): string
     {
-        // Get an id
+        // Get user by ID if numeric
         if ($user && is_numeric($user)) {
-            $bridge = LegacyBridge::getInstance();
-            if ( ! property_exists($CI, 'mdl_users')) {
-                $bridge->getRawInstance()->load->model('users/mdl_users');
-            }
-    
-            $user = $CI->mdl_users->get_by_id($user);
+            $user = User::find($user);
         }
     
-        // Not exist or find, Stop.
-        if (empty($user->user_name)) {
+        // Not exist or found, Stop.
+        if (empty($user->user_name ?? null)) {
             return '';
         }
     

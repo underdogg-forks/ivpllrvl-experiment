@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
+
 
 /**
  * OrphanHelper
@@ -18,7 +19,7 @@ class OrphanHelper
      */
     public static function delete_orphans(): void
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
     
         $queries = [
             'DELETE FROM ip_invoices WHERE client_id NOT IN (SELECT client_id FROM ip_clients)',

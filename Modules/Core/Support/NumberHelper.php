@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
 /**
  * NumberHelper
@@ -20,19 +20,12 @@ class NumberHelper
      */
     public static function format_currency($amount): string
     {
-        $bridge = LegacyBridge::getInstance();
-        $settings = $bridge->settings();
-        
-        if (!$settings) {
-            return (string)$amount;
-        }
-        
-        $currency_symbol           = $settings->setting('currency_symbol');
-        $currency_symbol_placement = $settings->setting('currency_symbol_placement');
-        $thousands_separator       = $settings->setting('thousands_separator');
-        $decimal_point             = $settings->setting('decimal_point');
-        $decimals                  = $decimal_point ? (int) $settings->setting('tax_rate_decimal_places') : 0;
-        $amount                    = (float) (is_numeric($amount) ? $amount : standardize_amount($amount)); // prevent null format
+        $currency_symbol           = Setting::getValue('currency_symbol') ?? '$';
+        $currency_symbol_placement = Setting::getValue('currency_symbol_placement') ?? 'before';
+        $thousands_separator       = Setting::getValue('thousands_separator') ?? ',';
+        $decimal_point             = Setting::getValue('decimal_point') ?? '.';
+        $decimals                  = $decimal_point ? (int) (Setting::getValue('tax_rate_decimal_places') ?? 2) : 0;
+        $amount                    = (float) (is_numeric($amount) ? $amount : standardize_amount($amount));
     
         if ($currency_symbol_placement == 'before') {
             return $currency_symbol . number_format($amount, $decimals, $decimal_point, $thousands_separator);
@@ -54,16 +47,9 @@ class NumberHelper
     public static function format_amount($amount = null)
     {
         if ($amount) {
-            $bridge = LegacyBridge::getInstance();
-            $settings = $bridge->settings();
-            
-            if (!$settings) {
-                return (string)$amount;
-            }
-            
-            $thousands_separator = $settings->setting('thousands_separator');
-            $decimal_point       = $settings->setting('decimal_point');
-            $decimals            = $decimal_point ? (int) $settings->setting('tax_rate_decimal_places') : 0;
+            $thousands_separator = Setting::getValue('thousands_separator') ?? ',';
+            $decimal_point       = Setting::getValue('decimal_point') ?? '.';
+            $decimals            = $decimal_point ? (int) (Setting::getValue('tax_rate_decimal_places') ?? 2) : 0;
             $amount              = is_numeric($amount) ? $amount : standardize_amount($amount);
     
             return number_format($amount, $decimals, $decimal_point, $thousands_separator);
@@ -79,16 +65,9 @@ class NumberHelper
     public static function format_quantity($amount = null)
     {
         if ($amount) {
-            $bridge = LegacyBridge::getInstance();
-            $settings = $bridge->settings();
-            
-            if (!$settings) {
-                return (string)$amount;
-            }
-            
-            $thousands_separator = $settings->setting('thousands_separator');
-            $decimal_point       = $settings->setting('decimal_point');
-            $decimals            = $decimal_point ? (int) $settings->setting('default_item_decimals') : 0;
+            $thousands_separator = Setting::getValue('thousands_separator') ?? ',';
+            $decimal_point       = Setting::getValue('decimal_point') ?? '.';
+            $decimals            = $decimal_point ? (int) (Setting::getValue('default_item_decimals') ?? 2) : 0;
             $amount              = is_numeric($amount) ? $amount : standardize_amount($amount);
     
             return number_format($amount, $decimals, $decimal_point, $thousands_separator);
@@ -103,15 +82,8 @@ class NumberHelper
     public static function standardize_amount($amount): float|int|string|array|false|null
     {
         if ($amount && ! is_numeric($amount)) {
-            $bridge = LegacyBridge::getInstance();
-            $settings = $bridge->settings();
-            
-            if (!$settings) {
-                return $amount;
-            }
-            
-            $thousands_separator = $settings->setting('thousands_separator');
-            $decimal_point       = $settings->setting('decimal_point');
+            $thousands_separator = Setting::getValue('thousands_separator') ?? ',';
+            $decimal_point       = Setting::getValue('decimal_point') ?? '.';
     
             if ($thousands_separator == '.' && ! mb_substr_count($amount, ',') && mb_substr_count($amount, '.') > 1) {
                 $amount[mb_strrpos($amount, '.')] = ','; // Replace last position of dot to comma

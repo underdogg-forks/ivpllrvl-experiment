@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
+
 
 /**
  * PagerHelper
@@ -21,7 +22,7 @@ class PagerHelper
      */
     public static function pager(string $base_url, $model): string
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
     
         $pager = '<div class="model-pager btn-group btn-group-sm">';
     

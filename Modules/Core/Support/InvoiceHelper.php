@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
+
 
 /**
  * InvoiceHelper
@@ -18,7 +19,7 @@ class InvoiceHelper
      */
     public static function invoice_logo(): string
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
     
         if ($bridge->settings()->setting('invoice_logo')) {
             return '<img src="' . base_url() . 'uploads/' . $bridge->settings()->setting('invoice_logo') . '">';
@@ -32,7 +33,7 @@ class InvoiceHelper
      */
     public static function invoice_logo_pdf(): string
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
     
         if ($bridge->settings()->setting('invoice_logo')) {
             $absolutePath = dirname(dirname(__DIR__));
@@ -111,7 +112,7 @@ class InvoiceHelper
      */
     public static function invoice_qrcode($invoice_id): string
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
     
         if (
             $bridge->settings()->setting('qr_code')
@@ -121,7 +122,7 @@ class InvoiceHelper
             $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
     
             if ((float) $invoice->invoice_balance) {
-                $bridge->getRawInstance()->load->library('QrCode', ['invoice' => $invoice]);
+                // TODO: Replace with Laravel equivalent: // load->library('QrCode', ['invoice' => $invoice]);
                 $qrcode_data_uri = $CI->qrcode->generate();
     
                 return '<img src="' . $qrcode_data_uri . '" alt="QR Code" id="invoice-qr-code">';

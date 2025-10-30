@@ -4,50 +4,31 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
 /**
  * Translation Helper Class
  * 
  * Provides static methods for language translation and management.
+ * Now uses Laravel's translation system.
  */
 class TranslationHelper
 {
     /**
      * Output a language string, supports language fallback if a string wasn't found.
+     * 
+     * Note: This now uses Laravel's translation system.
+     * Translation files should be in resources/lang/
      */
     public static function trans($line, ?string $id = '', $default = null): string
     {
-        $bridge = LegacyBridge::getInstance();
-        $lang = $bridge->lang();
-        $session = $bridge->session();
+        // Use Laravel's translation system
+        $lang_string = __($line, [], Setting::getValue('default_language') ?? config('app.locale', 'en'));
         
-        if (!$lang) {
-            return $default ?? $line;
-        }
-        
-        $lang_string = $lang->line($line);
-
-        // Fall back to default language if the current language has no translated string
-        if (empty($lang_string) && $session) {
-            // Save the current application language
-            $current_language = $session->userdata('user_language');
-
-            if (empty($current_language) || $current_language == 'system') {
-                $current_language = get_setting('default_language') ?? 'english';
-            }
-
-            // Load the default language and translate the string
-            self::setLanguage('english');
-            $lang_string = $lang->line($line);
-
-            // Restore the application language to its previous setting
-            self::setLanguage($current_language);
-        }
-
-        // Fall back to the $line value if the default language has no translation either
-        if (empty($lang_string)) {
-            $lang_string = $default != null ? $default : $line;
+        // If translation key not found, Laravel returns the key itself
+        // Check if we got back the same key (meaning no translation exists)
+        if ($lang_string === $line && $default !== null) {
+            $lang_string = $default;
         }
 
         if ($id != '') {
@@ -59,60 +40,43 @@ class TranslationHelper
 
     /**
      * Load the translations for the given language.
+     * 
+     * Note: Laravel handles language loading automatically.
+     * This method sets the application locale.
      */
     public static function setLanguage(string $language): void
     {
-        $bridge = LegacyBridge::getInstance();
-        $lang = $bridge->lang();
-        $config = $bridge->config();
-        
-        if (!$lang || !$config) {
-            return;
-        }
-        
-        // Clear the current loaded language
-        $lang->is_loaded = [];
-        $lang->language = [];
-
-        // Load system language if no custom language is set
-        $settings = $bridge->settings();
-        $default_lang = $settings ? $settings->setting('default_language', 'english') : 'english';
+        // Get default language from settings
+        $default_lang = Setting::getValue('default_language') ?? 'en';
         $new_language = ($language == 'system' ? $default_lang : $language);
-
-        $app_dir = $config->_config_paths[0];
-        $lang_dir = $app_dir . DIRECTORY_SEPARATOR . 'language';
-
-        // Set the new language
-        $lang->load('ip', $new_language);
-        $lang->load('form_validation', $new_language);
-        if (file_exists($lang_dir . DIRECTORY_SEPARATOR . $default_lang . DIRECTORY_SEPARATOR . 'custom_lang.php')) {
-            $lang->load('custom', $new_language);
-        }
-
-        $lang->load('gateway', $new_language);
+        
+        // Set Laravel's application locale
+        app()->setLocale($new_language);
     }
 
     /**
      * Returns all available languages.
+     * 
+     * Note: Scans the resources/lang directory for available languages.
      */
     public static function getAvailableLanguages(): array
     {
-        $bridge = LegacyBridge::getInstance();
+        $lang_path = resource_path('lang');
         
-        if (!$bridge->isAvailable()) {
+        if (!is_dir($lang_path)) {
             return [];
         }
         
-        $bridge->loadHelper('directory');
-
-        $languages = directory_map(APPPATH . 'language', true);
-        sort($languages);
-        $counter = count($languages);
-
-        for ($i = 0; $i < $counter; $i++) {
-            $languages[$i] = str_replace(['\\', '/'], '', $languages[$i]);
+        $languages = [];
+        $directories = scandir($lang_path);
+        
+        foreach ($directories as $dir) {
+            if ($dir !== '.' && $dir !== '..' && is_dir($lang_path . '/' . $dir)) {
+                $languages[] = $dir;
+            }
         }
-
+        
+        sort($languages);
         return $languages;
     }
 }

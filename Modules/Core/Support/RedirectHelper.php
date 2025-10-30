@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
+
 
 /**
  * RedirectHelper
@@ -23,7 +24,7 @@ class RedirectHelper
      */
     public static function redirect_to($fallback_url_string, $redirect = true)
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
     
         $redirect_url = ($bridge->session()->userdata('redirect_to')) ? $bridge->session()->userdata('redirect_to') : $fallback_url_string;
     
@@ -41,7 +42,7 @@ class RedirectHelper
      */
     public static function redirect_to_set(): void
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
         $bridge->session()->set_userdata('redirect_to', $CI->uri->uri_string());
     }
 

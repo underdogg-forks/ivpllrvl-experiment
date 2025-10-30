@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
-
 /**
  * EInvoiceHelper
  * 
- * Static helper class converted from procedural functions.
+ * Static helper class - REQUIRES MIGRATION
+ * 
+ * @todo This entire helper requires migration to Laravel.
+ *       It heavily depends on CodeIgniter views, models, and libraries.
+ *       Should be refactored to use Laravel views and Eloquent models.
  */
 class EInvoiceHelper
 {
@@ -20,9 +22,9 @@ class EInvoiceHelper
      */
     public static function generate_xml_invoice_file($invoice, $items, string $xml_lib, string $filename, $options): string
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate to Laravel - this method needs views, models, and libraries
     
-        $bridge->getRawInstance()->load->library('XMLtemplates/' . $xml_lib . 'Xml', [
+        // TODO: Replace with Laravel equivalent->load->library('XMLtemplates/' . $xml_lib . 'Xml', [
             'invoice'  => $invoice,
             'items'    => $items,
             'filename' => $filename,
@@ -93,7 +95,7 @@ class EInvoiceHelper
     {
         if (file_exists(APPPATH . 'helpers/XMLconfigs/' . $xml_id . '.php')) {
             include APPPATH . 'helpers/XMLconfigs/' . $xml_id . '.php';
-            $bridge = LegacyBridge::getInstance();
+            // TODO: Migrate to Laravel - this method needs views, models, and libraries
             // Shift calculation mode (false by default). Need true? See Dev Note on ipconfig example
             $bridge->config()->set_item('legacy_calculation', ! empty($xml_setting['legacy_calculation']));
     
@@ -108,7 +110,7 @@ class EInvoiceHelper
      */
     public static function get_admin_active_users($user_id = ''): array
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate to Laravel - this method needs views, models, and libraries
     
         $where = ['user_type' => '1', 'user_active' => '1']; // Administrators Active Only
         if ($user_id) {
@@ -296,7 +298,7 @@ class EInvoiceHelper
     
         // Bad: One with 0 Ok (false), No 0 NoOk (true)
         if (count($checks[0]) != 0 && count($checks[1]) != 0) {
-            $bridge = LegacyBridge::getInstance();
+            // TODO: Migrate to Laravel - this method needs views, models, and libraries
             $bridge->session()->set_flashdata(
                 'alert_warning',
                 '<h3 class="pull-right"><a class="btn btn-default" href="javascript:check_items_tax_usages(true);"><i class="fa fa-cogs"></i> ' . trans('view') . '</a></h3>'

@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
 /**
  * PdfHelper
  * 
- * Static helper class converted from procedural functions.
+ * Static helper class - REQUIRES COMPREHENSIVE MIGRATION
+ * 
+ * @todo This helper is the most complex and requires complete migration:
+ *       - CodeIgniter views -> Laravel Blade views
+ *       - CodeIgniter models -> Laravel Eloquent models
+ *       - CodeIgniter libraries -> Laravel services
+ *       - Manual view loading -> Laravel view system
+ *       All PDF generation logic needs to be refactored to use Laravel patterns.
  */
 class PdfHelper
 {
@@ -54,9 +61,9 @@ class PdfHelper
      */
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate to Laravel - comprehensive refactoring needed
     
-        $bridge->getRawInstance()->load->model(
+        // TODO: Replace with Laravel equivalent->load->model(
             [
                 'invoices/mdl_items',
                 'invoices/mdl_invoices',
@@ -66,7 +73,7 @@ class PdfHelper
             ]
         );
     
-        $bridge->getRawInstance()->load->helper(['country', 'client']);
+        // TODO: Replace with Laravel equivalent->load->helper(['country', 'client']);
     
         $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
         $invoice = $CI->mdl_invoices->get_payments($invoice);
@@ -75,7 +82,7 @@ class PdfHelper
         set_language($invoice->client_language);
     
         if ( ! $invoice_template) {
-            $bridge->getRawInstance()->load->helper('template');
+            // TODO: Replace with Laravel equivalent->load->helper('template');
             $invoice_template = select_pdf_invoice_template($invoice);
         }
     
@@ -115,7 +122,7 @@ class PdfHelper
         // For embed file on PDF
         $associatedFiles = null;
         if (get_setting('einvoicing')) {
-            $bridge->getRawInstance()->load->helper('e-invoice');
+            // TODO: Replace with Laravel equivalent->load->helper('e-invoice');
             // Get eInvoice name (version), user checks & shift legacy_calculation mode
             $einvoice = get_einvoice_usage($invoice, $items, false);
             // Set eInvoice config (false if Client & User not Ok)
@@ -154,10 +161,10 @@ class PdfHelper
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
     
-        $html = $bridge->getRawInstance()->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
+        $html = // TODO: Replace with Laravel equivalent->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
     
         // Create PDF with or without an embedded XML
-        $bridge->getRawInstance()->load->helper('mpdf');
+        // TODO: Replace with Laravel equivalent->load->helper('mpdf');
     
         $retval = pdf_create(
             html:             $html,
@@ -197,11 +204,11 @@ class PdfHelper
 
     public static function generate_invoice_sumex($invoice_id, $stream = true, $invoice_template = null, $client = false)
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate to Laravel - comprehensive refactoring needed
     
-        $bridge->getRawInstance()->load->model('invoices/mdl_items');
+        // TODO: Replace with Laravel equivalent->load->model('invoices/mdl_items');
         $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
-        $bridge->getRawInstance()->load->library('Sumex', [
+        // TODO: Replace with Laravel equivalent->load->library('Sumex', [
             'invoice' => $invoice,
             'items'   => $CI->mdl_items->where('invoice_id', $invoice_id)->get()->result(),
         ]);
@@ -259,9 +266,9 @@ class PdfHelper
      */
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate to Laravel - comprehensive refactoring needed
     
-        $bridge->getRawInstance()->load->model(
+        // TODO: Replace with Laravel equivalent->load->model(
             [
                 'quotes/mdl_quotes',
                 'quotes/mdl_quote_items',
@@ -269,7 +276,7 @@ class PdfHelper
                 'custom_fields/mdl_custom_fields',
             ]
         );
-        $bridge->getRawInstance()->load->helper(
+        // TODO: Replace with Laravel equivalent->load->helper(
             [
                 'country',
                 'client',
@@ -282,7 +289,7 @@ class PdfHelper
         set_language($quote->client_language);
     
         if ( ! $quote_template) {
-            $quote_template = $bridge->settings()->setting('pdf_quote_template');
+            $quote_template = Setting::getValue->setting('pdf_quote_template');
         }
     
         // Determine if discounts should be displayed
@@ -305,7 +312,7 @@ class PdfHelper
     
         // Automatic calculation mode
         if (get_setting('einvoicing')) {
-            $bridge->getRawInstance()->load->helper('e-invoice');
+            // TODO: Replace with Laravel equivalent->load->helper('e-invoice');
             // Only for shift the legacy_calculation mode
             get_einvoice_usage($quote, $items, false);
         }
@@ -320,9 +327,9 @@ class PdfHelper
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
     
-        $html = $bridge->getRawInstance()->load->view('quote_templates/pdf/' . $quote_template, $data, true);
+        $html = // TODO: Replace with Laravel equivalent->load->view('quote_templates/pdf/' . $quote_template, $data, true);
     
-        $bridge->getRawInstance()->load->helper('mpdf');
+        // TODO: Replace with Laravel equivalent->load->helper('mpdf');
     
         return pdf_create($html, trans('quote') . '_' . str_replace(['\\', '/'], '_', $quote->quote_number), $stream, $quote->quote_password);
     }

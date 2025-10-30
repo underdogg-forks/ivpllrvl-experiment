@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
+
 
 /**
  * EchoHelper
@@ -74,7 +75,7 @@ class EchoHelper
      */
     public static function _csrf_field(): void
     {
-        $bridge = LegacyBridge::getInstance();
+        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
         echo '<input type="hidden" name="' . $bridge->config()->item('csrf_token_name');
         echo '" value="' . $CI->security->get_csrf_hash() . '">';
     }

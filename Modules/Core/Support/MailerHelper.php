@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
 /**
  * MailerHelper
@@ -18,11 +18,11 @@ class MailerHelper
      */
     public static function mailer_configured(): bool
     {
-        $bridge = LegacyBridge::getInstance();
-    
-        return ($bridge->settings()->setting('email_send_method') == 'phpmail') ||
-            ($bridge->settings()->setting('email_send_method') == 'sendmail') ||
-            (($bridge->settings()->setting('email_send_method') == 'smtp') && ($bridge->settings()->setting('smtp_server_address')));
+        $emailMethod = Setting::getValue('email_send_method');
+        
+        return ($emailMethod == 'phpmail') ||
+            ($emailMethod == 'sendmail') ||
+            (($emailMethod == 'smtp') && Setting::getValue('smtp_server_address'));
     }
 
     /**
@@ -32,39 +32,13 @@ class MailerHelper
      * @param string $status   string "accepted" or "rejected"
      *
      * @return bool if the email was sent
+     * 
+     * @todo This method requires full migration of Quote model and mail sending system
      */
     public static function email_quote_status(string $quote_id, $status)
     {
-        ini_set('display_errors', 'on');
-        error_reporting(E_ALL);
-    
-        if ( ! mailer_configured()) {
-            return false;
-        }
-    
-        $bridge = LegacyBridge::getInstance();
-        $bridge->getRawInstance()->load->helper('mailer/phpmailer');
-    
-        $quote    = $CI->mdl_quotes->where('ip_quotes.quote_id', $quote_id)->get()->row();
-        $index    = env('REMOVE_INDEXPHP', true) ? '' : 'index.php';
-        $base_url = base_url('/' . $index . '/quotes/view/' . $quote_id);
-    
-        $user_email = $quote->user_email;
-        $subject    = sprintf(
-            trans('quote_status_email_subject'),
-            $quote->client_name,
-            mb_strtolower(lang($status)),
-            $quote->quote_number
-        );
-        $body = sprintf(
-            nl2br(trans('quote_status_email_body')),
-            $quote->client_name,
-            mb_strtolower(lang($status)),
-            $quote->quote_number,
-            '<a href="' . $base_url . '">' . $base_url . '</a>'
-        );
-    
-        return phpmail_send($user_email, $user_email, $subject, $body);
+        // TODO: Implement using Laravel Mail and Eloquent models
+        throw new \RuntimeException('email_quote_status requires migration to Laravel Mail system');
     }
 
     /**
@@ -74,7 +48,7 @@ class MailerHelper
      *
      * @param string $email
      *
-     * @return bool returs true if all emails are valid otherwise false
+     * @return bool returns true if all emails are valid otherwise false
      */
     public static function validate_email_address(string $email): bool
     {
@@ -95,16 +69,19 @@ class MailerHelper
     /**
      * @param []  $errors
      * @param string $redirect
+     * 
+     * @todo This method requires Laravel session/flash system
      */
     public static function check_mail_errors(array $errors = [], $redirect = ''): void
     {
         if ($errors) {
-            $bridge = LegacyBridge::getInstance();
             foreach ($errors as $i => $e) {
                 $errors[$i] = strtr(trans('form_validation_valid_email'), ['{field}' => trans($e)]);
             }
     
-            $bridge->session()->set_flashdata('alert_error', implode('<br>', $errors));
+            // TODO: Use Laravel flash messages
+            session()->flash('alert_error', implode('<br>', $errors));
+            
             $redirect = empty($redirect) ? (empty($_SERVER['HTTP_REFERER']) ? '' : $_SERVER['HTTP_REFERER']) : $redirect;
             redirect($redirect);
         }

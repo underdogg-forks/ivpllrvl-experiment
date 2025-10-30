@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Core\Support;
 
-use Modules\Core\Services\LegacyBridge;
+use Modules\Core\Entities\Setting;
 
 /**
  * Date Helper Class
@@ -144,14 +144,7 @@ class DateHelper
      */
     public static function dateFormatSetting()
     {
-        $bridge = LegacyBridge::getInstance();
-        $settings = $bridge->settings();
-        
-        if ($settings) {
-            return $settings->setting('date_format');
-        }
-        
-        return 'd/m/Y'; // Default fallback
+        return Setting::getValue('date_format') ?? 'd/m/Y';
     }
 
     /**
