@@ -2,7 +2,7 @@
 
 namespace Modules\Quotes\Entities;
 
-use App\Models\BaseModel;
+use Modules\Core\Models\BaseModel;
 
 /**
  * QuoteItem Model

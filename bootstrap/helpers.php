@@ -131,3 +131,35 @@ if (! function_exists('dd')) {
         die(1);
     }
 }
+
+if (! function_exists('env')) {
+    /**
+     * Get the value of an environment variable.
+     *
+     * @param  string  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function env($key, $default = null)
+    {
+        if (isset($_ENV[$key])) {
+            return $_ENV[$key];
+        }
+
+        return $default;
+    }
+}
+
+if (! function_exists('env_bool')) {
+    /**
+     * Get the value of an environment variable as a boolean.
+     *
+     * @param  string  $key
+     * @param  string  $default
+     * @return bool
+     */
+    function env_bool($key, $default = 'false'): bool
+    {
+        return env($key, $default) === 'true';
+    }
+}

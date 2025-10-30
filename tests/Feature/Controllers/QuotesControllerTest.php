@@ -32,13 +32,13 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_redirects_to_all_status_view_from_index(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->index();
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $this->assertEquals(route('quotes.status', ['status' => 'all']), $response->getTargetUrl());
     }
@@ -51,7 +51,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_displays_only_draft_quotes_when_draft_status_selected(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -67,10 +67,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->status('draft');
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         
@@ -78,7 +78,7 @@ class QuotesControllerTest extends TestCase
         $this->assertArrayHasKey('status', $viewData);
         $this->assertEquals('draft', $viewData['status']);
         
-        // Verify only draft quotes are returned
+        /** Verify only draft quotes are returned */
         $quoteIds = $viewData['quotes']->pluck('quote_id')->toArray();
         $this->assertContains($draftQuote->quote_id, $quoteIds);
         $this->assertNotContains($sentQuote->quote_id, $quoteIds);
@@ -92,7 +92,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_displays_all_quotes_when_all_status_selected(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -108,17 +108,17 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->status('all');
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         
         $this->assertArrayHasKey('quotes', $viewData);
         $this->assertEquals('all', $viewData['status']);
         
-        // Verify all quotes are returned
+        /** Verify all quotes are returned */
         $quoteIds = $viewData['quotes']->pluck('quote_id')->toArray();
         $this->assertContains($draftQuote->quote_id, $quoteIds);
         $this->assertContains($sentQuote->quote_id, $quoteIds);
@@ -132,13 +132,13 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_includes_quote_statuses_in_view_data_for_status_method(): void
     {
-        // Arrange
+        /** Arrange */
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->status('all');
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertArrayHasKey('quote_statuses', $viewData);
         $this->assertIsArray($viewData['quote_statuses']);
@@ -153,7 +153,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_displays_quote_details_with_items_and_amounts(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -167,10 +167,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->view($quote->quote_id);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         
@@ -191,11 +191,11 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_viewing_non_existent_quote(): void
     {
-        // Arrange
+        /** Arrange */
         $nonExistentQuoteId = 99999;
         $controller = new QuotesController();
         
-        // Act & Assert
+        /** Act & Assert */
         $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
         $controller->view($nonExistentQuoteId);
     }
@@ -208,7 +208,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_includes_custom_fields_in_quote_view_data(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -219,10 +219,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->view($quote->quote_id);
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertArrayHasKey('custom_fields', $viewData);
         $this->assertArrayHasKey('custom_values', $viewData);
@@ -236,7 +236,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_includes_tax_rates_in_quote_view_data(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -247,10 +247,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->view($quote->quote_id);
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertArrayHasKey('tax_rates', $viewData);
         $this->assertArrayHasKey('quote_tax_rates', $viewData);
@@ -264,7 +264,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_deletes_quote_and_redirects_to_index(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -276,14 +276,14 @@ class QuotesControllerTest extends TestCase
         $quoteId = $quote->quote_id;
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->delete($quoteId);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $this->assertEquals(route('quotes.index'), $response->getTargetUrl());
         
-        // Verify quote was deleted
+        /** Verify quote was deleted */
         $this->assertNull(Quote::find($quoteId));
     }
 
@@ -295,7 +295,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_deletes_quote_and_all_related_records(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -313,10 +313,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $controller->delete($quoteId);
         
-        // Assert - verify all related records are deleted
+        /** Assert - verify all related records are deleted */
         $this->assertNull(Quote::find($quoteId));
         $this->assertNull(QuoteItem::find($itemId));
         $this->assertNull(QuoteTaxRate::find($taxRateId));
@@ -330,7 +330,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_removes_tax_rate_and_recalculates_quote(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -347,14 +347,14 @@ class QuotesControllerTest extends TestCase
         $quoteTaxRateId = $taxRate->quote_tax_rate_id;
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->deleteQuoteTax($quote->quote_id, $quoteTaxRateId);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $this->assertEquals(route('quotes.view', ['quote_id' => $quote->quote_id]), $response->getTargetUrl());
         
-        // Verify tax rate was deleted
+        /** Verify tax rate was deleted */
         $this->assertNull(QuoteTaxRate::find($quoteTaxRateId));
     }
 
@@ -366,7 +366,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_redirects_to_quote_view_after_deleting_tax_rate(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -378,10 +378,10 @@ class QuotesControllerTest extends TestCase
         $taxRate = QuoteTaxRate::factory()->create(['quote_id' => $quote->quote_id]);
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->deleteQuoteTax($quote->quote_id, $taxRate->quote_tax_rate_id);
         
-        // Assert
+        /** Assert */
         $this->assertEquals(route('quotes.view', ['quote_id' => $quote->quote_id]), $response->getTargetUrl());
         $this->assertTrue($response->getSession()->has('success'));
     }
@@ -394,7 +394,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_recalculates_all_quotes_successfully(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -410,10 +410,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->recalculateAllQuotes();
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $this->assertTrue($response->getSession()->has('success'));
     }
@@ -426,18 +426,18 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_handles_empty_quote_list_when_recalculating_all_quotes(): void
     {
-        // Arrange
-        // Delete all quotes
+        /** Arrange */
+        /** Delete all quotes */
         Quote::query()->delete();
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->recalculateAllQuotes();
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
-        // Should still return success even with no quotes
+        /** Should still return success even with no quotes */
         $this->assertTrue($response->getSession()->has('success'));
     }
 
@@ -449,11 +449,11 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_paginates_quote_results_correctly(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
-        // Create 20 draft quotes (more than the 15 per page limit)
+        /** Create 20 draft quotes (more than the 15 per page limit) */
         for ($i = 0; $i < 20; $i++) {
             Quote::factory()->draft()->create([
                 'client_id' => $client->client_id,
@@ -463,10 +463,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->status('draft', 0);
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $viewData['quotes']);
         $this->assertEquals(15, $viewData['quotes']->perPage());
@@ -481,7 +481,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_displays_only_sent_quotes_when_sent_status_selected(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -497,10 +497,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->status('sent');
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $quoteIds = $viewData['quotes']->pluck('quote_id')->toArray();
         
@@ -516,7 +516,7 @@ class QuotesControllerTest extends TestCase
     #[Test]
     public function it_displays_only_approved_quotes_when_approved_status_selected(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         
@@ -532,10 +532,10 @@ class QuotesControllerTest extends TestCase
         
         $controller = new QuotesController();
         
-        // Act
+        /** Act */
         $response = $controller->status('approved');
         
-        // Assert
+        /** Assert */
         $viewData = $response->getData();
         $quoteIds = $viewData['quotes']->pluck('quote_id')->toArray();
         

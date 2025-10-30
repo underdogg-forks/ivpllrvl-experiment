@@ -40,7 +40,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_saves_quote_with_items_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create(['quote_status_id' => 1]);
         $request = $this->createMockRequest([
             'quote_id' => $quote->quote_id,
@@ -57,14 +57,14 @@ class QuotesAjaxControllerTest extends TestCase
             ])
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->save($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         
-        // Verify quote was updated
+        /** Verify quote was updated */
         $updatedQuote = Quote::find($quote->quote_id);
         $this->assertEquals(2, $updatedQuote->quote_status_id);
     }
@@ -75,17 +75,17 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_validation_errors_when_saving_invalid_quote(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $request = $this->createMockRequest([
             'quote_id' => $quote->quote_id,
-            // Missing required fields
+            /** Missing required fields */
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->save($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(0, $data['success']);
         $this->assertArrayHasKey('validation_errors', $data);
@@ -97,7 +97,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_prevents_both_discount_types_when_saving_quote(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $request = $this->createMockRequest([
             'quote_id' => $quote->quote_id,
@@ -106,10 +106,10 @@ class QuotesAjaxControllerTest extends TestCase
             'items' => json_encode([])
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->save($request);
         
-        // Assert
+        /** Assert */
         $updatedQuote = Quote::find($quote->quote_id);
         $this->assertEquals(10, $updatedQuote->quote_discount_percent);
         $this->assertEquals(0, $updatedQuote->quote_discount_amount);
@@ -121,7 +121,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_error_when_item_has_quantity_but_no_name(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $request = $this->createMockRequest([
             'quote_id' => $quote->quote_id,
@@ -134,10 +134,10 @@ class QuotesAjaxControllerTest extends TestCase
             ])
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->save($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(0, $data['success']);
         $this->assertArrayHasKey('item_name', $data['validation_errors']);
@@ -149,7 +149,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_saves_quote_tax_rate_in_legacy_calculation_mode(): void
     {
-        // Arrange
+        /** Arrange */
         config(['legacy_calculation' => true]);
         $quote = Quote::factory()->create();
         $taxRate = TaxRate::factory()->create();
@@ -159,14 +159,14 @@ class QuotesAjaxControllerTest extends TestCase
             'include_item_tax' => 1
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->saveQuoteTaxRate($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         
-        // Verify tax rate was saved
+        /** Verify tax rate was saved */
         $quoteTaxRate = QuoteTaxRate::where('quote_id', $quote->quote_id)->first();
         $this->assertNotNull($quoteTaxRate);
     }
@@ -177,19 +177,19 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_deletes_quote_item_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $item = QuoteItem::factory()->create(['quote_id' => $quote->quote_id]);
         $request = $this->createMockRequest(['item_id' => $item->item_id]);
         
-        // Act
+        /** Act */
         $response = $this->controller->deleteItem($request, $quote->quote_id);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         
-        // Verify item was deleted
+        /** Verify item was deleted */
         $this->assertNull(QuoteItem::find($item->item_id));
     }
     
@@ -199,13 +199,13 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_failure_when_deleting_item_for_non_existent_quote(): void
     {
-        // Arrange
+        /** Arrange */
         $request = $this->createMockRequest(['item_id' => 999]);
         
-        // Act
+        /** Act */
         $response = $this->controller->deleteItem($request, 99999);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(0, $data['success']);
     }
@@ -216,7 +216,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_quote_item_data_when_getting_item(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $item = QuoteItem::factory()->create([
             'quote_id' => $quote->quote_id,
@@ -226,10 +226,10 @@ class QuotesAjaxControllerTest extends TestCase
         ]);
         $request = $this->createMockRequest(['item_id' => $item->item_id]);
         
-        // Act
+        /** Act */
         $response = $this->controller->getItem($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals('Test Item', $data['item_name']);
         $this->assertEquals(5, $data['item_quantity']);
@@ -242,13 +242,13 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_empty_array_when_getting_non_existent_item(): void
     {
-        // Arrange
+        /** Arrange */
         $request = $this->createMockRequest(['item_id' => 99999]);
         
-        // Act
+        /** Act */
         $response = $this->controller->getItem($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEmpty($data);
     }
@@ -259,7 +259,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_copies_quote_with_all_items_and_tax_rates(): void
     {
-        // Arrange
+        /** Arrange */
         $sourceQuote = Quote::factory()->create();
         QuoteItem::factory()->count(3)->create(['quote_id' => $sourceQuote->quote_id]);
         QuoteTaxRate::factory()->count(2)->create(['quote_id' => $sourceQuote->quote_id]);
@@ -274,10 +274,10 @@ class QuotesAjaxControllerTest extends TestCase
             'user_id' => $sourceQuote->user_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->copyQuote($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         $this->assertArrayHasKey('quote_id', $data);
@@ -286,11 +286,11 @@ class QuotesAjaxControllerTest extends TestCase
         $newQuote = Quote::find($newQuoteId);
         $this->assertNotNull($newQuote);
         
-        // Verify items were copied
+        /** Verify items were copied */
         $copiedItems = QuoteItem::where('quote_id', $newQuoteId)->count();
         $this->assertEquals(3, $copiedItems);
         
-        // Verify tax rates were copied
+        /** Verify tax rates were copied */
         $copiedTaxRates = QuoteTaxRate::where('quote_id', $newQuoteId)->count();
         $this->assertEquals(2, $copiedTaxRates);
     }
@@ -301,7 +301,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_changes_quote_user_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $newUser = User::factory()->create();
         $request = $this->createMockRequest([
@@ -309,14 +309,14 @@ class QuotesAjaxControllerTest extends TestCase
             'user_id' => $newUser->user_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->changeUser($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         
-        // Verify user was changed
+        /** Verify user was changed */
         $updatedQuote = Quote::find($quote->quote_id);
         $this->assertEquals($newUser->user_id, $updatedQuote->user_id);
     }
@@ -327,17 +327,17 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_returns_error_when_changing_to_non_existent_user(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $request = $this->createMockRequest([
             'quote_id' => $quote->quote_id,
             'user_id' => 99999
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->changeUser($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(0, $data['success']);
         $this->assertArrayHasKey('validation_errors', $data);
@@ -349,7 +349,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_changes_quote_client_and_returns_success(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $newClient = Client::factory()->create();
         $request = $this->createMockRequest([
@@ -357,14 +357,14 @@ class QuotesAjaxControllerTest extends TestCase
             'client_id' => $newClient->client_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->changeClient($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         
-        // Verify client was changed
+        /** Verify client was changed */
         $updatedQuote = Quote::find($quote->quote_id);
         $this->assertEquals($newClient->client_id, $updatedQuote->client_id);
     }
@@ -375,7 +375,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_creates_new_quote_and_returns_quote_id(): void
     {
-        // Arrange
+        /** Arrange */
         $client = Client::factory()->create();
         $user = User::factory()->create();
         $invoiceGroup = InvoiceGroup::factory()->create();
@@ -386,15 +386,15 @@ class QuotesAjaxControllerTest extends TestCase
             'invoice_group_id' => $invoiceGroup->invoice_group_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->create($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         $this->assertArrayHasKey('quote_id', $data);
         
-        // Verify quote was created
+        /** Verify quote was created */
         $quoteId = $data['quote_id'];
         $quote = Quote::find($quoteId);
         $this->assertNotNull($quote);
@@ -407,7 +407,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_converts_quote_to_invoice_with_all_items_and_tax_rates(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create([
             'quote_discount_amount' => 10.00,
             'quote_discount_percent' => 0
@@ -422,10 +422,10 @@ class QuotesAjaxControllerTest extends TestCase
             'invoice_group_id' => $invoiceGroup->invoice_group_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->quoteToInvoice($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(1, $data['success']);
         $this->assertArrayHasKey('invoice_id', $data);
@@ -433,20 +433,20 @@ class QuotesAjaxControllerTest extends TestCase
         $invoiceId = $data['invoice_id'];
         $invoice = Invoice::find($invoiceId);
         
-        // Verify invoice was created
+        /** Verify invoice was created */
         $this->assertNotNull($invoice);
         $this->assertEquals($quote->client_id, $invoice->client_id);
         $this->assertEquals(10.00, $invoice->invoice_discount_amount);
         
-        // Verify quote was linked to invoice
+        /** Verify quote was linked to invoice */
         $updatedQuote = Quote::find($quote->quote_id);
         $this->assertEquals($invoiceId, $updatedQuote->invoice_id);
         
-        // Verify items were copied
+        /** Verify items were copied */
         $invoiceItems = Item::where('invoice_id', $invoiceId)->count();
         $this->assertEquals(3, $invoiceItems);
         
-        // Verify tax rates were copied
+        /** Verify tax rates were copied */
         $invoiceTaxRates = InvoiceTaxRate::where('invoice_id', $invoiceId)->count();
         $this->assertEquals(2, $invoiceTaxRates);
     }
@@ -457,7 +457,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_preserves_item_details_when_converting_quote_to_invoice(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $quoteItem = QuoteItem::factory()->create([
             'quote_id' => $quote->quote_id,
@@ -474,10 +474,10 @@ class QuotesAjaxControllerTest extends TestCase
             'invoice_group_id' => $invoiceGroup->invoice_group_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->quoteToInvoice($request);
         
-        // Assert
+        /** Assert */
         $data = json_decode($response->getContent(), true);
         $invoiceId = $data['invoice_id'];
         
@@ -494,7 +494,7 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_copy_quote_modal_with_invoice_groups_and_tax_rates(): void
     {
-        // Arrange
+        /** Arrange */
         $quote = Quote::factory()->create();
         $client = Client::factory()->create();
         InvoiceGroup::factory()->count(3)->create();
@@ -505,10 +505,10 @@ class QuotesAjaxControllerTest extends TestCase
             'client_id' => $client->client_id
         ]);
         
-        // Act
+        /** Act */
         $response = $this->controller->modalCopyQuote($request);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         
@@ -525,16 +525,16 @@ class QuotesAjaxControllerTest extends TestCase
     #[Test]
     public function it_loads_create_quote_modal_with_clients_list(): void
     {
-        // Arrange
+        /** Arrange */
         Client::factory()->count(10)->create();
         $client = Client::factory()->create();
         
         $request = $this->createMockRequest(['client_id' => $client->client_id]);
         
-        // Act
+        /** Act */
         $response = $this->controller->modalCreateQuote($request);
         
-        // Assert
+        /** Assert */
         $this->assertInstanceOf(\Illuminate\View\View::class, $response);
         $viewData = $response->getData();
         

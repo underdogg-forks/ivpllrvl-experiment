@@ -2,7 +2,7 @@
 
 namespace Modules\Users\Entities;
 
-use App\Models\BaseModel;
+use Modules\Core\Models\BaseModel;
 
 /**
  * Session Model
