@@ -32,13 +32,22 @@ class QuotesController
     protected QuoteService $quoteService;
 
     /**
+     * Quote amount service instance.
+     *
+     * @var QuoteAmountService
+     */
+    protected QuoteAmountService $quoteAmountService;
+
+    /**
      * Constructor.
      *
-     * @param QuoteService $quoteService
+     * @param QuoteService       $quoteService
+     * @param QuoteAmountService $quoteAmountService
      */
-    public function __construct(QuoteService $quoteService)
+    public function __construct(QuoteService $quoteService, QuoteAmountService $quoteAmountService)
     {
-        $this->quoteService = $quoteService;
+        $this->quoteService       = $quoteService;
+        $this->quoteAmountService = $quoteAmountService;
     }
 
     /**
@@ -265,13 +274,13 @@ class QuotesController
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
     {
         // Delete the tax rate
-        QuoteTaxRate::query()->where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
+        QuoteTaxRate::where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
 
         // Get global discount for recalculation
-        $globalDiscount = ['item' => QuoteAmount::getGlobalDiscount($quote_id)];
+        $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quote_id)];
 
         // Recalculate quote amounts
-        QuoteAmount::calculate($quote_id, $globalDiscount);
+        $this->quoteAmountService->calculate($quote_id, $globalDiscount);
 
         return redirect()->route('quotes.view', ['quote_id' => $quote_id])
             ->with('success', 'Tax rate deleted and quote recalculated');
@@ -295,8 +304,8 @@ class QuotesController
         $quoteIds = Quote::pluck('quote_id');
 
         foreach ($quoteIds as $quoteId) {
-            $globalDiscount = ['item' => QuoteAmount::getGlobalDiscount($quoteId)];
-            QuoteAmount::calculate($quoteId, $globalDiscount);
+            $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quoteId)];
+            $this->quoteAmountService->calculate($quoteId, $globalDiscount);
         }
 
         return redirect()->back()
