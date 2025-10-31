@@ -57,22 +57,6 @@ class InvoicesRecurring extends BaseModel
     ];
 
     /**
-     * Get validation rules for recurring invoices.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_id'       => 'required|integer',
-            'recur_start_date' => 'required|date',
-            'recur_end_date'   => 'nullable|date',
-            'recur_frequency'  => 'required|string',
-            'recur_next_date'  => 'nullable|date',
-        ];
-    }
-
-    /**
      * Get the invoice that owns the recurring data.
      */
     public function invoice()

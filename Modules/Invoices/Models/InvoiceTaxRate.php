@@ -59,54 +59,6 @@ class InvoiceTaxRate extends BaseModel
     ];
 
     /**
-     * Get validation rules for invoice tax rates.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_id'       => 'required|integer',
-            'tax_rate_id'      => 'required|integer',
-            'include_item_tax' => 'required|integer',
-        ];
-    }
-
-    /**
-     * Save invoice tax rate and trigger calculations.
-     * Only applicable in legacy calculation mode.
-     *
-     * @param array $data
-     *
-     * @return InvoiceTaxRate|null
-     */
-    public static function saveTaxRate(array $data): ?self
-    {
-        // Only applicable in legacy calculation mode
-        if ( ! config_item('legacy_calculation')) {
-            return null;
-        }
-
-        // Create or update the tax rate
-        if (isset($data['invoice_tax_rate_id']) && $data['invoice_tax_rate_id']) {
-            $taxRate = static::findOrFail($data['invoice_tax_rate_id']);
-            $taxRate->update($data);
-        } else {
-            $taxRate = static::create($data);
-        }
-
-        // Recalculate invoice amounts if invoice_id is provided
-        if (isset($data['invoice_id'])) {
-            $globalDiscount = [
-                'item' => InvoiceAmount::getGlobalDiscount($data['invoice_id']),
-            ];
-            InvoiceAmount::calculate($data['invoice_id'], $globalDiscount);
-        }
-
-        return $taxRate;
-    }
-
-    /**
      * Get the invoice that owns the tax rate.
      */
     public function invoice()

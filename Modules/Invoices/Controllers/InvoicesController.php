@@ -14,6 +14,8 @@ use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
+use Modules\Invoices\Services\InvoiceAmountService;
+use Modules\Invoices\Services\InvoiceService;
 use Modules\Payments\Models\PaymentMethod;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
@@ -79,7 +81,7 @@ class InvoicesController
             'filter_display'     => true,
             'filter_placeholder' => trans('filter_invoices'),
             'filter_method'      => 'filter_invoices',
-            'invoice_statuses'   => Invoice::statuses(),
+            'invoice_statuses'   => app(InvoiceService::class)->getStatuses(),
         ];
 
         return view('invoices::index', $data);
@@ -202,7 +204,7 @@ class InvoicesController
                 'currency_symbol_placement' => config('settings.currency_symbol_placement'),
                 'decimal_point'             => config('settings.decimal_point'),
             ],
-            'invoice_statuses'   => Invoice::statuses(),
+            'invoice_statuses'   => app(InvoiceService::class)->getStatuses(),
             'payment_cf_exist'   => $paymentCfExist,
             'legacy_calculation' => config('legacy_calculation'),
         ];
@@ -236,7 +238,7 @@ class InvoicesController
                 ->update(['task_status' => 3]); // 3 = Complete
 
             // Delete the invoice
-            Invoice::deleteInvoice($invoiceId);
+            app(InvoiceService::class)->deleteInvoice($invoiceId);
         } else {
             session()->flash('alert_error', trans('invoice_deletion_forbidden'));
         }
@@ -262,8 +264,9 @@ class InvoicesController
     public function generatePdf(int $invoiceId, bool $stream = true, ?string $invoiceTemplate = null): Response
     {
         if (config('settings.mark_invoices_sent_pdf') == 1) {
-            Invoice::generateInvoiceNumberIfApplicable($invoiceId);
-            Invoice::markSent($invoiceId);
+            $invoiceService = app(InvoiceService::class);
+            $invoiceService->generateInvoiceNumberIfApplicable($invoiceId);
+            $invoiceService->markSent($invoiceId);
         }
 
         // Generate PDF using helper
@@ -397,8 +400,9 @@ class InvoicesController
         InvoiceTaxRate::query()->where('invoice_tax_rate_id', $invoiceTaxRateId)->delete();
 
         // Recalculate invoice amounts
-        $globalDiscount = ['item' => InvoiceAmount::getGlobalDiscount($invoiceId)];
-        InvoiceAmount::calculate($invoiceId, $globalDiscount);
+        $invoiceAmountService = app(InvoiceAmountService::class);
+        $globalDiscount       = ['item' => $invoiceAmountService->getGlobalDiscount($invoiceId)];
+        $invoiceAmountService->calculate($invoiceId, $globalDiscount);
 
         return redirect()->route('invoices.view', ['invoiceId' => $invoiceId]);
     }
@@ -419,8 +423,9 @@ class InvoicesController
         $invoiceIds = Invoice::select('invoice_id')->get();
 
         foreach ($invoiceIds as $invoice) {
-            $globalDiscount = ['item' => InvoiceAmount::getGlobalDiscount($invoice->invoice_id)];
-            InvoiceAmount::calculate($invoice->invoice_id, $globalDiscount);
+            $invoiceAmountService = app(InvoiceAmountService::class);
+            $globalDiscount       = ['item' => $invoiceAmountService->getGlobalDiscount($invoice->invoice_id)];
+            $invoiceAmountService->calculate($invoice->invoice_id, $globalDiscount);
         }
 
         session()->flash('alert_success', trans('all_invoices_recalculated'));

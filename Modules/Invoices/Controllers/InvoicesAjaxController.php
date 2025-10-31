@@ -7,8 +7,11 @@ use Modules\Core\Models\User;
 use Modules\Crm\Models\Client;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoicesRecurring;
-use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
+use Modules\Invoices\Services\InvoiceAmountService;
+use Modules\Invoices\Services\InvoiceItemService;
+use Modules\Invoices\Services\InvoiceService;
+use Modules\Invoices\Services\InvoiceTaxRateService;
 
 /**
  * AJAX controller for invoice operations.
@@ -37,7 +40,7 @@ class InvoicesAjaxController
         $invoice   = Invoice::query()->findOrFail($invoiceId);
 
         // Validate invoice
-        $validationRules = Invoice::validationRulesSaveInvoice();
+        $validationRules = app(InvoiceService::class)->getSaveValidationRules();
         $validator       = validator(request()->all(), $validationRules);
 
         if ($validator->fails()) {
@@ -87,7 +90,7 @@ class InvoicesAjaxController
                 }
 
                 $itemId = $item['item_id'] ?? null;
-                Item::saveItem($itemId, $item, $invoiceId, $globalDiscount);
+                app(InvoiceItemService::class)->saveItem($itemId, $item, $invoiceId, $globalDiscount);
             }
         }
 
@@ -129,7 +132,11 @@ class InvoicesAjaxController
         $taxRateId      = request()->input('tax_rate_id');
         $includeItemTax = request()->input('include_item_tax', 0);
 
-        InvoiceTaxRate::saveTaxRate($invoiceId, $taxRateId, $includeItemTax);
+        app(InvoiceTaxRateService::class)->saveTaxRate([
+            'invoice_id'       => $invoiceId,
+            'tax_rate_id'      => $taxRateId,
+            'include_item_tax' => $includeItemTax,
+        ]);
 
         return ['success' => 1];
     }
@@ -159,7 +166,7 @@ class InvoicesAjaxController
             return ['success' => 0];
         }
 
-        Item::deleteItem($itemId);
+        app(InvoiceItemService::class)->deleteItem($itemId);
 
         // Recalculate invoice
         $invoice = Invoice::query()->findOrFail($invoiceId);

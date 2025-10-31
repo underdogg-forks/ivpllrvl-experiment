@@ -3,6 +3,7 @@
 namespace Modules\Invoices\Controllers;
 
 use Modules\Invoices\Models\InvoiceGroup;
+use Modules\Invoices\Services\InvoiceGroupService;
 use Illuminate\Http\Request;
 
 /**
@@ -52,7 +53,7 @@ class InvoiceGroupsController
         // Handle form submission
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
-            $rules = InvoiceGroup::validationRules();
+            $rules = app(InvoiceGroupService::class)->getValidationRules();
             $validated = request()->validate($rules);
             
             if ($id) {
