@@ -66,25 +66,6 @@ class Product extends BaseModel
     ];
 
     /**
-     * Get validation rules for products.
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'product_name'        => 'required|string|max:255',
-            'product_sku'         => 'nullable|string|max:255',
-            'product_description' => 'nullable|string',
-            'product_price'       => 'nullable|numeric|min:0',
-            'purchase_price'      => 'nullable|numeric|min:0',
-            'provider_name'       => 'nullable|string|max:255',
-            'family_id'           => 'nullable|integer',
-            'tax_rate_id'         => 'nullable|integer',
-            'unit_id'             => 'nullable|integer',
-            'product_tariff'      => 'nullable|string',
-        ];
-    }
-
-    /**
      * Get the family that owns the product.
      */
     public function family()
