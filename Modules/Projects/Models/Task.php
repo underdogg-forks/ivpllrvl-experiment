@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\Models;
+namespace Modules\Projects\Models;
 
 use Modules\Core\Models\BaseModel;
 

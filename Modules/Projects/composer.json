@@ -1,0 +1,6 @@
+{
+    "name": "modules/projects",
+    "description": "Projects and Tasks module",
+    "type": "laravel-module",
+    "require": {}
+}

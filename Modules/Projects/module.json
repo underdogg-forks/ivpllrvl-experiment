@@ -1,0 +1,11 @@
+{
+    "name": "Projects",
+    "alias": "projects",
+    "description": "Projects and Tasks module for project management",
+    "keywords": ["projects", "tasks", "project management"],
+    "priority": 7,
+    "providers": [
+        "Modules\\Projects\\Providers\\ProjectsServiceProvider"
+    ],
+    "files": []
+}

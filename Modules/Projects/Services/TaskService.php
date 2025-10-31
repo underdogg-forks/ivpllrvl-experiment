@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Crm\Services;
+namespace Modules\Projects\Services;
 
 use App\Services\BaseService;
-use Modules\Crm\Models\Task;
+use Modules\Projects\Models\Task;
 
 /**
  * TaskService.
