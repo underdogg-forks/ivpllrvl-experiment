@@ -94,7 +94,7 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $familyData */
+        /** @var array{family_name: string, btn_submit: string} $familyData */
         $familyData = [
             'family_name' => 'Electronics',
             'btn_submit' => '1',
@@ -122,7 +122,7 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $family = Family::factory()->create(['family_name' => 'Old Name']);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{family_name: string, btn_submit: string} $updateData */
         $updateData = [
             'family_name' => 'Updated Name',
             'btn_submit' => '1',
@@ -150,7 +150,7 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -171,7 +171,7 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $invalidData */
+        /** @var array{family_name: string, btn_submit: string} $invalidData */
         $invalidData = [
             'family_name' => '',
             'btn_submit' => '1',
@@ -194,7 +194,7 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Family::factory()->create(['family_name' => 'Existing Family']);
         
-        /** @var array<string, mixed> $duplicateData */
+        /** @var array{family_name: string, btn_submit: string} $duplicateData */
         $duplicateData = [
             'family_name' => 'Existing Family',
             'btn_submit' => '1',
@@ -217,7 +217,7 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $family = Family::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $family->family_id,
         ];
@@ -243,7 +243,7 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

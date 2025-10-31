@@ -115,7 +115,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $templateData */
+        /** @var array{email_template_title: string, email_template_subject: string, email_template_body: string, btn_submit: string} $templateData */
         $templateData = [
             'email_template_title' => 'New Template',
             'email_template_subject' => 'Subject',
@@ -145,7 +145,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create(['email_template_title' => 'Old Title']);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{email_template_title: string, email_template_subject: string, email_template_body: string, btn_submit: string} $updateData */
         $updateData = [
             'email_template_title' => 'Updated Title',
             'email_template_subject' => $template->email_template_subject,
@@ -175,7 +175,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -197,7 +197,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $template->email_template_id,
         ];
@@ -223,7 +223,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

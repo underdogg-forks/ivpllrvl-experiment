@@ -144,7 +144,7 @@ class PaymentsControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
         
-        /** @var array<string, mixed> $paymentData */
+        /** @var array{invoice_id: int, payment_date: string, payment_amount: string, payment_method_id: int, btn_submit: string} $paymentData */
         $paymentData = [
             'invoice_id' => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
@@ -176,7 +176,7 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $payment = Payment::factory()->create(['payment_amount' => '50.00']);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{invoice_id: int, payment_date: string, payment_amount: string, btn_submit: string} $updateData */
         $updateData = [
             'invoice_id' => $payment->invoice_id,
             'payment_date' => $payment->payment_date,
@@ -268,7 +268,7 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -290,7 +290,7 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $payment = Payment::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $payment->payment_id,
         ];
@@ -316,7 +316,7 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

@@ -126,7 +126,7 @@ class RecurringControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $stopParams */
+        /** @var array{id: int} $stopParams */
         $stopParams = [
             'id' => 99999,
         ];
@@ -149,7 +149,7 @@ class RecurringControllerTest extends FeatureTestCase
         $recurring   = InvoicesRecurring::factory()->create();
         $recurringId = $recurring->invoice_recurring_id;
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $recurringId,
         ];
@@ -172,7 +172,7 @@ class RecurringControllerTest extends FeatureTestCase
         $user      = User::factory()->create();
         $recurring = InvoicesRecurring::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $recurring->invoice_recurring_id,
         ];
@@ -193,7 +193,7 @@ class RecurringControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

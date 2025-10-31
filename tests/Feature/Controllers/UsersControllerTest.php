@@ -119,7 +119,7 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $adminUser = User::factory()->create();
         
-        /** @var array<string, mixed> $userData */
+        /** @var array{user_name: string, user_email: string, user_password: string, user_type: int, btn_submit: string} $userData */
         $userData = [
             'user_name' => 'New User',
             'user_email' => 'newuser@example.com',
@@ -151,7 +151,7 @@ class UsersControllerTest extends FeatureTestCase
         $adminUser = User::factory()->create();
         $editUser = User::factory()->create(['user_name' => 'Old Name']);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{user_name: string, user_email: string, btn_submit: string} $updateData */
         $updateData = [
             'user_name' => 'Updated Name',
             'user_email' => $editUser->user_email,
@@ -181,7 +181,7 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -203,7 +203,7 @@ class UsersControllerTest extends FeatureTestCase
         $adminUser = User::factory()->create();
         $deleteUser = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $deleteUser->user_id,
         ];
@@ -229,7 +229,7 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

@@ -113,7 +113,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $data */
+        /** @var array{payment_method_name: string, btn_submit: string} $data */
         $data = [
             'payment_method_name' => 'Credit Card',
             'btn_submit' => '1',
@@ -141,7 +141,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create(['payment_method_name' => 'Old Name']);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{payment_method_name: string, btn_submit: string} $updateData */
         $updateData = [
             'payment_method_name' => 'Updated Name',
             'btn_submit' => '1',
@@ -169,7 +169,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -190,7 +190,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $invalidData */
+        /** @var array{payment_method_name: string, btn_submit: string} $invalidData */
         $invalidData = [
             'payment_method_name' => '',
             'btn_submit' => '1',
@@ -213,7 +213,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         PaymentMethod::factory()->create(['payment_method_name' => 'Cash']);
         
-        /** @var array<string, string> $duplicateData */
+        /** @var array{payment_method_name: string, btn_submit: string} $duplicateData */
         $duplicateData = [
             'payment_method_name' => 'Cash',
             'btn_submit' => '1',
@@ -236,7 +236,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $paymentMethod->payment_method_id,
         ];
@@ -262,7 +262,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

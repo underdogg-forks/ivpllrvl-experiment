@@ -129,7 +129,7 @@ class InvoiceControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $invoiceData */
+        /** @var array{client_id: int, invoice_number: string, invoice_date_created: string} $invoiceData */
         $invoiceData = [
             'client_id' => 1,
             'invoice_number' => 'TEST-001',
@@ -156,7 +156,7 @@ class InvoiceControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $invoiceData */
+        /** @var array{client_id: int, invoice_number: string, invoice_date_created: string} $invoiceData */
         $invoiceData = [
             'client_id' => 1,
             'invoice_number' => 'TEST-002',

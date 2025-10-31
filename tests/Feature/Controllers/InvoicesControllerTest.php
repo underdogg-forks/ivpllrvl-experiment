@@ -196,7 +196,7 @@ class InvoicesControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{invoiceId: int} $deleteParams */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
@@ -220,7 +220,7 @@ class InvoicesControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         $task    = Task::factory()->create(['invoice_id' => $invoice->invoice_id, 'task_status' => 4]);
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{invoiceId: int} $deleteParams */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
@@ -244,7 +244,7 @@ class InvoicesControllerTest extends FeatureTestCase
         config(['settings.enable_invoice_deletion' => false]);
         $invoice = Invoice::factory()->sent()->create(); // Not a draft
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{invoiceId: int} $deleteParams */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];

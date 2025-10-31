@@ -247,7 +247,7 @@ class QuotesControllerTest extends FeatureTestCase
 
         $quoteId = $quote->quote_id;
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{quote_id: int} $deleteParams */
         $deleteParams = [
             'quote_id' => $quoteId,
         ];
@@ -284,7 +284,7 @@ class QuotesControllerTest extends FeatureTestCase
         $itemId    = $item->item_id;
         $taxRateId = $taxRate->quote_tax_rate_id;
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{quote_id: int} $deleteParams */
         $deleteParams = [
             'quote_id' => $quoteId,
         ];

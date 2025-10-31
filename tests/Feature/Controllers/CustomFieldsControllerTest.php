@@ -113,7 +113,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, mixed> $customFieldData */
+        /** @var array{custom_field_table: string, custom_field_label: string, custom_field_column: string, btn_submit: string} $customFieldData */
         $customFieldData = [
             'custom_field_table' => 'ip_clients',
             'custom_field_label' => 'Test Field',
@@ -144,7 +144,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $customField = CustomField::factory()->create(['custom_field_label' => 'Old Label']);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{custom_field_table: string, custom_field_label: string, custom_field_column: string, btn_submit: string} $updateData */
         $updateData = [
             'custom_field_table' => $customField->custom_field_table,
             'custom_field_label' => 'Updated Label',
@@ -174,7 +174,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -196,7 +196,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $customField = CustomField::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $customField->custom_field_id,
         ];
@@ -222,7 +222,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

@@ -234,7 +234,7 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         /** Would create invoice group */
         $testId = 1;
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $testId,
         ];

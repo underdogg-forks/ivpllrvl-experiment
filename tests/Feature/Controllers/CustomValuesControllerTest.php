@@ -117,7 +117,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $customField = CustomField::factory()->create();
         
-        /** @var array<string, mixed> $customValueData */
+        /** @var array{custom_field_id: int, custom_value_value: string, btn_submit: string} $customValueData */
         $customValueData = [
             'custom_field_id' => $customField->custom_field_id,
             'custom_value_value' => 'Test Value',
@@ -151,7 +151,7 @@ class CustomValuesControllerTest extends FeatureTestCase
             'custom_value_value' => 'Old Value',
         ]);
         
-        /** @var array<string, mixed> $updateData */
+        /** @var array{custom_field_id: int, custom_value_value: string, btn_submit: string} $updateData */
         $updateData = [
             'custom_field_id' => $customField->custom_field_id,
             'custom_value_value' => 'Updated Value',
@@ -180,7 +180,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, string> $cancelData */
+        /** @var array{btn_cancel: string} $cancelData */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -203,7 +203,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         $customField = CustomField::factory()->create();
         $customValue = CustomValue::factory()->create(['custom_field_id' => $customField->custom_field_id]);
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => $customValue->custom_value_id,
         ];
@@ -229,7 +229,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array<string, int> $deleteParams */
+        /** @var array{id: int} $deleteParams */
         $deleteParams = [
             'id' => 99999,
         ];

@@ -30,7 +30,7 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
         
-        /** @var array<string, mixed> $paymentData */
+        /** @var array{invoice_id: int, payment_date: string, payment_amount: string, payment_method_id: int} $paymentData */
         $paymentData = [
             'invoice_id' => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
