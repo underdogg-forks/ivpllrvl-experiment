@@ -59,14 +59,6 @@ class PaymentLog extends BaseModel
      *
      * @return array
      */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_id'             => 'required|integer',
-            'merchant_response_data' => 'required|string',
-            'merchant_response_date' => 'nullable|datetime',
-        ];
-    }
 
     /**
      * Get the invoice that owns the log.

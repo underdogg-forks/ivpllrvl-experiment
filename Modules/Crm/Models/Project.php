@@ -57,12 +57,4 @@ class Project extends BaseModel
      *
      * @return array
      */
-    public static function validationRules(): array
-    {
-        return [
-            'client_id'           => 'required|integer',
-            'project_name'        => 'required|string|max:255',
-            'project_description' => 'nullable|string',
-        ];
-    }
 }
