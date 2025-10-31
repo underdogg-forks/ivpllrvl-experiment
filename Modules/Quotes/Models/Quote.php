@@ -7,6 +7,7 @@ use DateTime;
 use Modules\Core\Models\BaseModel;
 use Modules\Core\Models\QuoteCustom;
 use Modules\Invoices\Models\InvoiceGroup;
+use Modules\Invoices\Services\InvoiceGroupService;
 
 /**
  * Quote Model.
@@ -274,7 +275,7 @@ class Quote extends BaseModel
     {
         $invoiceGroup = InvoiceGroup::findOrFail($invoiceGroupId);
 
-        return $invoiceGroup->generateInvoiceNumber();
+        return app(InvoiceGroupService::class)->generateInvoiceNumber($invoiceGroup);
     }
 
     /**

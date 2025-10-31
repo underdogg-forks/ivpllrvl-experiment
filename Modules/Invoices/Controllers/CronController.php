@@ -3,9 +3,11 @@
 namespace Modules\Invoices\Controllers;
 
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Models\InvoicesRecurring;
+use Modules\Invoices\Services\InvoiceAmountService;
+use Modules\Invoices\Services\InvoiceGroupService;
+use Modules\Invoices\Services\InvoiceService;
 
 class CronController
 {
@@ -105,13 +107,15 @@ class CronController
     {
         $invoiceGroup = InvoiceGroup::query()->findOrFail($invoiceGroupId);
 
-        return $invoiceGroup->generateInvoiceNumber();
+        return app(InvoiceGroupService::class)->generateInvoiceNumber($invoiceGroup);
     }
 
     private function getUrlKey(): string
     {
+        $invoiceService = app(InvoiceService::class);
+
         do {
-            $urlKey = bin2hex(random_bytes(16));
+            $urlKey = $invoiceService->generateUrlKey();
             $exists = Invoice::query()->where('invoice_url_key', $urlKey)->exists();
         } while ($exists);
 
@@ -134,9 +138,7 @@ class CronController
             $newTaxRate->save();
         }
 
-        if (class_exists(InvoiceAmount::class)) {
-            InvoiceAmount::calculate($targetId);
-        }
+        app(InvoiceAmountService::class)->calculate($targetId);
     }
 
     private function setNextRecurDate(int $recurringId): void

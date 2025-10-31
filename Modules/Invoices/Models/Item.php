@@ -2,7 +2,6 @@
 
 namespace Modules\Invoices\Models;
 
-use DB;
 use Modules\Core\Models\BaseModel;
 
 /**
@@ -69,107 +68,6 @@ class Item extends BaseModel
         'item_discount_amount' => 'decimal:2',
         'item_product_unit_id' => 'integer',
     ];
-
-    /**
-     * Get validation rules for invoice items.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_id'       => 'required|integer',
-            'item_name'        => 'required|string',
-            'item_description' => 'nullable|string',
-            'item_quantity'    => 'nullable|numeric',
-            'item_price'       => 'nullable|numeric',
-            'item_tax_rate_id' => 'nullable|integer',
-            'item_product_id'  => 'nullable|integer',
-        ];
-    }
-
-    /**
-     * Save invoice item and trigger calculations.
-     *
-     * @param array $data
-     * @param array $globalDiscount
-     *
-     * @return Item
-     */
-    public static function saveItem(array $data, array &$globalDiscount = []): self
-    {
-        // Create or update the item
-        if (isset($data['item_id']) && $data['item_id']) {
-            $item = static::findOrFail($data['item_id']);
-            $item->update($data);
-        } else {
-            $item = static::create($data);
-        }
-
-        // Calculate item amounts
-        ItemAmount::calculate($item->item_id, $globalDiscount);
-
-        // Recalculate invoice amounts
-        if (isset($data['invoice_id'])) {
-            InvoiceAmount::calculate($data['invoice_id'], $globalDiscount);
-        }
-
-        return $item;
-    }
-
-    /**
-     * Delete invoice item and recalculate amounts.
-     *
-     * @param int $itemId
-     *
-     * @return bool
-     */
-    public static function deleteItem(int $itemId): bool
-    {
-        // Get the item to find invoice_id
-        $item = static::find($itemId);
-
-        if ( ! $item) {
-            return false;
-        }
-
-        $invoiceId = $item->invoice_id;
-
-        // Delete the item
-        $item->delete();
-
-        // Delete the item amounts
-        ItemAmount::where('item_id', $itemId)->delete();
-
-        // Recalculate invoice amounts with global discount
-        $globalDiscount = [
-            'item' => InvoiceAmount::getGlobalDiscount($invoiceId),
-        ];
-        InvoiceAmount::calculate($invoiceId, $globalDiscount);
-
-        return true;
-    }
-
-    /**
-     * Get items subtotal for an invoice.
-     *
-     * @param int $invoiceId
-     *
-     * @return float
-     */
-    public static function getItemsSubtotal(int $invoiceId): float
-    {
-        $result = DB::table('ip_invoice_item_amounts')
-            ->selectRaw('SUM(item_subtotal) AS items_subtotal')
-            ->whereIn('item_id', function ($query) use ($invoiceId) {
-                $query->select('item_id')
-                    ->from('ip_invoice_items')
-                    ->where('invoice_id', $invoiceId);
-            })
-            ->first();
-
-        return (float) ($result->items_subtotal ?? 0.0);
-    }
 
     /**
      * Get the invoice that owns the item.

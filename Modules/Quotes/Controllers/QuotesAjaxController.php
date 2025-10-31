@@ -9,8 +9,8 @@ use Modules\Core\Models\QuoteCustom;
 use Modules\Core\Models\User;
 use Modules\Crm\Models\Client;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Services\InvoiceItemService;
+use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Quotes\Models\Quote;
@@ -605,7 +605,7 @@ class QuotesAjaxController
                 'item_order'           => $quoteItem->item_order,
             ];
 
-            Item::saveItem(null, $itemData, $globalDiscount);
+            app(InvoiceItemService::class)->saveItem(null, $itemData, $invoiceId, $globalDiscount);
         }
 
         // Copy quote tax rates to invoice
@@ -617,7 +617,7 @@ class QuotesAjaxController
                 'invoice_tax_rate_amount' => $quoteTaxRate->quote_tax_rate_amount,
             ];
 
-            InvoiceTaxRate::saveTaxRate($taxRateData);
+            app(InvoiceTaxRateService::class)->saveTaxRate($taxRateData);
         }
 
         return response()->json([
