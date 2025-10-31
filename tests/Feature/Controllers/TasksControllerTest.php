@@ -48,9 +48,6 @@ class TasksControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_task_create_form(): void
     {
-        /** Arrange */
-        $project = Project::factory()->create();
-
         /** Act */
         $response = $this->get(route('tasks.create'));
 
