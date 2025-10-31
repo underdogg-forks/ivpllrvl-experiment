@@ -344,9 +344,14 @@ class ProductsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         /** Would create product */
         $testId = 1;
+        
+        /** @var array{id: int} $deleteParams */
+        $deleteParams = [
+            'id' => $testId,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('products.delete', ['id' => $testId]));
+        $response = $this->actingAs($user)->post(route('products.delete', $deleteParams));
 
         /* Assert */
         /* Would verify product is deleted */

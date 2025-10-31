@@ -125,9 +125,14 @@ class RecurringControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array{id: int} $stopParams */
+        $stopParams = [
+            'id' => 99999,
+        ];
 
         /* Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.stop', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('invoices.recurring.stop', $stopParams));
 
         /* Assert */
         $response->assertNotFound();
@@ -143,9 +148,14 @@ class RecurringControllerTest extends FeatureTestCase
         $user        = User::factory()->create();
         $recurring   = InvoicesRecurring::factory()->create();
         $recurringId = $recurring->invoice_recurring_id;
+        
+        /** @var array{id: int} $deleteParams */
+        $deleteParams = [
+            'id' => $recurringId,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', ['id' => $recurringId]));
+        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', $deleteParams));
 
         /* Assert */
         $response->assertRedirect();
@@ -161,11 +171,14 @@ class RecurringControllerTest extends FeatureTestCase
         /** Arrange */
         $user      = User::factory()->create();
         $recurring = InvoicesRecurring::factory()->create();
+        
+        /** @var array{id: int} $deleteParams */
+        $deleteParams = [
+            'id' => $recurring->invoice_recurring_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
-            route('invoices.recurring.delete', ['id' => $recurring->invoice_recurring_id])
-        );
+        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', $deleteParams));
 
         /* Assert */
         $response->assertRedirect();
@@ -179,9 +192,14 @@ class RecurringControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array{id: int} $deleteParams */
+        $deleteParams = [
+            'id' => 99999,
+        ];
 
         /* Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', $deleteParams));
 
         /* Assert */
         $response->assertNotFound();
