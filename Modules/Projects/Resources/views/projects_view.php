@@ -38,7 +38,7 @@
                     <?php foreach ($tasks as $task): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($task->task_name ?? ''); ?></td>
-                        <td><?php echo $task->task_status ?? ''; ?></td>
+                        <td><?php echo htmlspecialchars($task->task_status ?? ''); ?></td>
                         <td>
                             <a href="<?php echo route('tasks.edit', ['task' => $task->task_id]); ?>" 
                                class="btn btn-xs btn-default">

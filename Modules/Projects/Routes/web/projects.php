@@ -33,7 +33,7 @@ Route::put('/projects/{project}', [ProjectsController::class, 'update'])->name('
 Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
 Route::put('/tasks/{task}', [TasksController::class, 'update'])->name('tasks.update');
 
-// Delete routes (POST for safety)
+// Delete routes
 Route::delete('/projects/{project}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 Route::delete('/tasks/{task}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 
