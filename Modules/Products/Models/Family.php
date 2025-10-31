@@ -52,23 +52,7 @@ class Family extends BaseModel
     ];
 
     /**
-     * Get validation rules for families.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'family_name' => 'required|string|max:255',
-        ];
-    }
-
-    /**
      * Default ordering scope.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrdered($query)
     {

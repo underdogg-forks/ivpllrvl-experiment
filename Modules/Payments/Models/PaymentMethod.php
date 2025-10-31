@@ -56,12 +56,6 @@ class PaymentMethod extends BaseModel
      *
      * @return array
      */
-    public static function validationRules(): array
-    {
-        return [
-            'payment_method_name' => 'required|string|max:255',
-        ];
-    }
 
     /**
      * Default ordering scope.

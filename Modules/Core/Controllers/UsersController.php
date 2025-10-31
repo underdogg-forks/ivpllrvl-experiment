@@ -3,6 +3,7 @@
 namespace Modules\Core\Controllers;
 
 use Modules\Core\Models\User;
+use Modules\Core\Services\UserService;
 
 /**
  * UsersController.
@@ -11,6 +12,12 @@ use Modules\Core\Models\User;
  */
 class UsersController
 {
+    protected UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     /**
      * @legacy-function index
      *
@@ -20,7 +27,7 @@ class UsersController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $users = User::query()->orderBy('user_name')->paginate(15, ['*'], 'page', $page);
+        $users = User::orderBy('user_name')->paginate(15, ['*'], 'page', $page);
 
         return view('users::index', [
             'filter_display'     => true,
@@ -45,14 +52,14 @@ class UsersController
         }
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $rules     = $id ? User::validationRulesExisting() : User::validationRules();
+            $rules     = $id ? $this->userService->getValidationRulesExisting($id) : $this->userService->getValidationRules();
             $validated = request()->validate($rules);
 
             if ($id) {
-                $user = User::query()->findOrFail($id);
+                $user = User::findOrFail($id);
                 $user->update($validated);
             } else {
-                $user = User::query()->create($validated);
+                $user = User::create($validated);
                 $id   = $user->user_id;
             }
 
@@ -61,7 +68,7 @@ class UsersController
         }
 
         if ($id) {
-            $user = User::query()->find($id);
+            $user = User::find($id);
             if ( ! $user) {
                 abort(404);
             }

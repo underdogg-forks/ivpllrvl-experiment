@@ -57,11 +57,4 @@ class UserClient extends BaseModel
      *
      * @return array
      */
-    public static function validationRules(): array
-    {
-        return [
-            'user_id'   => 'required|integer',
-            'client_id' => 'required|integer',
-        ];
-    }
 }

@@ -57,11 +57,4 @@ class ClientNote extends BaseModel
      *
      * @return array
      */
-    public static function validationRules(): array
-    {
-        return [
-            'client_id'   => 'required|integer',
-            'client_note' => 'required|string',
-        ];
-    }
 }

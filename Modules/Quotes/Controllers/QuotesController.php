@@ -11,6 +11,8 @@ use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
+use Modules\Quotes\Services\QuoteAmountService;
+use Modules\Quotes\Services\QuoteService;
 
 /**
  * QuotesController.
@@ -22,6 +24,32 @@ use Modules\Quotes\Models\QuoteTaxRate;
  */
 class QuotesController
 {
+    /**
+     * Quote service instance.
+     *
+     * @var QuoteService
+     */
+    protected QuoteService $quoteService;
+
+    /**
+     * Quote amount service instance.
+     *
+     * @var QuoteAmountService
+     */
+    protected QuoteAmountService $quoteAmountService;
+
+    /**
+     * Constructor.
+     *
+     * @param QuoteService       $quoteService
+     * @param QuoteAmountService $quoteAmountService
+     */
+    public function __construct(QuoteService $quoteService, QuoteAmountService $quoteAmountService)
+    {
+        $this->quoteService       = $quoteService;
+        $this->quoteAmountService = $quoteAmountService;
+    }
+
     /**
      * Redirect to all quotes view.
      *
@@ -91,7 +119,7 @@ class QuotesController
             'filter_display'     => true,
             'filter_placeholder' => trans('filter_quotes'),
             'filter_method'      => 'filter_quotes',
-            'quote_statuses'     => Quote::statuses(),
+            'quote_statuses'     => $this->quoteService->getStatuses(),
         ]);
     }
 
@@ -127,7 +155,7 @@ class QuotesController
         }
 
         // Get custom fields for quotes
-        $customFields = CustomField::query()->where('custom_field_table', 'ip_quote_custom')
+        $customFields = CustomField::where('custom_field_table', 'ip_quote_custom')
             ->orderBy('custom_field_order')
             ->get();
 
@@ -135,24 +163,24 @@ class QuotesController
         $customValues = [];
         foreach ($customFields as $field) {
             if (in_array($field->custom_field_type, ['select', 'dropdown'])) {
-                $customValues[$field->custom_field_id] = CustomValue::query()->where('custom_field_id', $field->custom_field_id)->get();
+                $customValues[$field->custom_field_id] = CustomValue::where('custom_field_id', $field->custom_field_id)->get();
             }
         }
 
         // Get all items for this quote
-        $items = QuoteItem::query()->where('quote_id', $quote_id)
+        $items = QuoteItem::where('quote_id', $quote_id)
             ->with(['product', 'unit'])
             ->orderBy('item_order')
             ->get();
 
         // Get tax rates
-        $taxRates      = TaxRate::query()->all();
-        $quoteTaxRates = QuoteTaxRate::query()->where('quote_id', $quote_id)
+        $taxRates      = TaxRate::all();
+        $quoteTaxRates = QuoteTaxRate::where('quote_id', $quote_id)
             ->with('taxRate')
             ->get();
 
         // Get units
-        $units = Unit::query()->all();
+        $units = Unit::all();
 
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = DB::table('ip_users')
@@ -168,7 +196,7 @@ class QuotesController
             'units'           => $units,
             'tax_rates'       => $taxRates,
             'quote_tax_rates' => $quoteTaxRates,
-            'quote_statuses'  => Quote::statuses(),
+            'quote_statuses'  => $this->quoteService->getStatuses(),
             'custom_fields'   => $customFields,
             'custom_values'   => $customValues,
             'custom_js_vars'  => [
@@ -195,7 +223,7 @@ class QuotesController
      */
     public function delete(int $quote_id)
     {
-        Quote::deleteQuote($quote_id);
+        $this->quoteService->deleteQuote($quote_id);
 
         return redirect()->route('quotes.index')
             ->with('success', 'Quote deleted successfully');
@@ -220,8 +248,8 @@ class QuotesController
     {
         // Mark quote as sent if configured
         if (config('invoiceplane.mark_quotes_sent_pdf', false)) {
-            Quote::generateQuoteNumberIfApplicable($quote_id);
-            Quote::markSent($quote_id);
+            $this->quoteService->generateQuoteNumberIfApplicable($quote_id);
+            $this->quoteService->markSent($quote_id);
         }
 
         // Generate PDF using helper function
@@ -246,13 +274,13 @@ class QuotesController
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
     {
         // Delete the tax rate
-        QuoteTaxRate::query()->where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
+        QuoteTaxRate::where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
 
         // Get global discount for recalculation
-        $globalDiscount = ['item' => QuoteAmount::getGlobalDiscount($quote_id)];
+        $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quote_id)];
 
         // Recalculate quote amounts
-        QuoteAmount::calculate($quote_id, $globalDiscount);
+        $this->quoteAmountService->calculate($quote_id, $globalDiscount);
 
         return redirect()->route('quotes.view', ['quote_id' => $quote_id])
             ->with('success', 'Tax rate deleted and quote recalculated');
@@ -276,8 +304,8 @@ class QuotesController
         $quoteIds = Quote::pluck('quote_id');
 
         foreach ($quoteIds as $quoteId) {
-            $globalDiscount = ['item' => QuoteAmount::getGlobalDiscount($quoteId)];
-            QuoteAmount::calculate($quoteId, $globalDiscount);
+            $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quoteId)];
+            $this->quoteAmountService->calculate($quoteId, $globalDiscount);
         }
 
         return redirect()->back()

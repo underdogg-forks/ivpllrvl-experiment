@@ -45,9 +45,9 @@ Each module follows this structure:
 ```
 ModuleName/
 ├── Config/                 # Module configuration
-├── Http/
-│   └── Controllers/        # PSR-4 controllers
-├── Entities/               # Eloquent models
+├── Controllers/            # PSR-4 controllers  
+├── Models/                 # Eloquent models (relationships, scopes only)
+├── Services/               # Business logic services
 ├── Resources/
 │   └── views/             # Plain PHP view templates
 ├── Providers/
@@ -58,18 +58,314 @@ ModuleName/
 └── module.json            # Module metadata
 ```
 
-#### 3. PSR-4 Autoloading
+#### 3. Service Layer Architecture
+
+**CRITICAL**: The application uses a **Service Layer** pattern with **BaseService**, **FormRequests**, and **Route Model Binding** to separate concerns.
+
+**Responsibilities:**
+- **Models**: Data structure, relationships, scopes ONLY (no business logic, no validation)
+- **Services**: Business logic, calculations, complex queries (extend BaseService)
+- **FormRequests**: Validation rules (shared by create and update)
+- **Controllers**: HTTP handling, request/response, service orchestration
+
+**BaseService Pattern:**
+
+All services MUST extend the abstract `BaseService` class which provides common CRUD operations:
+
+```php
+// app/Services/BaseService.php
+abstract class BaseService
+{
+    abstract protected function getModelClass(): string;
+    
+    public function create(array $data): Model { /* ... */ }
+    public function update(int $id, array $data): bool { /* ... */ }
+    public function delete(int $id): ?bool { /* ... */ }
+    public function find(int $id): ?Model { /* ... */ }
+    public function findOrFail(int $id): Model { /* ... */ }
+}
+```
+
+**Service Example (extends BaseService):**
+
+```php
+// Modules/Quotes/Services/QuoteService.php
+namespace Modules\Quotes\Services;
+
+use App\Services\BaseService;
+use Modules\Quotes\Models\Quote;
+
+class QuoteService extends BaseService
+{
+    // Required: declare the model class
+    protected function getModelClass(): string
+    {
+        return Quote::class;
+    }
+
+    // Business logic methods only (no validation rules)
+    public function getStatuses(): array
+    {
+        return [
+            '1' => ['label' => trans('draft'), 'class' => 'draft', ...],
+            // ...
+        ];
+    }
+
+    public function createQuote(array $data): Quote
+    {
+        $quote = $this->create($data); // Use BaseService method
+        // Additional business logic...
+        return $quote;
+    }
+
+    public function deleteQuote(int $quoteId): ?bool
+    {
+        // Business logic before deletion
+        return $this->delete($quoteId); // Use BaseService method
+    }
+}
+```
+
+**FormRequest Pattern (Validation):**
+
+ALL validation rules MUST be in FormRequest classes, NOT in services or controllers:
+
+```php
+// Modules/Quotes/Http/Requests/QuoteRequest.php
+namespace Modules\Quotes\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class QuoteRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true; // or implement authorization logic
+    }
+
+    public function rules(): array
+    {
+        return [
+            'client_id' => 'required|integer',
+            'quote_date' => 'required|date',
+            'quote_number' => 'required|string|max:255',
+            // ... all validation rules
+        ];
+    }
+    
+    // Optional: customize validation preparation
+    protected function prepareForValidation(): void
+    {
+        // Transform data before validation if needed
+    }
+}
+    }
+
+    public function deleteQuote(int $quoteId): ?bool
+    {
+        $quote = Quote::findOrFail($quoteId);
+        $deleted = $quote->delete();
+        // Cleanup related records...
+        return $deleted;
+    }
+}
+```
+
+**Model Example (Keep Minimal):**
+
+```php
+// Modules/Quotes/Models/Quote.php
+namespace Modules\Quotes\Models;
+
+use Modules\Core\Models\BaseModel;
+
+class Quote extends BaseModel
+{
+    protected $table = 'ip_quotes';
+    protected $primaryKey = 'quote_id';
+    public $timestamps = false;
+
+    protected $fillable = ['client_id', 'quote_number', ...];
+    protected $casts = ['quote_id' => 'integer', ...];
+
+    // ✅ KEEP: Relationships
+    public function client()
+    {
+        return $this->belongsTo('Modules\Crm\Models\Client', 'client_id');
+    }
+
+    public function items()
+    {
+        return $this->hasMany('Modules\Quotes\Models\QuoteItem', 'quote_id');
+    }
+
+    // ✅ KEEP: Scopes
+    public function scopeDraft($query)
+    {
+        return $query->where('quote_status_id', 1);
+    }
+
+    public function scopeByClient($query, int $clientId)
+    {
+        return $query->where('client_id', $clientId);
+    }
+
+    // ❌ REMOVE: Business logic (move to service)
+    // - Static methods for validation, CRUD operations
+    // - Complex calculations
+    // - Status changes
+}
+```
+
+**Controller with Services and FormRequests (Modern Pattern):**
+
+```php
+// Modules/Quotes/Controllers/QuotesController.php
+namespace Modules\Quotes\Controllers;
+
+use Modules\Quotes\Http\Requests\QuoteRequest;
+use Modules\Quotes\Models\Quote;
+use Modules\Quotes\Services\QuoteService;
+use Modules\Quotes\Services\QuoteAmountService;
+
+class QuotesController
+{
+    protected QuoteService $quoteService;
+    protected QuoteAmountService $quoteAmountService;
+
+    public function __construct(
+        QuoteService $quoteService,
+        QuoteAmountService $quoteAmountService
+    ) {
+        $this->quoteService = $quoteService;
+        $this->quoteAmountService = $quoteAmountService;
+    }
+
+    public function index()
+    {
+        // ✅ Use service methods for business logic
+        $statuses = $this->quoteService->getStatuses();
+        
+        // ✅ Use Eloquent directly (no ::query())
+        $quotes = Quote::with(['client', 'user'])->draft()->paginate(15);
+        
+        return view('quotes::index', compact('quotes', 'statuses'));
+    }
+
+    // ✅ MODERN: Separate create and store methods
+    public function create()
+    {
+        $quote = new Quote();
+        $statuses = $this->quoteService->getStatuses();
+        return view('quotes::form', compact('quote', 'statuses'));
+    }
+
+    // ✅ MODERN: FormRequest injection for validation
+    public function store(QuoteRequest $request)
+    {
+        // Validation already done by QuoteRequest
+        $quote = $this->quoteService->create($request->validated());
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote created');
+    }
+
+    // ✅ MODERN: Route model binding
+    public function edit(Quote $quote)
+    {
+        $statuses = $this->quoteService->getStatuses();
+        return view('quotes::form', compact('quote', 'statuses'));
+    }
+
+    // ✅ MODERN: FormRequest + route model binding
+    public function update(QuoteRequest $request, Quote $quote)
+    {
+        // Validation already done by QuoteRequest
+        $this->quoteService->update($quote->quote_id, $request->validated());
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote updated');
+    }
+
+    // ✅ MODERN: Route model binding
+    public function destroy(Quote $quote)
+    {
+        $this->quoteService->delete($quote->quote_id);
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote deleted');
+    }
+}
+```
+
+**NEVER in Controllers:**
+- ❌ `Model::query()->method()` - Use Eloquent directly or service methods
+- ❌ `Model::staticMethod()` - Move to service
+- ❌ Inline validation with `$request->validate([...])` - Use FormRequest
+- ❌ Complex business logic - Move to service
+- ❌ Direct database queries - Use Eloquent or service
+- ❌ Single `form()` method for both create and edit - Separate into create/store/edit/update
+
+**ALWAYS in Controllers:**
+- ✅ Separate methods: create(), store(), edit(), update(), destroy()
+- ✅ FormRequest injection for validation
+- ✅ Route model binding when applicable
+- ✅ Service injection via constructor
+- ✅ Use `$request->validated()` from FormRequest
+- ✅ Delegate all business logic to services
+        return view('quotes::index', compact('quotes', 'statuses'));
+    }
+
+    public function delete(int $quoteId)
+    {
+        // ✅ Use service for business logic
+        $this->quoteService->deleteQuote($quoteId);
+        
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote deleted');
+    }
+}
+```
+
+**Service Dependencies:**
+
+Services can depend on other services via constructor injection:
+
+```php
+class QuoteAmountService
+{
+    protected QuoteService $quoteService;
+
+    public function __construct(QuoteService $quoteService)
+    {
+        $this->quoteService = $quoteService;
+    }
+
+    public function getStatusTotals(string $period): array
+    {
+        // Use injected service
+        $statuses = $this->quoteService->getStatuses();
+        // ...
+    }
+}
+```
+
+**NEVER in Controllers:**
+- ❌ `Model::query()->method()` - Use Eloquent directly or service methods
+- ❌ `Model::staticMethod()` - Move to service
+- ❌ Complex business logic - Move to service
+- ❌ Direct database queries - Use Eloquent or service
+
+#### 4. PSR-4 Autoloading
 
 All new code follows PSR-4 autoloading standards:
 
 - **Modules**: `Modules\{ModuleName}\{Component}\{ClassName}`
-  - Example: `Modules\Invoices\Entities\Invoice`
+  - Example: `Modules\Invoices\Models\Invoice`
   - Example: `Modules\Invoices\Http\Controllers\InvoiceController`
 
 - **App**: `App\{Component}\{ClassName}`
   - Example: `App\Models\BaseModel`
 
-#### 4. Database (Eloquent ORM)
+#### 5. Database (Eloquent ORM)
 
 **OLD (CodeIgniter):**
 ```php
@@ -81,7 +377,7 @@ $query = $this->db->get('ip_invoices');
 
 **NEW (Eloquent):**
 ```php
-use Modules\Invoices\Entities\Invoice;
+use Modules\Invoices\Models\Invoice;
 
 $invoices = Invoice::where('client_id', $id)
     ->with('client')
@@ -110,12 +406,12 @@ class Invoice extends BaseModel
     
     public function client()
     {
-        return $this->belongsTo('Modules\Crm\Entities\Client', 'client_id');
+        return $this->belongsTo('Modules\Crm\Models\Client', 'client_id');
     }
 }
 ```
 
-#### 5. Views
+#### 6. Views
 
 Views use plain PHP (not Blade) and are rendered via Illuminate View:
 
@@ -135,7 +431,7 @@ View files remain as plain PHP:
 <h1><?php echo $invoice->invoice_number; ?></h1>
 ```
 
-#### 6. Controllers
+#### 7. Controllers
 
 **OLD (CodeIgniter):**
 ```php
@@ -159,7 +455,7 @@ class Invoices extends Admin_Controller
 ```php
 namespace Modules\Invoices\Http\Controllers;
 
-use Modules\Invoices\Entities\Invoice;
+use Modules\Invoices\Models\Invoice;
 
 class InvoiceController
 {
@@ -237,7 +533,7 @@ class InvoiceGroupsController                 // PascalCase, no underscores
 3. **Create namespace**: `Modules\{Module}\Entities\{ClassName}`
 
 **Step 3: Migrate Methods (ONE-TO-ONE)**
-1. **Create Eloquent model**: Convert CodeIgniter model to Eloquent in `Modules/{Module}/Entities/`
+1. **Create Eloquent model**: Convert CodeIgniter model to Eloquent in `Modules/{Module}/Models/`
 2. **Migrate EVERY method**: Convert each method individually, maintaining all logic
 3. **Convert syntax, not logic**:
    - `$this->db->where()` → Eloquent query builder
@@ -559,7 +855,7 @@ $this->load->model('mdl_invoices');
 $this->db->where('id', $id);
 
 // ✅ CORRECT in new code
-use Modules\Invoices\Entities\Invoice;
+use Modules\Invoices\Models\Invoice;
 $invoice = Invoice::find($id);
 ```
 
@@ -624,7 +920,7 @@ class Invoice extends BaseModel
 
 namespace Modules\Invoices\Http\Controllers;
 
-use Modules\Invoices\Entities\Invoice;
+use Modules\Invoices\Models\Invoice;
 
 class InvoiceController
 {

@@ -63,16 +63,6 @@ class Payment extends BaseModel
      *
      * @return array
      */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_id'        => 'required|integer',
-            'payment_method_id' => 'required|integer',
-            'payment_amount'    => 'required|numeric|min:0',
-            'payment_date'      => 'required|date',
-            'payment_note'      => 'nullable|string',
-        ];
-    }
 
     /**
      * Get the invoice that owns the payment.

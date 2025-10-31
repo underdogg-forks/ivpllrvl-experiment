@@ -53,53 +53,7 @@ class Unit extends BaseModel
     ];
 
     /**
-     * Return either the singular unit name or the plural unit name,
-     * depending on the quantity.
-     *
-     * @param int   $unitId
-     * @param float $quantity
-     *
-     * @return string|null
-     */
-    public static function getName($unitId, $quantity)
-    {
-        if ( ! $unitId) {
-            return;
-        }
-
-        $unit = static::find($unitId);
-
-        if ( ! $unit) {
-            return;
-        }
-
-        // Return plural if quantity is less than -1 or greater than 1
-        if ($quantity < -1 || $quantity > 1) {
-            return $unit->unit_name_plrl;
-        }
-
-        return $unit->unit_name;
-    }
-
-    /**
-     * Get validation rules for units.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'unit_name'      => 'required|string|max:255',
-            'unit_name_plrl' => 'required|string|max:255',
-        ];
-    }
-
-    /**
      * Default ordering scope.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrdered($query)
     {
