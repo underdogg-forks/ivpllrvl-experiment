@@ -111,8 +111,7 @@ class EInvoiceHelper
         include $configFile;
 
         if (isset($xml_setting['legacy_calculation'])) {
-            $bridge = get_instance();
-            $bridge->config->set_item('legacy_calculation', ! empty($xml_setting['legacy_calculation']));
+            config(['legacy_calculation' => ! empty($xml_setting['legacy_calculation'])]);
         }
 
         return $xml_setting['full-name'] . ' - ' . get_country_name(trans('cldr'), $xml_setting['countrycode']);
@@ -312,8 +311,7 @@ class EInvoiceHelper
         $checks = self::get_items_tax_usages($items);
 
         if (count($checks[0]) !== 0 && count($checks[1]) !== 0) {
-            $bridge = get_instance();
-            $bridge->session->set_flashdata(
+            session()->flash(
                 'alert_warning',
                 '<h3 class="pull-right"><a class="btn btn-default" href="javascript:check_items_tax_usages(true);"><i class="fa fa-cogs"></i> ' . trans('view') . '</a></h3>'
                 . trans('items_tax_usages_bad_set')
