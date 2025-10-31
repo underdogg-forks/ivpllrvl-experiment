@@ -1,17 +1,22 @@
 <?php
 
-namespace Modules\Users\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * Session Model
- * 
+ * Session Model.
+ *
  * Eloquent model for managing unknown_table
  * Migrated from CodeIgniter model
  */
 class Session extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class Session extends BaseModel
      * @var string
      */
     protected $primaryKey = 'id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,7 +58,7 @@ class Session extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'user_id' => 'required|integer',
+            'user_id'      => 'required|integer',
             'session_data' => 'nullable|string',
         ];
     }

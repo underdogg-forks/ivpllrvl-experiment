@@ -1,17 +1,22 @@
 <?php
 
-namespace Modules\Users\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * User Model
- * 
+ * User Model.
+ *
  * Eloquent model for managing users
  * Migrated from CodeIgniter Mdl_Users
  */
 class User extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class User extends BaseModel
      * @var string
      */
     protected $primaryKey = 'user_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -80,18 +78,46 @@ class User extends BaseModel
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer',
-        'user_type' => 'integer',
+        'user_id'          => 'integer',
+        'user_type'        => 'integer',
         'user_all_clients' => 'boolean',
-        'user_active' => 'boolean',
+        'user_active'      => 'boolean',
     ];
+
+    /**
+     * Get validation rules for users.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'user_type'      => 'required|integer',
+            'user_name'      => 'required|string|max:255',
+            'user_company'   => 'nullable|string|max:255',
+            'user_address_1' => 'nullable|string|max:255',
+            'user_address_2' => 'nullable|string|max:255',
+            'user_city'      => 'nullable|string|max:255',
+            'user_state'     => 'nullable|string|max:255',
+            'user_zip'       => 'nullable|string|max:50',
+            'user_country'   => 'nullable|string|max:255',
+            'user_phone'     => 'nullable|string|max:50',
+            'user_fax'       => 'nullable|string|max:50',
+            'user_mobile'    => 'nullable|string|max:50',
+            'user_email'     => 'required|email|max:255',
+            'user_web'       => 'nullable|url|max:255',
+            'user_vat_id'    => 'nullable|string|max:50',
+            'user_tax_code'  => 'nullable|string|max:50',
+            'user_pswd'      => 'required|string|min:6',
+        ];
+    }
 
     /**
      * Get the invoices created by the user.
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Invoices\Entities\Invoice', 'user_id', 'user_id');
+        return $this->hasMany('Modules\Invoices\Models\Invoice', 'user_id', 'user_id');
     }
 
     /**
@@ -99,13 +125,14 @@ class User extends BaseModel
      */
     public function quotes()
     {
-        return $this->hasMany('Modules\Quotes\Entities\Quote', 'user_id', 'user_id');
+        return $this->hasMany('Modules\Quotes\Models\Quote', 'user_id', 'user_id');
     }
 
     /**
      * Scope a query to only include active users.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeActive($query)
@@ -116,39 +143,12 @@ class User extends BaseModel
     /**
      * Scope a query to only include admin users.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeAdmin($query)
     {
         return $query->where('user_type', 1);
-    }
-
-    /**
-     * Get validation rules for users.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'user_type' => 'required|integer',
-            'user_name' => 'required|string|max:255',
-            'user_company' => 'nullable|string|max:255',
-            'user_address_1' => 'nullable|string|max:255',
-            'user_address_2' => 'nullable|string|max:255',
-            'user_city' => 'nullable|string|max:255',
-            'user_state' => 'nullable|string|max:255',
-            'user_zip' => 'nullable|string|max:50',
-            'user_country' => 'nullable|string|max:255',
-            'user_phone' => 'nullable|string|max:50',
-            'user_fax' => 'nullable|string|max:50',
-            'user_mobile' => 'nullable|string|max:50',
-            'user_email' => 'required|email|max:255',
-            'user_web' => 'nullable|url|max:255',
-            'user_vat_id' => 'nullable|string|max:50',
-            'user_tax_code' => 'nullable|string|max:50',
-            'user_pswd' => 'required|string|min:6',
-        ];
     }
 }

@@ -7,36 +7,39 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "php-http/discovery": true
-        }
+            "php-http/discovery": true,
+            "pestphp/pest-plugin": true,
+            "wikimedia/composer-merge-plugin": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
     },
     "require": {
-        "php": "^8.1",
-        "endroid/qr-code": "^4.8",
-        "guzzlehttp/guzzle": "^7.9",
-        "illuminate/container": "^10.0",
-        "illuminate/database": "^10.0",
-        "illuminate/events": "^10.0",
-        "illuminate/filesystem": "^10.0",
-        "illuminate/support": "^10.0",
-        "illuminate/view": "^10.0",
-        "moneyphp/money": "^4.7",
-        "mpdf/mpdf": "^8.2",
-        "nwidart/laravel-modules": "^10.0",
-        "paragonie/random_compat": "^2.0",
-        "phpmailer/phpmailer": "^6.10",
-        "setasign/fpdf": "^1.8",
+        "php": "^8.2",
+        "endroid/qr-code": "^4.8.5",
+        "filament/filament": "^4.1.10",
+        "guzzlehttp/guzzle": "^7.10",
+        "laravel/framework": "^12.36.1",
+        "moneyphp/money": "^4.8",
+        "mpdf/mpdf": "^8.2.6",
+        "nwidart/laravel-modules": "^11.1.10",
+        "paragonie/random_compat": "^2.0.21",
+        "phpmailer/phpmailer": "^6.12",
+        "setasign/fpdf": "^1.8.6",
         "smhg/sepa-qr-data": "^1.2",
-        "stripe/stripe-php": "^14.10",
-        "vlucas/phpdotenv": "^5.6"
+        "stripe/stripe-php": "^14.10"
     },
     "require-dev": {
-        "filp/whoops": "^2.18",
-        "laravel/pint": "^1.20",
-        "phpunit/phpunit": "^11.0",
-        "rector/rector": "^2.0",
-        "squizlabs/php_codesniffer": "^3.13",
-        "symfony/var-dumper": "^6.4"
+        "driftingly/rector-laravel": "^2.1",
+        "fakerphp/faker": "^1.24.1",
+        "filp/whoops": "^2.18.4",
+        "larastan/larastan": "^3.7",
+        "laravel/pint": "^1.25.1",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^8.8.2",
+        "phpunit/phpunit": "^11.5.42",
+        "rector/rector": "^2.2",
+        "squizlabs/php_codesniffer": "^3.13.4"
     },
     "autoload": {
         "psr-4": {
@@ -45,7 +48,7 @@
         },
         "files": [
             "bootstrap/helpers.php",
-            "Modules/Core/Helpers/helpers.php"
+            "Modules/Core/Helpers/bc_helper.php"
         ]
     },
     "autoload-dev": {
@@ -54,6 +57,12 @@
         }
     },
     "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
         "check": [
             "rector",
             "phpcs",
@@ -71,5 +80,7 @@
             "Composer\\Config::disableProcessTimeout",
             "vendor/bin/pint"
         ]
-    }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

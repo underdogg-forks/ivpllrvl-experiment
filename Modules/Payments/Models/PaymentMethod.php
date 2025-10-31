@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Payments\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * PaymentMethod Model
- * 
+ * PaymentMethod Model.
+ *
  * Eloquent model for managing ip_payment_methods
  * Migrated from CodeIgniter model
  */
 class PaymentMethod extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class PaymentMethod extends BaseModel
      * @var string
      */
     protected $primaryKey = 'payment_method_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -52,25 +52,6 @@ class PaymentMethod extends BaseModel
     ];
 
     /**
-     * Default ordering scope
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('payment_method_name');
-    }
-
-    /**
-     * Get payments that use this method
-     */
-    public function payments()
-    {
-        return $this->hasMany('Modules\Payments\Entities\Payment', 'payment_method_id', 'payment_method_id');
-    }
-
-    /**
      * Get validation rules for payment methods.
      *
      * @return array
@@ -80,5 +61,25 @@ class PaymentMethod extends BaseModel
         return [
             'payment_method_name' => 'required|string|max:255',
         ];
+    }
+
+    /**
+     * Default ordering scope.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('payment_method_name');
+    }
+
+    /**
+     * Get payments that use this method.
+     */
+    public function payments()
+    {
+        return $this->hasMany('Modules\Payments\Models\Payment', 'payment_method_id', 'payment_method_id');
     }
 }

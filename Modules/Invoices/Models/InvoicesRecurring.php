@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * InvoicesRecurring Model
- * 
+ * InvoicesRecurring Model.
+ *
  * Eloquent model for managing ip_invoices_recurring
  * Migrated from CodeIgniter model
  */
 class InvoicesRecurring extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class InvoicesRecurring extends BaseModel
      * @var string
      */
     protected $primaryKey = 'invoice_recurring_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -53,16 +53,8 @@ class InvoicesRecurring extends BaseModel
      */
     protected $casts = [
         'invoice_recurring_id' => 'integer',
-        'invoice_id' => 'integer',
+        'invoice_id'           => 'integer',
     ];
-
-    /**
-     * Get the invoice that owns the recurring data.
-     */
-    public function invoice()
-    {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
-    }
 
     /**
      * Get validation rules for recurring invoices.
@@ -72,12 +64,20 @@ class InvoicesRecurring extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'invoice_id' => 'required|integer',
+            'invoice_id'       => 'required|integer',
             'recur_start_date' => 'required|date',
-            'recur_end_date' => 'nullable|date',
-            'recur_frequency' => 'required|string',
-            'recur_next_date' => 'nullable|date',
+            'recur_end_date'   => 'nullable|date',
+            'recur_frequency'  => 'required|string',
+            'recur_next_date'  => 'nullable|date',
         ];
+    }
+
+    /**
+     * Get the invoice that owns the recurring data.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
     }
 
     /**

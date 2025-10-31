@@ -1,8 +1,8 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+namespace Modules\Core\Libraries;
+
+use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
 class Sumex

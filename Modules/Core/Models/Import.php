@@ -1,17 +1,22 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * Import Model
- * 
+ * Import Model.
+ *
  * Eloquent model for managing ip_imports
  * Migrated from CodeIgniter model
  */
 class Import extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class Import extends BaseModel
      * @var string
      */
     protected $primaryKey = 'import_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

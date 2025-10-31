@@ -2,8 +2,8 @@
 
 namespace Modules\Crm\Controllers;
 
-use Modules\Crm\Models\Project;
 use Modules\Crm\Models\Client;
+use Modules\Crm\Models\Project;
 
 class ProjectsController
 {
@@ -11,19 +11,22 @@ class ProjectsController
     public function index(int $page = 0): \Illuminate\View\View
     {
         $projects = Project::with('client')->orderBy('project_name')->paginate(15, ['*'], 'page', $page);
+
         return view('crm::projects_index', [
-            'filter_display' => true,
+            'filter_display'     => true,
             'filter_placeholder' => trans('filter_projects'),
-            'filter_method' => 'filter_projects',
-            'projects' => $projects,
+            'filter_method'      => 'filter_projects',
+            'projects'           => $projects,
         ]);
     }
 
     /** @legacy-file application/modules/projects/controllers/Projects.php:49 */
     public function form(?int $id = null)
     {
-        if (request()->post('btn_cancel')) return redirect()->route('projects.index');
-        
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('projects.index');
+        }
+
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate(Project::validationRules());
             if ($id) {
@@ -31,13 +34,17 @@ class ProjectsController
             } else {
                 Project::query()->create($validated);
             }
+
             return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
         $project = $id ? Project::query()->find($id) : new Project();
-        if ($id && !$project) abort(404);
-        
+        if ($id && ! $project) {
+            abort(404);
+        }
+
         $clients = Client::query()->where('client_active', 1)->orderBy('client_name')->get();
+
         return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
     }
 
@@ -45,9 +52,10 @@ class ProjectsController
     public function view(int $projectId): \Illuminate\View\View
     {
         $project = Project::with(['client', 'tasks'])->findOrFail($projectId);
+
         return view('crm::projects_view', [
             'project' => $project,
-            'tasks' => $project->tasks,
+            'tasks'   => $project->tasks,
         ]);
     }
 
@@ -56,6 +64,7 @@ class ProjectsController
     {
         $project = Project::query()->findOrFail($id);
         $project->delete();
+
         return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }

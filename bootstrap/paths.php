@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Application Paths Configuration
- * 
+ * Application Paths Configuration.
+ *
  * This file defines all path constants used throughout the application.
  * Separated from index.php for cleaner organization.
  */

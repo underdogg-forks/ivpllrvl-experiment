@@ -1,17 +1,22 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * Upload Model
- * 
+ * Upload Model.
+ *
  * Eloquent model for managing ip_uploads
  * Migrated from CodeIgniter model
  */
 class Upload extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class Upload extends BaseModel
      * @var string
      */
     protected $primaryKey = 'upload_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

@@ -1,17 +1,25 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Quotes\Models;
 
+use DB;
 use Modules\Core\Models\BaseModel;
 
 /**
- * QuoteItem Model
- * 
+ * QuoteItem Model.
+ *
  * Eloquent model for managing ip_quote_items
  * Migrated from CodeIgniter model
  */
 class QuoteItem extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +33,6 @@ class QuoteItem extends BaseModel
      * @var string
      */
     protected $primaryKey = 'item_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -58,56 +59,16 @@ class QuoteItem extends BaseModel
      * @var array
      */
     protected $casts = [
-        'item_id' => 'integer',
-        'quote_id' => 'integer',
-        'item_tax_rate_id' => 'integer',
-        'item_product_id' => 'integer',
-        'item_quantity' => 'decimal:2',
-        'item_price' => 'decimal:2',
-        'item_order' => 'integer',
+        'item_id'              => 'integer',
+        'quote_id'             => 'integer',
+        'item_tax_rate_id'     => 'integer',
+        'item_product_id'      => 'integer',
+        'item_quantity'        => 'decimal:2',
+        'item_price'           => 'decimal:2',
+        'item_order'           => 'integer',
         'item_discount_amount' => 'decimal:2',
         'item_product_unit_id' => 'integer',
     ];
-
-    /**
-     * Get the quote that owns the item.
-     */
-    public function quote()
-    {
-        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
-    }
-
-    /**
-     * Get the tax rate.
-     */
-    public function taxRate()
-    {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
-    }
-
-    /**
-     * Get the product.
-     */
-    public function product()
-    {
-        return $this->belongsTo('Modules\Products\Entities\Product', 'item_product_id', 'product_id');
-    }
-
-    /**
-     * Get the item amounts.
-     */
-    public function itemAmount()
-    {
-        return $this->hasOne('Modules\Quotes\Entities\QuoteItemAmount', 'item_id', 'item_id');
-    }
-
-    /**
-     * Default ordering scope
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('item_order');
-    }
 
     /**
      * Get validation rules for quote items.
@@ -117,13 +78,13 @@ class QuoteItem extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'quote_id' => 'required|integer',
-            'item_name' => 'required|string',
+            'quote_id'         => 'required|integer',
+            'item_name'        => 'required|string',
             'item_description' => 'nullable|string',
-            'item_quantity' => 'nullable|numeric',
-            'item_price' => 'nullable|numeric',
+            'item_quantity'    => 'nullable|numeric',
+            'item_price'       => 'nullable|numeric',
             'item_tax_rate_id' => 'nullable|integer',
-            'item_product_id' => 'nullable|integer',
+            'item_product_id'  => 'nullable|integer',
         ];
     }
 
@@ -132,9 +93,10 @@ class QuoteItem extends BaseModel
      *
      * @param array $data
      * @param array $globalDiscount
+     *
      * @return QuoteItem
      */
-    public static function saveItem(array $data, array &$globalDiscount = []): QuoteItem
+    public static function saveItem(array $data, array &$globalDiscount = []): self
     {
         // Create or update the item
         if (isset($data['item_id']) && $data['item_id']) {
@@ -159,6 +121,7 @@ class QuoteItem extends BaseModel
      * Delete quote item and recalculate amounts.
      *
      * @param int $itemId
+     *
      * @return bool
      */
     public static function deleteItem(int $itemId): bool
@@ -166,7 +129,7 @@ class QuoteItem extends BaseModel
         // Get the item to find quote_id
         $item = static::find($itemId);
 
-        if (!$item) {
+        if ( ! $item) {
             return false;
         }
 
@@ -191,11 +154,12 @@ class QuoteItem extends BaseModel
      * Get items subtotal for a quote.
      *
      * @param int $quoteId
+     *
      * @return float
      */
     public static function getItemsSubtotal(int $quoteId): float
     {
-        $result = \DB::table('ip_quote_item_amounts')
+        $result = DB::table('ip_quote_item_amounts')
             ->selectRaw('SUM(item_subtotal) AS items_subtotal')
             ->whereIn('item_id', function ($query) use ($quoteId) {
                 $query->select('item_id')
@@ -205,5 +169,45 @@ class QuoteItem extends BaseModel
             ->first();
 
         return (float) ($result->items_subtotal ?? 0.0);
+    }
+
+    /**
+     * Get the quote that owns the item.
+     */
+    public function quote()
+    {
+        return $this->belongsTo('Modules\Quotes\Models\Quote', 'quote_id', 'quote_id');
+    }
+
+    /**
+     * Get the tax rate.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
+    }
+
+    /**
+     * Get the product.
+     */
+    public function product()
+    {
+        return $this->belongsTo('Modules\Products\Models\Product', 'item_product_id', 'product_id');
+    }
+
+    /**
+     * Get the item amounts.
+     */
+    public function itemAmount()
+    {
+        return $this->hasOne('Modules\Quotes\Models\QuoteItemAmount', 'item_id', 'item_id');
+    }
+
+    /**
+     * Default ordering scope.
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('item_order');
     }
 }

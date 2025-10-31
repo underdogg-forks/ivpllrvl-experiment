@@ -1,8 +1,8 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+namespace Modules\Core\Libraries;
+
+use Exception;
 
 /*******************
  * Cryptor Class
@@ -61,11 +61,11 @@ class Cryptor
         $this->format      = $fmt;
 
         if ( ! in_array($cipher_algo, openssl_get_cipher_methods(true))) {
-            throw new \Exception('Cryptor:: - unknown cipher algo ' . $cipher_algo);
+            throw new Exception('Cryptor:: - unknown cipher algo ' . $cipher_algo);
         }
 
         if ( ! in_array($hash_algo, openssl_get_md_methods(true))) {
-            throw new \Exception('Cryptor:: - unknown hash algo ' . $hash_algo);
+            throw new Exception('Cryptor:: - unknown hash algo ' . $hash_algo);
         }
 
         $this->iv_num_bytes = openssl_cipher_iv_length($cipher_algo);
@@ -121,7 +121,7 @@ class Cryptor
         // Build an initialisation vector
         $iv = openssl_random_pseudo_bytes($this->iv_num_bytes, $isStrongCrypto);
         if ( ! $isStrongCrypto) {
-            throw new \Exception('Cryptor::encryptString() - Not a strong key');
+            throw new Exception('Cryptor::encryptString() - Not a strong key');
         }
 
         // Hash the key
@@ -132,7 +132,7 @@ class Cryptor
         $encrypted = openssl_encrypt($in, $this->cipher_algo, $keyhash, $opts, $iv);
 
         if ($encrypted === false) {
-            throw new \Exception('Cryptor::encryptString() - Encryption failed: ' . openssl_error_string());
+            throw new Exception('Cryptor::encryptString() - Encryption failed: ' . openssl_error_string());
         }
 
         // The result comprises the IV and encrypted data
@@ -173,13 +173,13 @@ class Cryptor
         }
 
         // and do an integrity check on the size.
-        if (strlen($raw) < $this->iv_num_bytes) {
-            throw new \Exception('Cryptor::decryptString() - data length ' . strlen($raw) . (' is less than iv length ' . $this->iv_num_bytes));
+        if (mb_strlen($raw) < $this->iv_num_bytes) {
+            throw new Exception('Cryptor::decryptString() - data length ' . mb_strlen($raw) . (' is less than iv length ' . $this->iv_num_bytes));
         }
 
         // Extract the initialisation vector and encrypted data
-        $iv  = substr($raw, 0, $this->iv_num_bytes);
-        $raw = substr($raw, $this->iv_num_bytes);
+        $iv  = mb_substr($raw, 0, $this->iv_num_bytes);
+        $raw = mb_substr($raw, $this->iv_num_bytes);
 
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
@@ -189,7 +189,7 @@ class Cryptor
         $res  = openssl_decrypt($raw, $this->cipher_algo, $keyhash, $opts, $iv);
 
         if ($res === false) {
-            throw new \Exception('Cryptor::decryptString - decryption failed: ' . openssl_error_string());
+            throw new Exception('Cryptor::decryptString - decryption failed: ' . openssl_error_string());
         }
 
         return $res;

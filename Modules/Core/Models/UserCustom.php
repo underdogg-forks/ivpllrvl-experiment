@@ -1,27 +1,32 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * UserCustom Model
- * 
+ * UserCustom Model.
+ *
  * Eloquent model for managing user custom fields
  * Migrated from CodeIgniter Mdl_User_Custom model
- * 
+ *
  * @property int $user_custom_id
  * @property int $user_id
  */
 class UserCustom extends BaseModel
 {
     /**
-     * Custom field positions for users
+     * Custom field positions for users.
      */
     public static array $positions = [
         'custom_fields',
         'after_email',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The table associated with the model.
@@ -36,13 +41,6 @@ class UserCustom extends BaseModel
      * @var string
      */
     protected $primaryKey = 'user_custom_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,20 +58,8 @@ class UserCustom extends BaseModel
      */
     protected $casts = [
         'user_custom_id' => 'integer',
-        'user_id' => 'integer',
+        'user_id'        => 'integer',
     ];
-
-    /**
-     * Get custom fields for a specific user
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByUserId($query, int $userId)
-    {
-        return $query->where('user_id', $userId);
-    }
 
     /**
      * Get validation rules for user custom fields.
@@ -83,9 +69,22 @@ class UserCustom extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'user_id' => 'required|integer',
-            'custom_field_id' => 'required|integer',
+            'user_id'            => 'required|integer',
+            'custom_field_id'    => 'required|integer',
             'custom_field_value' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Get custom fields for a specific user.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByUserId($query, int $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 }

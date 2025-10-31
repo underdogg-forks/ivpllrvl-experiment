@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Payments\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * Payment Model
- * 
+ * Payment Model.
+ *
  * Eloquent model for managing payments
  * Migrated from CodeIgniter Mdl_Payments
  */
 class Payment extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Payment extends BaseModel
      * @var string
      */
     protected $primaryKey = 'payment_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -52,47 +52,11 @@ class Payment extends BaseModel
      * @var array
      */
     protected $casts = [
-        'payment_id' => 'integer',
-        'invoice_id' => 'integer',
+        'payment_id'        => 'integer',
+        'invoice_id'        => 'integer',
         'payment_method_id' => 'integer',
-        'payment_amount' => 'decimal:2',
+        'payment_amount'    => 'decimal:2',
     ];
-
-    /**
-     * Get the invoice that owns the payment.
-     */
-    public function invoice()
-    {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Get the payment method.
-     */
-    public function paymentMethod()
-    {
-        return $this->belongsTo('Modules\Payments\Entities\PaymentMethod', 'payment_method_id', 'payment_method_id');
-    }
-
-    /**
-     * Default ordering scope
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('payment_date', 'desc')
-            ->orderBy('payment_id', 'desc');
-    }
-
-    /**
-     * Mutator for payment_amount
-     */
-    public function setPaymentAmountAttribute($value)
-    {
-        $this->attributes['payment_amount'] = standardize_amount($value);
-    }
 
     /**
      * Get validation rules for payments.
@@ -102,11 +66,48 @@ class Payment extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'invoice_id' => 'required|integer',
+            'invoice_id'        => 'required|integer',
             'payment_method_id' => 'required|integer',
-            'payment_amount' => 'required|numeric|min:0',
-            'payment_date' => 'required|date',
-            'payment_note' => 'nullable|string',
+            'payment_amount'    => 'required|numeric|min:0',
+            'payment_date'      => 'required|date',
+            'payment_note'      => 'nullable|string',
         ];
+    }
+
+    /**
+     * Get the invoice that owns the payment.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the payment method.
+     */
+    public function paymentMethod()
+    {
+        return $this->belongsTo('Modules\Payments\Models\PaymentMethod', 'payment_method_id', 'payment_method_id');
+    }
+
+    /**
+     * Default ordering scope.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('payment_date', 'desc')
+            ->orderBy('payment_id', 'desc');
+    }
+
+    /**
+     * Mutator for payment_amount.
+     */
+    public function setPaymentAmountAttribute($value)
+    {
+        $this->attributes['payment_amount'] = standardize_amount($value);
     }
 }

@@ -1,17 +1,25 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
+use DB;
 use Modules\Core\Models\BaseModel;
 
 /**
- * Item Model
- * 
+ * Item Model.
+ *
  * Eloquent model for managing ip_invoice_items
  * Migrated from CodeIgniter model
  */
 class Item extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +33,6 @@ class Item extends BaseModel
      * @var string
      */
     protected $primaryKey = 'item_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -58,56 +59,16 @@ class Item extends BaseModel
      * @var array
      */
     protected $casts = [
-        'item_id' => 'integer',
-        'invoice_id' => 'integer',
-        'item_tax_rate_id' => 'integer',
-        'item_product_id' => 'integer',
-        'item_quantity' => 'decimal:2',
-        'item_price' => 'decimal:2',
-        'item_order' => 'integer',
+        'item_id'              => 'integer',
+        'invoice_id'           => 'integer',
+        'item_tax_rate_id'     => 'integer',
+        'item_product_id'      => 'integer',
+        'item_quantity'        => 'decimal:2',
+        'item_price'           => 'decimal:2',
+        'item_order'           => 'integer',
         'item_discount_amount' => 'decimal:2',
         'item_product_unit_id' => 'integer',
     ];
-
-    /**
-     * Get the invoice that owns the item.
-     */
-    public function invoice()
-    {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Get the tax rate.
-     */
-    public function taxRate()
-    {
-        return $this->belongsTo('Modules\Products\Entities\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
-    }
-
-    /**
-     * Get the product.
-     */
-    public function product()
-    {
-        return $this->belongsTo('Modules\Products\Entities\Product', 'item_product_id', 'product_id');
-    }
-
-    /**
-     * Get the item amounts.
-     */
-    public function itemAmount()
-    {
-        return $this->hasOne('Modules\Invoices\Entities\Item_amount', 'item_id', 'item_id');
-    }
-
-    /**
-     * Default ordering scope
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('item_order');
-    }
 
     /**
      * Get validation rules for invoice items.
@@ -117,13 +78,13 @@ class Item extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'invoice_id' => 'required|integer',
-            'item_name' => 'required|string',
+            'invoice_id'       => 'required|integer',
+            'item_name'        => 'required|string',
             'item_description' => 'nullable|string',
-            'item_quantity' => 'nullable|numeric',
-            'item_price' => 'nullable|numeric',
+            'item_quantity'    => 'nullable|numeric',
+            'item_price'       => 'nullable|numeric',
             'item_tax_rate_id' => 'nullable|integer',
-            'item_product_id' => 'nullable|integer',
+            'item_product_id'  => 'nullable|integer',
         ];
     }
 
@@ -132,9 +93,10 @@ class Item extends BaseModel
      *
      * @param array $data
      * @param array $globalDiscount
+     *
      * @return Item
      */
-    public static function saveItem(array $data, array &$globalDiscount = []): Item
+    public static function saveItem(array $data, array &$globalDiscount = []): self
     {
         // Create or update the item
         if (isset($data['item_id']) && $data['item_id']) {
@@ -159,6 +121,7 @@ class Item extends BaseModel
      * Delete invoice item and recalculate amounts.
      *
      * @param int $itemId
+     *
      * @return bool
      */
     public static function deleteItem(int $itemId): bool
@@ -166,7 +129,7 @@ class Item extends BaseModel
         // Get the item to find invoice_id
         $item = static::find($itemId);
 
-        if (!$item) {
+        if ( ! $item) {
             return false;
         }
 
@@ -191,11 +154,12 @@ class Item extends BaseModel
      * Get items subtotal for an invoice.
      *
      * @param int $invoiceId
+     *
      * @return float
      */
     public static function getItemsSubtotal(int $invoiceId): float
     {
-        $result = \DB::table('ip_invoice_item_amounts')
+        $result = DB::table('ip_invoice_item_amounts')
             ->selectRaw('SUM(item_subtotal) AS items_subtotal')
             ->whereIn('item_id', function ($query) use ($invoiceId) {
                 $query->select('item_id')
@@ -205,5 +169,45 @@ class Item extends BaseModel
             ->first();
 
         return (float) ($result->items_subtotal ?? 0.0);
+    }
+
+    /**
+     * Get the invoice that owns the item.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the tax rate.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo('Modules\Products\Models\TaxRate', 'item_tax_rate_id', 'tax_rate_id');
+    }
+
+    /**
+     * Get the product.
+     */
+    public function product()
+    {
+        return $this->belongsTo('Modules\Products\Models\Product', 'item_product_id', 'product_id');
+    }
+
+    /**
+     * Get the item amounts.
+     */
+    public function itemAmount()
+    {
+        return $this->hasOne('Modules\Invoices\Models\Item_amount', 'item_id', 'item_id');
+    }
+
+    /**
+     * Default ordering scope.
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('item_order');
     }
 }

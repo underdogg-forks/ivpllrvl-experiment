@@ -1,22 +1,20 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * ClientCustom Model
- * 
+ * ClientCustom Model.
+ *
  * Eloquent model for managing client custom fields
  * Migrated from CodeIgniter Mdl_Client_Custom model
- * 
+ *
  * @property int $client_custom_id
  * @property int $client_id
  */
 class ClientCustom extends BaseModel
 {
     /**
-     * Custom field positions for clients
+     * Custom field positions for clients.
      */
     public static array $positions = [
         'custom_fields',
@@ -25,6 +23,13 @@ class ClientCustom extends BaseModel
         'personal_information',
         'tax_information',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The table associated with the model.
@@ -39,13 +44,6 @@ class ClientCustom extends BaseModel
      * @var string
      */
     protected $primaryKey = 'client_custom_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -63,20 +61,8 @@ class ClientCustom extends BaseModel
      */
     protected $casts = [
         'client_custom_id' => 'integer',
-        'client_id' => 'integer',
+        'client_id'        => 'integer',
     ];
-
-    /**
-     * Get custom fields for a specific client
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $clientId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByClientId($query, int $clientId)
-    {
-        return $query->where('client_id', $clientId);
-    }
 
     /**
      * Get validation rules for client custom fields.
@@ -86,9 +72,22 @@ class ClientCustom extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'client_id' => 'required|integer',
-            'custom_field_id' => 'required|integer',
+            'client_id'          => 'required|integer',
+            'custom_field_id'    => 'required|integer',
             'custom_field_value' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Get custom fields for a specific client.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $clientId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByClientId($query, int $clientId)
+    {
+        return $query->where('client_id', $clientId);
     }
 }

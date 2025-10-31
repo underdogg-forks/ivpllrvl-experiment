@@ -1,21 +1,26 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * CustomValue Model
- * 
+ * CustomValue Model.
+ *
  * Eloquent model for managing custom field value options
  * Migrated from CodeIgniter Mdl_Custom_Values model
- * 
- * @property int $custom_values_id
- * @property int $custom_values_field
+ *
+ * @property int    $custom_values_id
+ * @property int    $custom_values_field
  * @property string $custom_values_value
  */
 class CustomValue extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -29,13 +34,6 @@ class CustomValue extends BaseModel
      * @var string
      */
     protected $primaryKey = 'custom_values_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -53,22 +51,12 @@ class CustomValue extends BaseModel
      * @var array
      */
     protected $casts = [
-        'custom_values_id' => 'integer',
+        'custom_values_id'    => 'integer',
         'custom_values_field' => 'integer',
     ];
 
     /**
-     * Get the custom field this value belongs to
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function customField()
-    {
-        return $this->belongsTo(CustomField::class, 'custom_values_field', 'custom_field_id');
-    }
-
-    /**
-     * Get available custom field types
+     * Get available custom field types.
      *
      * @return array
      */
@@ -78,7 +66,7 @@ class CustomValue extends BaseModel
     }
 
     /**
-     * Get user input types
+     * Get user input types.
      *
      * @return array
      */
@@ -92,7 +80,7 @@ class CustomValue extends BaseModel
     }
 
     /**
-     * Get custom value field types
+     * Get custom value field types.
      *
      * @return array
      */
@@ -105,37 +93,26 @@ class CustomValue extends BaseModel
     }
 
     /**
-     * Get custom tables mapping
+     * Get custom tables mapping.
      *
      * @return array
      */
     public static function customTables(): array
     {
         return [
-            'ip_client_custom' => 'client',
+            'ip_client_custom'  => 'client',
             'ip_invoice_custom' => 'invoice',
             'ip_payment_custom' => 'payment',
-            'ip_quote_custom' => 'quote',
-            'ip_user_custom' => 'user',
+            'ip_quote_custom'   => 'quote',
+            'ip_user_custom'    => 'user',
         ];
     }
 
     /**
-     * Scope for filtering by field ID
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $fieldId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByFieldId($query, int $fieldId)
-    {
-        return $query->where('custom_values_field', $fieldId);
-    }
-
-    /**
-     * Get custom values by multiple IDs
+     * Get custom values by multiple IDs.
      *
      * @param array|string $ids
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function getByIds($ids)
@@ -143,18 +120,19 @@ class CustomValue extends BaseModel
         if (empty($ids)) {
             return collect();
         }
-        
-        if (!is_array($ids)) {
+
+        if ( ! is_array($ids)) {
             $ids = explode(',', $ids);
         }
-        
+
         return static::whereIn('custom_values_id', $ids)->get();
     }
 
     /**
-     * Delete all values for a specific field
+     * Delete all values for a specific field.
      *
      * @param int $fieldId
+     *
      * @return void
      */
     public static function deleteAllByField(int $fieldId): void
@@ -174,5 +152,28 @@ class CustomValue extends BaseModel
             'custom_values_value' => 'required|string|max:255',
             'custom_values_order' => 'nullable|integer',
         ];
+    }
+
+    /**
+     * Get the custom field this value belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function customField()
+    {
+        return $this->belongsTo(CustomField::class, 'custom_values_field', 'custom_field_id');
+    }
+
+    /**
+     * Scope for filtering by field ID.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $fieldId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByFieldId($query, int $fieldId)
+    {
+        return $query->where('custom_values_field', $fieldId);
     }
 }

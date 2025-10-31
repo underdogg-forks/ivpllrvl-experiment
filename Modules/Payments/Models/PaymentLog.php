@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Payments\Entities;
+namespace Modules\Payments\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * PaymentLog Model
- * 
+ * PaymentLog Model.
+ *
  * Eloquent model for managing ip_merchant_responses
  * Migrated from CodeIgniter model
  */
 class PaymentLog extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class PaymentLog extends BaseModel
      * @var string
      */
     protected $primaryKey = 'merchant_response_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -51,27 +51,8 @@ class PaymentLog extends BaseModel
      */
     protected $casts = [
         'merchant_response_id' => 'integer',
-        'invoice_id' => 'integer',
+        'invoice_id'           => 'integer',
     ];
-
-    /**
-     * Get the invoice that owns the log.
-     */
-    public function invoice()
-    {
-        return $this->belongsTo('Modules\Invoices\Entities\Invoice', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Default ordering scope
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('merchant_response_id', 'desc');
-    }
 
     /**
      * Get validation rules for payment logs.
@@ -81,9 +62,29 @@ class PaymentLog extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'invoice_id' => 'required|integer',
+            'invoice_id'             => 'required|integer',
             'merchant_response_data' => 'required|string',
             'merchant_response_date' => 'nullable|datetime',
         ];
+    }
+
+    /**
+     * Get the invoice that owns the log.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo('Modules\Invoices\Models\Invoice', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Default ordering scope.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('merchant_response_id', 'desc');
     }
 }

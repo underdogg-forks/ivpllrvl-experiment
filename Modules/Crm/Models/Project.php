@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * Project Model
- * 
+ * Project Model.
+ *
  * Eloquent model for managing ip_projects
  * Migrated from CodeIgniter model
  */
 class Project extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Project extends BaseModel
      * @var string
      */
     protected $primaryKey = 'project_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,8 +60,8 @@ class Project extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'client_id' => 'required|integer',
-            'project_name' => 'required|string|max:255',
+            'client_id'           => 'required|integer',
+            'project_name'        => 'required|string|max:255',
             'project_description' => 'nullable|string',
         ];
     }

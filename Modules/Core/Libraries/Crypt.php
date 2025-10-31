@@ -1,29 +1,19 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+namespace Modules\Core\Libraries;
 
-/*
- * InvoicePlane
- *
- * @author		InvoicePlane Developers & Contributors
- * @copyright	Copyright (c) 2012 - 2018 InvoicePlane.com
- * @license		https://invoiceplane.com/license.txt
- * @link		https://invoiceplane.com
- */
+use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
 class Crypt
 {
     public function salt(): string
     {
-        return substr(sha1(mt_rand()), 0, 22);
+        return mb_substr(sha1(mt_rand()), 0, 22);
     }
 
     /**
      * @param string $password
-     *
      */
     public function generate_password($password, string $salt): string
     {

@@ -1,8 +1,8 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+namespace Modules\Core\Libraries\XMLtemplates;
+
+use AllowDynamicProperties;
 
 /*
  * InvoicePlane
@@ -19,7 +19,7 @@ if ( ! defined('BASEPATH')) {
 /**
  * Class Zugferdv10Xml.
  */
-#[\AllowDynamicProperties]
+#[AllowDynamicProperties]
 class Zugferdv10Xml
 {
     public $invoice;

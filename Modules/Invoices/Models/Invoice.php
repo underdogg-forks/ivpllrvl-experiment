@@ -1,17 +1,26 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
+use DateInterval;
+use DateTime;
 use Modules\Core\Models\BaseModel;
 
 /**
- * Invoice Model
- * 
+ * Invoice Model.
+ *
  * Eloquent model for managing invoices
  * Migrated from CodeIgniter Mdl_Invoices
  */
 class Invoice extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +34,6 @@ class Invoice extends BaseModel
      * @var string
      */
     protected $primaryKey = 'invoice_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,138 +62,14 @@ class Invoice extends BaseModel
      * @var array
      */
     protected $casts = [
-        'invoice_id' => 'integer',
-        'client_id' => 'integer',
-        'user_id' => 'integer',
-        'invoice_group_id' => 'integer',
-        'invoice_status_id' => 'integer',
-        'invoice_discount_amount' => 'decimal:2',
+        'invoice_id'               => 'integer',
+        'client_id'                => 'integer',
+        'user_id'                  => 'integer',
+        'invoice_group_id'         => 'integer',
+        'invoice_status_id'        => 'integer',
+        'invoice_discount_amount'  => 'decimal:2',
         'invoice_discount_percent' => 'decimal:2',
     ];
-
-    /**
-     * Get the client that owns the invoice.
-     */
-    public function client()
-    {
-        return $this->belongsTo('Modules\Crm\Entities\Client', 'client_id', 'client_id');
-    }
-
-    /**
-     * Get the user that created the invoice.
-     */
-    public function user()
-    {
-        return $this->belongsTo('Modules\Users\Entities\User', 'user_id', 'user_id');
-    }
-
-    /**
-     * Get the invoice group.
-     */
-    public function invoiceGroup()
-    {
-        return $this->belongsTo('Modules\Invoices\Entities\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
-    }
-
-    /**
-     * Get the invoice amounts.
-     */
-    public function amounts()
-    {
-        return $this->hasOne('Modules\Invoices\Entities\InvoiceAmount', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Get the invoice items.
-     */
-    public function items()
-    {
-        return $this->hasMany('Modules\Invoices\Entities\InvoiceItem', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Get the invoice tax rates.
-     */
-    public function taxRates()
-    {
-        return $this->hasMany('Modules\Invoices\Entities\InvoiceTaxRate', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Get the quote associated with this invoice.
-     */
-    public function quote()
-    {
-        return $this->hasOne('Modules\Quotes\Entities\Quote', 'invoice_id', 'invoice_id');
-    }
-
-    /**
-     * Scope a query to only include invoices with a given status.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  int  $statusId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByStatus($query, int $statusId)
-    {
-        return $query->where('invoice_status_id', $statusId);
-    }
-
-    /**
-     * Scope a query to only include draft invoices.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeDraft($query)
-    {
-        return $query->where('invoice_status_id', 1);
-    }
-
-    /**
-     * Scope a query to only include sent invoices.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSent($query)
-    {
-        return $query->where('invoice_status_id', 2);
-    }
-
-    /**
-     * Scope a query to only include viewed invoices.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeViewed($query)
-    {
-        return $query->where('invoice_status_id', 3);
-    }
-
-    /**
-     * Scope a query to only include paid invoices.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopePaid($query)
-    {
-        return $query->where('invoice_status_id', 4);
-    }
-
-    /**
-     * Scope a query to only include overdue invoices.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOverdue($query)
-    {
-        return $query->whereNotIn('invoice_status_id', [1, 4])
-            ->whereRaw('DATEDIFF(NOW(), invoice_date_due) > 0');
-    }
 
     /**
      * Get the invoice statuses.
@@ -204,58 +82,24 @@ class Invoice extends BaseModel
             1 => [
                 'label' => 'draft',
                 'class' => 'draft',
-                'href' => 'invoices/status/draft',
+                'href'  => 'invoices/status/draft',
             ],
             2 => [
                 'label' => 'sent',
                 'class' => 'sent',
-                'href' => 'invoices/status/sent',
+                'href'  => 'invoices/status/sent',
             ],
             3 => [
                 'label' => 'viewed',
                 'class' => 'viewed',
-                'href' => 'invoices/status/viewed',
+                'href'  => 'invoices/status/viewed',
             ],
             4 => [
                 'label' => 'paid',
                 'class' => 'paid',
-                'href' => 'invoices/status/paid',
+                'href'  => 'invoices/status/paid',
             ],
         ];
-    }
-
-    /**
-     * Check if the invoice is overdue.
-     *
-     * @return bool
-     */
-    public function isOverdue(): bool
-    {
-        if (in_array($this->invoice_status_id, [1, 4])) {
-            return false;
-        }
-
-        $dueDate = new \DateTime($this->invoice_date_due);
-        $now = new \DateTime();
-
-        return $now > $dueDate;
-    }
-
-    /**
-     * Get the number of days overdue.
-     *
-     * @return int
-     */
-    public function getDaysOverdue(): int
-    {
-        if (!$this->isOverdue()) {
-            return 0;
-        }
-
-        $dueDate = new \DateTime($this->invoice_date_due);
-        $now = new \DateTime();
-
-        return $now->diff($dueDate)->days;
     }
 
     /**
@@ -266,11 +110,11 @@ class Invoice extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'client_id' => 'required|integer',
+            'client_id'            => 'required|integer',
             'invoice_date_created' => 'required|date',
-            'invoice_group_id' => 'required|integer',
-            'invoice_password' => 'nullable|string',
-            'user_id' => 'required|integer',
+            'invoice_group_id'     => 'required|integer',
+            'invoice_password'     => 'nullable|string',
+            'user_id'              => 'required|integer',
         ];
     }
 
@@ -278,6 +122,7 @@ class Invoice extends BaseModel
      * Get validation rules for saving an invoice.
      *
      * @param int|null $invoiceId
+     *
      * @return array
      */
     public static function validationRulesSaveInvoice(?int $invoiceId = null): array
@@ -288,10 +133,10 @@ class Invoice extends BaseModel
         }
 
         return [
-            'invoice_number' => $uniqueRule,
+            'invoice_number'       => $uniqueRule,
             'invoice_date_created' => 'required|date',
-            'invoice_date_due' => 'required|date',
-            'invoice_password' => 'nullable|string',
+            'invoice_date_due'     => 'required|date',
+            'invoice_password'     => 'nullable|string',
         ];
     }
 
@@ -299,13 +144,14 @@ class Invoice extends BaseModel
      * Get the due date based on creation date.
      *
      * @param string $invoiceDateCreated
+     *
      * @return string
      */
     public static function getDateDue(string $invoiceDateCreated): string
     {
         $dueAfter = get_setting('invoices_due_after');
-        $dueDate = new \DateTime($invoiceDateCreated);
-        $dueDate->add(new \DateInterval('P' . $dueAfter . 'D'));
+        $dueDate  = new DateTime($invoiceDateCreated);
+        $dueDate->add(new DateInterval('P' . $dueAfter . 'D'));
 
         return $dueDate->format('Y-m-d');
     }
@@ -314,11 +160,13 @@ class Invoice extends BaseModel
      * Generate an invoice number.
      *
      * @param int $invoiceGroupId
+     *
      * @return string
      */
     public static function getInvoiceNumber(int $invoiceGroupId): string
     {
         $invoiceGroup = InvoiceGroup::findOrFail($invoiceGroupId);
+
         return $invoiceGroup->generateInvoiceNumber();
     }
 
@@ -336,11 +184,13 @@ class Invoice extends BaseModel
      * Get invoice group ID for an invoice.
      *
      * @param int $invoiceId
+     *
      * @return int
      */
     public static function getInvoiceGroupId(int $invoiceId): int
     {
         $invoice = static::findOrFail($invoiceId);
+
         return $invoice->invoice_group_id;
     }
 
@@ -348,11 +198,13 @@ class Invoice extends BaseModel
      * Get parent invoice number.
      *
      * @param int $parentInvoiceId
+     *
      * @return string
      */
     public static function getParentInvoiceNumber(int $parentInvoiceId): string
     {
         $parentInvoice = static::findOrFail($parentInvoiceId);
+
         return $parentInvoice->invoice_number;
     }
 
@@ -360,6 +212,7 @@ class Invoice extends BaseModel
      * Delete invoice and cleanup orphans.
      *
      * @param int $invoiceId
+     *
      * @return bool|null
      */
     public static function deleteInvoice(int $invoiceId): ?bool
@@ -379,6 +232,7 @@ class Invoice extends BaseModel
      * Mark invoice as viewed (only if currently sent).
      *
      * @param int $invoiceId
+     *
      * @return bool
      */
     public static function markViewed(int $invoiceId): bool
@@ -399,6 +253,7 @@ class Invoice extends BaseModel
      * Mark invoice as sent (only if currently draft).
      *
      * @param int $invoiceId
+     *
      * @return bool
      */
     public static function markSent(int $invoiceId): bool
@@ -419,6 +274,7 @@ class Invoice extends BaseModel
      * Generate invoice number if applicable.
      *
      * @param int $invoiceId
+     *
      * @return void
      */
     public static function generateInvoiceNumberIfApplicable(int $invoiceId): void
@@ -432,6 +288,170 @@ class Invoice extends BaseModel
             static::where('invoice_id', $invoiceId)
                 ->update(['invoice_number' => $invoiceNumber]);
         }
+    }
+
+    /**
+     * Get the client that owns the invoice.
+     */
+    public function client()
+    {
+        return $this->belongsTo('Modules\Crm\Models\Client', 'client_id', 'client_id');
+    }
+
+    /**
+     * Get the user that created the invoice.
+     */
+    public function user()
+    {
+        return $this->belongsTo('Modules\Users\Models\User', 'user_id', 'user_id');
+    }
+
+    /**
+     * Get the invoice group.
+     */
+    public function invoiceGroup()
+    {
+        return $this->belongsTo('Modules\Invoices\Models\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
+    }
+
+    /**
+     * Get the invoice amounts.
+     */
+    public function amounts()
+    {
+        return $this->hasOne('Modules\Invoices\Models\InvoiceAmount', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the invoice items.
+     */
+    public function items()
+    {
+        return $this->hasMany('Modules\Invoices\Models\InvoiceItem', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the invoice tax rates.
+     */
+    public function taxRates()
+    {
+        return $this->hasMany('Modules\Invoices\Models\InvoiceTaxRate', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the quote associated with this invoice.
+     */
+    public function quote()
+    {
+        return $this->hasOne('Modules\Quotes\Models\Quote', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Scope a query to only include invoices with a given status.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $statusId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByStatus($query, int $statusId)
+    {
+        return $query->where('invoice_status_id', $statusId);
+    }
+
+    /**
+     * Scope a query to only include draft invoices.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('invoice_status_id', 1);
+    }
+
+    /**
+     * Scope a query to only include sent invoices.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSent($query)
+    {
+        return $query->where('invoice_status_id', 2);
+    }
+
+    /**
+     * Scope a query to only include viewed invoices.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeViewed($query)
+    {
+        return $query->where('invoice_status_id', 3);
+    }
+
+    /**
+     * Scope a query to only include paid invoices.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePaid($query)
+    {
+        return $query->where('invoice_status_id', 4);
+    }
+
+    /**
+     * Scope a query to only include overdue invoices.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOverdue($query)
+    {
+        return $query->whereNotIn('invoice_status_id', [1, 4])
+            ->whereRaw('DATEDIFF(NOW(), invoice_date_due) > 0');
+    }
+
+    /**
+     * Check if the invoice is overdue.
+     *
+     * @return bool
+     */
+    public function isOverdue(): bool
+    {
+        if (in_array($this->invoice_status_id, [1, 4])) {
+            return false;
+        }
+
+        $dueDate = new DateTime($this->invoice_date_due);
+        $now     = new DateTime();
+
+        return $now > $dueDate;
+    }
+
+    /**
+     * Get the number of days overdue.
+     *
+     * @return int
+     */
+    public function getDaysOverdue(): int
+    {
+        if ( ! $this->isOverdue()) {
+            return 0;
+        }
+
+        $dueDate = new DateTime($this->invoice_date_due);
+        $now     = new DateTime();
+
+        return $now->diff($dueDate)->days;
     }
 
     /**

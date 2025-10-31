@@ -5,20 +5,23 @@ namespace Modules\Payments\Controllers;
 use Modules\Payments\Models\PaymentMethod;
 
 /**
- * PaymentMethodsController
- * 
+ * PaymentMethodsController.
+ *
  * Manages payment methods (Cash, Check, Credit Card, PayPal, etc.)
  */
 class PaymentMethodsController
 {
     /**
-     * Display a paginated list of payment methods
-     * 
+     * Display a paginated list of payment methods.
+     *
      * @param int $page Page number for pagination
+     *
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function index
+     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
+     *
      * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -32,13 +35,16 @@ class PaymentMethodsController
     }
 
     /**
-     * Display form for creating or editing a payment method
-     * 
+     * Display form for creating or editing a payment method.
+     *
      * @param int|null $id Payment method ID (null for create)
+     *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function form
+     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
+     *
      * @legacy-line 42
      */
     public function form(?int $id = null)
@@ -71,29 +77,32 @@ class PaymentMethodsController
         // Load existing record for editing
         if ($id) {
             $paymentMethod = PaymentMethod::query()->find($id);
-            if (!$paymentMethod) {
+            if ( ! $paymentMethod) {
                 abort(404);
             }
             $isUpdate = true;
         } else {
             $paymentMethod = new PaymentMethod();
-            $isUpdate = false;
+            $isUpdate      = false;
         }
 
         return view('payments::payment_methods_form', [
             'payment_method' => $paymentMethod,
-            'is_update' => $isUpdate,
+            'is_update'      => $isUpdate,
         ]);
     }
 
     /**
-     * Delete a payment method
-     * 
+     * Delete a payment method.
+     *
      * @param int $id Payment method ID
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
+     *
      * @legacy-line 78
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

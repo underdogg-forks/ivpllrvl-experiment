@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Invoices\Entities;
+namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * InvoiceGroup Model
- * 
+ * InvoiceGroup Model.
+ *
  * Eloquent model for managing ip_invoice_groups
  * Migrated from CodeIgniter model
  */
 class InvoiceGroup extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class InvoiceGroup extends BaseModel
      * @var string
      */
     protected $primaryKey = 'invoice_group_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -51,15 +51,31 @@ class InvoiceGroup extends BaseModel
      * @var array
      */
     protected $casts = [
-        'invoice_group_id' => 'integer',
-        'invoice_group_next_id' => 'integer',
+        'invoice_group_id'       => 'integer',
+        'invoice_group_next_id'  => 'integer',
         'invoice_group_left_pad' => 'integer',
     ];
 
     /**
-     * Default ordering scope
+     * Get validation rules for invoice groups.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'invoice_group_name'              => 'required|string|max:255',
+            'invoice_group_identifier_format' => 'required|string',
+            'invoice_group_next_id'           => 'required|integer|min:1',
+            'invoice_group_left_pad'          => 'required|integer|min:0',
+        ];
+    }
+
+    /**
+     * Default ordering scope.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrdered($query)
@@ -68,17 +84,18 @@ class InvoiceGroup extends BaseModel
     }
 
     /**
-     * Get invoices that belong to this group
+     * Get invoices that belong to this group.
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Invoices\Entities\Invoice', 'invoice_group_id', 'invoice_group_id');
+        return $this->hasMany('Modules\Invoices\Models\Invoice', 'invoice_group_id', 'invoice_group_id');
     }
 
     /**
-     * Generate invoice number for this group
+     * Generate invoice number for this group.
      *
      * @param bool $set_next Whether to increment next_id
+     *
      * @return string
      */
     public function generateInvoiceNumber($set_next = true)
@@ -97,7 +114,7 @@ class InvoiceGroup extends BaseModel
     }
 
     /**
-     * Increment the next invoice number
+     * Increment the next invoice number.
      */
     public function setNextInvoiceNumber()
     {
@@ -105,11 +122,12 @@ class InvoiceGroup extends BaseModel
     }
 
     /**
-     * Parse identifier format with template variables
+     * Parse identifier format with template variables.
      *
      * @param string $identifier_format
      * @param string $next_id
-     * @param int $left_pad
+     * @param int    $left_pad
+     *
      * @return string
      */
     private function parseIdentifierFormat($identifier_format, $next_id, $left_pad)
@@ -141,20 +159,5 @@ class InvoiceGroup extends BaseModel
         }
 
         return $identifier_format;
-    }
-
-    /**
-     * Get validation rules for invoice groups.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'invoice_group_name' => 'required|string|max:255',
-            'invoice_group_identifier_format' => 'required|string',
-            'invoice_group_next_id' => 'required|integer|min:1',
-            'invoice_group_left_pad' => 'required|integer|min:0',
-        ];
     }
 }

@@ -1,18 +1,5 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
-
-/*
- * InvoicePlane
- *
- * @author      InvoicePlane Developers & Contributors
- * @copyright   Copyright (c) 2012 - 2018 InvoicePlane.com
- * @license     https://invoiceplane.com/license.txt
- * @link        https://invoiceplane.com
- */
-
 /**
  * Check if mail sending is configured in the settings.
  */
@@ -20,9 +7,9 @@ function mailer_configured(): bool
 {
     $CI = &get_instance();
 
-    return ($CI->mdl_settings->setting('email_send_method') == 'phpmail') ||
-        ($CI->mdl_settings->setting('email_send_method') == 'sendmail') ||
-        (($CI->mdl_settings->setting('email_send_method') == 'smtp') && ($CI->mdl_settings->setting('smtp_server_address')));
+    return ($CI->mdl_settings->setting('email_send_method') == 'phpmail')
+        || ($CI->mdl_settings->setting('email_send_method') == 'sendmail')
+        || (($CI->mdl_settings->setting('email_send_method') == 'smtp') && ($CI->mdl_settings->setting('smtp_server_address')));
 }
 
 /**

@@ -1,17 +1,22 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * Setup Model
- * 
+ * Setup Model.
+ *
  * Eloquent model for managing unknown_table
  * Migrated from CodeIgniter model
  */
 class Setup extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +30,6 @@ class Setup extends BaseModel
      * @var string
      */
     protected $primaryKey = 'id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

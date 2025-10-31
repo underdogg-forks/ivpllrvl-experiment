@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * ClientNote Model
- * 
+ * ClientNote Model.
+ *
  * Eloquent model for managing ip_client_notes
  * Migrated from CodeIgniter model
  */
 class ClientNote extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class ClientNote extends BaseModel
      * @var string
      */
     protected $primaryKey = 'client_note_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -60,7 +60,7 @@ class ClientNote extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'client_id' => 'required|integer',
+            'client_id'   => 'required|integer',
             'client_note' => 'required|string',
         ];
     }

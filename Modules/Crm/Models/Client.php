@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Crm\Entities;
+namespace Modules\Crm\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * Client Model
- * 
+ * Client Model.
+ *
  * Eloquent model for managing clients
  * Migrated from CodeIgniter Mdl_Clients
  */
 class Client extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Client extends BaseModel
      * @var string
      */
     protected $primaryKey = 'client_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -64,16 +64,44 @@ class Client extends BaseModel
      * @var array
      */
     protected $casts = [
-        'client_id' => 'integer',
+        'client_id'     => 'integer',
         'client_active' => 'boolean',
     ];
+
+    /**
+     * Get validation rules for clients.
+     *
+     * @return array
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'client_name'      => 'required|string|max:255',
+            'client_surname'   => 'nullable|string|max:255',
+            'client_email'     => 'nullable|email|max:255',
+            'client_address_1' => 'nullable|string|max:255',
+            'client_address_2' => 'nullable|string|max:255',
+            'client_city'      => 'nullable|string|max:255',
+            'client_state'     => 'nullable|string|max:255',
+            'client_zip'       => 'nullable|string|max:50',
+            'client_country'   => 'nullable|string|max:255',
+            'client_phone'     => 'nullable|string|max:50',
+            'client_fax'       => 'nullable|string|max:50',
+            'client_mobile'    => 'nullable|string|max:50',
+            'client_web'       => 'nullable|url|max:255',
+            'client_vat_id'    => 'nullable|string|max:50',
+            'client_tax_code'  => 'nullable|string|max:50',
+            'client_language'  => 'nullable|string|max:10',
+            'client_active'    => 'required|integer|in:0,1',
+        ];
+    }
 
     /**
      * Get the invoices for the client.
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Invoices\Entities\Invoice', 'client_id', 'client_id');
+        return $this->hasMany('Modules\Invoices\Models\Invoice', 'client_id', 'client_id');
     }
 
     /**
@@ -81,7 +109,7 @@ class Client extends BaseModel
      */
     public function quotes()
     {
-        return $this->hasMany('Modules\Quotes\Entities\Quote', 'client_id', 'client_id');
+        return $this->hasMany('Modules\Quotes\Models\Quote', 'client_id', 'client_id');
     }
 
     /**
@@ -90,8 +118,8 @@ class Client extends BaseModel
     public function payments()
     {
         return $this->hasManyThrough(
-            'Modules\Payments\Entities\Payment',
-            'Modules\Invoices\Entities\Invoice',
+            'Modules\Payments\Models\Payment',
+            'Modules\Invoices\Models\Invoice',
             'client_id',
             'invoice_id',
             'client_id',
@@ -102,7 +130,8 @@ class Client extends BaseModel
     /**
      * Scope a query to only include active clients.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeActive($query)
@@ -117,34 +146,6 @@ class Client extends BaseModel
      */
     public function getFullNameAttribute(): string
     {
-        return trim($this->client_name . ' ' . $this->client_surname);
-    }
-
-    /**
-     * Get validation rules for clients.
-     *
-     * @return array
-     */
-    public static function validationRules(): array
-    {
-        return [
-            'client_name' => 'required|string|max:255',
-            'client_surname' => 'nullable|string|max:255',
-            'client_email' => 'nullable|email|max:255',
-            'client_address_1' => 'nullable|string|max:255',
-            'client_address_2' => 'nullable|string|max:255',
-            'client_city' => 'nullable|string|max:255',
-            'client_state' => 'nullable|string|max:255',
-            'client_zip' => 'nullable|string|max:50',
-            'client_country' => 'nullable|string|max:255',
-            'client_phone' => 'nullable|string|max:50',
-            'client_fax' => 'nullable|string|max:50',
-            'client_mobile' => 'nullable|string|max:50',
-            'client_web' => 'nullable|url|max:255',
-            'client_vat_id' => 'nullable|string|max:50',
-            'client_tax_code' => 'nullable|string|max:50',
-            'client_language' => 'nullable|string|max:10',
-            'client_active' => 'required|integer|in:0,1',
-        ];
+        return mb_trim($this->client_name . ' ' . $this->client_surname);
     }
 }

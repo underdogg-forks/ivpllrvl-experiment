@@ -1,17 +1,8 @@
 <?php
 
-if ( ! defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+namespace Modules\Core\Hooks;
 
-/*
- * InvoicePlane
- *
- * @author		InvoicePlane Developers & Contributors
- * @copyright	Copyright (c) 2012 - 2018 InvoicePlane.com
- * @license		https://invoiceplane.com/license.txt
- * @link		https://invoiceplane.com
- */
+use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
 class SetTimezoneClass

@@ -3,10 +3,10 @@
 namespace Modules\Crm\Controllers;
 
 /**
- * QuotesController (Guest)
- * 
+ * QuotesController (Guest).
+ *
  * Guest portal quote viewing
- * 
+ *
  * @legacy-file application/modules/guest/controllers/Quotes.php
  */
 class QuotesController
@@ -16,19 +16,21 @@ class QuotesController
         // Guest quote list
         return view('crm::guest_quotes');
     }
-    
+
     public function view(string $urlKey)
     {
         // Guest quote view by URL key
-        $quote = \Modules\Quotes\Entities\Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
+        $quote = \Modules\Quotes\Models\Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
+
         return view('crm::guest_quote_view', ['quote' => $quote]);
     }
-    
+
     public function approve(string $urlKey)
     {
         // Guest quote approval
-        $quote = \Modules\Quotes\Entities\Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
+        $quote = \Modules\Quotes\Models\Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
         $quote->update(['quote_status_id' => 4]); // Approved
+
         return redirect()->back()->with('alert_success', trans('quote_approved'));
     }
 }

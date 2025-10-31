@@ -1,17 +1,25 @@
 <?php
 
-namespace Modules\Quotes\Entities;
+namespace Modules\Quotes\Models;
 
+use DB;
 use Modules\Core\Models\BaseModel;
 
 /**
- * QuoteAmount Model
- * 
+ * QuoteAmount Model.
+ *
  * Eloquent model for managing quote amounts
  * Migrated from CodeIgniter model
  */
 class QuoteAmount extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +33,6 @@ class QuoteAmount extends BaseModel
      * @var string
      */
     protected $primaryKey = 'quote_amount_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -53,28 +54,21 @@ class QuoteAmount extends BaseModel
      * @var array
      */
     protected $casts = [
-        'quote_amount_id' => 'integer',
-        'quote_id' => 'integer',
-        'quote_item_subtotal' => 'decimal:2',
+        'quote_amount_id'      => 'integer',
+        'quote_id'             => 'integer',
+        'quote_item_subtotal'  => 'decimal:2',
         'quote_item_tax_total' => 'decimal:2',
-        'quote_tax_total' => 'decimal:2',
-        'quote_total' => 'decimal:2',
-        'quote_item_discount' => 'decimal:2',
+        'quote_tax_total'      => 'decimal:2',
+        'quote_total'          => 'decimal:2',
+        'quote_item_discount'  => 'decimal:2',
     ];
-
-    /**
-     * Get the quote that owns the amount.
-     */
-    public function quote()
-    {
-        return $this->belongsTo('Modules\Quotes\Entities\Quote', 'quote_id', 'quote_id');
-    }
 
     /**
      * Calculate quote amounts including items, taxes, and discounts.
      *
-     * @param int $quoteId
+     * @param int   $quoteId
      * @param array $globalDiscount
+     *
      * @return void
      */
     public static function calculate(int $quoteId, array $globalDiscount = []): void
@@ -82,7 +76,7 @@ class QuoteAmount extends BaseModel
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
 
         // Get the basic totals from quote item amounts
-        $quoteAmounts = \DB::table('ip_quote_item_amounts')
+        $quoteAmounts = DB::table('ip_quote_item_amounts')
             ->selectRaw('
                 SUM(item_subtotal) AS quote_item_subtotal,
                 SUM(item_tax_total) AS quote_item_tax_total,
@@ -98,23 +92,23 @@ class QuoteAmount extends BaseModel
 
         // Calculate subtotal and total based on legacy or new calculation mode
         $legacyCalculation = config_item('legacy_calculation');
-        
+
         if ($legacyCalculation) {
             $quoteItemSubtotal = $quoteAmounts->quote_item_subtotal - $quoteAmounts->quote_item_discount;
-            $quoteSubtotal = $quoteItemSubtotal + $quoteAmounts->quote_item_tax_total;
-            $quoteTotal = static::calculateDiscount($quoteId, $quoteSubtotal, $decimalPlaces);
+            $quoteSubtotal     = $quoteItemSubtotal + $quoteAmounts->quote_item_tax_total;
+            $quoteTotal        = static::calculateDiscount($quoteId, $quoteSubtotal, $decimalPlaces);
         } else {
             $globalDiscountItem = $globalDiscount['item'] ?? 0.0;
-            $quoteItemSubtotal = $quoteAmounts->quote_item_subtotal - $quoteAmounts->quote_item_discount - $globalDiscountItem;
-            $quoteTotal = $quoteItemSubtotal + $quoteAmounts->quote_item_tax_total;
+            $quoteItemSubtotal  = $quoteAmounts->quote_item_subtotal - $quoteAmounts->quote_item_discount - $globalDiscountItem;
+            $quoteTotal         = $quoteItemSubtotal + $quoteAmounts->quote_item_tax_total;
         }
 
         // Save or update quote amounts
         $dbArray = [
-            'quote_id' => $quoteId,
-            'quote_item_subtotal' => $quoteItemSubtotal,
+            'quote_id'             => $quoteId,
+            'quote_item_subtotal'  => $quoteItemSubtotal,
             'quote_item_tax_total' => $quoteAmounts->quote_item_tax_total,
-            'quote_total' => $quoteTotal,
+            'quote_total'          => $quoteTotal,
         ];
 
         static::updateOrCreate(
@@ -129,17 +123,18 @@ class QuoteAmount extends BaseModel
     /**
      * Calculate discount for legacy calculation mode.
      *
-     * @param int $quoteId
+     * @param int   $quoteId
      * @param float $quoteTotal
-     * @param int $decimalPlaces
+     * @param int   $decimalPlaces
+     *
      * @return float
      */
     public static function calculateDiscount(int $quoteId, float $quoteTotal, int $decimalPlaces = 2): float
     {
         $quote = Quote::findOrFail($quoteId);
 
-        $total = (float) number_format((float) $quoteTotal, $decimalPlaces, '.', '');
-        $discountAmount = (float) number_format((float) $quote->quote_discount_amount, $decimalPlaces, '.', '');
+        $total           = (float) number_format((float) $quoteTotal, $decimalPlaces, '.', '');
+        $discountAmount  = (float) number_format((float) $quote->quote_discount_amount, $decimalPlaces, '.', '');
         $discountPercent = (float) number_format((float) $quote->quote_discount_percent, $decimalPlaces, '.', '');
 
         $total -= $discountAmount;
@@ -151,11 +146,12 @@ class QuoteAmount extends BaseModel
      * Get global discount for a quote.
      *
      * @param int $quoteId
+     *
      * @return float
      */
     public static function getGlobalDiscount(int $quoteId): float
     {
-        $result = \DB::table('ip_quote_item_amounts')
+        $result = DB::table('ip_quote_item_amounts')
             ->selectRaw('
                 SUM(item_subtotal) - (SUM(item_total) - SUM(item_tax_total) + SUM(item_discount)) AS global_discount
             ')
@@ -174,6 +170,7 @@ class QuoteAmount extends BaseModel
      *
      * @param int $quoteId
      * @param int $decimalPlaces
+     *
      * @return void
      */
     public static function calculateQuoteTaxes(int $quoteId, int $decimalPlaces = 2): void
@@ -181,7 +178,7 @@ class QuoteAmount extends BaseModel
         $legacyCalculation = config_item('legacy_calculation');
 
         // Only applicable in legacy calculation mode
-        $quoteTaxRates = $legacyCalculation 
+        $quoteTaxRates = $legacyCalculation
             ? QuoteTaxRate::where('quote_id', $quoteId)->get()
             : collect([]);
 
@@ -193,11 +190,11 @@ class QuoteAmount extends BaseModel
             foreach ($quoteTaxRates as $quoteTaxRate) {
                 if ($quoteTaxRate->include_item_tax) {
                     // Include applied item tax
-                    $quoteTaxRateAmount = ($quoteAmount->quote_item_subtotal + $quoteAmount->quote_item_tax_total) 
+                    $quoteTaxRateAmount = ($quoteAmount->quote_item_subtotal + $quoteAmount->quote_item_tax_total)
                         * ($quoteTaxRate->quote_tax_rate_percent / 100);
                 } else {
                     // Don't include applied item tax
-                    $quoteTaxRateAmount = $quoteAmount->quote_item_subtotal 
+                    $quoteTaxRateAmount = $quoteAmount->quote_item_subtotal
                         * ($quoteTaxRate->quote_tax_rate_percent / 100);
                 }
 
@@ -207,22 +204,22 @@ class QuoteAmount extends BaseModel
             }
 
             // Update quote amount with total tax
-            \DB::table('ip_quote_amounts')
+            DB::table('ip_quote_amounts')
                 ->where('quote_id', $quoteId)
                 ->update([
-                    'quote_tax_total' => \DB::raw('(
+                    'quote_tax_total' => DB::raw('(
                         SELECT SUM(quote_tax_rate_amount)
                         FROM ip_quote_tax_rates
                         WHERE quote_id = ' . $quoteId . '
-                    )')
+                    )'),
                 ]);
 
             // Get updated quote amount
             $quoteAmount = static::where('quote_id', $quoteId)->first();
 
             // Recalculate quote total
-            $quoteTotal = $quoteAmount->quote_item_subtotal 
-                + $quoteAmount->quote_item_tax_total 
+            $quoteTotal = $quoteAmount->quote_item_subtotal
+                + $quoteAmount->quote_item_tax_total
                 + $quoteAmount->quote_tax_total;
 
             // Apply discount for legacy calculation
@@ -244,13 +241,14 @@ class QuoteAmount extends BaseModel
      * Get total quoted amount for a period.
      *
      * @param string|null $period
+     *
      * @return float
      */
     public static function getTotalQuoted(?string $period = null): float
     {
         switch ($period) {
             case 'month':
-                $result = \DB::table('ip_quote_amounts')
+                $result = DB::table('ip_quote_amounts')
                     ->selectRaw('SUM(quote_total) AS total_quoted')
                     ->whereIn('quote_id', function ($query) {
                         $query->select('quote_id')
@@ -262,7 +260,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'last_month':
-                $result = \DB::table('ip_quote_amounts')
+                $result = DB::table('ip_quote_amounts')
                     ->selectRaw('SUM(quote_total) AS total_quoted')
                     ->whereIn('quote_id', function ($query) {
                         $query->select('quote_id')
@@ -274,7 +272,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'year':
-                $result = \DB::table('ip_quote_amounts')
+                $result = DB::table('ip_quote_amounts')
                     ->selectRaw('SUM(quote_total) AS total_quoted')
                     ->whereIn('quote_id', function ($query) {
                         $query->select('quote_id')
@@ -285,7 +283,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'last_year':
-                $result = \DB::table('ip_quote_amounts')
+                $result = DB::table('ip_quote_amounts')
                     ->selectRaw('SUM(quote_total) AS total_quoted')
                     ->whereIn('quote_id', function ($query) {
                         $query->select('quote_id')
@@ -296,7 +294,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             default:
-                $result = \DB::table('ip_quote_amounts')
+                $result = DB::table('ip_quote_amounts')
                     ->selectRaw('SUM(quote_total) AS total_quoted')
                     ->first();
                 break;
@@ -309,13 +307,14 @@ class QuoteAmount extends BaseModel
      * Get status totals for a period.
      *
      * @param string $period
+     *
      * @return array
      */
     public static function getStatusTotals(string $period = 'this-month'): array
     {
         switch ($period) {
             case 'last-month':
-                $results = \DB::table('ip_quote_amounts')
+                $results = DB::table('ip_quote_amounts')
                     ->selectRaw('
                         quote_status_id,
                         SUM(quote_total) AS sum_total,
@@ -332,7 +331,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'this-quarter':
-                $results = \DB::table('ip_quote_amounts')
+                $results = DB::table('ip_quote_amounts')
                     ->selectRaw('
                         quote_status_id,
                         SUM(quote_total) AS sum_total,
@@ -349,7 +348,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'last-quarter':
-                $results = \DB::table('ip_quote_amounts')
+                $results = DB::table('ip_quote_amounts')
                     ->selectRaw('
                         quote_status_id,
                         SUM(quote_total) AS sum_total,
@@ -366,7 +365,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'this-year':
-                $results = \DB::table('ip_quote_amounts')
+                $results = DB::table('ip_quote_amounts')
                     ->selectRaw('
                         quote_status_id,
                         SUM(quote_total) AS sum_total,
@@ -382,7 +381,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             case 'last-year':
-                $results = \DB::table('ip_quote_amounts')
+                $results = DB::table('ip_quote_amounts')
                     ->selectRaw('
                         quote_status_id,
                         SUM(quote_total) AS sum_total,
@@ -398,7 +397,7 @@ class QuoteAmount extends BaseModel
                 break;
 
             default: // 'this-month'
-                $results = \DB::table('ip_quote_amounts')
+                $results = DB::table('ip_quote_amounts')
                     ->selectRaw('
                         quote_status_id,
                         SUM(quote_total) AS sum_total,
@@ -415,26 +414,34 @@ class QuoteAmount extends BaseModel
                 break;
         }
 
-        $return = [];
+        $return   = [];
         $statuses = Quote::statuses();
 
         foreach ($statuses as $key => $status) {
             $return[$key] = [
                 'quote_status_id' => $key,
-                'class' => $status['class'],
-                'label' => $status['label'],
-                'href' => $status['href'],
-                'sum_total' => 0,
-                'num_total' => 0,
+                'class'           => $status['class'],
+                'label'           => $status['label'],
+                'href'            => $status['href'],
+                'sum_total'       => 0,
+                'num_total'       => 0,
             ];
         }
 
         foreach ($results as $result) {
-            $resultArray = (array) $result;
-            $statusId = $resultArray['quote_status_id'];
+            $resultArray       = (array) $result;
+            $statusId          = $resultArray['quote_status_id'];
             $return[$statusId] = array_merge($return[$statusId], $resultArray);
         }
 
         return $return;
+    }
+
+    /**
+     * Get the quote that owns the amount.
+     */
+    public function quote()
+    {
+        return $this->belongsTo('Modules\Quotes\Models\Quote', 'quote_id', 'quote_id');
     }
 }

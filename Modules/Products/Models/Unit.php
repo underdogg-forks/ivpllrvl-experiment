@@ -1,17 +1,24 @@
 <?php
 
-namespace Modules\Products\Entities;
+namespace Modules\Products\Models;
 
 use Modules\Core\Models\BaseModel;
 
 /**
- * Unit Model
- * 
+ * Unit Model.
+ *
  * Eloquent model for managing ip_units (product units of measure)
  * Migrated from CodeIgniter Mdl_Units model
  */
 class Unit extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -25,13 +32,6 @@ class Unit extends BaseModel
      * @var string
      */
     protected $primaryKey = 'unit_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -53,34 +53,24 @@ class Unit extends BaseModel
     ];
 
     /**
-     * Default ordering scope
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('unit_name');
-    }
-
-    /**
      * Return either the singular unit name or the plural unit name,
      * depending on the quantity.
      *
-     * @param int $unitId
+     * @param int   $unitId
      * @param float $quantity
+     *
      * @return string|null
      */
     public static function getName($unitId, $quantity)
     {
-        if (!$unitId) {
-            return null;
+        if ( ! $unitId) {
+            return;
         }
 
         $unit = static::find($unitId);
-        
-        if (!$unit) {
-            return null;
+
+        if ( ! $unit) {
+            return;
         }
 
         // Return plural if quantity is less than -1 or greater than 1
@@ -92,14 +82,6 @@ class Unit extends BaseModel
     }
 
     /**
-     * Get products that use this unit
-     */
-    public function products()
-    {
-        return $this->hasMany('Modules\Products\Entities\Product', 'unit_id', 'unit_id');
-    }
-
-    /**
      * Get validation rules for units.
      *
      * @return array
@@ -107,8 +89,28 @@ class Unit extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'unit_name' => 'required|string|max:255',
+            'unit_name'      => 'required|string|max:255',
             'unit_name_plrl' => 'required|string|max:255',
         ];
+    }
+
+    /**
+     * Default ordering scope.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('unit_name');
+    }
+
+    /**
+     * Get products that use this unit.
+     */
+    public function products()
+    {
+        return $this->hasMany('Modules\Products\Models\Product', 'unit_id', 'unit_id');
     }
 }

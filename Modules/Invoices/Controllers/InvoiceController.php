@@ -5,8 +5,8 @@ namespace Modules\Invoices\Controllers;
 use Modules\Invoices\Models\Invoice;
 
 /**
- * Invoice Controller
- * 
+ * Invoice Controller.
+ *
  * Handles invoice-related HTTP requests
  * Migrated from CodeIgniter Invoices controller
  */
@@ -30,7 +30,8 @@ class InvoiceController
     /**
      * Display the specified invoice.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\View\View
      */
     public function show(int $id)
@@ -54,7 +55,8 @@ class InvoiceController
     /**
      * Store a newly created invoice.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return Invoice
      */
     public function store(array $data): Invoice
@@ -72,7 +74,8 @@ class InvoiceController
     /**
      * Show the form for editing the specified invoice.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\View\View
      */
     public function edit(int $id)
@@ -85,8 +88,9 @@ class InvoiceController
     /**
      * Update the specified invoice.
      *
-     * @param  int  $id
-     * @param  array  $data
+     * @param int   $id
+     * @param array $data
+     *
      * @return bool
      */
     public function update(int $id, array $data): bool
@@ -99,7 +103,8 @@ class InvoiceController
     /**
      * Remove the specified invoice.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return bool
      */
     public function destroy(int $id): bool
@@ -112,21 +117,22 @@ class InvoiceController
     /**
      * Get invoices by status.
      *
-     * @param  string  $status
+     * @param string $status
+     *
      * @return \Illuminate\Contracts\View\View
      */
     public function byStatus(string $status)
     {
         $statusMap = [
-            'draft' => 1,
-            'sent' => 2,
+            'draft'  => 1,
+            'sent'   => 2,
             'viewed' => 3,
-            'paid' => 4,
+            'paid'   => 4,
         ];
 
         $statusId = $statusMap[$status] ?? null;
 
-        if (!$statusId) {
+        if ( ! $statusId) {
             abort(404);
         }
 

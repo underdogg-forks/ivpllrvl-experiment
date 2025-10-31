@@ -5,20 +5,23 @@ namespace Modules\Products\Controllers;
 use Modules\Products\Models\TaxRate;
 
 /**
- * TaxRatesController
- * 
+ * TaxRatesController.
+ *
  * Handles tax rate management for products and invoices
  */
 class TaxRatesController
 {
     /**
-     * Display a paginated list of tax rates
-     * 
+     * Display a paginated list of tax rates.
+     *
      * @param int $page Page number for pagination
+     *
      * @return \Illuminate\View\View
-     * 
+     *
      * @legacy-function index
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
+     *
      * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -32,13 +35,16 @@ class TaxRatesController
     }
 
     /**
-     * Display form for creating or editing a tax rate
-     * 
+     * Display form for creating or editing a tax rate.
+     *
      * @param int|null $id Tax rate ID (null for create)
+     *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function form
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
+     *
      * @legacy-line 42
      */
     public function form(?int $id = null)
@@ -52,7 +58,7 @@ class TaxRatesController
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
             $validated = request()->validate([
-                'tax_rate_name' => 'required|string|max:255',
+                'tax_rate_name'    => 'required|string|max:255',
                 'tax_rate_percent' => 'required|numeric|min:0|max:100',
             ]);
 
@@ -80,7 +86,7 @@ class TaxRatesController
         // Load existing record for editing
         if ($id) {
             $taxRate = TaxRate::query()->find($id);
-            if (!$taxRate) {
+            if ( ! $taxRate) {
                 abort(404);
             }
         } else {
@@ -93,13 +99,16 @@ class TaxRatesController
     }
 
     /**
-     * Delete a tax rate
-     * 
+     * Delete a tax rate.
+     *
      * @param int $id Tax rate ID
+     *
      * @return \Illuminate\Http\RedirectResponse
-     * 
+     *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
+     *
      * @legacy-line 73
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

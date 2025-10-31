@@ -1,25 +1,30 @@
 <?php
 
-namespace Modules\Core\Entities;
-
-use Modules\Core\Models\BaseModel;
+namespace Modules\Core\Models;
 
 /**
- * CustomField Model
- * 
+ * CustomField Model.
+ *
  * Eloquent model for managing custom field definitions
  * Migrated from CodeIgniter Mdl_Custom_Fields model
- * 
- * @property int $custom_field_id
+ *
+ * @property int    $custom_field_id
  * @property string $custom_field_table
  * @property string $custom_field_label
  * @property string $custom_field_column
  * @property string $custom_field_type
- * @property int $custom_field_location
- * @property int $custom_field_order
+ * @property int    $custom_field_location
+ * @property int    $custom_field_order
  */
 class CustomField extends BaseModel
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -33,13 +38,6 @@ class CustomField extends BaseModel
      * @var string
      */
     protected $primaryKey = 'custom_field_id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -61,39 +59,29 @@ class CustomField extends BaseModel
      * @var array
      */
     protected $casts = [
-        'custom_field_id' => 'integer',
+        'custom_field_id'       => 'integer',
         'custom_field_location' => 'integer',
-        'custom_field_order' => 'integer',
+        'custom_field_order'    => 'integer',
     ];
 
     /**
-     * Get custom field values
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function customValues()
-    {
-        return $this->hasMany(CustomValue::class, 'custom_values_field', 'custom_field_id');
-    }
-
-    /**
-     * Get available custom tables
+     * Get available custom tables.
      *
      * @return array
      */
     public static function customTables(): array
     {
         return [
-            'ip_client_custom' => 'client',
+            'ip_client_custom'  => 'client',
             'ip_invoice_custom' => 'invoice',
             'ip_payment_custom' => 'payment',
-            'ip_quote_custom' => 'quote',
-            'ip_user_custom' => 'user',
+            'ip_quote_custom'   => 'quote',
+            'ip_user_custom'    => 'user',
         ];
     }
 
     /**
-     * Get available custom field types
+     * Get available custom field types.
      *
      * @return array
      */
@@ -109,49 +97,19 @@ class CustomField extends BaseModel
     }
 
     /**
-     * Get nicename for a custom field type
+     * Get nicename for a custom field type.
      *
      * @param string $element
+     *
      * @return string
      */
     public static function getNicename(string $element): string
     {
         if (in_array($element, static::customTypes())) {
-            return strtolower(str_replace('-', '', $element));
+            return mb_strtolower(str_replace('-', '', $element));
         }
-        
+
         return 'fallback';
-    }
-
-    /**
-     * Scope for filtering by table
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $table
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByTable($query, string $table)
-    {
-        return $query->where('custom_field_table', $table);
-    }
-
-    /**
-     * Scope for filtering by table name
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $name
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeByTableName($query, string $name)
-    {
-        $tables = array_flip(static::customTables());
-        $table = $tables[$name] ?? null;
-        
-        if ($table) {
-            return $query->where('custom_field_table', $table);
-        }
-        
-        return $query;
     }
 
     /**
@@ -164,8 +122,51 @@ class CustomField extends BaseModel
         return [
             'custom_field_table' => 'required|string|max:50',
             'custom_field_label' => 'required|string|max:255',
-            'custom_field_type' => 'required|string|max:50',
+            'custom_field_type'  => 'required|string|max:50',
             'custom_field_order' => 'nullable|integer',
         ];
+    }
+
+    /**
+     * Get custom field values.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customValues()
+    {
+        return $this->hasMany(CustomValue::class, 'custom_values_field', 'custom_field_id');
+    }
+
+    /**
+     * Scope for filtering by table.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $table
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByTable($query, string $table)
+    {
+        return $query->where('custom_field_table', $table);
+    }
+
+    /**
+     * Scope for filtering by table name.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $name
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByTableName($query, string $name)
+    {
+        $tables = array_flip(static::customTables());
+        $table  = $tables[$name] ?? null;
+
+        if ($table) {
+            return $query->where('custom_field_table', $table);
+        }
+
+        return $query;
     }
 }
