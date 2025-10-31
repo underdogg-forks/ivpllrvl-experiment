@@ -2,6 +2,7 @@
 
 namespace Modules\Products\Services;
 
+use App\Services\BaseService;
 use Modules\Products\Models\Unit;
 
 /**
@@ -9,8 +10,16 @@ use Modules\Products\Models\Unit;
  *
  * Service class for managing unit business logic
  */
-class UnitService
+class UnitService extends BaseService
 {
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return Unit::class;
+    }
+
     /**
      * Get unit name with proper pluralization.
      *
@@ -32,18 +41,5 @@ class UnitService
         }
 
         return ($quantity == 1) ? $unit->unit_name : $unit->unit_name_plrl;
-    }
-
-    /**
-     * Get validation rules for units.
-     *
-     * @return array
-     */
-    public function getValidationRules(): array
-    {
-        return [
-            'unit_name'      => 'required|string|max:255',
-            'unit_name_plrl' => 'required|string|max:255',
-        ];
     }
 }

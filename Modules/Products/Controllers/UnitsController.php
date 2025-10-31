@@ -2,7 +2,9 @@
 
 namespace Modules\Products\Controllers;
 
+use Modules\Products\Http\Requests\UnitRequest;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\UnitService;
 
 /**
  * UnitsController.
@@ -11,18 +13,19 @@ use Modules\Products\Models\Unit;
  */
 class UnitsController
 {
+    protected UnitService $unitService;
+
+    public function __construct(UnitService $unitService)
+    {
+        $this->unitService = $unitService;
+    }
+
     /**
      * Display a paginated list of product units.
      *
      * @param int $page Page number for pagination
      *
      * @return \Illuminate\View\View
-     *
-     * @legacy-function index
-     *
-     * @legacy-file application/modules/units/controllers/Units.php
-     *
-     * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -35,81 +38,69 @@ class UnitsController
     }
 
     /**
-     * Display form for creating or editing a product unit.
+     * Show the form for creating a new unit.
      *
-     * @param int|null $id Unit ID (null for create)
-     *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     *
-     * @legacy-function form
-     *
-     * @legacy-file application/modules/units/controllers/Units.php
-     *
-     * @legacy-line 42
+     * @return \Illuminate\View\View
      */
-    public function form(?int $id = null)
+    public function create(): \Illuminate\View\View
     {
-        // Handle cancel button
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('units.index');
-        }
-
-        // Handle form submission
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            // Validate input
-            $validated = request()->validate([
-                'unit_name'      => 'required|string|max:255|unique:ip_units,unit_name' . ($id ? ',' . $id . ',unit_id' : ''),
-                'unit_name_plrl' => 'required|string|max:255',
-            ]);
-
-            if ($id) {
-                // Update existing
-                $unit = Unit::query()->findOrFail($id);
-                $unit->update($validated);
-            } else {
-                // Create new
-                Unit::query()->create($validated);
-            }
-
-            return redirect()->route('units.index')
-                ->with('alert_success', trans('record_successfully_saved'));
-        }
-
-        // Load existing record for editing
-        if ($id) {
-            $unit = Unit::query()->find($id);
-            if ( ! $unit) {
-                abort(404);
-            }
-            $isUpdate = true;
-        } else {
-            $unit     = new Unit();
-            $isUpdate = false;
-        }
-
-        return view('products::units_form', [
-            'unit'      => $unit,
-            'is_update' => $isUpdate,
-        ]);
+        $unit = new Unit();
+        return view('products::units_form', ['unit' => $unit]);
     }
 
     /**
-     * Delete a product unit.
+     * Store a newly created unit.
      *
-     * @param int $id Unit ID
+     * @param UnitRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
-     *
-     * @legacy-function delete
-     *
-     * @legacy-file application/modules/units/controllers/Units.php
-     *
-     * @legacy-line 83
      */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function store(UnitRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $unit = Unit::query()->findOrFail($id);
-        $unit->delete();
+        $this->unitService->create($request->validated());
+
+        return redirect()->route('units.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    /**
+     * Show the form for editing an existing unit.
+     *
+     * @param Unit $unit
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(Unit $unit): \Illuminate\View\View
+    {
+        return view('products::units_form', ['unit' => $unit]);
+    }
+
+    /**
+     * Update the specified unit.
+     *
+     * @param UnitRequest $request
+     * @param Unit        $unit
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(UnitRequest $request, Unit $unit): \Illuminate\Http\RedirectResponse
+    {
+        $this->unitService->update($unit->unit_id, $request->validated());
+
+        return redirect()->route('units.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    /**
+     * Remove the specified unit.
+     *
+     * @param Unit $unit
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Unit $unit): \Illuminate\Http\RedirectResponse
+    {
+        $this->unitService->delete($unit->unit_id);
 
         return redirect()->route('units.index')
             ->with('alert_success', trans('record_successfully_deleted'));

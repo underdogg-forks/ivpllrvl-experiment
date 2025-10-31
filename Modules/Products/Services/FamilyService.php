@@ -2,22 +2,21 @@
 
 namespace Modules\Products\Services;
 
+use App\Services\BaseService;
+use Modules\Products\Models\Family;
+
 /**
  * FamilyService.
  *
  * Service class for managing product family business logic
  */
-class FamilyService
+class FamilyService extends BaseService
 {
     /**
-     * Get validation rules for product families.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'family_name' => 'required|string|max:255',
-        ];
+        return Family::class;
     }
 }

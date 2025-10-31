@@ -2,23 +2,21 @@
 
 namespace Modules\Products\Services;
 
+use App\Services\BaseService;
+use Modules\Products\Models\TaxRate;
+
 /**
  * TaxRateService.
  *
  * Service class for managing tax rate business logic
  */
-class TaxRateService
+class TaxRateService extends BaseService
 {
     /**
-     * Get validation rules for tax rates.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'tax_rate_name'    => 'required|string|max:255',
-            'tax_rate_percent' => 'required|numeric|min:0|max:100',
-        ];
+        return TaxRate::class;
     }
 }
