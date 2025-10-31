@@ -25,7 +25,6 @@ $helperFiles = [
     'payments_helper.php',
     'pdf_helper.php',
     'redirect_helper.php',
-    'settings_helper.php',
     'template_helper.php',
     'trans_helper.php',
     'user_helper.php',
