@@ -2,7 +2,7 @@
     <h1 class="headerbar-title"><?php _trans('version_history'); ?></h1>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('settings/versions/index'), 'mdl_versions'); ?>
+        <?php echo pager(site_url('settings/versions/index'), $versions); ?>
     </div>
 </div>
 

@@ -13,7 +13,7 @@
     </div>
 
     <div class="headerbar-item pull-right visible-lg">
-        <?php echo pager(site_url('invoices/status/' . $this->uri->segment(3)), 'mdl_invoices'); ?>
+        <?php echo pager(site_url('invoices/status/' . $this->uri->segment(3)), $invoices); ?>
     </div>
 
     <div class="headerbar-item pull-right visible-lg">
@@ -51,7 +51,7 @@
     <div class="collapse clearfix" id="ip-submenu-collapse">
 
         <div class="submenu-row">
-            <?php echo pager(site_url('invoices/status/' . $this->uri->segment(3)), 'mdl_invoices'); ?>
+            <?php echo pager(site_url('invoices/status/' . $this->uri->segment(3)), $invoices); ?>
         </div>
 
         <div class="submenu-row">

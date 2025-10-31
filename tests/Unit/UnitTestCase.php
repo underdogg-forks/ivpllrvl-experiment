@@ -98,7 +98,7 @@ abstract class UnitTestCase extends TestCase
         $defaults = [
             'client_id'              => 1,
             'user_id'                => 1,
-            'quote_group_id'         => 1,
+            'invoice_group_id'       => 1,
             'quote_status_id'        => 1,
             'quote_number'           => 'QUO-TEST-' . uniqid(),
             'quote_date_created'     => '2024-01-01',

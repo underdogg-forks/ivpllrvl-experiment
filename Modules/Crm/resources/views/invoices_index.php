@@ -3,7 +3,7 @@
     <h1 class="headerbar-title"><?php _trans('invoices'); ?></h1>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('guest/invoices/status/' . $this->uri->segment(4)), 'mdl_invoices'); ?>
+        <?php echo pager(site_url('guest/invoices/status/' . $this->uri->segment(4)), $invoices); ?>
     </div>
 
     <div class="headerbar-item pull-right">

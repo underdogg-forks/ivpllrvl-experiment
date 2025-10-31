@@ -8,7 +8,7 @@
     </div>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('payment_methods/index'), 'mdl_payment_methods'); ?>
+        <?php echo pager(site_url('payment_methods/index'), $payment_methods); ?>
     </div>
 
 </div>
