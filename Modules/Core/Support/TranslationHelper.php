@@ -17,6 +17,8 @@ class TranslationHelper
      *
      * Note: This now uses Laravel's translation system.
      * Translation files should be in resources/lang/
+     *
+     * @origin Modules/Core/Helpers/trans_helper.php
      */
     public static function trans($line, ?string $id = '', $default = null): string
     {
@@ -41,6 +43,8 @@ class TranslationHelper
      *
      * Note: Laravel handles language loading automatically.
      * This method sets the application locale.
+     *
+     * @origin Modules/Core/Helpers/trans_helper.php
      */
     public static function setLanguage(string $language): void
     {
@@ -56,6 +60,8 @@ class TranslationHelper
      * Returns all available languages.
      *
      * Note: Scans the resources/lang directory for available languages.
+     *
+     * @origin Modules/Core/Helpers/trans_helper.php
      */
     public static function getAvailableLanguages(): array
     {

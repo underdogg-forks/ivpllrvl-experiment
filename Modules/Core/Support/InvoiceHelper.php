@@ -11,6 +11,8 @@ class InvoiceHelper
 {
     /**
      * Returns the invoice image.
+     *
+     * @origin Modules/Core/Helpers/invoice_helper.php
      */
     public static function invoice_logo(): string
     {
@@ -25,6 +27,8 @@ class InvoiceHelper
 
     /**
      * Returns the invoice logo for PDF files.
+     *
+     * @origin Modules/Core/Helpers/invoice_helper.php
      */
     public static function invoice_logo_pdf(): string
     {
@@ -43,6 +47,8 @@ class InvoiceHelper
      * Returns a Swiss IS / IS+ code line
      * Documentation: https://www.postfinance.ch/binp/postfinance/public/dam.M26m_i6_6ceYcN2XtAN4w8OHMynQG7FKxJVK8TtQzr0.spool/content/dam/pf/de/doc/consult/manual/dlserv/inpayslip_isr_man_en.pdf.
      *
+     *
+     * @origin Modules/Core/Helpers/invoice_helper.php
      * @param        $amount
      * @param string $rnumb
      *
@@ -85,6 +91,8 @@ class InvoiceHelper
      * See https://www.postfinance.ch/binp/postfinance/public/dam.Ii-X5NgtAixO8cQPvja46blV6d7cZCyGUscxO15L5S8.spool/content/dam/pf/de/doc/consult/manual/dldata/efin_recdescr_man_en.pdf
      * Page 5.
      *
+     *
+     * @origin Modules/Core/Helpers/invoice_helper.php
      * @param string $in
      */
     public static function invoice_recMod10($in): int
@@ -103,6 +111,8 @@ class InvoiceHelper
     /**
      * Returns a QR code for invoice payments.
      *
+     *
+     * @origin Modules/Core/Helpers/invoice_helper.php
      * @param number invoice-id
      */
     public static function invoice_qrcode($invoice_id): string

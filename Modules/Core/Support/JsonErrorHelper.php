@@ -11,6 +11,8 @@ class JsonErrorHelper
 {
     /**
      * Returns all errors prepared for JSON.
+     *
+     * @origin Modules/Core/Helpers/json_error_helper.php
      */
     public static function json_errors(): array
     {

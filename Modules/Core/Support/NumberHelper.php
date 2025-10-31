@@ -14,6 +14,8 @@ class NumberHelper
     /**
      * Return a formated amount as a currency based on the system settings, e.g. 1.234,56 €.
      *
+     *
+     * @origin Modules/Core/Helpers/number_helper.php
      * @param $amount
      */
     public static function format_currency($amount): string
@@ -40,6 +42,8 @@ class NumberHelper
      * Return a formated amount based on the system settings, e.g. 1.234,56.
      *
      *
+     *
+     * @origin Modules/Core/Helpers/number_helper.php
      * @return null|string
      */
     public static function format_amount($amount = null)
@@ -58,6 +62,8 @@ class NumberHelper
      * Return a formated amount as a quantity based on the system settings, e.g. 1.234,56.
      *
      *
+     *
+     * @origin Modules/Core/Helpers/number_helper.php
      * @return null|string
      */
     public static function format_quantity($amount = null)
@@ -75,6 +81,8 @@ class NumberHelper
     /**
      * Return a standardized amount for database based on the system settings, e.g. 1234.56.
      *
+     *
+     * @origin Modules/Core/Helpers/number_helper.php
      * @param $amount
      */
     public static function standardize_amount($amount): float|int|string|array|false|null

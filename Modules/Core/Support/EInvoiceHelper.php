@@ -6,6 +6,18 @@ use stdClass;
 
 class EInvoiceHelper
 {
+    /**
+     * Generate XML invoice file.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param mixed $invoice Invoice data
+     * @param mixed $items Invoice items
+     * @param string $xml_lib XML library/template to use
+     * @param string $filename Output filename
+     * @param mixed $options Additional options
+     * @return string Path to generated XML file
+     */
     public static function generate_xml_invoice_file($invoice, $items, string $xml_lib, string $filename, $options): string
     {
         $CI = get_instance();
@@ -22,6 +34,15 @@ class EInvoiceHelper
         return UPLOADS_TEMP_FOLDER . $filename . '.xml';
     }
 
+    /**
+     * Include RDF metadata for PDF/A compliance.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param string $embedXml XML filename to embed
+     * @param string $urn URN for the document type
+     * @return string RDF metadata XML
+     */
     public static function include_rdf(string $embedXml, string $urn = 'factur-x'): string
     {
         return '<rdf:Description rdf:about="" xmlns:zf="urn:' . $urn . ':pdfa:CrossIndustryDocument:invoice:1p0#">' . "\n"
@@ -32,6 +53,13 @@ class EInvoiceHelper
             . '</rdf:Description>' . "\n";
     }
 
+    /**
+     * Get available XML template files for e-invoicing.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @return array Array of available XML templates
+     */
     public static function get_xml_template_files(): array
     {
         $xml_template_items = [];
@@ -63,6 +91,14 @@ class EInvoiceHelper
         return $xml_template_items;
     }
 
+    /**
+     * Get full name of XML template.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param string $xml_id XML template ID
+     * @return string|null Full template name with country
+     */
     public static function get_xml_full_name(string $xml_id)
     {
         $configFile = APPPATH . 'helpers/XMLconfigs/' . $xml_id . '.php';
@@ -82,6 +118,14 @@ class EInvoiceHelper
         return $xml_setting['full-name'] . ' - ' . get_country_name(trans('cldr'), $xml_setting['countrycode']);
     }
 
+    /**
+     * Get list of active admin users.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param string|int $user_id Optional user ID to filter
+     * @return array Array of active admin users
+     */
     public static function get_admin_active_users($user_id = ''): array
     {
         $CI = get_instance();
@@ -94,6 +138,15 @@ class EInvoiceHelper
         return $CI->db->from('ip_users')->where($where)->get()->result();
     }
 
+    /**
+     * Get required fields for e-invoice generation.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param object|null $client Client object
+     * @param string|int $user_id User ID
+     * @return object Object containing required field flags
+     */
     public static function get_req_fields_einvoice($client = null, $user_id = ''): object
     {
         $cid          = empty($client->client_id) ? 0 : $client->client_id;
@@ -178,6 +231,16 @@ class EInvoiceHelper
         return $req_fields;
     }
 
+    /**
+     * Get e-invoice usage data and statistics.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param object $invoice Invoice object
+     * @param array $items Invoice items
+     * @param bool $full Whether to return full data
+     * @return object E-invoice usage data
+     */
     public static function get_einvoice_usage($invoice, array $items, $full = true): object
     {
         $einvoice       = new stdClass();
@@ -209,6 +272,14 @@ class EInvoiceHelper
         return $einvoice;
     }
 
+    /**
+     * Get tax usage information from invoice items.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param array $items Invoice items
+     * @return array Tax usage data
+     */
     public static function get_items_tax_usages($items): array
     {
         $checks = [[], []];
@@ -224,6 +295,14 @@ class EInvoiceHelper
         return $checks;
     }
 
+    /**
+     * Check if items have invalid tax usage for e-invoicing.
+     *
+     * @origin Modules/Core/Helpers/e-invoice_helper.php
+     *
+     * @param array $items Invoice items
+     * @return mixed False if valid, error data if invalid
+     */
     public static function items_tax_usages_bad($items): mixed
     {
         if (config_item('legacy_calculation')) {

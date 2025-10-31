@@ -10,6 +10,8 @@ namespace Modules\Core\Support;
 class CustomValuesHelper
 {
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      *
      * @return bool|DateTime|string
@@ -24,6 +26,8 @@ class CustomValuesHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      *
      * @return string
@@ -38,6 +42,8 @@ class CustomValuesHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      *
      * @return string
@@ -56,6 +62,8 @@ class CustomValuesHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      */
     public static function format_multiplechoice($txt): string
@@ -79,6 +87,8 @@ class CustomValuesHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      *
      * @return string
@@ -100,6 +110,8 @@ class CustomValuesHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      *
      * @return string|null
@@ -114,6 +126,8 @@ class CustomValuesHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param $txt
      *
      * @return string
@@ -126,6 +140,8 @@ class CustomValuesHelper
     /**
      * Print a custom form field based on the type.
      *
+     *
+     * @origin Modules/Core/Helpers/custom_values_helper.php
      * @param        $module
      * @param        $custom_field
      * @param        $cv

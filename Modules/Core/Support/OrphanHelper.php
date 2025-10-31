@@ -11,6 +11,8 @@ class OrphanHelper
 {
     /**
      * Deletes orphaned entries in the database.
+     *
+     * @origin Modules/Core/Helpers/orphan_helper.php
      */
     public static function delete_orphans(): void
     {

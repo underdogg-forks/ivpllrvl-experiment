@@ -12,6 +12,8 @@ class PagerHelper
     /**
      * Returns a printable pagination.
      *
+     *
+     * @origin Modules/Core/Helpers/pager_helper.php
      * @param $base_url
      * @param $model
      */

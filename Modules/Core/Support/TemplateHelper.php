@@ -12,6 +12,8 @@ class TemplateHelper
     /**
      * Parse a template by predefined template tags.
      *
+     *
+     * @origin Modules/Core/Helpers/template_helper.php
      * @param $object
      * @param $body
      * @param $model_id
@@ -112,6 +114,8 @@ class TemplateHelper
     /**
      * Returns the translated invoice status.
      *
+     *
+     * @origin Modules/Core/Helpers/template_helper.php
      * @param $invoice->invoice_status_id
      *
      * @return string
@@ -132,6 +136,8 @@ class TemplateHelper
     /**
      * Returns the appropriate PDF template for the given invoice.
      *
+     *
+     * @origin Modules/Core/Helpers/template_helper.php
      * @param $invoice
      *
      * @return mixed
@@ -157,6 +163,8 @@ class TemplateHelper
     /**
      * Returns the appropriate email template for the given invoice.
      *
+     *
+     * @origin Modules/Core/Helpers/template_helper.php
      * @param $invoice
      *
      * @return mixed

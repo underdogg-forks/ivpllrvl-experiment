@@ -14,6 +14,8 @@ class DateHelper
 {
     /**
      * Available date formats.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function dateFormats(): array
     {
@@ -71,6 +73,8 @@ class DateHelper
 
     /**
      * Convert MySQL date to user format.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function dateFromMysql($date, bool $ignorePostCheck = false)
     {
@@ -93,6 +97,8 @@ class DateHelper
 
     /**
      * Convert timestamp to user date format.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function dateFromTimestamp($timestamp): string
     {
@@ -103,6 +109,8 @@ class DateHelper
 
     /**
      * Convert user date to MySQL format.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function dateToMysql($date)
     {
@@ -125,6 +133,8 @@ class DateHelper
 
     /**
      * Check if value is a valid date.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function isDate($date): bool
     {
@@ -141,6 +151,8 @@ class DateHelper
 
     /**
      * Get date format setting.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function dateFormatSetting()
     {
@@ -149,6 +161,8 @@ class DateHelper
 
     /**
      * Get datepicker format.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function dateFormatDatepicker()
     {
@@ -160,6 +174,8 @@ class DateHelper
 
     /**
      * Increment user date by interval.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function incrementUserDate($date, string $increment): string
     {
@@ -176,6 +192,8 @@ class DateHelper
 
     /**
      * Increment date by interval.
+     *
+     * @origin Modules/Core/Helpers/date_helper.php
      */
     public static function incrementDate($date, string $increment): string
     {
