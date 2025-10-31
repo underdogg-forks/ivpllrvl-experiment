@@ -167,10 +167,6 @@ class Sumex
 
     public function __construct(array $params)
     {
-        $CI = &get_instance();
-
-        $CI->load->helper('invoice');
-
         $this->invoice = $params['invoice'];
         $this->items   = $params['items'];
         if ( ! is_array(@$params['options'])) {
@@ -222,12 +218,12 @@ class Sumex
         ];
 
         $esrTypes       = ['9', 'red'];
-        $this->_esrType = $esrTypes[$CI->mdl_settings->setting('sumex_sliptype')];
+        $this->_esrType = $esrTypes[\Modules\Core\Models\Setting::getValue('sumex_sliptype') ?? 0];
 
-        $this->currencyCode = $CI->mdl_settings->setting('currency_code');
-        $this->_role        = self::ROLES[$CI->mdl_settings->setting('sumex_role')];
-        $this->_place       = self::PLACES[$CI->mdl_settings->setting('sumex_place')];
-        $this->_canton      = self::CANTONS[$CI->mdl_settings->setting('sumex_canton')];
+        $this->currencyCode = \Modules\Core\Models\Setting::getValue('currency_code');
+        $this->_role        = self::ROLES[\Modules\Core\Models\Setting::getValue('sumex_role') ?? 0];
+        $this->_place       = self::PLACES[\Modules\Core\Models\Setting::getValue('sumex_place') ?? 0];
+        $this->_canton      = self::CANTONS[\Modules\Core\Models\Setting::getValue('sumex_canton') ?? 0];
     }
 
     public function pdf($invoice_template = null): bool|string

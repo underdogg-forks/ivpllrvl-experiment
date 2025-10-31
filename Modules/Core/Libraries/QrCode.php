@@ -24,18 +24,14 @@ class QrCode
 
     public function __construct(array $params)
     {
-        $CI = & get_instance();
-
-        $CI->load->helper('template');
-
         $this->invoice         = $params['invoice'];
-        $this->recipient       = $this->invoice->user_company ?: $CI->mdl_settings->setting('qr_code_recipient');
-        $this->iban            = $this->invoice->user_iban ?: $CI->mdl_settings->setting('qr_code_iban');
-        $this->bic             = $this->invoice->user_bic ?: $CI->mdl_settings->setting('qr_code_bic');
-        $this->currencyCode    = $CI->mdl_settings->setting('currency_code');
-        $this->remittance_text = parse_template(
+        $this->recipient       = $this->invoice->user_company ?: \Modules\Core\Models\Setting::getValue('qr_code_recipient');
+        $this->iban            = $this->invoice->user_iban ?: \Modules\Core\Models\Setting::getValue('qr_code_iban');
+        $this->bic             = $this->invoice->user_bic ?: \Modules\Core\Models\Setting::getValue('qr_code_bic');
+        $this->currencyCode    = \Modules\Core\Models\Setting::getValue('currency_code');
+        $this->remittance_text = \Modules\Core\Support\TemplateHelper::parse_template(
             $this->invoice,
-            $this->invoice->user_remittance_text ?: $CI->mdl_settings->setting('qr_code_remittance_text')
+            $this->invoice->user_remittance_text ?: \Modules\Core\Models\Setting::getValue('qr_code_remittance_text')
         );
     }
 
