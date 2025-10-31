@@ -2,6 +2,7 @@
 
 namespace Modules\Crm\Controllers;
 
+use Modules\Crm\Http\Requests\ClientRequest;
 use Modules\Crm\Models\Client;
 use Modules\Crm\Services\ClientService;
 
@@ -13,13 +14,12 @@ class ClientsController
     {
         $this->clientService = $clientService;
     }
-    /** @legacy-file application/modules/clients/controllers/Clients.php:31 */
+
     public function index(): \Illuminate\Http\RedirectResponse
     {
         return redirect()->route('clients.status', ['status' => 'active']);
     }
 
-    /** @legacy-file application/modules/clients/controllers/Clients.php:40 */
     public function status(string $status = 'active', int $page = 0): \Illuminate\View\View
     {
         $query = Client::query();
@@ -41,34 +41,32 @@ class ClientsController
         ]);
     }
 
-    /** @legacy-file application/modules/clients/controllers/Clients.php:77 */
-    public function form(?int $id = null)
+    public function create(): \Illuminate\View\View
     {
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('clients.index');
-        }
-
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $validated = request()->validate($this->clientService->getValidationRules());
-            if ($id) {
-                Client::findOrFail($id)->update($validated);
-            } else {
-                Client::create($validated);
-            }
-
-            return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_saved'));
-        }
-
-        $client = $id ? Client::findOrFail($id) : new Client();
-
+        $client = new Client();
         return view('crm::clients_form', ['client' => $client]);
     }
 
-    /** @legacy-file application/modules/clients/controllers/Clients.php:205 */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function store(ClientRequest $request): \Illuminate\Http\RedirectResponse
     {
-        Client::findOrFail($id)->delete();
+        $this->clientService->create($request->validated());
+        return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_saved'));
+    }
 
+    public function edit(Client $client): \Illuminate\View\View
+    {
+        return view('crm::clients_form', ['client' => $client]);
+    }
+
+    public function update(ClientRequest $request, Client $client): \Illuminate\Http\RedirectResponse
+    {
+        $this->clientService->update($client->client_id, $request->validated());
+        return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    public function destroy(Client $client): \Illuminate\Http\RedirectResponse
+    {
+        $this->clientService->delete($client->client_id);
         return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }

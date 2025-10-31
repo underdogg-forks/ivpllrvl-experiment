@@ -2,25 +2,18 @@
 
 namespace Modules\Crm\Services;
 
+use App\Services\BaseService;
+use Modules\Crm\Models\Task;
+
 /**
  * TaskService.
  *
  * Service class for managing task business logic
  */
-class TaskService
+class TaskService extends BaseService
 {
-    /**
-     * Get validation rules for tasks.
-     *
-     * @return array
-     */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'project_id'     => 'nullable|integer',
-            'task_name'      => 'required|string|max:255',
-            'task_status'    => 'nullable|integer',
-            'task_finish_date' => 'nullable|date',
-        ];
+        return Task::class;
     }
 }

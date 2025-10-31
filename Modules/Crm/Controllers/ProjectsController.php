@@ -2,6 +2,7 @@
 
 namespace Modules\Crm\Controllers;
 
+use Modules\Crm\Http\Requests\ProjectRequest;
 use Modules\Crm\Models\Client;
 use Modules\Crm\Models\Project;
 use Modules\Crm\Services\ProjectService;
@@ -14,7 +15,7 @@ class ProjectsController
     {
         $this->projectService = $projectService;
     }
-    /** @legacy-file application/modules/projects/controllers/Projects.php:32 */
+
     public function index(int $page = 0): \Illuminate\View\View
     {
         $projects = Project::with('client')->orderBy('project_name')->paginate(15, ['*'], 'page', $page);
@@ -27,38 +28,35 @@ class ProjectsController
         ]);
     }
 
-    /** @legacy-file application/modules/projects/controllers/Projects.php:49 */
-    public function form(?int $id = null)
+    public function create(): \Illuminate\View\View
     {
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('projects.index');
-        }
-
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $validated = request()->validate($this->projectService->getValidationRules());
-            if ($id) {
-                Project::findOrFail($id)->update($validated);
-            } else {
-                Project::create($validated);
-            }
-
-            return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_saved'));
-        }
-
-        $project = $id ? Project::find($id) : new Project();
-        if ($id && ! $project) {
-            abort(404);
-        }
-
+        $project = new Project();
         $clients = Client::where('client_active', 1)->orderBy('client_name')->get();
 
         return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
     }
 
-    /** @legacy-file application/modules/projects/controllers/Projects.php:80 */
-    public function view(int $projectId): \Illuminate\View\View
+    public function store(ProjectRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $project = Project::with(['client', 'tasks'])->findOrFail($projectId);
+        $this->projectService->create($request->validated());
+        return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    public function edit(Project $project): \Illuminate\View\View
+    {
+        $clients = Client::where('client_active', 1)->orderBy('client_name')->get();
+        return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
+    }
+
+    public function update(ProjectRequest $request, Project $project): \Illuminate\Http\RedirectResponse
+    {
+        $this->projectService->update($project->project_id, $request->validated());
+        return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    public function view(Project $project): \Illuminate\View\View
+    {
+        $project->load(['client', 'tasks']);
 
         return view('crm::projects_view', [
             'project' => $project,
@@ -66,12 +64,9 @@ class ProjectsController
         ]);
     }
 
-    /** @legacy-file application/modules/projects/controllers/Projects.php:106 */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function destroy(Project $project): \Illuminate\Http\RedirectResponse
     {
-        $project = Project::findOrFail($id);
-        $project->delete();
-
+        $this->projectService->delete($project->project_id);
         return redirect()->route('projects.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }

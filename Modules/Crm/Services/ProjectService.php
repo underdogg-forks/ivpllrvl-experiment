@@ -2,24 +2,18 @@
 
 namespace Modules\Crm\Services;
 
+use App\Services\BaseService;
+use Modules\Crm\Models\Project;
+
 /**
  * ProjectService.
  *
  * Service class for managing project business logic
  */
-class ProjectService
+class ProjectService extends BaseService
 {
-    /**
-     * Get validation rules for projects.
-     *
-     * @return array
-     */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'client_id'      => 'required|integer',
-            'project_name'   => 'required|string|max:255',
-            'project_status' => 'nullable|integer',
-        ];
+        return Project::class;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\Crm\Controllers;
 
+use Modules\Crm\Http\Requests\TaskRequest;
 use Modules\Crm\Models\Project;
 use Modules\Crm\Models\Task;
 use Modules\Crm\Services\TaskService;
@@ -14,7 +15,7 @@ class TasksController
     {
         $this->taskService = $taskService;
     }
-    /** @legacy-file application/modules/tasks/controllers/Tasks.php:32 */
+
     public function index(int $page = 0): \Illuminate\View\View
     {
         $tasks = Task::with(['project', 'taxRate'])->orderBy('task_name')->paginate(15, ['*'], 'page', $page);
@@ -28,25 +29,9 @@ class TasksController
         ]);
     }
 
-    /** @legacy-file application/modules/tasks/controllers/Tasks.php:50 */
-    public function form(?int $id = null)
+    public function create(): \Illuminate\View\View
     {
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('tasks.index');
-        }
-
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $validated = request()->validate($this->taskService->getValidationRules());
-            if ($id) {
-                Task::findOrFail($id)->update($validated);
-            } else {
-                Task::create($validated);
-            }
-
-            return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
-        }
-
-        $task     = $id ? Task::findOrFail($id) : new Task();
+        $task     = new Task();
         $projects = Project::orderBy('project_name')->get();
         $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
 
@@ -58,11 +43,34 @@ class TasksController
         ]);
     }
 
-    /** @legacy-file application/modules/tasks/controllers/Tasks.php:87 */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function store(TaskRequest $request): \Illuminate\Http\RedirectResponse
     {
-        Task::findOrFail($id)->delete();
+        $this->taskService->create($request->validated());
+        return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
+    }
 
+    public function edit(Task $task): \Illuminate\View\View
+    {
+        $projects = Project::orderBy('project_name')->get();
+        $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
+
+        return view('crm::tasks_form', [
+            'task'          => $task,
+            'projects'      => $projects,
+            'task_statuses' => Task::STATUSES,
+            'tax_rates'     => $taxRates,
+        ]);
+    }
+
+    public function update(TaskRequest $request, Task $task): \Illuminate\Http\RedirectResponse
+    {
+        $this->taskService->update($task->task_id, $request->validated());
+        return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    public function destroy(Task $task): \Illuminate\Http\RedirectResponse
+    {
+        $this->taskService->delete($task->task_id);
         return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_deleted'));
     }
 }
