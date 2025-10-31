@@ -22,7 +22,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsCurrencyWithDefaultSettings(): void
+    public function it_formats_currency_with_default_settings(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -32,7 +32,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsCurrencyWithSymbolAfter(): void
+    public function it_formats_currency_with_symbol_after(): void
     {
         Setting::setValue('currency_symbol', '€');
         Setting::setValue('currency_symbol_placement', 'after');
@@ -46,7 +46,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsCurrencyWithSymbolAfterSpace(): void
+    public function it_formats_currency_with_symbol_after_space(): void
     {
         Setting::setValue('currency_symbol', '€');
         Setting::setValue('currency_symbol_placement', 'afterspace');
@@ -60,7 +60,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsCurrencyWithZeroDecimals(): void
+    public function it_formats_currency_with_zero_decimals(): void
     {
         Setting::setValue('currency_symbol', '$');
         Setting::setValue('currency_symbol_placement', 'before');
@@ -75,7 +75,7 @@ class NumberHelperTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('currencyAmountProvider')]
-    public function itFormatsVariousCurrencyAmounts($amount, string $expected): void
+    public function it_formats_various_currency_amounts($amount, string $expected): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -96,7 +96,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsAmountWithDefaultSettings(): void
+    public function it_formats_amount_with_default_settings(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -106,7 +106,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsNullForNullAmount(): void
+    public function it_returns_null_for_null_amount(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -116,7 +116,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsAmountWithEuropeanFormat(): void
+    public function it_formats_amount_with_european_format(): void
     {
         Setting::setValue('thousands_separator', '.');
         Setting::setValue('decimal_point', ',');
@@ -128,7 +128,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsQuantityWithDefaultSettings(): void
+    public function it_formats_quantity_with_default_settings(): void
     {
         Setting::setValue('thousands_separator', ',');
         Setting::setValue('decimal_point', '.');
@@ -140,7 +140,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsQuantityWithHigherPrecision(): void
+    public function it_formats_quantity_with_higher_precision(): void
     {
         Setting::setValue('thousands_separator', ',');
         Setting::setValue('decimal_point', '.');
@@ -152,7 +152,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsNullForNullQuantity(): void
+    public function it_returns_null_for_null_quantity(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -162,7 +162,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itStandardizesAmountFromEuropeanFormat(): void
+    public function it_standardizes_amount_from_european_format(): void
     {
         Setting::setValue('thousands_separator', '.');
         Setting::setValue('decimal_point', ',');
@@ -173,7 +173,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itStandardizesAmountFromUsFormat(): void
+    public function it_standardizes_amount_from_us_format(): void
     {
         Setting::setValue('thousands_separator', ',');
         Setting::setValue('decimal_point', '.');
@@ -184,7 +184,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesNumericAmountStandardization(): void
+    public function it_handles_numeric_amount_standardization(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -194,7 +194,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itStandardizesAmountWithMultipleDots(): void
+    public function it_standardizes_amount_with_multiple_dots(): void
     {
         Setting::setValue('thousands_separator', '.');
         Setting::setValue('decimal_point', ',');
@@ -206,7 +206,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesEmptyThousandsSeparator(): void
+    public function it_handles_empty_thousands_separator(): void
     {
         Setting::setValue('thousands_separator', '');
         Setting::setValue('decimal_point', ',');
@@ -217,7 +217,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsNullForNullStandardizeAmount(): void
+    public function it_returns_null_for_null_standardize_amount(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -227,7 +227,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itStandardizesZero(): void
+    public function it_standardizes_zero(): void
     {
         $this->setDefaultCurrencySettings();
         
@@ -237,7 +237,7 @@ class NumberHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itStandardizesNegativeAmounts(): void
+    public function it_standardizes_negative_amounts(): void
     {
         Setting::setValue('thousands_separator', ',');
         Setting::setValue('decimal_point', '.');

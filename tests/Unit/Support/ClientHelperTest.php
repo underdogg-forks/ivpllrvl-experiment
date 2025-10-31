@@ -12,7 +12,7 @@ use Tests\Unit\UnitTestCase;
 class ClientHelperTest extends UnitTestCase
 {
     #[Test]
-    public function itFormatsGenderMale(): void
+    public function it_formats_gender_male(): void
     {
         $result = ClientHelper::format_gender(0);
         
@@ -21,7 +21,7 @@ class ClientHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsGenderFemale(): void
+    public function it_formats_gender_female(): void
     {
         $result = ClientHelper::format_gender(1);
         
@@ -30,7 +30,7 @@ class ClientHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsGenderOther(): void
+    public function it_formats_gender_other(): void
     {
         $result = ClientHelper::format_gender(2);
         
@@ -40,7 +40,7 @@ class ClientHelperTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('genderProvider')]
-    public function itFormatsVariousGenders($gender): void
+    public function it_formats_various_genders($gender): void
     {
         $result = ClientHelper::format_gender($gender);
         
@@ -59,7 +59,7 @@ class ClientHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesStringGenderValues(): void
+    public function it_handles_string_gender_values(): void
     {
         $result = ClientHelper::format_gender('0');
         
@@ -67,7 +67,7 @@ class ClientHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesNullGender(): void
+    public function it_handles_null_gender(): void
     {
         $result = ClientHelper::format_gender(null);
         

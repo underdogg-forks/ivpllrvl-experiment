@@ -21,7 +21,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itDetectsPhpmailConfiguration(): void
+    public function it_detects_phpmail_configuration(): void
     {
         Setting::setValue('email_send_method', 'phpmail');
         
@@ -31,7 +31,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itDetectsSendmailConfiguration(): void
+    public function it_detects_sendmail_configuration(): void
     {
         Setting::setValue('email_send_method', 'sendmail');
         
@@ -41,7 +41,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itDetectsSmtpConfigurationWithServer(): void
+    public function it_detects_smtp_configuration_with_server(): void
     {
         Setting::setValue('email_send_method', 'smtp');
         Setting::setValue('smtp_server_address', 'smtp.example.com');
@@ -52,7 +52,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itDetectsIncompleteSmtpConfiguration(): void
+    public function it_detects_incomplete_smtp_configuration(): void
     {
         Setting::setValue('email_send_method', 'smtp');
         Setting::setValue('smtp_server_address', '');
@@ -63,7 +63,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itDetectsNoConfiguration(): void
+    public function it_detects_no_configuration(): void
     {
         $result = MailerHelper::mailer_configured();
         
@@ -71,7 +71,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesSingleEmailAddress(): void
+    public function it_validates_single_email_address(): void
     {
         $result = MailerHelper::validate_email_address('test@example.com');
         
@@ -79,7 +79,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesMultipleEmailAddresses(): void
+    public function it_validates_multiple_email_addresses(): void
     {
         $result = MailerHelper::validate_email_address('test1@example.com,test2@example.com');
         
@@ -87,7 +87,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itRejectsInvalidEmail(): void
+    public function it_rejects_invalid_email(): void
     {
         $result = MailerHelper::validate_email_address('invalid-email');
         
@@ -95,7 +95,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itRejectsListWithOneInvalidEmail(): void
+    public function it_rejects_list_with_one_invalid_email(): void
     {
         $result = MailerHelper::validate_email_address('valid@example.com,invalid-email');
         
@@ -104,7 +104,7 @@ class MailerHelperTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('emailValidationProvider')]
-    public function itValidatesVariousEmailFormats(string $email, bool $expected): void
+    public function it_validates_various_email_formats(string $email, bool $expected): void
     {
         $result = MailerHelper::validate_email_address($email);
         
@@ -128,7 +128,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesEmailWithDots(): void
+    public function it_validates_email_with_dots(): void
     {
         $result = MailerHelper::validate_email_address('first.last@example.com');
         
@@ -136,7 +136,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesEmailWithHyphens(): void
+    public function it_validates_email_with_hyphens(): void
     {
         $result = MailerHelper::validate_email_address('user-name@example.com');
         
@@ -144,7 +144,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesEmailWithUnderscores(): void
+    public function it_validates_email_with_underscores(): void
     {
         $result = MailerHelper::validate_email_address('user_name@example.com');
         
@@ -152,7 +152,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itRejectsEmailWithSpaces(): void
+    public function it_rejects_email_with_spaces(): void
     {
         $result = MailerHelper::validate_email_address('user name@example.com');
         
@@ -160,7 +160,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itRejectsEmailWithDoubleAt(): void
+    public function it_rejects_email_with_double_at(): void
     {
         $result = MailerHelper::validate_email_address('user@@example.com');
         
@@ -168,7 +168,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesMultipleEmailsWithSpacesAfterComma(): void
+    public function it_validates_multiple_emails_with_spaces_after_comma(): void
     {
         $result = MailerHelper::validate_email_address('a@b.com, c@d.com');
         
@@ -177,7 +177,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesEmailWithCountryCodeTld(): void
+    public function it_validates_email_with_country_code_tld(): void
     {
         $result = MailerHelper::validate_email_address('user@example.co.uk');
         
@@ -185,7 +185,7 @@ class MailerHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itValidatesEmailWithNewTlds(): void
+    public function it_validates_email_with_new_tlds(): void
     {
         $result = MailerHelper::validate_email_address('user@example.technology');
         

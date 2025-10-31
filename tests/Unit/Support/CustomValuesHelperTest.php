@@ -12,7 +12,7 @@ use Tests\Unit\UnitTestCase;
 class CustomValuesHelperTest extends UnitTestCase
 {
     #[Test]
-    public function itReturnsEmptyStringForNullText(): void
+    public function it_returns_empty_string_for_null_text(): void
     {
         $result = CustomValuesHelper::format_text(null);
         
@@ -20,7 +20,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsText(): void
+    public function it_formats_text(): void
     {
         $result = CustomValuesHelper::format_text('Sample text');
         
@@ -28,7 +28,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itPreservesTextUnchanged(): void
+    public function it_preserves_text_unchanged(): void
     {
         $text = 'This is some <b>formatted</b> text';
         
@@ -38,7 +38,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsBooleanTrue(): void
+    public function it_formats_boolean_true(): void
     {
         $result = CustomValuesHelper::format_boolean('1');
         
@@ -47,7 +47,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsBooleanFalse(): void
+    public function it_formats_boolean_false(): void
     {
         $result = CustomValuesHelper::format_boolean('0');
         
@@ -56,7 +56,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsEmptyStringForNullBoolean(): void
+    public function it_returns_empty_string_for_null_boolean(): void
     {
         $result = CustomValuesHelper::format_boolean(null);
         
@@ -64,7 +64,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsEmptyStringForInvalidBoolean(): void
+    public function it_returns_empty_string_for_invalid_boolean(): void
     {
         $result = CustomValuesHelper::format_boolean('invalid');
         
@@ -73,7 +73,7 @@ class CustomValuesHelperTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('booleanProvider')]
-    public function itFormatsVariousBooleanValues($value, bool $isEmpty): void
+    public function it_formats_various_boolean_values($value, bool $isEmpty): void
     {
         $result = CustomValuesHelper::format_boolean($value);
         
@@ -97,7 +97,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesEmptyStringsInFormatText(): void
+    public function it_handles_empty_strings_in_format_text(): void
     {
         $result = CustomValuesHelper::format_text('');
         
@@ -105,7 +105,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesWhitespaceInFormatText(): void
+    public function it_handles_whitespace_in_format_text(): void
     {
         $result = CustomValuesHelper::format_text('   ');
         
@@ -113,7 +113,7 @@ class CustomValuesHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesNumericStringsInFormatText(): void
+    public function it_handles_numeric_strings_in_format_text(): void
     {
         $result = CustomValuesHelper::format_text('12345');
         

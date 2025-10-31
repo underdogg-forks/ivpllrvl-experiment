@@ -11,7 +11,7 @@ use Tests\Unit\UnitTestCase;
 class JsonErrorHelperTest extends UnitTestCase
 {
     #[Test]
-    public function itReturnsEmptyArrayWhenNoPostData(): void
+    public function it_returns_empty_array_when_no_post_data(): void
     {
         $_POST = [];
         
@@ -22,7 +22,7 @@ class JsonErrorHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsArrayOfErrors(): void
+    public function it_returns_array_of_errors(): void
     {
         // Simulate POST data
         $_POST = ['field1' => 'value1', 'field2' => 'value2'];
@@ -33,7 +33,7 @@ class JsonErrorHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itProcessesMultiplePostFields(): void
+    public function it_processes_multiple_post_fields(): void
     {
         $_POST = [
             'email' => 'invalid-email',

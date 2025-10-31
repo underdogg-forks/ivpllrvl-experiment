@@ -12,7 +12,7 @@ use Tests\Unit\UnitTestCase;
 class EchoHelperTest extends UnitTestCase
 {
     #[Test]
-    public function itEscapesHtmlSpecialChars(): void
+    public function it_escapes_html_special_chars(): void
     {
         $input = '<script>alert("xss")</script>';
         
@@ -22,7 +22,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsNullForNullInput(): void
+    public function it_returns_null_for_null_input(): void
     {
         $result = EchoHelper::htmlsc(null);
         
@@ -30,7 +30,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesQuotesInHtmlsc(): void
+    public function it_handles_quotes_in_htmlsc(): void
     {
         $input = "It's a \"test\"";
         
@@ -41,7 +41,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesAmpersands(): void
+    public function it_handles_ampersands(): void
     {
         $input = 'Johnson & Johnson';
         
@@ -52,7 +52,7 @@ class EchoHelperTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('specialCharsProvider')]
-    public function itEscapesVariousSpecialChars(string $input, string $expectedContains): void
+    public function it_escapes_various_special_chars(string $input, string $expectedContains): void
     {
         $result = EchoHelper::htmlsc($input);
         
@@ -71,7 +71,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itOutputsEscapedHtmlChars(): void
+    public function it_outputs_escaped_html_chars(): void
     {
         $input = '<b>Bold</b>';
         
@@ -83,7 +83,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsEmptyStringForNullHtmlscOutput(): void
+    public function it_returns_empty_string_for_null_htmlsc_output(): void
     {
         ob_start();
         $result = EchoHelper::_htmlsc(null);
@@ -94,7 +94,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itOutputsHtmlEntities(): void
+    public function it_outputs_html_entities(): void
     {
         $input = '<script>test</script>';
         
@@ -107,7 +107,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsEmptyStringForNullHtmleOutput(): void
+    public function it_returns_empty_string_for_null_htmle_output(): void
     {
         ob_start();
         $result = EchoHelper::_htmle(null);
@@ -118,7 +118,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesEmptyStrings(): void
+    public function it_handles_empty_strings(): void
     {
         $result = EchoHelper::htmlsc('');
         
@@ -126,7 +126,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itPreservesSafeText(): void
+    public function it_preserves_safe_text(): void
     {
         $input = 'This is safe text without special chars';
         
@@ -136,7 +136,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesUnicodeCharacters(): void
+    public function it_handles_unicode_characters(): void
     {
         $input = 'Hello 世界 🌍';
         
@@ -147,7 +147,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesNumericStrings(): void
+    public function it_handles_numeric_strings(): void
     {
         $input = '12345.67';
         
@@ -157,7 +157,7 @@ class EchoHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesMultipleSpecialChars(): void
+    public function it_handles_multiple_special_chars(): void
     {
         $input = '<div class="test" id=\'myId\'>Content & more</div>';
         

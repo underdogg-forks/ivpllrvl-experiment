@@ -20,7 +20,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsEmptyStringForNullUser(): void
+    public function it_returns_empty_string_for_null_user(): void
     {
         $result = UserHelper::format_user(null);
         
@@ -28,7 +28,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itReturnsEmptyStringForNonexistentUserId(): void
+    public function it_returns_empty_string_for_nonexistent_user_id(): void
     {
         $result = UserHelper::format_user(99999);
         
@@ -36,7 +36,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsUserWithNameOnly(): void
+    public function it_formats_user_with_name_only(): void
     {
         $user = (object)[
             'user_name' => 'John Doe',
@@ -50,7 +50,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsUserWithCompany(): void
+    public function it_formats_user_with_company(): void
     {
         $user = (object)[
             'user_name' => 'John Doe',
@@ -64,7 +64,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsUserWithContact(): void
+    public function it_formats_user_with_contact(): void
     {
         $user = (object)[
             'user_name' => 'John Doe',
@@ -78,7 +78,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itFormatsUserWithAllFields(): void
+    public function it_formats_user_with_all_fields(): void
     {
         $user = (object)[
             'user_name' => 'John Doe',
@@ -92,7 +92,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itCapitalizesFirstLetterOfName(): void
+    public function it_capitalizes_first_letter_of_name(): void
     {
         $user = (object)[
             'user_name' => 'john',
@@ -106,7 +106,7 @@ class UserHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function itHandlesUserObjectWithoutOptionalFields(): void
+    public function it_handles_user_object_without_optional_fields(): void
     {
         $user = (object)[
             'user_name' => 'Jane Smith'
