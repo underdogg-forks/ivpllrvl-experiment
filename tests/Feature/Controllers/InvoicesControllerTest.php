@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use Modules\Core\Models\User;
 use Modules\Crm\Models\Task;
 use Modules\Invoices\Controllers\InvoicesController;
 use Modules\Invoices\Models\Invoice;
@@ -10,7 +11,7 @@ use Modules\Invoices\Models\Item;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Feature\FeatureTestCase;
 
 /**
  * Test suite for InvoicesController.
@@ -18,28 +19,22 @@ use PHPUnit\Framework\TestCase;
  * Tests invoice viewing, status filtering, PDF generation, and management
  */
 #[CoversClass(InvoicesController::class)]
-class InvoicesControllerTest extends TestCase
+class InvoicesControllerTest extends FeatureTestCase
 {
-    private InvoicesController $controller;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->controller = new InvoicesController();
-    }
-
     /**
      * Test index redirects to all status view.
      */
     #[Test]
     public function it_redirects_to_all_status_view_from_index(): void
     {
+        /** Arrange */
+        $user = User::factory()->create();
+
         /** Act */
-        $response = $this->controller->index();
+        $response = $this->actingAs($user)->get(route('invoices.index'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
-        $this->assertEquals(route('invoices.status', ['status' => 'all']), $response->getTargetUrl());
+        $response->assertRedirect(route('invoices.status', ['status' => 'all']));
     }
 
     /**
@@ -49,17 +44,21 @@ class InvoicesControllerTest extends TestCase
     public function it_displays_only_draft_invoices_when_draft_status_selected(): void
     {
         /** Arrange */
+        $user         = User::factory()->create();
         $draftInvoice = Invoice::factory()->draft()->create();
         $sentInvoice  = Invoice::factory()->sent()->create();
 
         /** Act */
-        $response = $this->controller->status('draft');
+        $response = $this->actingAs($user)->get('/invoices/status/draft');
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
+        $response->assertOk();
+        $response->assertViewIs('invoices::index');
+        $response->assertViewHas('invoices');
+        $response->assertViewHas('status', 'draft');
 
-        $invoiceIds = $viewData['invoices']->pluck('invoice_id')->toArray();
+        $invoices   = $response->viewData('invoices');
+        $invoiceIds = $invoices->pluck('invoice_id')->toArray();
         $this->assertContains($draftInvoice->invoice_id, $invoiceIds);
         $this->assertNotContains($sentInvoice->invoice_id, $invoiceIds);
     }
@@ -71,16 +70,18 @@ class InvoicesControllerTest extends TestCase
     public function it_displays_all_invoices_when_all_status_selected(): void
     {
         /** Arrange */
+        $user         = User::factory()->create();
         $draftInvoice = Invoice::factory()->draft()->create();
         $sentInvoice  = Invoice::factory()->sent()->create();
         $paidInvoice  = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->controller->status('all');
+        $response = $this->actingAs($user)->get('/invoices/status/all');
 
         /** Assert */
-        $viewData   = $response->getData();
-        $invoiceIds = $viewData['invoices']->pluck('invoice_id')->toArray();
+        $response->assertOk();
+        $invoices   = $response->viewData('invoices');
+        $invoiceIds = $invoices->pluck('invoice_id')->toArray();
 
         $this->assertContains($draftInvoice->invoice_id, $invoiceIds);
         $this->assertContains($sentInvoice->invoice_id, $invoiceIds);
@@ -93,14 +94,16 @@ class InvoicesControllerTest extends TestCase
     #[Test]
     public function it_includes_invoice_statuses_in_view_data_for_status_method(): void
     {
+        /** Arrange */
+        $user = User::factory()->create();
+
         /** Act */
-        $response = $this->controller->status('all');
+        $response = $this->actingAs($user)->get('/invoices/status/all');
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('invoice_statuses', $viewData);
-        $this->assertArrayHasKey('status', $viewData);
-        $this->assertEquals('all', $viewData['status']);
+        $response->assertOk();
+        $response->assertViewHas('invoice_statuses');
+        $response->assertViewHas('status', 'all');
     }
 
     /**
@@ -110,18 +113,21 @@ class InvoicesControllerTest extends TestCase
     public function it_displays_invoice_details_with_items_and_amounts(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
         Item::factory()->count(3)->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
-        $response = $this->controller->view($invoice->invoice_id);
+        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('invoice', $viewData);
-        $this->assertArrayHasKey('items', $viewData);
-        $this->assertEquals($invoice->invoice_id, $viewData['invoice']->invoice_id);
-        $this->assertCount(3, $viewData['items']);
+        $response->assertOk();
+        $response->assertViewHas('invoice');
+        $response->assertViewHas('items');
+        $invoice_id = $response->viewData('invoice_id');
+        $items      = $response->viewData('items');
+        $this->assertEquals($invoice->invoice_id, $invoice_id);
+        $this->assertCount(3, $items);
     }
 
     /**
@@ -130,11 +136,14 @@ class InvoicesControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_viewing_non_existent_invoice(): void
     {
-        /* Expect exception */
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        /** Arrange */
+        $user = User::factory()->create();
 
         /* Act */
-        $this->controller->view(99999);
+        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => 99999]));
+
+        /** Assert */
+        $response->assertNotFound();
     }
 
     /**
@@ -144,15 +153,16 @@ class InvoicesControllerTest extends TestCase
     public function it_includes_custom_fields_in_invoice_view_data(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->controller->view($invoice->invoice_id);
+        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('custom_fields', $viewData);
-        $this->assertArrayHasKey('custom_values', $viewData);
+        $response->assertOk();
+        $response->assertViewHas('custom_fields');
+        $response->assertViewHas('custom_values');
     }
 
     /**
@@ -162,16 +172,18 @@ class InvoicesControllerTest extends TestCase
     public function it_includes_tax_rates_in_invoice_view_data(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
         TaxRate::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->controller->view($invoice->invoice_id);
+        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('tax_rates', $viewData);
-        $this->assertGreaterThanOrEqual(5, count($viewData['tax_rates']));
+        $response->assertOk();
+        $response->assertViewHas('tax_rates');
+        $taxRates = $response->viewData('tax_rates');
+        $this->assertGreaterThanOrEqual(5, count($taxRates));
     }
 
     /**
@@ -181,13 +193,14 @@ class InvoicesControllerTest extends TestCase
     public function it_deletes_draft_invoice_and_redirects_to_index(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
 
         /** Act */
-        $response = $this->controller->delete($invoice->invoice_id);
+        $response = $this->actingAs($user)->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $response->assertRedirect();
         $this->assertNull(Invoice::find($invoice->invoice_id));
     }
 
@@ -198,11 +211,12 @@ class InvoicesControllerTest extends TestCase
     public function it_updates_task_status_when_deleting_invoice_with_tasks(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
         $task    = Task::factory()->create(['invoice_id' => $invoice->invoice_id, 'task_status' => 4]);
 
         /* Act */
-        $this->controller->delete($invoice->invoice_id);
+        $this->actingAs($user)->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
         $updatedTask = Task::find($task->task_id);
@@ -216,15 +230,16 @@ class InvoicesControllerTest extends TestCase
     public function it_shows_error_when_deleting_non_draft_invoice_and_deletion_disabled(): void
     {
         /* Arrange */
+        $user = User::factory()->create();
         config(['settings.enable_invoice_deletion' => false]);
         $invoice = Invoice::factory()->sent()->create(); // Not a draft
 
         /** Act */
-        $response = $this->controller->delete($invoice->invoice_id);
+        $response = $this->actingAs($user)->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
         /* Assert */
         $this->assertNotNull(Invoice::find($invoice->invoice_id)); // Still exists
-        $this->assertTrue(session()->has('alert_error'));
+        $response->assertSessionHas('alert_error');
     }
 
     /**
@@ -233,13 +248,16 @@ class InvoicesControllerTest extends TestCase
     #[Test]
     public function it_displays_archived_invoices_list(): void
     {
+        /** Arrange */
+        $user = User::factory()->create();
+
         /** Act */
-        $response = $this->controller->archive();
+        $response = $this->actingAs($user)->get(route('invoices.archive'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('invoices_archive', $viewData);
+        $response->assertOk();
+        $response->assertViewIs('invoices::archive');
+        $response->assertViewHas('invoices_archive');
     }
 
     /**
@@ -248,11 +266,14 @@ class InvoicesControllerTest extends TestCase
     #[Test]
     public function it_prevents_directory_traversal_when_downloading_invoice(): void
     {
-        /* Expect 404 for invalid path */
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        /** Arrange */
+        $user = User::factory()->create();
 
-        /* Act - Try directory traversal */
-        $this->controller->download('../../../etc/passwd');
+        /* Act */
+        $response = $this->actingAs($user)->get(route('invoices.download', ['filename' => '../../../etc/passwd']));
+
+        /* Assert - Expect 404 for invalid path */
+        $response->assertNotFound();
     }
 
     /**
@@ -261,11 +282,14 @@ class InvoicesControllerTest extends TestCase
     #[Test]
     public function it_returns_404_when_downloading_non_existent_file(): void
     {
-        /* Expect 404 */
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        /** Arrange */
+        $user = User::factory()->create();
 
         /* Act */
-        $this->controller->download('non-existent-file.pdf');
+        $response = $this->actingAs($user)->get(route('invoices.download', ['filename' => 'non-existent-file.pdf']));
+
+        /* Assert - Expect 404 */
+        $response->assertNotFound();
     }
 
     /**
@@ -275,14 +299,20 @@ class InvoicesControllerTest extends TestCase
     public function it_recalculates_invoice_after_deleting_tax_rate(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
         $taxRate = InvoiceTaxRate::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
-        $response = $this->controller->deleteInvoiceTax($invoice->invoice_id, $taxRate->invoice_tax_rate_id);
+        $response = $this->actingAs($user)->post(
+            route('invoices.delete_tax', [
+                'invoiceId' => $invoice->invoice_id,
+                'taxRateId' => $taxRate->invoice_tax_rate_id,
+            ])
+        );
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $response->assertRedirect();
         $this->assertNull(InvoiceTaxRate::find($taxRate->invoice_tax_rate_id));
     }
 
@@ -293,15 +323,20 @@ class InvoicesControllerTest extends TestCase
     public function it_redirects_to_invoice_view_after_deleting_tax_rate(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
         $taxRate = InvoiceTaxRate::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
-        $response = $this->controller->deleteInvoiceTax($invoice->invoice_id, $taxRate->invoice_tax_rate_id);
+        $response = $this->actingAs($user)->post(
+            route('invoices.delete_tax', [
+                'invoiceId' => $invoice->invoice_id,
+                'taxRateId' => $taxRate->invoice_tax_rate_id,
+            ])
+        );
 
         /** Assert */
-        $expectedUrl = route('invoices.view', ['invoiceId' => $invoice->invoice_id]);
-        $this->assertEquals($expectedUrl, $response->getTargetUrl());
+        $response->assertRedirect(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
     }
 
     /**
@@ -311,16 +346,17 @@ class InvoicesControllerTest extends TestCase
     public function it_recalculates_all_invoices_in_system(): void
     {
         /* Arrange */
+        $user = User::factory()->create();
         Invoice::factory()->count(5)->create();
         $initialCount = Invoice::count();
 
         /** Act */
-        $response = $this->controller->recalculateAllInvoices();
+        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $response->assertRedirect();
         $this->assertEquals($initialCount, Invoice::count()); // All still exist
-        $this->assertTrue(session()->has('alert_success'));
+        $response->assertSessionHas('alert_success');
     }
 
     /**
@@ -330,13 +366,14 @@ class InvoicesControllerTest extends TestCase
     public function it_handles_empty_invoice_list_when_recalculating_all(): void
     {
         /* Arrange - No invoices */
+        $user = User::factory()->create();
         Invoice::truncate();
 
         /** Act */
-        $response = $this->controller->recalculateAllInvoices();
+        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $response->assertRedirect();
         /* Should not throw exception */
     }
 
@@ -347,11 +384,12 @@ class InvoicesControllerTest extends TestCase
     public function it_marks_invoice_as_sent_when_generating_pdf_and_setting_enabled(): void
     {
         /* Arrange */
+        $user = User::factory()->create();
         config(['settings.mark_invoices_sent_pdf' => 1]);
         $invoice = Invoice::factory()->draft()->create();
 
         /* Act */
-        $this->controller->generatePdf($invoice->invoice_id);
+        $this->actingAs($user)->get(route('invoices.generate_pdf', ['id' => $invoice->invoice_id]));
 
         /** Assert */
         $updatedInvoice = Invoice::find($invoice->invoice_id);
@@ -365,15 +403,17 @@ class InvoicesControllerTest extends TestCase
     public function it_displays_only_paid_invoices_when_paid_status_selected(): void
     {
         /** Arrange */
+        $user         = User::factory()->create();
         $draftInvoice = Invoice::factory()->draft()->create();
         $paidInvoice  = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->controller->status('paid');
+        $response = $this->actingAs($user)->get('/invoices/status/paid');
 
         /** Assert */
-        $viewData   = $response->getData();
-        $invoiceIds = $viewData['invoices']->pluck('invoice_id')->toArray();
+        $response->assertOk();
+        $invoices   = $response->viewData('invoices');
+        $invoiceIds = $invoices->pluck('invoice_id')->toArray();
 
         $this->assertContains($paidInvoice->invoice_id, $invoiceIds);
         $this->assertNotContains($draftInvoice->invoice_id, $invoiceIds);
@@ -386,15 +426,17 @@ class InvoicesControllerTest extends TestCase
     public function it_displays_only_overdue_invoices_when_overdue_status_selected(): void
     {
         /** Arrange */
+        $user           = User::factory()->create();
         $overdueInvoice = Invoice::factory()->overdue()->create();
         $paidInvoice    = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->controller->status('overdue');
+        $response = $this->actingAs($user)->get('/invoices/status/overdue');
 
         /** Assert */
-        $viewData   = $response->getData();
-        $invoiceIds = $viewData['invoices']->pluck('invoice_id')->toArray();
+        $response->assertOk();
+        $invoices   = $response->viewData('invoices');
+        $invoiceIds = $invoices->pluck('invoice_id')->toArray();
 
         $this->assertContains($overdueInvoice->invoice_id, $invoiceIds);
         $this->assertNotContains($paidInvoice->invoice_id, $invoiceIds);
@@ -407,13 +449,15 @@ class InvoicesControllerTest extends TestCase
     public function it_uses_sumex_template_when_invoice_has_sumex_id(): void
     {
         /** Arrange */
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create(['sumex_id' => 12345]);
 
         /** Act */
-        $response = $this->controller->view($invoice->invoice_id);
+        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /* Assert */
-        $this->assertEquals('invoices::view_sumex', $response->name());
+        $response->assertOk();
+        $response->assertViewIs('invoices::view_sumex');
     }
 
     /**
@@ -423,13 +467,15 @@ class InvoicesControllerTest extends TestCase
     public function it_paginates_invoice_results_correctly(): void
     {
         /* Arrange */
+        $user = User::factory()->create();
         Invoice::factory()->count(30)->create();
 
         /** Act */
-        $response = $this->controller->status('all', 0);
+        $response = $this->actingAs($user)->get('/invoices/status/all');
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertLessThanOrEqual(15, $viewData['invoices']->count());
+        $response->assertOk();
+        $invoices = $response->viewData('invoices');
+        $this->assertLessThanOrEqual(15, $invoices->count());
     }
 }

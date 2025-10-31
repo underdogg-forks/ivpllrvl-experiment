@@ -2,19 +2,20 @@
 
 namespace Tests\Feature\Controllers;
 
+use Modules\Core\Models\User;
 use Modules\Invoices\Controllers\InvoiceGroupsController;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Feature\FeatureTestCase;
 
 /**
  * InvoiceGroupsController Feature Tests.
  *
- * Comprehensive test coverage for invoice group management
+ * Comprehensive test coverage for invoice group management via HTTP routes
  * Invoice groups control invoice numbering patterns
  */
 #[CoversClass(InvoiceGroupsController::class)]
-class InvoiceGroupsControllerTest extends TestCase
+class InvoiceGroupsControllerTest extends FeatureTestCase
 {
     /**
      * Test index displays paginated list of invoice groups.
@@ -23,15 +24,15 @@ class InvoiceGroupsControllerTest extends TestCase
     public function it_displays_paginated_list_of_invoice_groups(): void
     {
         /** Arrange */
-        $controller = new InvoiceGroupsController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('invoice_groups.index'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('invoice_groups', $viewData);
+        $response->assertOk();
+        $response->assertViewIs('invoices::invoice_groups_index');
+        $response->assertViewHas('invoice_groups');
     }
 
     /**
@@ -41,13 +42,14 @@ class InvoiceGroupsControllerTest extends TestCase
     public function it_orders_invoice_groups_by_name(): void
     {
         /** Arrange */
-        $controller = new InvoiceGroupsController();
+        $user = User::factory()->create();
         /** Would create multiple invoice groups with different names */
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('invoice_groups.index'));
 
         /* Assert */
+        $response->assertOk();
         /* Would verify groups are ordered alphabetically */
         $this->assertTrue(true, 'Invoice groups should be ordered by name');
     }
@@ -59,14 +61,14 @@ class InvoiceGroupsControllerTest extends TestCase
     public function it_paginates_invoice_groups_at_15_per_page(): void
     {
         /** Arrange */
-        $controller = new InvoiceGroupsController();
+        $user = User::factory()->create();
         /** Would create 20 invoice groups */
 
         /** Act */
-        $response = $controller->index(0);
+        $response = $this->actingAs($user)->get(route('invoice_groups.index'));
 
         /** Assert */
-        $viewData = $response->getData();
+        $response->assertOk();
         /* Would verify pagination shows max 15 items */
         $this->assertTrue(true, 'Should paginate at 15 items per page');
     }
@@ -78,18 +80,18 @@ class InvoiceGroupsControllerTest extends TestCase
     public function it_displays_create_form_with_default_values(): void
     {
         /** Arrange */
-        $controller = new InvoiceGroupsController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->form(null);
+        $response = $this->actingAs($user)->get(route('invoice_groups.form'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('invoice_group', $viewData);
+        $response->assertOk();
+        $response->assertViewIs('invoices::invoice_groups_form');
+        $response->assertViewHas('invoice_group');
 
         /** Verify default values */
-        $invoiceGroup = $viewData['invoice_group'];
+        $invoiceGroup = $response->viewData('invoice_group');
         $this->assertEquals(0, $invoiceGroup->invoice_group_left_pad);
         $this->assertEquals(1, $invoiceGroup->invoice_group_next_id);
     }
@@ -228,12 +230,12 @@ class InvoiceGroupsControllerTest extends TestCase
     public function it_deletes_invoice_group_successfully(): void
     {
         /** Arrange */
-        $controller = new InvoiceGroupsController();
+        $user = User::factory()->create();
         /** Would create invoice group */
         $testId = 1;
 
         /** Act */
-        $response = $controller->delete($testId);
+        $response = $this->actingAs($user)->post(route('invoice_groups.delete', ['id' => $testId]));
 
         /* Assert */
         /* Would verify invoice group is deleted */
