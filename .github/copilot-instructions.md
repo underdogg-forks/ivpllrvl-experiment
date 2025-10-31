@@ -36,7 +36,8 @@ Modules/
 ├── Payments/       # Payment and payment method management
 ├── Products/       # Product, families, units, tax rates
 ├── Quotes/         # Quote management
-├── Crm/            # Clients, projects, tasks
+├── Crm/            # Clients and customer relationships
+├── Projects/       # Projects and tasks management
 ├── Users/          # User and session management
 └── Custom/         # Custom fields and values
 ```
