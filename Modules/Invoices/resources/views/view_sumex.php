@@ -55,7 +55,7 @@ if ( ! $items) {
         $('#invoice_change_client').click(function () {
             $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_change_client'); ?>", {
                 invoice_id: <?php echo $invoice_id; ?>,
-                client_id: "<?php echo $this->db->escape_str($invoice->client_id); ?>"
+                client_id: "<?php echo e($invoice->client_id); ?>"
             });
         });
 
