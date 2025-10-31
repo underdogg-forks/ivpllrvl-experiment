@@ -98,9 +98,7 @@ class EchoHelper
      */
     public static function _csrf_field(): void
     {
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-        echo '<input type="hidden" name="' . $bridge->config()->item('csrf_token_name');
-        echo '" value="' . $CI->security->get_csrf_hash() . '">';
+        echo '<input type="hidden" name="' . csrf_token() . '" value="' . csrf_token() . '">';
     }
 
     /**

@@ -128,14 +128,14 @@ class EInvoiceHelper
      */
     public static function get_admin_active_users($user_id = ''): array
     {
-        $CI = get_instance();
+        $query = \Modules\Core\Models\User::where('user_type', '1')
+            ->where('user_active', '1');
 
-        $where = ['user_type' => '1', 'user_active' => '1'];
         if ($user_id) {
-            $where['user_id'] = $user_id;
+            $query->where('user_id', $user_id);
         }
 
-        return $CI->db->from('ip_users')->where($where)->get()->result();
+        return $query->get()->toArray();
     }
 
     /**
