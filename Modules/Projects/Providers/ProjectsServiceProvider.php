@@ -56,7 +56,7 @@ class ProjectsServiceProvider extends ServiceProvider
      */
     protected function registerConfig(): void
     {
-        $configPath = module_path($this->moduleName, 'config/config.php');
+        $configPath = module_path($this->moduleName, 'Config/config.php');
         
         if (file_exists($configPath)) {
             $this->publishes([
