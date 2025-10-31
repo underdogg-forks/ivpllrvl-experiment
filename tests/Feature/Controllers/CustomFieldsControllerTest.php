@@ -113,7 +113,14 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{custom_field_table: string, custom_field_label: string, custom_field_column: string, btn_submit: string} $customFieldData */
+        /**
+         * {
+         *     "custom_field_table": "ip_clients",
+         *     "custom_field_label": "Test Field",
+         *     "custom_field_column": "custom_test_field",
+         *     "btn_submit": "1"
+         * }
+         */
         $customFieldData = [
             'custom_field_table' => 'ip_clients',
             'custom_field_label' => 'Test Field',
@@ -144,7 +151,14 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $customField = CustomField::factory()->create(['custom_field_label' => 'Old Label']);
         
-        /** @var array{custom_field_table: string, custom_field_label: string, custom_field_column: string, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "custom_field_table": "<custom_field_table>",
+         *     "custom_field_label": "Updated Label",
+         *     "custom_field_column": "<custom_field_column>",
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'custom_field_table' => $customField->custom_field_table,
             'custom_field_label' => 'Updated Label',
@@ -174,7 +188,11 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -196,7 +214,11 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $customField = CustomField::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": <custom_field_id>
+         * }
+         */
         $deleteParams = [
             'id' => $customField->custom_field_id,
         ];
@@ -222,7 +244,11 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": 99999
+         * }
+         */
         $deleteParams = [
             'id' => 99999,
         ];

@@ -345,7 +345,11 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create product */
         $testId = 1;
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": 1
+         * }
+         */
         $deleteParams = [
             'id' => $testId,
         ];

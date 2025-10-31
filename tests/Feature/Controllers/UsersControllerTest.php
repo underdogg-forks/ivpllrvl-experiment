@@ -119,7 +119,15 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $adminUser = User::factory()->create();
         
-        /** @var array{user_name: string, user_email: string, user_password: string, user_type: int, btn_submit: string} $userData */
+        /**
+         * {
+         *     "user_name": "New User",
+         *     "user_email": "newuser@example.com",
+         *     "user_password": "password123",
+         *     "user_type": <user_type>,
+         *     "btn_submit": "1"
+         * }
+         */
         $userData = [
             'user_name' => 'New User',
             'user_email' => 'newuser@example.com',
@@ -151,7 +159,14 @@ class UsersControllerTest extends FeatureTestCase
         $adminUser = User::factory()->create();
         $editUser = User::factory()->create(['user_name' => 'Old Name']);
         
-        /** @var array{user_name: string, user_email: string, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "user_name": "Updated Name",
+         *     "user_email": "<user_email>",
+         *     "user_type": <user_type>,
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'user_name' => 'Updated Name',
             'user_email' => $editUser->user_email,
@@ -181,7 +196,11 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -203,7 +222,11 @@ class UsersControllerTest extends FeatureTestCase
         $adminUser = User::factory()->create();
         $deleteUser = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": <user_id>
+         * }
+         */
         $deleteParams = [
             'id' => $deleteUser->user_id,
         ];
@@ -229,7 +252,11 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": 99999
+         * }
+         */
         $deleteParams = [
             'id' => 99999,
         ];

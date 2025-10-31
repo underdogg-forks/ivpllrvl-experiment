@@ -73,7 +73,12 @@ class SettingsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{company_name: string, currency_code: string} $settingsData */
+        /**
+         * {
+         *     "company_name": "New Company",
+         *     "currency_code": "EUR"
+         * }
+         */
         $settingsData = [
             'company_name' => 'New Company',
             'currency_code' => 'EUR',
@@ -103,7 +108,11 @@ class SettingsControllerTest extends FeatureTestCase
         
         Setting::factory()->create(['setting_key' => 'company_name', 'setting_value' => 'Old Company']);
         
-        /** @var array{company_name: string, currency_code: string} $settingsData */
+        /**
+         * {
+         *     "company_name": "Updated Company"
+         * }
+         */
         $settingsData = [
             'company_name' => 'Updated Company',
         ];
@@ -130,7 +139,13 @@ class SettingsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{company_name: string, currency_code: string} $settingsData */
+        /**
+         * {
+         *     "company_name": "Multi Test Company",
+         *     "currency_code": "GBP",
+         *     "invoice_prefix": "INV-"
+         * }
+         */
         $settingsData = [
             'company_name' => 'Multi Test Company',
             'currency_code' => 'GBP',

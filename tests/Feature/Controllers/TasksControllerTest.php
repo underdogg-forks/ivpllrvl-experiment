@@ -72,6 +72,14 @@ class TasksControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $project = Project::factory()->create();
+        /**
+         * {
+         *     "project_id": <project_id>,
+         *     "task_name": "Test Task",
+         *     "task_status": 1,
+         *     "task_finish_date": "2025-12-31"
+         * }
+         */
         $taskData = [
             'project_id'       => $project->project_id,
             'task_name'        => 'Test Task',
@@ -100,6 +108,11 @@ class TasksControllerTest extends FeatureTestCase
     public function it_fails_to_create_task_with_invalid_data(): void
     {
         /** Arrange */
+        /**
+         * {
+         *     "project_id": 999
+         * }
+         */
         $taskData = [
             'project_id' => 999,
             // Missing required task_name
@@ -147,6 +160,12 @@ class TasksControllerTest extends FeatureTestCase
             'task_name' => 'Old Name',
         ]);
 
+        /**
+         * {
+         *     "task_name": "Updated Name",
+         *     "task_status": 2
+         * }
+         */
         $updateData = [
             'task_name'   => 'Updated Name',
             'task_status' => 2,
@@ -195,6 +214,12 @@ class TasksControllerTest extends FeatureTestCase
     public function it_creates_task_without_project(): void
     {
         /** Arrange */
+        /**
+         * {
+         *     "task_name": "Standalone Task",
+         *     "task_status": 1
+         * }
+         */
         $taskData = [
             'task_name'   => 'Standalone Task',
             'task_status' => 1,

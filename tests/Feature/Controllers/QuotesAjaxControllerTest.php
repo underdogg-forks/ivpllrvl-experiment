@@ -42,6 +42,15 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user  = User::factory()->create();
         $quote = Quote::factory()->create(['quote_status_id' => 1]);
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "quote_status_id": 2,
+         *     "quote_date_created": "<today>",
+         *     "quote_date_expires": "<today_plus_30_days>",
+         *     "items": "[{\"item_name\":\"Test Item\",\"item_quantity\":2,\"item_price\":100,\"item_order\":1}]"
+         * }
+         */
         $payload = [
             'quote_id'           => $quote->quote_id,
             'quote_status_id'    => 2,
@@ -85,6 +94,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>
+         * }
+         */
         $payload = [
             'quote_id' => $quote->quote_id,
             /* Missing required fields */
@@ -118,6 +132,16 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "quote_discount_percent": 10,
+         *     "quote_discount_amount": 20,
+         *     "quote_date_created": "<today>",
+         *     "quote_date_expires": "<today_plus_30_days>",
+         *     "items": "[{\"item_name\":\"Test\",\"item_quantity\":1,\"item_price\":100}]"
+         * }
+         */
         $payload = [
             'quote_id'               => $quote->quote_id,
             'quote_discount_percent' => 10,
@@ -158,6 +182,14 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "quote_date_created": "<today>",
+         *     "quote_date_expires": "<today_plus_30_days>",
+         *     "items": "[{\"item_name\":\"Item\",\"item_quantity\":3,\"item_price\":50}]"
+         * }
+         */
         $payload = [
             'quote_id'           => $quote->quote_id,
             'quote_date_created' => date('Y-m-d'),
@@ -194,6 +226,13 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $quote   = Quote::factory()->create();
         $taxRate = TaxRate::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "tax_rate_id": <tax_rate_id>,
+         *     "include_item_tax": 0
+         * }
+         */
         $payload = [
             'quote_id'         => $quote->quote_id,
             'tax_rate_id'      => $taxRate->tax_rate_id,
@@ -229,6 +268,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $quote = Quote::factory()->create();
         $item  = QuoteItem::factory()->create(['quote_id' => $quote->quote_id]);
         
+        /**
+         * {
+         *     "item_id": <item_id>
+         * }
+         */
         $payload = ['item_id' => $item->item_id];
 
         /** Act */
@@ -257,6 +301,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user    = User::factory()->create();
+        /**
+         * {
+         *     "item_id": 99999
+         * }
+         */
         $payload = ['item_id' => 99999];
 
         /** Act */
@@ -333,6 +382,15 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $quote  = Quote::factory()->create();
         QuoteItem::factory()->count(3)->create(['quote_id' => $quote->quote_id]);
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "client_id": <client_id>,
+         *     "user_id": <user_id>,
+         *     "quote_date_created": "<today>",
+         *     "quote_change_client": 0
+         * }
+         */
         $payload = [
             'quote_id'            => $quote->quote_id,
             'client_id'           => $client->client_id,
@@ -372,6 +430,12 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $newUser = User::factory()->create();
         $quote   = Quote::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "user_id": <user_id>
+         * }
+         */
         $payload = [
             'quote_id' => $quote->quote_id,
             'user_id'  => $newUser->user_id,
@@ -405,6 +469,12 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "user_id": 99999
+         * }
+         */
         $payload = [
             'quote_id' => $quote->quote_id,
             'user_id'  => 99999,
@@ -436,6 +506,12 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $newClient = Client::factory()->create();
         $quote     = Quote::factory()->create();
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "client_id": <client_id>
+         * }
+         */
         $payload = [
             'quote_id'  => $quote->quote_id,
             'client_id' => $newClient->client_id,
@@ -470,6 +546,13 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user   = User::factory()->create();
         $client = Client::factory()->create();
         
+        /**
+         * {
+         *     "client_id": <client_id>,
+         *     "user_id": <user_id>,
+         *     "quote_date_created": "<today>"
+         * }
+         */
         $payload = [
             'client_id'          => $client->client_id,
             'user_id'            => $user->user_id,
@@ -513,6 +596,26 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $invoiceGroup = InvoiceGroup::factory()->create();
         QuoteItem::factory()->count(2)->create(['quote_id' => $quote->quote_id]);
         
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "client_id": <client_id>,
+         *     "user_id": <user_id>,
+         *     "invoice_date_created": "<today>",
+         *     "invoice_group_id": <invoice_group_id>,
+         *     "invoice_change_client": 0
+         * }
+         */
+        /**
+         * {
+         *     "quote_id": <quote_id>,
+         *     "client_id": <client_id>,
+         *     "user_id": <user_id>,
+         *     "invoice_date_created": "<today>",
+         *     "invoice_group_id": <invoice_group_id>,
+         *     "invoice_change_client": 0
+         * }
+         */
         $payload = [
             'quote_id'              => $quote->quote_id,
             'client_id'             => $client->client_id,

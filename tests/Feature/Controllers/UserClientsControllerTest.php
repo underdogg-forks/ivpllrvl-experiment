@@ -124,7 +124,13 @@ class UserClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $client = Client::factory()->create();
         
-        /** @var array{user_id: int, client_id: int, btn_submit: string} $userClientData */
+        /**
+         * {
+         *     "user_id": <user_id>,
+         *     "client_id": <client_id>,
+         *     "btn_submit": "1"
+         * }
+         */
         $userClientData = [
             'user_id' => $user->user_id,
             'client_id' => $client->client_id,
@@ -160,7 +166,13 @@ class UserClientsControllerTest extends FeatureTestCase
             'client_id' => $client1->client_id,
         ]);
         
-        /** @var array{user_id: int, client_id: int, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "user_id": <user_id>,
+         *     "client_id": <client_id>,
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'user_id' => $user->user_id,
             'client_id' => $client2->client_id,
@@ -191,10 +203,18 @@ class UserClientsControllerTest extends FeatureTestCase
         $client = Client::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.form'), [
+        /**
+         * {
+         *     "client_id": <client_id>,
+         *     "btn_submit": "1"
+         * }
+         */
+        $missingUserPayload = [
             'client_id' => $client->client_id,
             'btn_submit' => '1',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('user_clients.form'), $missingUserPayload);
 
         /** Assert */
         $response->assertSessionHasErrors('user_id');
@@ -210,10 +230,18 @@ class UserClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.form'), [
+        /**
+         * {
+         *     "user_id": <user_id>,
+         *     "btn_submit": "1"
+         * }
+         */
+        $missingClientPayload = [
             'user_id' => $user->user_id,
             'btn_submit' => '1',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('user_clients.form'), $missingClientPayload);
 
         /** Assert */
         $response->assertSessionHasErrors('client_id');
@@ -228,7 +256,11 @@ class UserClientsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -254,7 +286,11 @@ class UserClientsControllerTest extends FeatureTestCase
             'client_id' => $client->client_id,
         ]);
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": <user_client_id>
+         * }
+         */
         $deleteParams = [
             'id' => $userClient->id,
         ];
@@ -280,7 +316,11 @@ class UserClientsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": 99999
+         * }
+         */
         $deleteParams = [
             'id' => 99999,
         ];

@@ -196,7 +196,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
         
-        /** @var array{invoiceId: int} $deleteParams */
+        /**
+         * {
+         *     "invoiceId": <invoice_id>
+         * }
+         */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
@@ -220,7 +224,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         $task    = Task::factory()->create(['invoice_id' => $invoice->invoice_id, 'task_status' => 4]);
         
-        /** @var array{invoiceId: int} $deleteParams */
+        /**
+         * {
+         *     "invoiceId": <invoice_id>
+         * }
+         */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
@@ -244,7 +252,11 @@ class InvoicesControllerTest extends FeatureTestCase
         config(['settings.enable_invoice_deletion' => false]);
         $invoice = Invoice::factory()->sent()->create(); // Not a draft
         
-        /** @var array{invoiceId: int} $deleteParams */
+        /**
+         * {
+         *     "invoiceId": <invoice_id>
+         * }
+         */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
@@ -319,11 +331,17 @@ class InvoicesControllerTest extends FeatureTestCase
         $taxRate = InvoiceTaxRate::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
+        /**
+         * {}
+         */
+        $payload = [];
+
         $response = $this->actingAs($user)->post(
             route('invoices.delete_tax', [
                 'invoiceId' => $invoice->invoice_id,
                 'taxRateId' => $taxRate->invoice_tax_rate_id,
-            ])
+            ]),
+            $payload
         );
 
         /* Assert */
@@ -343,11 +361,17 @@ class InvoicesControllerTest extends FeatureTestCase
         $taxRate = InvoiceTaxRate::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
+        /**
+         * {}
+         */
+        $payload = [];
+
         $response = $this->actingAs($user)->post(
             route('invoices.delete_tax', [
                 'invoiceId' => $invoice->invoice_id,
                 'taxRateId' => $taxRate->invoice_tax_rate_id,
-            ])
+            ]),
+            $payload
         );
 
         /** Assert */
@@ -366,7 +390,12 @@ class InvoicesControllerTest extends FeatureTestCase
         $initialCount = Invoice::count();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'));
+        /**
+         * {}
+         */
+        $recalculatePayload = [];
+
+        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'), $recalculatePayload);
 
         /* Assert */
         $response->assertRedirect();
@@ -385,7 +414,12 @@ class InvoicesControllerTest extends FeatureTestCase
         Invoice::truncate();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'));
+        /**
+         * {}
+         */
+        $recalculatePayload = [];
+
+        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'), $recalculatePayload);
 
         /* Assert */
         $response->assertRedirect();

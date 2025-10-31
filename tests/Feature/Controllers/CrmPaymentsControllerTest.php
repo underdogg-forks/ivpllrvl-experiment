@@ -59,7 +59,12 @@ class CrmPaymentsControllerTest extends FeatureTestCase
         // Guest payment submission
 
         /** Act */
-        $response = $this->post(route('guest.payments.submit'));
+        /**
+         * {}
+         */
+        $payload = [];
+
+        $response = $this->post(route('guest.payments.submit'), $payload);
 
         /** Assert */
         $response->assertRedirect();
@@ -76,7 +81,12 @@ class CrmPaymentsControllerTest extends FeatureTestCase
         // No authentication required
 
         /** Act */
-        $response = $this->post(route('guest.payments.submit'));
+        /**
+         * {}
+         */
+        $payload = [];
+
+        $response = $this->post(route('guest.payments.submit'), $payload);
 
         /** Assert */
         $response->assertRedirect();

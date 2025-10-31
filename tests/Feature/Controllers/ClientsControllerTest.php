@@ -162,7 +162,13 @@ class ClientsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{client_name: string, client_email: string, client_active: int} $clientData */
+        /**
+         * {
+         *     "client_name": "Test Client Inc.",
+         *     "client_email": "test@client.com",
+         *     "client_active": 1
+         * }
+         */
         $clientData = [
             'client_name' => 'Test Client Inc.',
             'client_email' => 'test@client.com',
@@ -214,7 +220,13 @@ class ClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $client = Client::factory()->create(['client_name' => 'Old Name']);
         
-        /** @var array{client_name: string, client_email: string, client_active: int} $updateData */
+        /**
+         * {
+         *     "client_name": "Updated Name",
+         *     "client_email": "<client_email>",
+         *     "client_active": <client_active>
+         * }
+         */
         $updateData = [
             'client_name' => 'Updated Name',
             'client_email' => $client->client_email,

@@ -115,7 +115,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{email_template_title: string, email_template_subject: string, email_template_body: string, btn_submit: string} $templateData */
+        /**
+         * {
+         *     "email_template_title": "New Template",
+         *     "email_template_subject": "Subject",
+         *     "email_template_body": "Body content",
+         *     "btn_submit": "1"
+         * }
+         */
         $templateData = [
             'email_template_title' => 'New Template',
             'email_template_subject' => 'Subject',
@@ -145,7 +152,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create(['email_template_title' => 'Old Title']);
         
-        /** @var array{email_template_title: string, email_template_subject: string, email_template_body: string, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "email_template_title": "Updated Title",
+         *     "email_template_subject": "<email_template_subject>",
+         *     "email_template_body": "<email_template_body>",
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'email_template_title' => 'Updated Title',
             'email_template_subject' => $template->email_template_subject,
@@ -175,7 +189,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -197,7 +215,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": <email_template_id>
+         * }
+         */
         $deleteParams = [
             'id' => $template->email_template_id,
         ];
@@ -223,7 +245,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": 99999
+         * }
+         */
         $deleteParams = [
             'id' => 99999,
         ];

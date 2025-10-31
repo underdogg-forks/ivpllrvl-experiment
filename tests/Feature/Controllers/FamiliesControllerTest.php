@@ -94,7 +94,12 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{family_name: string, btn_submit: string} $familyData */
+        /**
+         * {
+         *     "family_name": "Electronics",
+         *     "btn_submit": "1"
+         * }
+         */
         $familyData = [
             'family_name' => 'Electronics',
             'btn_submit' => '1',
@@ -122,7 +127,12 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $family = Family::factory()->create(['family_name' => 'Old Name']);
         
-        /** @var array{family_name: string, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "family_name": "Updated Name",
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'family_name' => 'Updated Name',
             'btn_submit' => '1',
@@ -150,7 +160,11 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -171,7 +185,12 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{family_name: string, btn_submit: string} $invalidData */
+        /**
+         * {
+         *     "family_name": "",
+         *     "btn_submit": "1"
+         * }
+         */
         $invalidData = [
             'family_name' => '',
             'btn_submit' => '1',
@@ -194,7 +213,12 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Family::factory()->create(['family_name' => 'Existing Family']);
         
-        /** @var array{family_name: string, btn_submit: string} $duplicateData */
+        /**
+         * {
+         *     "family_name": "Existing Family",
+         *     "btn_submit": "1"
+         * }
+         */
         $duplicateData = [
             'family_name' => 'Existing Family',
             'btn_submit' => '1',
@@ -217,7 +241,11 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $family = Family::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": <family_id>
+         * }
+         */
         $deleteParams = [
             'id' => $family->family_id,
         ];
@@ -243,7 +271,11 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
+        /**
+         * {
+         *     "id": 99999
+         * }
+         */
         $deleteParams = [
             'id' => 99999,
         ];

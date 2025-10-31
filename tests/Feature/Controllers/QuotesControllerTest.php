@@ -247,7 +247,11 @@ class QuotesControllerTest extends FeatureTestCase
 
         $quoteId = $quote->quote_id;
         
-        /** @var array{quote_id: int} $deleteParams */
+        /**
+         * {
+         *     "quote_id": <quote_id>
+         * }
+         */
         $deleteParams = [
             'quote_id' => $quoteId,
         ];
@@ -284,7 +288,11 @@ class QuotesControllerTest extends FeatureTestCase
         $itemId    = $item->item_id;
         $taxRateId = $taxRate->quote_tax_rate_id;
         
-        /** @var array{quote_id: int} $deleteParams */
+        /**
+         * {
+         *     "quote_id": <quote_id>
+         * }
+         */
         $deleteParams = [
             'quote_id' => $quoteId,
         ];
@@ -321,11 +329,17 @@ class QuotesControllerTest extends FeatureTestCase
         $quoteTaxRateId = $taxRate->quote_tax_rate_id;
 
         /** Act */
+        /**
+         * {}
+         */
+        $payload = [];
+
         $response = $this->actingAs($user)->post(
             route('quotes.delete_tax', [
                 'quote_id'          => $quote->quote_id,
                 'quote_tax_rate_id' => $quoteTaxRateId,
-            ])
+            ]),
+            $payload
         );
 
         /** Assert */
@@ -353,11 +367,17 @@ class QuotesControllerTest extends FeatureTestCase
         $taxRate = QuoteTaxRate::factory()->create(['quote_id' => $quote->quote_id]);
 
         /** Act */
+        /**
+         * {}
+         */
+        $payload = [];
+
         $response = $this->actingAs($user)->post(
             route('quotes.delete_tax', [
                 'quote_id'          => $quote->quote_id,
                 'quote_tax_rate_id' => $taxRate->quote_tax_rate_id,
-            ])
+            ]),
+            $payload
         );
 
         /** Assert */
@@ -386,7 +406,12 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.recalculate_all'));
+        /**
+         * {}
+         */
+        $recalculatePayload = [];
+
+        $response = $this->actingAs($user)->post(route('quotes.recalculate_all'), $recalculatePayload);
 
         /** Assert */
         $response->assertRedirect();
@@ -404,7 +429,12 @@ class QuotesControllerTest extends FeatureTestCase
         Quote::query()->delete();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.recalculate_all'));
+        /**
+         * {}
+         */
+        $recalculatePayload = [];
+
+        $response = $this->actingAs($user)->post(route('quotes.recalculate_all'), $recalculatePayload);
 
         /** Assert */
         $response->assertRedirect();
