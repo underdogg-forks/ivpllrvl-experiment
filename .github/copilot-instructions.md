@@ -60,23 +60,50 @@ ModuleName/
 
 #### 3. Service Layer Architecture
 
-**CRITICAL**: The application uses a **Service Layer** pattern to separate business logic from models and controllers.
+**CRITICAL**: The application uses a **Service Layer** pattern with **BaseService**, **FormRequests**, and **Route Model Binding** to separate concerns.
 
 **Responsibilities:**
-- **Models**: Data structure, relationships, scopes ONLY (no business logic)
-- **Services**: Business logic, calculations, validation rules, complex queries
+- **Models**: Data structure, relationships, scopes ONLY (no business logic, no validation)
+- **Services**: Business logic, calculations, complex queries (extend BaseService)
+- **FormRequests**: Validation rules (shared by create and update)
 - **Controllers**: HTTP handling, request/response, service orchestration
 
-**Service Pattern Example:**
+**BaseService Pattern:**
+
+All services MUST extend the abstract `BaseService` class which provides common CRUD operations:
+
+```php
+// app/Services/BaseService.php
+abstract class BaseService
+{
+    abstract protected function getModelClass(): string;
+    
+    public function create(array $data): Model { /* ... */ }
+    public function update(int $id, array $data): bool { /* ... */ }
+    public function delete(int $id): ?bool { /* ... */ }
+    public function find(int $id): ?Model { /* ... */ }
+    public function findOrFail(int $id): Model { /* ... */ }
+}
+```
+
+**Service Example (extends BaseService):**
 
 ```php
 // Modules/Quotes/Services/QuoteService.php
 namespace Modules\Quotes\Services;
 
+use App\Services\BaseService;
 use Modules\Quotes\Models\Quote;
 
-class QuoteService
+class QuoteService extends BaseService
 {
+    // Required: declare the model class
+    protected function getModelClass(): string
+    {
+        return Quote::class;
+    }
+
+    // Business logic methods only (no validation rules)
     public function getStatuses(): array
     {
         return [
@@ -85,19 +112,54 @@ class QuoteService
         ];
     }
 
-    public function getValidationRules(): array
+    public function createQuote(array $data): Quote
+    {
+        $quote = $this->create($data); // Use BaseService method
+        // Additional business logic...
+        return $quote;
+    }
+
+    public function deleteQuote(int $quoteId): ?bool
+    {
+        // Business logic before deletion
+        return $this->delete($quoteId); // Use BaseService method
+    }
+}
+```
+
+**FormRequest Pattern (Validation):**
+
+ALL validation rules MUST be in FormRequest classes, NOT in services or controllers:
+
+```php
+// Modules/Quotes/Http/Requests/QuoteRequest.php
+namespace Modules\Quotes\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class QuoteRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true; // or implement authorization logic
+    }
+
+    public function rules(): array
     {
         return [
             'client_id' => 'required|integer',
-            // ...
+            'quote_date' => 'required|date',
+            'quote_number' => 'required|string|max:255',
+            // ... all validation rules
         ];
     }
-
-    public function createQuote(array $data): Quote
+    
+    // Optional: customize validation preparation
+    protected function prepareForValidation(): void
     {
-        $quote = Quote::create($data);
-        // Additional business logic...
-        return $quote;
+        // Transform data before validation if needed
+    }
+}
     }
 
     public function deleteQuote(int $quoteId): ?bool
@@ -156,12 +218,14 @@ class Quote extends BaseModel
 }
 ```
 
-**Controller with Services:**
+**Controller with Services and FormRequests (Modern Pattern):**
 
 ```php
 // Modules/Quotes/Controllers/QuotesController.php
 namespace Modules\Quotes\Controllers;
 
+use Modules\Quotes\Http\Requests\QuoteRequest;
+use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Services\QuoteService;
 use Modules\Quotes\Services\QuoteAmountService;
 
@@ -180,12 +244,73 @@ class QuotesController
 
     public function index()
     {
-        // ✅ Use service methods, not static model methods
+        // ✅ Use service methods for business logic
         $statuses = $this->quoteService->getStatuses();
         
-        // ✅ Use Eloquent queries directly (no ::query())
+        // ✅ Use Eloquent directly (no ::query())
         $quotes = Quote::with(['client', 'user'])->draft()->paginate(15);
         
+        return view('quotes::index', compact('quotes', 'statuses'));
+    }
+
+    // ✅ MODERN: Separate create and store methods
+    public function create()
+    {
+        $quote = new Quote();
+        $statuses = $this->quoteService->getStatuses();
+        return view('quotes::form', compact('quote', 'statuses'));
+    }
+
+    // ✅ MODERN: FormRequest injection for validation
+    public function store(QuoteRequest $request)
+    {
+        // Validation already done by QuoteRequest
+        $quote = $this->quoteService->create($request->validated());
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote created');
+    }
+
+    // ✅ MODERN: Route model binding
+    public function edit(Quote $quote)
+    {
+        $statuses = $this->quoteService->getStatuses();
+        return view('quotes::form', compact('quote', 'statuses'));
+    }
+
+    // ✅ MODERN: FormRequest + route model binding
+    public function update(QuoteRequest $request, Quote $quote)
+    {
+        // Validation already done by QuoteRequest
+        $this->quoteService->update($quote->quote_id, $request->validated());
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote updated');
+    }
+
+    // ✅ MODERN: Route model binding
+    public function destroy(Quote $quote)
+    {
+        $this->quoteService->delete($quote->quote_id);
+        return redirect()->route('quotes.index')
+            ->with('success', 'Quote deleted');
+    }
+}
+```
+
+**NEVER in Controllers:**
+- ❌ `Model::query()->method()` - Use Eloquent directly or service methods
+- ❌ `Model::staticMethod()` - Move to service
+- ❌ Inline validation with `$request->validate([...])` - Use FormRequest
+- ❌ Complex business logic - Move to service
+- ❌ Direct database queries - Use Eloquent or service
+- ❌ Single `form()` method for both create and edit - Separate into create/store/edit/update
+
+**ALWAYS in Controllers:**
+- ✅ Separate methods: create(), store(), edit(), update(), destroy()
+- ✅ FormRequest injection for validation
+- ✅ Route model binding when applicable
+- ✅ Service injection via constructor
+- ✅ Use `$request->validated()` from FormRequest
+- ✅ Delegate all business logic to services
         return view('quotes::index', compact('quotes', 'statuses'));
     }
 

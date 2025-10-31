@@ -2,23 +2,21 @@
 
 namespace Modules\Crm\Services;
 
+use App\Services\BaseService;
+use Modules\Crm\Models\UserClient;
+
 /**
  * UserClientService.
  *
  * Service class for managing user-client relationship business logic
  */
-class UserClientService
+class UserClientService extends BaseService
 {
     /**
-     * Get validation rules for user-client relationships.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'user_id'   => 'required|integer',
-            'client_id' => 'required|integer',
-        ];
+        return UserClient::class;
     }
 }

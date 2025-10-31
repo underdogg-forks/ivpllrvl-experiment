@@ -2,24 +2,21 @@
 
 namespace Modules\Payments\Services;
 
+use App\Services\BaseService;
+use Modules\Payments\Models\PaymentLog;
+
 /**
  * PaymentLogService.
  *
  * Service class for managing payment log business logic
  */
-class PaymentLogService
+class PaymentLogService extends BaseService
 {
     /**
-     * Get validation rules for payment logs.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'payment_id'   => 'required|integer',
-            'log_message'  => 'required|string',
-            'log_date'     => 'required|date',
-        ];
+        return PaymentLog::class;
     }
 }

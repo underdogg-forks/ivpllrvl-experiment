@@ -2,26 +2,21 @@
 
 namespace Modules\Payments\Services;
 
+use App\Services\BaseService;
+use Modules\Payments\Models\Payment;
+
 /**
  * PaymentService.
  *
  * Service class for managing payment business logic
  */
-class PaymentService
+class PaymentService extends BaseService
 {
     /**
-     * Get validation rules for payments.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'invoice_id'         => 'required|integer',
-            'payment_method_id'  => 'required|integer',
-            'payment_amount'     => 'required|numeric|min:0',
-            'payment_date'       => 'required|date',
-            'payment_note'       => 'nullable|string',
-        ];
+        return Payment::class;
     }
 }

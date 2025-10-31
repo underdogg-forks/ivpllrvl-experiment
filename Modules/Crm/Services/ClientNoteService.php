@@ -2,24 +2,21 @@
 
 namespace Modules\Crm\Services;
 
+use App\Services\BaseService;
+use Modules\Crm\Models\ClientNote;
+
 /**
  * ClientNoteService.
  *
  * Service class for managing client note business logic
  */
-class ClientNoteService
+class ClientNoteService extends BaseService
 {
     /**
-     * Get validation rules for client notes.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'client_id'   => 'required|integer',
-            'note_text'   => 'required|string',
-            'note_date'   => 'required|date',
-        ];
+        return ClientNote::class;
     }
 }

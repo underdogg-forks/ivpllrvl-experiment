@@ -2,24 +2,21 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\BaseService;
+use Modules\Core\Models\EmailTemplate;
+
 /**
  * EmailTemplateService.
  *
  * Service class for managing email template business logic
  */
-class EmailTemplateService
+class EmailTemplateService extends BaseService
 {
     /**
-     * Get validation rules for email templates.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'email_template_title'   => 'required|string|max:255',
-            'email_template_subject' => 'required|string|max:255',
-            'email_template_body'    => 'required|string',
-        ];
+        return EmailTemplate::class;
     }
 }

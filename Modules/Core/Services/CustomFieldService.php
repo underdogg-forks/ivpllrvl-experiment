@@ -2,13 +2,24 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\BaseService;
+use Modules\Core\Models\CustomField;
+
 /**
  * CustomFieldService.
  *
  * Service class for managing custom field business logic
  */
-class CustomFieldService
+class CustomFieldService extends BaseService
 {
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return CustomField::class;
+    }
+
     /**
      * Get custom tables list.
      *
@@ -59,19 +70,5 @@ class CustomFieldService
         ];
 
         return $nicenames[$element] ?? '';
-    }
-
-    /**
-     * Get validation rules for custom fields.
-     *
-     * @return array
-     */
-    public function getValidationRules(): array
-    {
-        return [
-            'custom_field_table' => 'required|string',
-            'custom_field_label' => 'required|string|max:255',
-            'custom_field_type'  => 'required|string',
-        ];
     }
 }

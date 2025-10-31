@@ -2,15 +2,27 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\BaseService;
+use Modules\Core\Models\User;
+
 /**
  * UserService.
  *
  * Service class for managing user business logic
  */
-class UserService
+class UserService extends BaseService
 {
     /**
-     * Get validation rules for creating users.
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return User::class;
+    }
+
+    /**
+     * Get validation rules for creating users (kept for backward compatibility).
+     * Validation should be done via FormRequest in controllers.
      *
      * @return array
      */
@@ -25,7 +37,8 @@ class UserService
     }
 
     /**
-     * Get validation rules for updating existing users.
+     * Get validation rules for updating existing users (kept for backward compatibility).
+     * Validation should be done via FormRequest in controllers.
      *
      * @param int $userId
      *

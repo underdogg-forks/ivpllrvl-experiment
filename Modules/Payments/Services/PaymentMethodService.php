@@ -2,22 +2,21 @@
 
 namespace Modules\Payments\Services;
 
+use App\Services\BaseService;
+use Modules\Payments\Models\PaymentMethod;
+
 /**
  * PaymentMethodService.
  *
  * Service class for managing payment method business logic
  */
-class PaymentMethodService
+class PaymentMethodService extends BaseService
 {
     /**
-     * Get validation rules for payment methods.
-     *
-     * @return array
+     * Get the model class for this service.
      */
-    public function getValidationRules(): array
+    protected function getModelClass(): string
     {
-        return [
-            'payment_method_name' => 'required|string|max:255',
-        ];
+        return PaymentMethod::class;
     }
 }
