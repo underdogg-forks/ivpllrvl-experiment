@@ -34,3 +34,18 @@ Route::post('/quotes/recalculate_all', [QuotesController::class, 'recalculateAll
 
 // AJAX routes
 Route::get('/quotes/generate_pdf/{id}', [QuotesAjaxController::class, 'generatePdf'])->name('quotes.generate_pdf');
+Route::post('/quotes/ajax/save', [QuotesAjaxController::class, 'save'])->name('quotes.ajax.save');
+Route::post('/quotes/ajax/create', [QuotesAjaxController::class, 'create'])->name('quotes.ajax.create');
+Route::post('/quotes/ajax/save-tax-rate', [QuotesAjaxController::class, 'saveQuoteTaxRate'])->name('quotes.ajax.save_tax_rate');
+Route::post('/quotes/ajax/delete-item/{quoteId}', [QuotesAjaxController::class, 'deleteItem'])->name('quotes.ajax.delete_item');
+Route::get('/quotes/ajax/get-item', [QuotesAjaxController::class, 'getItem'])->name('quotes.ajax.get_item');
+Route::post('/quotes/ajax/copy', [QuotesAjaxController::class, 'copyQuote'])->name('quotes.ajax.copy');
+Route::post('/quotes/ajax/change-user', [QuotesAjaxController::class, 'changeUser'])->name('quotes.ajax.change_user');
+Route::post('/quotes/ajax/change-client', [QuotesAjaxController::class, 'changeClient'])->name('quotes.ajax.change_client');
+Route::post('/quotes/ajax/quote-to-invoice', [QuotesAjaxController::class, 'quoteToInvoice'])->name('quotes.ajax.quote_to_invoice');
+
+// Modal routes
+Route::get('/quotes/modal/copy', [QuotesAjaxController::class, 'modalCopyQuote'])->name('quotes.modal.copy');
+Route::get('/quotes/modal/create', [QuotesAjaxController::class, 'modalCreateQuote'])->name('quotes.modal.create');
+Route::get('/quotes/modal/change-user', [QuotesAjaxController::class, 'modalChangeUser'])->name('quotes.modal.change_user');
+Route::get('/quotes/modal/change-client', [QuotesAjaxController::class, 'modalChangeClient'])->name('quotes.modal.change_client');
