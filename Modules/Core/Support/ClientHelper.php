@@ -21,16 +21,11 @@ class ClientHelper
     {
         // Get an id
         if ($client && is_numeric($client)) {
-            // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-            if ( ! property_exists($CI, 'mdl_clients')) {
-                // TODO: Replace with Laravel equivalent: // load->model('clients/mdl_clients');
-            }
-
-            $client = $CI->mdl_clients->get_by_id($client);
+            $client = \Modules\Crm\Models\Client::find($client);
         }
 
         // Not exist or find, Stop.
-        if (empty($client->client_name)) {
+        if (empty($client) || empty($client->client_name)) {
             return '';
         }
 

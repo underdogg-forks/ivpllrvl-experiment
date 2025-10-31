@@ -16,8 +16,6 @@ class OrphanHelper
      */
     public static function delete_orphans(): void
     {
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-
         $queries = [
             'DELETE FROM ip_invoices WHERE client_id NOT IN (SELECT client_id FROM ip_clients)',
             'DELETE FROM ip_quotes WHERE client_id NOT IN (SELECT client_id FROM ip_clients)',
@@ -40,7 +38,7 @@ class OrphanHelper
         ];
 
         foreach ($queries as $query) {
-            $CI->db->query($query);
+            \Illuminate\Support\Facades\DB::statement($query);
         }
     }
 }

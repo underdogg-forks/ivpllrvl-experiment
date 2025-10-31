@@ -83,18 +83,35 @@ class TemplateHelper
                         // Check if it's a custom field
                         if (preg_match('/ip_cf_(\d.*)/', $var, $cf_id)) {
                             // Get the custom field
-                            // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-                            // TODO: Replace with Laravel equivalent: // load->model('custom_fields/mdl_custom_fields');
-                            $cf = $CI->mdl_custom_fields->get_by_id($cf_id[1]);
+                            $cf = \Modules\Core\Models\CustomField::find($cf_id[1]);
 
                             if ($cf) {
                                 // Get the values for the custom field
-                                $cf_model = str_replace('ip_', 'mdl_', $cf->custom_field_table);
-                                $replace  = $CI->mdl_custom_fields->get_value_for_field($cf_id[1], $cf_model, $object);
-                                if ($cf->custom_field_type == 'SINGLE-CHOICE') {
-                                    // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
-                                    $el      = $CI->cv->get_by_id($replace)->row();
-                                    $replace = $el->custom_values_value;
+                                $cf_table = $cf->custom_field_table;
+                                $cf_column = $cf->custom_field_column;
+                                
+                                // Determine which model to use based on table name
+                                $modelClass = match($cf_table) {
+                                    'ip_invoice_custom' => \Modules\Invoices\Models\InvoiceCustom::class,
+                                    'ip_quote_custom' => \Modules\Quotes\Models\QuoteCustom::class,
+                                    'ip_client_custom' => \Modules\Crm\Models\ClientCustom::class,
+                                    'ip_user_custom' => \Modules\Core\Models\UserCustom::class,
+                                    'ip_payment_custom' => \Modules\Payments\Models\PaymentCustom::class,
+                                    default => null,
+                                };
+                                
+                                if ($modelClass) {
+                                    // Get the ID field name from the table
+                                    $idField = str_replace('_custom', '_id', str_replace('ip_', '', $cf_table));
+                                    $record = $modelClass::where($idField, $object->{$idField})->first();
+                                    $replace = $record ? $record->{$cf_column} : '';
+                                    
+                                    if ($cf->custom_field_type == 'SINGLE-CHOICE' && $replace) {
+                                        $el = \Modules\Core\Models\CustomValue::find($replace);
+                                        $replace = $el ? $el->custom_values_value : '';
+                                    }
+                                } else {
+                                    $replace = '';
                                 }
                             } else {
                                 $replace = '';
@@ -122,15 +139,17 @@ class TemplateHelper
      */
     public static function get_invoice_status($id)
     {
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
+        // Invoice statuses - should eventually move to a Status enum or config
+        $statuses = [
+            1 => ['label' => trans('draft')],
+            2 => ['label' => trans('sent')],
+            3 => ['label' => trans('viewed')],
+            4 => ['label' => trans('paid')],
+            5 => ['label' => trans('overdue')],
+            6 => ['label' => trans('canceled')],
+        ];
 
-        if (empty($CI->mdl_invoices)) {
-            // TODO: Replace with Laravel equivalent: // load->model('invoices/mdl_invoices');
-        }
-
-        $statuses = $CI->mdl_invoices->statuses();
-
-        return $statuses[$id]['label'];
+        return $statuses[$id]['label'] ?? trans('unknown');
     }
 
     /**

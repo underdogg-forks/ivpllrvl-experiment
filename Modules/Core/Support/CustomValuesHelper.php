@@ -54,11 +54,9 @@ class CustomValuesHelper
             return '';
         }
 
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-        // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
-        $el = $CI->cv->get_by_id($txt)->row();
+        $el = \Modules\Core\Models\CustomValue::find($txt);
 
-        return $el->custom_values_value;
+        return $el ? $el->custom_values_value : '';
     }
 
     /**
@@ -72,11 +70,8 @@ class CustomValuesHelper
             return '';
         }
 
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-        // TODO: Replace with Laravel equivalent: // load->model('custom_values/mdl_custom_values', 'cv');
-
         $values      = explode(',', $txt);
-        $values      = $CI->cv->where_in('custom_values_id', $values)->get()->result();
+        $values      = \Modules\Core\Models\CustomValue::whereIn('custom_values_id', $values)->get();
         $values_text = [];
 
         foreach ($values as $value) {

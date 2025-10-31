@@ -34,14 +34,14 @@ if ($quote->quote_status_id == 1) {
     $('#quote_change_client').click(function () {
         $('#modal-placeholder').load("<?php echo site_url('quotes/ajax/modal_change_client'); ?>", {
             quote_id: <?php echo $quote_id; ?>,
-            client_id: "<?php echo $this->db->escape_str($quote->client_id); ?>",
+            client_id: "<?php echo e($quote->client_id); ?>",
         });
     });
 
     $('#quote_change_user').click(function () {
         $('#modal-placeholder').load("<?php echo site_url('quotes/ajax/modal_change_user'); ?>", {
             quote_id: <?php echo $quote_id; ?>,
-            user_id: "<?php echo $this->db->escape_str($quote->user_id); ?>",
+            user_id: "<?php echo e($quote->user_id); ?>",
         });
     });
 <?php

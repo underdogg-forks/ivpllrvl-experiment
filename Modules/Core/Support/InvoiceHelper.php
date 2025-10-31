@@ -117,18 +117,16 @@ class InvoiceHelper
      */
     public static function invoice_qrcode($invoice_id): string
     {
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-
         if (
-            $bridge->settings()->setting('qr_code')
-            && $bridge->settings()->setting('qr_code_iban')
-            && $bridge->settings()->setting('qr_code_bic')
+            \Modules\Core\Models\Setting::getValue('qr_code')
+            && \Modules\Core\Models\Setting::getValue('qr_code_iban')
+            && \Modules\Core\Models\Setting::getValue('qr_code_bic')
         ) {
-            $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
+            $invoice = \Modules\Invoices\Models\Invoice::find($invoice_id);
 
-            if ((float) $invoice->invoice_balance) {
-                // TODO: Replace with Laravel equivalent: // load->library('QrCode', ['invoice' => $invoice]);
-                $qrcode_data_uri = $CI->qrcode->generate();
+            if ($invoice && (float) $invoice->invoice_balance) {
+                $qrcode = new \Modules\Core\Libraries\QrCode(['invoice' => $invoice]);
+                $qrcode_data_uri = $qrcode->generate();
 
                 return '<img src="' . $qrcode_data_uri . '" alt="QR Code" id="invoice-qr-code">';
             }

@@ -52,34 +52,27 @@ class PdfHelper
      */
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
-        $CI = get_instance();
-
-        $CI->load->model([
-            'invoices/mdl_items',
-            'invoices/mdl_invoices',
-            'invoices/mdl_invoice_tax_rates',
-            'custom_fields/mdl_custom_fields',
-            'payment_methods/mdl_payment_methods',
-        ]);
-
-        $CI->load->helper(['country', 'client']);
-
-        $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
-        $invoice = $CI->mdl_invoices->get_payments($invoice);
+        $invoice = \Modules\Invoices\Models\Invoice::with(['client', 'user'])->find($invoice_id);
+        
+        if (!$invoice) {
+            return null;
+        }
+        
+        // Get invoice with payments - TODO: move to service method
+        $invoice = \Modules\Invoices\Models\Invoice::with(['payments'])->find($invoice_id);
 
         set_language($invoice->client_language);
 
         if ( ! $invoice_template) {
-            $CI->load->helper('template');
-            $invoice_template = select_pdf_invoice_template($invoice);
+            $invoice_template = \Modules\Core\Support\TemplateHelper::select_pdf_invoice_template($invoice);
         }
 
-        $payment_method = $CI->mdl_payment_methods->where('payment_method_id', $invoice->payment_method)->get()->row();
-        if ((int) $invoice->payment_method === 0) {
-            $payment_method = false;
+        $payment_method = null;
+        if ((int) $invoice->payment_method !== 0) {
+            $payment_method = \Modules\Payments\Models\PaymentMethod::where('payment_method_id', $invoice->payment_method)->first();
         }
 
-        $items = $CI->mdl_items->where('invoice_id', $invoice_id)->get()->result();
+        $items = \Modules\Invoices\Models\Item::where('invoice_id', $invoice_id)->get();
 
         $show_item_discounts = false;
         foreach ($items as $item) {
@@ -90,13 +83,13 @@ class PdfHelper
         }
 
         $custom_fields = [
-            'invoice' => $CI->mdl_custom_fields->get_values_for_fields('mdl_invoice_custom', $invoice->invoice_id),
-            'client'  => $CI->mdl_custom_fields->get_values_for_fields('mdl_client_custom', $invoice->client_id),
-            'user'    => $CI->mdl_custom_fields->get_values_for_fields('mdl_user_custom', $invoice->user_id),
+            'invoice' => static::getCustomFieldValues('ip_invoice_custom', $invoice->invoice_id),
+            'client'  => static::getCustomFieldValues('ip_client_custom', $invoice->client_id),
+            'user'    => static::getCustomFieldValues('ip_user_custom', $invoice->user_id),
         ];
 
         if ($invoice->quote_id) {
-            $custom_fields['quote'] = $CI->mdl_custom_fields->get_values_for_fields('mdl_quote_custom', $invoice->quote_id);
+            $custom_fields['quote'] = static::getCustomFieldValues('ip_quote_custom', $invoice->quote_id);
         }
 
         $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number);
@@ -106,9 +99,7 @@ class PdfHelper
         $associatedFiles = null;
 
         if (get_setting('einvoicing')) {
-            $CI->load->helper('e-invoice');
-
-            $einvoice  = get_einvoice_usage($invoice, $items, false);
+            $einvoice  = \Modules\Core\Support\EInvoiceHelper::get_einvoice_usage($invoice, $items, false);
             $xml_id    = $einvoice->user ? $einvoice->name : false;
             $options   = [];
             $generator = $xml_id;
@@ -137,7 +128,7 @@ class PdfHelper
 
         $data = [
             'invoice'             => $invoice,
-            'invoice_tax_rates'   => $CI->mdl_invoice_tax_rates->where('invoice_id', $invoice_id)->get()->result(),
+            'invoice_tax_rates'   => \Modules\Invoices\Models\InvoiceTaxRate::where('invoice_id', $invoice_id)->get(),
             'items'               => $items,
             'payment_method'      => $payment_method,
             'output_type'         => 'pdf',
@@ -146,9 +137,7 @@ class PdfHelper
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
 
-        $html = $CI->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
-
-        $CI->load->helper('mpdf');
+        $html = view('invoice_templates/pdf/' . $invoice_template, $data)->render();
 
         $retval = pdf_create(
             html:             $html,
@@ -192,19 +181,20 @@ class PdfHelper
      */
     public static function generate_invoice_sumex($invoice_id, $stream = true, $invoice_template = null, $client = false)
     {
-        $CI = get_instance();
+        $invoice = \Modules\Invoices\Models\Invoice::find($invoice_id);
+        
+        if (!$invoice) {
+            return null;
+        }
 
-        $CI->load->model('invoices/mdl_invoices');
-        $CI->load->model('invoices/mdl_items');
+        $items = \Modules\Invoices\Models\Item::where('invoice_id', $invoice_id)->get();
 
-        $invoice = $CI->mdl_invoices->get_by_id($invoice_id);
-
-        $CI->load->library('Sumex', [
+        $sumex = new \Modules\Core\Libraries\Sumex([
             'invoice' => $invoice,
-            'items'   => $CI->mdl_items->where('invoice_id', $invoice_id)->get()->result(),
+            'items'   => $items,
         ]);
 
-        $sumexPDF = $CI->sumex->pdf($invoice_template);
+        $sumexPDF = $sumex->pdf($invoice_template);
         $sha1sum  = sha1($sumexPDF);
         $shortsum = mb_substr($sha1sum, 0, 8);
         $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number) . '_' . $shortsum;
@@ -260,18 +250,11 @@ class PdfHelper
      */
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
-        $CI = get_instance();
-
-        $CI->load->model([
-            'quotes/mdl_quotes',
-            'quotes/mdl_quote_items',
-            'quotes/mdl_quote_tax_rates',
-            'custom_fields/mdl_custom_fields',
-        ]);
-
-        $CI->load->helper(['country', 'client']);
-
-        $quote = $CI->mdl_quotes->get_by_id($quote_id);
+        $quote = \Modules\Quotes\Models\Quote::with(['client', 'user'])->find($quote_id);
+        
+        if (!$quote) {
+            return null;
+        }
 
         set_language($quote->client_language);
 
@@ -279,7 +262,7 @@ class PdfHelper
             $quote_template = get_setting('pdf_quote_template');
         }
 
-        $items = $CI->mdl_quote_items->where('quote_id', $quote_id)->get()->result();
+        $items = \Modules\Quotes\Models\QuoteItem::where('quote_id', $quote_id)->get();
 
         $show_item_discounts = false;
         foreach ($items as $item) {
@@ -290,19 +273,18 @@ class PdfHelper
         }
 
         $custom_fields = [
-            'quote'  => $CI->mdl_custom_fields->get_values_for_fields('mdl_quote_custom', $quote->quote_id),
-            'client' => $CI->mdl_custom_fields->get_values_for_fields('mdl_client_custom', $quote->client_id),
-            'user'   => $CI->mdl_custom_fields->get_values_for_fields('mdl_user_custom', $quote->user_id),
+            'quote'  => static::getCustomFieldValues('ip_quote_custom', $quote->quote_id),
+            'client' => static::getCustomFieldValues('ip_client_custom', $quote->client_id),
+            'user'   => static::getCustomFieldValues('ip_user_custom', $quote->user_id),
         ];
 
         if (get_setting('einvoicing')) {
-            $CI->load->helper('e-invoice');
-            get_einvoice_usage($quote, $items, false);
+            \Modules\Core\Support\EInvoiceHelper::get_einvoice_usage($quote, $items, false);
         }
 
         $data = [
             'quote'               => $quote,
-            'quote_tax_rates'     => $CI->mdl_quote_tax_rates->where('quote_id', $quote_id)->get()->result(),
+            'quote_tax_rates'     => \Modules\Quotes\Models\QuoteTaxRate::where('quote_id', $quote_id)->get(),
             'items'               => $items,
             'output_type'         => 'pdf',
             'show_item_discounts' => $show_item_discounts,
@@ -310,9 +292,7 @@ class PdfHelper
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
 
-        $html = $CI->load->view('quote_templates/pdf/' . $quote_template, $data, true);
-
-        $CI->load->helper('mpdf');
+        $html = view('quote_templates/pdf/' . $quote_template, $data)->render();
 
         return pdf_create(
             $html,
@@ -320,5 +300,43 @@ class PdfHelper
             $stream,
             $quote->quote_password
         );
+    }
+
+    /**
+     * Get custom field values for a given table and ID.
+     * Helper method to retrieve custom field values from database.
+     *
+     * @param string $table Custom field table name
+     * @param int $id Record ID
+     * @return array Array of custom field values
+     */
+    protected static function getCustomFieldValues(string $table, int $id): array
+    {
+        $modelClass = match($table) {
+            'ip_invoice_custom' => \Modules\Core\Models\InvoiceCustom::class,
+            'ip_quote_custom' => \Modules\Core\Models\QuoteCustom::class,
+            'ip_client_custom' => \Modules\Core\Models\ClientCustom::class,
+            'ip_user_custom' => \Modules\Core\Models\UserCustom::class,
+            'ip_payment_custom' => \Modules\Core\Models\PaymentCustom::class,
+            default => null,
+        };
+        
+        if (!$modelClass) {
+            return [];
+        }
+        
+        // Get the ID field name from the table
+        $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
+        
+        // Get all custom field records for this ID
+        $records = $modelClass::where($idField, $id)->get();
+        
+        // Convert to array format
+        $values = [];
+        foreach ($records as $record) {
+            $values[] = $record->toArray();
+        }
+        
+        return $values;
     }
 }

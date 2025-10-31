@@ -20,16 +20,16 @@ class EInvoiceHelper
      */
     public static function generate_xml_invoice_file($invoice, $items, string $xml_lib, string $filename, $options): string
     {
-        $CI = get_instance();
-
-        $CI->load->library('XMLtemplates/' . $xml_lib . 'Xml', [
+        $className = '\\Modules\\Core\\Libraries\\XMLtemplates\\' . $xml_lib . 'Xml';
+        
+        $xmlGenerator = new $className([
             'invoice'  => $invoice,
             'items'    => $items,
             'filename' => $filename,
             'options'  => $options,
-        ], 'ublciixml');
+        ]);
 
-        $CI->ublciixml->xml();
+        $xmlGenerator->xml();
 
         return UPLOADS_TEMP_FOLDER . $filename . '.xml';
     }
@@ -111,8 +111,7 @@ class EInvoiceHelper
         include $configFile;
 
         if (isset($xml_setting['legacy_calculation'])) {
-            $bridge = get_instance();
-            $bridge->config->set_item('legacy_calculation', ! empty($xml_setting['legacy_calculation']));
+            config(['legacy_calculation' => ! empty($xml_setting['legacy_calculation'])]);
         }
 
         return $xml_setting['full-name'] . ' - ' . get_country_name(trans('cldr'), $xml_setting['countrycode']);
@@ -128,14 +127,14 @@ class EInvoiceHelper
      */
     public static function get_admin_active_users($user_id = ''): array
     {
-        $CI = get_instance();
+        $query = \Modules\Core\Models\User::where('user_type', '1')
+            ->where('user_active', '1');
 
-        $where = ['user_type' => '1', 'user_active' => '1'];
         if ($user_id) {
-            $where['user_id'] = $user_id;
+            $query->where('user_id', $user_id);
         }
 
-        return $CI->db->from('ip_users')->where($where)->get()->result();
+        return $query->get()->toArray();
     }
 
     /**
@@ -312,8 +311,7 @@ class EInvoiceHelper
         $checks = self::get_items_tax_usages($items);
 
         if (count($checks[0]) !== 0 && count($checks[1]) !== 0) {
-            $bridge = get_instance();
-            $bridge->session->set_flashdata(
+            session()->flash(
                 'alert_warning',
                 '<h3 class="pull-right"><a class="btn btn-default" href="javascript:check_items_tax_usages(true);"><i class="fa fa-cogs"></i> ' . trans('view') . '</a></h3>'
                 . trans('items_tax_usages_bad_set')

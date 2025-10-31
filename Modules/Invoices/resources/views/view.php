@@ -56,14 +56,14 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
         $('#invoice_change_client').click(function () {
             $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_change_client'); ?>", {
                 invoice_id: <?php echo $invoice_id; ?>,
-                client_id: "<?php echo $this->db->escape_str($invoice->client_id); ?>",
+                client_id: "<?php echo e($invoice->client_id); ?>",
             });
         });
 
         $('#invoice_change_user').click(function () {
             $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_change_user'); ?>", {
                 invoice_id: <?php echo $invoice_id; ?>,
-                user_id: "<?php echo $this->db->escape_str($invoice->user_id); ?>",
+                user_id: "<?php echo e($invoice->user_id); ?>",
             });
         });
 <?php

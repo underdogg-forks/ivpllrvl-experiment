@@ -167,10 +167,6 @@ class Sumex
 
     public function __construct(array $params)
     {
-        $CI = &get_instance();
-
-        $CI->load->helper('invoice');
-
         $this->invoice = $params['invoice'];
         $this->items   = $params['items'];
         if ( ! is_array(@$params['options'])) {
@@ -222,12 +218,12 @@ class Sumex
         ];
 
         $esrTypes       = ['9', 'red'];
-        $this->_esrType = $esrTypes[$CI->mdl_settings->setting('sumex_sliptype')];
+        $this->_esrType = $esrTypes[\Modules\Core\Models\Setting::getValue('sumex_sliptype') ?? 0];
 
-        $this->currencyCode = $CI->mdl_settings->setting('currency_code');
-        $this->_role        = self::ROLES[$CI->mdl_settings->setting('sumex_role')];
-        $this->_place       = self::PLACES[$CI->mdl_settings->setting('sumex_place')];
-        $this->_canton      = self::CANTONS[$CI->mdl_settings->setting('sumex_canton')];
+        $this->currencyCode = \Modules\Core\Models\Setting::getValue('currency_code');
+        $this->_role        = self::ROLES[\Modules\Core\Models\Setting::getValue('sumex_role') ?? 0];
+        $this->_place       = self::PLACES[\Modules\Core\Models\Setting::getValue('sumex_place') ?? 0];
+        $this->_canton      = self::CANTONS[\Modules\Core\Models\Setting::getValue('sumex_canton') ?? 0];
     }
 
     public function pdf($invoice_template = null): bool|string
@@ -250,27 +246,17 @@ class Sumex
         }
 
         // Internal like eInvoice - Since v1.6.3
-        $CI = & get_instance();
-
-        $CI->load->model(
-            [
-                'invoices/mdl_invoice_tax_rates',
-                'custom_fields/mdl_custom_fields',
-            ]
-        );
-
+        
         // Override system language with client language
         set_language($this->invoice->client_language);
 
         if ( ! $invoice_template) {
-            $CI->load->helper('template');
-            $invoice_template = select_pdf_invoice_template($this->invoice);
+            $invoice_template = \Modules\Core\Support\TemplateHelper::select_pdf_invoice_template($this->invoice);
         }
 
         $payment_method = false;
         if ($this->invoice->payment_method != 0) {
-            $CI->load->model('payment_methods/mdl_payment_methods');
-            $payment_method = $CI->mdl_payment_methods->where('payment_method_id', $this->invoice->payment_method)->get()->row();
+            $payment_method = \Modules\Payments\Models\PaymentMethod::where('payment_method_id', $this->invoice->payment_method)->first();
         }
 
         // Determine if discounts should be displayed
@@ -282,15 +268,15 @@ class Sumex
             }
         }
 
-        // Get all custom fields
+        // Get all custom fields - using helper method
         $custom_fields = [
-            'invoice' => $CI->mdl_custom_fields->get_values_for_fields('mdl_invoice_custom', $this->invoice->invoice_id),
-            'client'  => $CI->mdl_custom_fields->get_values_for_fields('mdl_client_custom', $this->invoice->client_id),
-            'user'    => $CI->mdl_custom_fields->get_values_for_fields('mdl_user_custom', $this->invoice->user_id),
+            'invoice' => $this->getCustomFieldValues('ip_invoice_custom', $this->invoice->invoice_id),
+            'client'  => $this->getCustomFieldValues('ip_client_custom', $this->invoice->client_id),
+            'user'    => $this->getCustomFieldValues('ip_user_custom', $this->invoice->user_id),
         ];
 
         if ($this->invoice->quote_id) {
-            $custom_fields['quote'] = $CI->mdl_custom_fields->get_values_for_fields('mdl_quote_custom', $this->invoice->quote_id);
+            $custom_fields['quote'] = $this->getCustomFieldValues('ip_quote_custom', $this->invoice->quote_id);
         }
 
         $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $this->invoice->invoice_number);
@@ -307,7 +293,7 @@ class Sumex
 
         $data = [
             'invoice'             => $this->invoice,
-            'invoice_tax_rates'   => $CI->mdl_invoice_tax_rates->where('invoice_id', $this->invoice->invoice_id)->get()->result(),
+            'invoice_tax_rates'   => \Modules\Invoices\Models\InvoiceTaxRate::where('invoice_id', $this->invoice->invoice_id)->get(),
             'items'               => $this->items,
             'payment_method'      => $payment_method,
             'output_type'         => 'pdf',
@@ -316,9 +302,7 @@ class Sumex
             'legacy_calculation'  => config_item('legacy_calculation'),
         ];
 
-        $CI->load->helper(['pdf', 'mpdf']);
-
-        $html = $CI->load->view('invoice_templates/pdf/' . $invoice_template, $data, true);
+        $html = view('invoice_templates/pdf/' . $invoice_template, $data)->render();
 
         // Create PDF with embed XML
         $retval = pdf_create(
@@ -333,6 +317,44 @@ class Sumex
         );
 
         return file_get_contents($retval);
+    }
+
+    /**
+     * Get custom field values for a given table and ID.
+     * Helper method to retrieve custom field values from database.
+     *
+     * @param string $table Custom field table name
+     * @param int $id Record ID
+     * @return array Array of custom field values
+     */
+    protected function getCustomFieldValues(string $table, int $id): array
+    {
+        $modelClass = match($table) {
+            'ip_invoice_custom' => \Modules\Core\Models\InvoiceCustom::class,
+            'ip_quote_custom' => \Modules\Core\Models\QuoteCustom::class,
+            'ip_client_custom' => \Modules\Core\Models\ClientCustom::class,
+            'ip_user_custom' => \Modules\Core\Models\UserCustom::class,
+            'ip_payment_custom' => \Modules\Core\Models\PaymentCustom::class,
+            default => null,
+        };
+        
+        if (!$modelClass) {
+            return [];
+        }
+        
+        // Get the ID field name from the table
+        $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
+        
+        // Get all custom field records for this ID
+        $records = $modelClass::where($idField, $id)->get();
+        
+        // Convert to array format
+        $values = [];
+        foreach ($records as $record) {
+            $values[] = $record->toArray();
+        }
+        
+        return $values;
     }
 
     public function xml(): string|false

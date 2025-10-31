@@ -31,9 +31,6 @@ if ($custom_field_usage) {
     $need_model = false;
     if (in_array($what, ['invoice', 'quote'])) {
         $need_model = true;
-        $model      = 'mdl_' . $what . 's';
-        $CI         = & get_instance();
-        $CI->load->model($what . 's/' . $model);
     }
 
     foreach ($custom_field_usage as $obj) {
@@ -41,7 +38,13 @@ if ($custom_field_usage) {
         $id  = $obj->{$fid};
         $fid = $id;
         if ($need_model) {
-            $fid = '#' . $CI->{$model}->get_by_id($id)->{$what . '_number'};
+            if ($what === 'invoice') {
+                $record = \Modules\Invoices\Models\Invoice::find($id);
+                $fid = $record ? '#' . $record->invoice_number : $id;
+            } elseif ($what === 'quote') {
+                $record = \Modules\Quotes\Models\Quote::find($id);
+                $fid = $record ? '#' . $record->quote_number : $id;
+            }
         }
         // $val = $what . '_custom_fieldvalue'; // like invoice_custom_fieldvalue
         // $val = $obj->$val; // todo? get values of single/multiple choice (int: 1 or 2,3,4)

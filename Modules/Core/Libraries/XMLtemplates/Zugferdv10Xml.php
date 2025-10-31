@@ -30,11 +30,10 @@ class Zugferdv10Xml
 
     public function __construct(array $params)
     {
-        $CI                 = &get_instance();
         $this->invoice      = $params['invoice'];
         $this->items        = $params['items'];
         $this->filename     = $params['filename'];
-        $this->currencyCode = $CI->mdl_settings->setting('currency_code');
+        $this->currencyCode = \Modules\Core\Models\Setting::getValue('currency_code');
     }
 
     public function xml()
