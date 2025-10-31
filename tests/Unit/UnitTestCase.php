@@ -2,20 +2,19 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\TestCase;
 
 abstract class UnitTestCase extends TestCase
 {
     /**
      * Setup the test environment.
+     *
+     * Note: Since unit tests extend PHPUnit\Framework\TestCase (not Laravel's TestCase),
+     * Laravel components are bootstrapped via tests/bootstrap.php which is loaded by PHPUnit.
      */
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Load application bootstrap for Illuminate components
-        require_once __DIR__ . '/../../bootstrap/app.php';
     }
 
     /**
@@ -27,7 +26,7 @@ abstract class UnitTestCase extends TestCase
     protected function cleanupTables(array $tables): void
     {
         foreach ($tables as $table) {
-            DB::table($table)->delete();
+            \Illuminate\Support\Facades\DB::table($table)->delete();
         }
     }
 

@@ -22,11 +22,11 @@ Route::get('/quotes/status/sent', [QuotesController::class, 'status'])->defaults
 Route::get('/quotes/status/viewed', [QuotesController::class, 'status'])->defaults('status', 'viewed');
 
 // View routes
-Route::get('/quotes/view/{id}', [QuotesController::class, 'view'])->name('quotes.view');
+Route::get('/quotes/view/{quote_id}', [QuotesController::class, 'view'])->name('quotes.view');
 
 // Delete routes (POST for safety)
-Route::post('/quotes/delete/{id}', [QuotesController::class, 'delete'])->name('quotes.delete');
-Route::post('/quotes/cancel/{id}', [QuotesController::class, 'cancel'])->name('quotes.cancel');
+Route::post('/quotes/delete/{quote_id}', [QuotesController::class, 'delete'])->name('quotes.delete');
+Route::post('/quotes/cancel/{quote_id}', [QuotesController::class, 'cancel'])->name('quotes.cancel');
 Route::post('/quotes/delete_tax/{quote_id}/{quote_tax_rate_id}', [QuotesController::class, 'deleteQuoteTax'])->name('quotes.delete_tax');
 
 // Maintenance routes
