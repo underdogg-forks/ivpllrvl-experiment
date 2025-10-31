@@ -2,15 +2,14 @@
 
 namespace Tests\Unit\Services;
 
-use Illuminate\Support\Facades\DB;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\UnitTestCase;
 
 #[CoversClass(InvoiceGroupService::class)]
-class InvoiceGroupServiceTest extends TestCase
+class InvoiceGroupServiceTest extends UnitTestCase
 {
     private InvoiceGroupService $service;
 
@@ -20,7 +19,7 @@ class InvoiceGroupServiceTest extends TestCase
 
         $this->service = new InvoiceGroupService();
 
-        DB::table('ip_invoice_groups')->delete();
+        $this->cleanupTables(['ip_invoice_groups']);
     }
 
     #[Test]
