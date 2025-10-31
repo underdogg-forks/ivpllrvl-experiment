@@ -2,6 +2,7 @@
 
 namespace Modules\Products\Controllers;
 
+use Modules\Products\Http\Requests\ProductRequest;
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
@@ -21,18 +22,9 @@ class ProductsController
     {
         $this->productService = $productService;
     }
+
     /**
      * Display a paginated list of products.
-     *
-     * @param int $page Page number for pagination
-     *
-     * @return \Illuminate\View\View
-     *
-     * @legacy-function index
-     *
-     * @legacy-file application/modules/products/controllers/Products.php
-     *
-     * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -49,56 +41,11 @@ class ProductsController
     }
 
     /**
-     * Display form for creating or editing a product.
-     *
-     * @param int|null $id Product ID (null for create)
-     *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     *
-     * @legacy-function form
-     *
-     * @legacy-file application/modules/products/controllers/Products.php
-     *
-     * @legacy-line 49
+     * Show the form for creating a new product.
      */
-    public function form(?int $id = null)
+    public function create(): \Illuminate\View\View
     {
-        // Handle cancel button
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('products.index');
-        }
-
-        // Handle form submission
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            // Validate input
-            $rules     = $this->productService->getValidationRules();
-            $validated = request()->validate($rules);
-
-            if ($id) {
-                // Update existing
-                $product = Product::findOrFail($id);
-                $product->update($validated);
-            } else {
-                // Create new
-                Product::create($validated);
-            }
-
-            return redirect()->route('products.index')
-                ->with('alert_success', trans('record_successfully_saved'));
-        }
-
-        // Load existing record for editing
-        if ($id) {
-            $product = Product::find($id);
-            if ( ! $product) {
-                abort(404);
-            }
-        } else {
-            // New product
-            $product = new Product();
-        }
-
-        // Load related data for dropdowns
+        $product = new Product();
         $families = Family::orderBy('family_name')->get();
         $units    = Unit::orderBy('unit_name')->get();
         $taxRates = TaxRate::orderBy('tax_rate_name')->get();
@@ -112,22 +59,50 @@ class ProductsController
     }
 
     /**
-     * Delete a product.
-     *
-     * @param int $id Product ID
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @legacy-function delete
-     *
-     * @legacy-file application/modules/products/controllers/Products.php
-     *
-     * @legacy-line 87
+     * Store a newly created product.
      */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function store(ProductRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $product = Product::query()->findOrFail($id);
-        $product->delete();
+        $this->productService->create($request->validated());
+
+        return redirect()->route('products.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    /**
+     * Show the form for editing the specified product.
+     */
+    public function edit(Product $product): \Illuminate\View\View
+    {
+        $families = Family::orderBy('family_name')->get();
+        $units    = Unit::orderBy('unit_name')->get();
+        $taxRates = TaxRate::orderBy('tax_rate_name')->get();
+
+        return view('products::form', [
+            'product'   => $product,
+            'families'  => $families,
+            'units'     => $units,
+            'tax_rates' => $taxRates,
+        ]);
+    }
+
+    /**
+     * Update the specified product.
+     */
+    public function update(ProductRequest $request, Product $product): \Illuminate\Http\RedirectResponse
+    {
+        $this->productService->update($product->product_id, $request->validated());
+
+        return redirect()->route('products.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    /**
+     * Delete the specified product.
+     */
+    public function destroy(Product $product): \Illuminate\Http\RedirectResponse
+    {
+        $this->productService->delete($product->product_id);
 
         return redirect()->route('products.index')
             ->with('alert_success', trans('record_successfully_deleted'));
