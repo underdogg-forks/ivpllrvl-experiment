@@ -12,6 +12,8 @@ use Modules\Core\Models\User;
 class UserHelper
 {
     /**
+     *
+     * @origin Modules/Core/Helpers/user_helper.php
      * @param mixed id or object $user - since 1.6.3
      */
     public static function format_user($user): string

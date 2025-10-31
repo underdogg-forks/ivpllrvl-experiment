@@ -13,6 +13,8 @@ class CountryHelper
      * Returns an array list of cldr => country, translated in the language $cldr.
      * If there is no translated country list, return the english one.
      *
+     * @origin Modules/Core/Helpers/country_helper.php
+     *
      * @param $cldr
      *
      * @return mixed
@@ -28,6 +30,8 @@ class CountryHelper
 
     /**
      * Returns the countryname of a given $countrycode, translated in the language $cldr.
+     *
+     * @origin Modules/Core/Helpers/country_helper.php
      *
      * @param $cldr
      * @param $countrycode

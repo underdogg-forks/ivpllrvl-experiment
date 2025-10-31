@@ -12,6 +12,8 @@ class EchoHelper
     /**
      * Shorthand for htmlspecialchars().
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param $output
      *
      * @return string|null
@@ -28,6 +30,8 @@ class EchoHelper
     /**
      * Echo something with escaped HTML special chars.
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param mixed $output
      *
      * @return void
@@ -44,6 +48,8 @@ class EchoHelper
     /**
      * Echo something with escaped HTML entities.
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param mixed $output
      *
      * @return void
@@ -60,6 +66,8 @@ class EchoHelper
     /**
      * Echo a language string with the trans helper.
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param string      $line
      * @param string      $id
      * @param null|string $default
@@ -72,6 +80,8 @@ class EchoHelper
     /**
      * Echo for the auto link function with special chars handling.
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param        $str
      * @param string $type
      * @param bool   $popup
@@ -83,6 +93,8 @@ class EchoHelper
 
     /**
      * Output the standard CSRF protection field.
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      */
     public static function _csrf_field(): void
     {
@@ -95,6 +107,8 @@ class EchoHelper
      * Returns the correct URL for a asset within the theme directory
      * Also appends the current version to the asset to prevent browser caching issues.
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param string $asset
      */
     public static function _theme_asset($asset): void
@@ -108,6 +122,8 @@ class EchoHelper
      * Returns the correct URL for a asset within the core directory
      * Also appends the current version to the asset to prevent browser caching issues.
      *
+     *
+     * @origin Modules/Core/Helpers/echo_helper.php
      * @param string $asset
      */
     public static function _core_asset($asset): void

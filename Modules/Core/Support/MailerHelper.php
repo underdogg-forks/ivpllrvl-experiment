@@ -14,6 +14,8 @@ class MailerHelper
 {
     /**
      * Check if mail sending is configured in the settings.
+     *
+     * @origin Modules/Core/Helpers/mailer_helper.php
      */
     public static function mailer_configured(): bool
     {
@@ -27,6 +29,8 @@ class MailerHelper
     /**
      * Send an email if the status of an email changed.
      *
+     *
+     * @origin Modules/Core/Helpers/mailer_helper.php
      * @param        $quote_id
      * @param string $status   string "accepted" or "rejected"
      *
@@ -45,6 +49,8 @@ class MailerHelper
      * $email string can be a single email or a list of emails.
      * The emails list must be comma separated.
      *
+     *
+     * @origin Modules/Core/Helpers/mailer_helper.php
      * @param string $email
      *
      * @return bool returns true if all emails are valid otherwise false
@@ -66,6 +72,8 @@ class MailerHelper
     }
 
     /**
+     *
+     * @origin Modules/Core/Helpers/mailer_helper.php
      * @param []  $errors
      * @param string $redirect
      *

@@ -13,6 +13,8 @@ class MpdfHelper
 {
     /**
      * Pdf_create.
+     *
+     * @origin Modules/Core/Helpers/mpdf_helper.php
      */
     public static function pdf_create(
         $html,

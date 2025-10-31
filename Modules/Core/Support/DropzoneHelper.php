@@ -4,6 +4,13 @@ namespace Modules\Core\Support;
 
 class DropzoneHelper
 {
+    /**
+     * Render dropzone HTML for file uploads.
+     *
+     * @origin Modules/Core/Helpers/dropzone_helper.php
+     *
+     * @param bool $read_only Whether to display in read-only mode
+     */
     public static function _dropzone_html($read_only = true): void
     {
         ?>
@@ -81,6 +88,16 @@ class DropzoneHelper
         <?php
     }
 
+    /**
+     * Render dropzone JavaScript configuration.
+     *
+     * @origin Modules/Core/Helpers/dropzone_helper.php
+     *
+     * @param string|null $url_key URL key for upload endpoint
+     * @param int $client_id Client ID
+     * @param string $site_url Site URL
+     * @param array|null $acceptedExts Accepted file extensions
+     */
     public static function _dropzone_script($url_key = null, $client_id = 1, $site_url = '', $acceptedExts = null): void
     {
         $site_url = site_url(empty($site_url) ? 'upload/' : (mb_rtrim($site_url, '/') . '/'));

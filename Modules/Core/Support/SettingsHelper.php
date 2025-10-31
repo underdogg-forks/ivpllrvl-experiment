@@ -13,6 +13,8 @@ class SettingsHelper
 {
     /**
      * Get a setting value.
+     *
+     * @origin Modules/Core/Helpers/settings_helper.php
      */
     public static function getSetting(string $settingKey, $default = '', bool $escape = false)
     {
@@ -23,6 +25,8 @@ class SettingsHelper
 
     /**
      * Get the settings for a payment gateway.
+     *
+     * @origin Modules/Core/Helpers/settings_helper.php
      */
     public static function getGatewaySettings(string $gateway): array
     {
@@ -43,6 +47,8 @@ class SettingsHelper
     /**
      * Compares the two given values and outputs selected="selected"
      * if the values match or the operation is true for the single value.
+     *
+     * @origin Modules/Core/Helpers/settings_helper.php
      */
     public static function checkSelect($value1, $value2 = null, string $operator = '==', bool $checked = false): void
     {

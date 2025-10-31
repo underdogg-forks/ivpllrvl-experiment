@@ -10,6 +10,10 @@ namespace Modules\Core\Support;
 class ClientHelper
 {
     /**
+     * Format client name with optional title.
+     *
+     * @origin Modules/Core/Helpers/client_helper.php
+     *
      * @param obj|int $client     (or id - since 1.6.3)
      * @param bool    $show_title - since 1.6.3
      */
@@ -39,6 +43,10 @@ class ClientHelper
     }
 
     /**
+     * Format gender for display.
+     *
+     * @origin Modules/Core/Helpers/client_helper.php
+     *
      * @param string $gender
      *
      * @return string

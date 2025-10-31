@@ -12,6 +12,8 @@ class RedirectHelper
     /**
      * Redirect the user to a given URL.
      *
+     *
+     * @origin Modules/Core/Helpers/redirect_helper.php
      * @param string $fallback_url_string
      * @param bool   $redirect
      *
@@ -34,6 +36,8 @@ class RedirectHelper
 
     /**
      * Sets the current URL in the session.
+     *
+     * @origin Modules/Core/Helpers/redirect_helper.php
      */
     public static function redirect_to_set(): void
     {

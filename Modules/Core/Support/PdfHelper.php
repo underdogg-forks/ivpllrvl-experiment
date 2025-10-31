@@ -4,6 +4,15 @@ namespace Modules\Core\Support;
 
 class PdfHelper
 {
+    /**
+     * Print global discount in PDF output.
+     *
+     * @origin Modules/Core/Helpers/pdf_helper.php
+     *
+     * @param object $obj Invoice or quote object
+     * @param bool $show_item_discounts Whether item discounts are shown
+     * @param string $is Type of document ('invoice' or 'quote')
+     */
     public static function discount_global_print_in_pdf($obj, $show_item_discounts, string $is = 'invoice'): void
     {
         $type = [
@@ -30,6 +39,17 @@ class PdfHelper
         }
     }
 
+    /**
+     * Generate PDF for an invoice.
+     *
+     * @origin Modules/Core/Helpers/pdf_helper.php
+     *
+     * @param string $invoice_id Invoice ID
+     * @param bool $stream Whether to stream the PDF
+     * @param string|null $invoice_template Template to use
+     * @param bool|null $is_guest Whether viewing as guest
+     * @return string|null PDF content or filename
+     */
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
         $CI = get_instance();
@@ -159,6 +179,17 @@ class PdfHelper
         return $retval;
     }
 
+    /**
+     * Generate SUMEX compliant invoice PDF.
+     *
+     * @origin Modules/Core/Helpers/pdf_helper.php
+     *
+     * @param string $invoice_id Invoice ID
+     * @param bool $stream Whether to stream the PDF
+     * @param string|null $invoice_template Template to use
+     * @param bool $client Whether called from client context
+     * @return string|null PDF content or filename
+     */
     public static function generate_invoice_sumex($invoice_id, $stream = true, $invoice_template = null, $client = false)
     {
         $CI = get_instance();
@@ -217,6 +248,16 @@ class PdfHelper
         return $filePath;
     }
 
+    /**
+     * Generate PDF for a quote.
+     *
+     * @origin Modules/Core/Helpers/pdf_helper.php
+     *
+     * @param string $quote_id Quote ID
+     * @param bool $stream Whether to stream the PDF
+     * @param string|null $quote_template Template to use
+     * @return string|null PDF content or filename
+     */
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
         $CI = get_instance();
