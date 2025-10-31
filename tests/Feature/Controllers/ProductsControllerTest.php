@@ -2,18 +2,19 @@
 
 namespace Tests\Feature\Controllers;
 
+use Modules\Core\Models\User;
 use Modules\Products\Controllers\ProductsController;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Feature\FeatureTestCase;
 
 /**
  * ProductsController Feature Tests.
  *
- * Comprehensive test coverage for product catalog management
+ * Comprehensive test coverage for product catalog management via HTTP routes
  */
 #[CoversClass(ProductsController::class)]
-class ProductsControllerTest extends TestCase
+class ProductsControllerTest extends FeatureTestCase
 {
     /**
      * Test index displays paginated list of products.
@@ -22,17 +23,18 @@ class ProductsControllerTest extends TestCase
     public function it_displays_paginated_list_of_products(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('products.index'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('products', $viewData);
-        $this->assertArrayHasKey('filter_display', $viewData);
-        $this->assertTrue($viewData['filter_display']);
+        $response->assertOk();
+        $response->assertViewIs('products::index');
+        $response->assertViewHas('products');
+        $response->assertViewHas('filter_display');
+        $filterDisplay = $response->viewData('filter_display');
+        $this->assertTrue($filterDisplay);
     }
 
     /**
@@ -42,13 +44,14 @@ class ProductsControllerTest extends TestCase
     public function it_loads_products_with_family_unit_and_tax_rate_relationships(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create product with family, unit, and tax rate */
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('products.index'));
 
         /* Assert */
+        $response->assertOk();
         /* Would verify eager loading of relationships */
         $this->assertTrue(true, 'Should eager load family, unit, and tax rate');
     }
@@ -60,13 +63,14 @@ class ProductsControllerTest extends TestCase
     public function it_orders_products_by_name_alphabetically(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create products with different names */
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('products.index'));
 
         /* Assert */
+        $response->assertOk();
         /* Would verify products are ordered alphabetically */
         $this->assertTrue(true, 'Products should be ordered by name');
     }
@@ -78,16 +82,17 @@ class ProductsControllerTest extends TestCase
     public function it_includes_filter_configuration_in_view_data(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('products.index'));
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('filter_placeholder', $viewData);
-        $this->assertArrayHasKey('filter_method', $viewData);
-        $this->assertEquals('filter_products', $viewData['filter_method']);
+        $response->assertOk();
+        $response->assertViewHas('filter_placeholder');
+        $response->assertViewHas('filter_method');
+        $filterMethod = $response->viewData('filter_method');
+        $this->assertEquals('filter_products', $filterMethod);
     }
 
     /**
@@ -97,13 +102,14 @@ class ProductsControllerTest extends TestCase
     public function it_paginates_products_at_15_per_page(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create 20 products */
 
         /** Act */
-        $response = $controller->index(0);
+        $response = $this->actingAs($user)->get(route('products.index'));
 
         /* Assert */
+        $response->assertOk();
         /* Would verify pagination shows max 15 items */
         $this->assertTrue(true, 'Should paginate at 15 items per page');
     }
@@ -115,18 +121,18 @@ class ProductsControllerTest extends TestCase
     public function it_displays_create_form_for_new_product(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->form(null);
+        $response = $this->actingAs($user)->get(route('products.form'));
 
         /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('product', $viewData);
-        $this->assertArrayHasKey('families', $viewData);
-        $this->assertArrayHasKey('units', $viewData);
-        $this->assertArrayHasKey('tax_rates', $viewData);
+        $response->assertOk();
+        $response->assertViewIs('products::form');
+        $response->assertViewHas('product');
+        $response->assertViewHas('families');
+        $response->assertViewHas('units');
+        $response->assertViewHas('tax_rates');
     }
 
     /**
@@ -167,14 +173,14 @@ class ProductsControllerTest extends TestCase
     public function it_loads_families_ordered_by_name_for_dropdown(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create multiple families */
 
         /** Act */
-        $response = $controller->form();
+        $response = $this->actingAs($user)->get(route('products.form'));
 
         /** Assert */
-        $viewData = $response->getData();
+        $response->assertOk();
         /* Would verify families are ordered alphabetically */
         $this->assertTrue(true, 'Families should be ordered by name');
     }
@@ -186,14 +192,14 @@ class ProductsControllerTest extends TestCase
     public function it_loads_units_ordered_by_name_for_dropdown(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create multiple units */
 
         /** Act */
-        $response = $controller->form();
+        $response = $this->actingAs($user)->get(route('products.form'));
 
         /** Assert */
-        $viewData = $response->getData();
+        $response->assertOk();
         /* Would verify units are ordered alphabetically */
         $this->assertTrue(true, 'Units should be ordered by name');
     }
@@ -205,11 +211,11 @@ class ProductsControllerTest extends TestCase
     public function it_loads_tax_rates_ordered_by_name_for_dropdown(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create multiple tax rates */
 
         /** Act */
-        $response = $controller->form();
+        $response = $this->actingAs($user)->get(route('products.form'));
 
         /** Assert */
         $viewData = $response->getData();
@@ -335,12 +341,12 @@ class ProductsControllerTest extends TestCase
     public function it_deletes_product_successfully(): void
     {
         /** Arrange */
-        $controller = new ProductsController();
+        $user = User::factory()->create();
         /** Would create product */
         $testId = 1;
 
         /** Act */
-        $response = $controller->delete($testId);
+        $response = $this->actingAs($user)->post(route('products.delete', ['id' => $testId]));
 
         /* Assert */
         /* Would verify product is deleted */
