@@ -10,6 +10,22 @@ namespace Modules\Core\Support;
 class EchoHelper
 {
     /**
+     * Shorthand for htmlspecialchars().
+     *
+     * @param $output
+     *
+     * @return string|null
+     */
+    public static function htmlsc($output): ?string
+    {
+        if (null !== $output) {
+            return htmlspecialchars($output, ENT_QUOTES | ENT_IGNORE);
+        }
+
+        return $output;
+    }
+
+    /**
      * Echo something with escaped HTML special chars.
      *
      * @param mixed $output

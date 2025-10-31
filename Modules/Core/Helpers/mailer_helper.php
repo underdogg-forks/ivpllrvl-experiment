@@ -1,16 +1,12 @@
 <?php
 
 /**
- * Check if mail sending is configured in the settings.
+ * Additional mailer helper functions.
+ * 
+ * These complex functions still use CodeIgniter dependencies and are kept here
+ * until they can be migrated to Laravel's mail system.
+ * All simple functions have been migrated to MailerHelper class.
  */
-function mailer_configured(): bool
-{
-    $CI = &get_instance();
-
-    return ($CI->mdl_settings->setting('email_send_method') == 'phpmail')
-        || ($CI->mdl_settings->setting('email_send_method') == 'sendmail')
-        || (($CI->mdl_settings->setting('email_send_method') == 'smtp') && ($CI->mdl_settings->setting('smtp_server_address')));
-}
 
 /**
  * Send an invoice via email.
@@ -24,7 +20,8 @@ function mailer_configured(): bool
  *
  * @return bool
  */
-function email_invoice(
+if ( ! function_exists('email_invoice')) {
+    function email_invoice(
     string $invoice_id,
     $invoice_template,
     array $from,
@@ -87,6 +84,7 @@ function email_invoice(
     $message = (empty($message) ? ' ' : $message);
 
     return phpmail_send($from, $to, $subject, $message, $invoice, $cc, $bcc, $attachments);
+    }
 }
 
 /**
@@ -101,15 +99,16 @@ function email_invoice(
  *
  * @return bool
  */
-function email_quote(
-    string $quote_id,
-    $quote_template,
-    array $from,
-    $to,
-    $subject,
-    $body,
-    $cc = null,
-    $bcc = null,
+if ( ! function_exists('email_quote')) {
+    function email_quote(
+        string $quote_id,
+        $quote_template,
+        array $from,
+        $to,
+        $subject,
+        $body,
+        $cc = null,
+        $bcc = null,
     $attachments = null
 ) {
     $CI = & get_instance();
@@ -152,89 +151,10 @@ function email_quote(
     $message = (empty($message) ? ' ' : $message);
 
     return phpmail_send($from, $to, $subject, $message, $quote, $cc, $bcc, $attachments);
-}
-
-/**
- * Send an email if the status of an email changed.
- *
- * @param        $quote_id
- * @param string $status   string "accepted" or "rejected"
- *
- * @return bool if the email was sent
- */
-function email_quote_status(string $quote_id, $status)
-{
-    ini_set('display_errors', 'on');
-    error_reporting(E_ALL);
-
-    if ( ! mailer_configured()) {
-        return false;
-    }
-
-    $CI = & get_instance();
-    $CI->load->helper('mailer/phpmailer');
-
-    $quote    = $CI->mdl_quotes->where('ip_quotes.quote_id', $quote_id)->get()->row();
-    $index    = env('REMOVE_INDEXPHP', true) ? '' : 'index.php';
-    $base_url = base_url('/' . $index . '/quotes/view/' . $quote_id);
-
-    $user_email = $quote->user_email;
-    $subject    = sprintf(
-        trans('quote_status_email_subject'),
-        $quote->client_name,
-        mb_strtolower(lang($status)),
-        $quote->quote_number
-    );
-    $body = sprintf(
-        nl2br(trans('quote_status_email_body')),
-        $quote->client_name,
-        mb_strtolower(lang($status)),
-        $quote->quote_number,
-        '<a href="' . $base_url . '">' . $base_url . '</a>'
-    );
-
-    return phpmail_send($user_email, $user_email, $subject, $body);
-}
-
-/**
- * Validate email address syntax
- * $email string can be a single email or a list of emails.
- * The emails list must be comma separated.
- *
- * @param string $email
- *
- * @return bool returs true if all emails are valid otherwise false
- */
-function validate_email_address(string $email): bool
-{
-    $emails[] = $email;
-    if (str_contains($email, ',')) {
-        $emails = explode(',', $email);
-    }
-
-    foreach ($emails as $emailItem) {
-        if ( ! filter_var($emailItem, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * @param []  $errors
- * @param string $redirect
- */
-function check_mail_errors(array $errors = [], $redirect = ''): void
-{
-    if ($errors) {
-        $CI = & get_instance();
-        foreach ($errors as $i => $e) {
-            $errors[$i] = strtr(trans('form_validation_valid_email'), ['{field}' => trans($e)]);
-        }
-
-        $CI->session->set_flashdata('alert_error', implode('<br>', $errors));
-        $redirect = empty($redirect) ? (empty($_SERVER['HTTP_REFERER']) ? '' : $_SERVER['HTTP_REFERER']) : $redirect;
-        redirect($redirect);
     }
 }
+
+// Note: email_quote_status, validate_email_address, and check_mail_errors
+// are now defined in MailerHelper class and wrapped in bc_helper.php.
+// They have been removed from this file to avoid conflicts.
+
