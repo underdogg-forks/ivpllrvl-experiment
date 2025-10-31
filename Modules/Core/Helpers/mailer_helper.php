@@ -32,16 +32,7 @@ if ( ! function_exists('email_invoice')) {
     $bcc = null,
     $attachments = null
 ) {
-    $CI = & get_instance();
-
-    $CI->load->helper([
-        'mailer/phpmailer',
-        'template',
-        'invoice',
-        'pdf',
-    ]);
-
-    $db_invoice = $CI->mdl_invoices->where('ip_invoices.invoice_id', $invoice_id)->get()->row();
+    $db_invoice = \Modules\Invoices\Models\Invoice::where('invoice_id', $invoice_id)->first();
 
     if ($db_invoice->sumex_id == null) {
         $invoice = generate_invoice_pdf($invoice_id, false, $invoice_template);
@@ -111,17 +102,9 @@ if ( ! function_exists('email_quote')) {
         $bcc = null,
     $attachments = null
 ) {
-    $CI = & get_instance();
-
-    $CI->load->helper([
-        'mailer/phpmailer',
-        'template',
-        'pdf',
-    ]);
-
     $quote = generate_quote_pdf($quote_id, false, $quote_template);
 
-    $db_quote = $CI->mdl_quotes->where('ip_quotes.quote_id', $quote_id)->get()->row();
+    $db_quote = \Modules\Quotes\Models\Quote::where('quote_id', $quote_id)->first();
 
     $message = parse_template($db_quote, $body);
     $subject = parse_template($db_quote, $subject);
