@@ -10,13 +10,19 @@ use Modules\Core\Models\User;
 use Modules\Crm\Models\Client;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Services\InvoiceItemService;
+use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\UnitService;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
+use Modules\Quotes\Services\QuoteAmountService;
+use Modules\Quotes\Services\QuoteItemService;
+use Modules\Quotes\Services\QuoteService;
+use Modules\Quotes\Services\QuoteTaxRateService;
 
 /**
  * QuotesAjaxController.
@@ -25,6 +31,28 @@ use Modules\Quotes\Models\QuoteTaxRate;
  */
 class QuotesAjaxController
 {
+    protected QuoteService $quoteService;
+    protected QuoteAmountService $quoteAmountService;
+    protected QuoteItemService $quoteItemService;
+    protected QuoteTaxRateService $quoteTaxRateService;
+    protected UnitService $unitService;
+    protected InvoiceService $invoiceService;
+
+    public function __construct(
+        QuoteService $quoteService,
+        QuoteAmountService $quoteAmountService,
+        QuoteItemService $quoteItemService,
+        QuoteTaxRateService $quoteTaxRateService,
+        UnitService $unitService,
+        InvoiceService $invoiceService
+    ) {
+        $this->quoteService = $quoteService;
+        $this->quoteAmountService = $quoteAmountService;
+        $this->quoteItemService = $quoteItemService;
+        $this->quoteTaxRateService = $quoteTaxRateService;
+        $this->unitService = $unitService;
+        $this->invoiceService = $invoiceService;
+    }
     /**
      * Save quote with items, tax rates, and custom fields.
      *
@@ -41,10 +69,10 @@ class QuotesAjaxController
     public function save(Request $request): JsonResponse
     {
         $quoteId = (int) $request->input('quote_id');
-        $quote   = Quote::query()->findOrFail($quoteId);
+        $quote   = Quote::findOrFail($quoteId);
 
         // Validate quote
-        $validation = Quote::validationRulesSaveQuote();
+        $validation = $this->quoteService->getSaveValidationRules($quoteId);
         $validator  = validator($request->all(), $validation);
 
         if ($validator->fails()) {
@@ -94,12 +122,15 @@ class QuotesAjaxController
                     'item_price'           => $item->item_price ?? 0,
                     'item_discount_amount' => $item->item_discount_amount ?? null,
                     'item_product_unit_id' => $item->item_product_unit_id ?? null,
-                    'item_product_unit'    => Unit::getName($item->item_product_unit_id ?? null, $item->item_quantity ?? 1),
+                    'item_product_unit'    => $this->unitService->getUnitName($item->item_product_unit_id ?? null, $item->item_quantity ?? 1),
                     'item_order'           => $item->item_order ?? 0,
                 ];
 
                 $itemId = $item->item_id ?? null;
-                QuoteItem::saveItem($itemId, $itemData, $globalDiscount);
+                if ($itemId) {
+                    $itemData['item_id'] = $itemId;
+                }
+                $this->quoteItemService->saveItem($itemData, $globalDiscount);
             } elseif (empty($item->item_name) && ( ! empty($item->item_quantity) || ! empty($item->item_price))) {
                 return response()->json([
                     'success'           => 0,
@@ -114,7 +145,7 @@ class QuotesAjaxController
 
         if (empty($quoteNumber) && $quoteStatusId != 1) {
             $quoteGroupId = $quote->invoice_group_id;
-            $quoteNumber  = Quote::getQuoteNumber($quoteGroupId);
+            $quoteNumber  = $this->quoteService->generateQuoteNumber($quoteGroupId);
         }
 
         // Adjust discount for non-legacy calculation
@@ -185,7 +216,7 @@ class QuotesAjaxController
      */
     public function saveQuoteTaxRate(Request $request): JsonResponse
     {
-        $validation = QuoteTaxRate::validationRules();
+        $validation = $this->quoteTaxRateService->getValidationRules();
         $validator  = validator($request->all(), $validation);
 
         if ($validator->fails()) {
@@ -302,7 +333,7 @@ class QuotesAjaxController
      */
     public function copyQuote(Request $request): JsonResponse
     {
-        $validation = Quote::validationRules();
+        $validation = $this->quoteService->getValidationRules();
         $validator  = validator($request->all(), $validation);
 
         if ($validator->fails()) {
@@ -313,7 +344,7 @@ class QuotesAjaxController
         }
 
         // Create new quote
-        $targetId = Quote::query()->createQuote($request->all());
+        $targetId = $this->quoteService->createQuote($request->all())->quote_id;
         $sourceId = (int) $request->input('quote_id');
 
         // Copy all related data
@@ -490,7 +521,7 @@ class QuotesAjaxController
      */
     public function create(Request $request): JsonResponse
     {
-        $validation = Quote::validationRules();
+        $validation = $this->quoteService->getValidationRules();
         $validator  = validator($request->all(), $validation);
 
         if ($validator->fails()) {
@@ -500,7 +531,8 @@ class QuotesAjaxController
             ]);
         }
 
-        $quoteId = Quote::query()->createQuote($request->all());
+        $quote = $this->quoteService->createQuote($request->all());
+        $quoteId = $quote->quote_id;
 
         return response()->json([
             'success'  => 1,
@@ -549,7 +581,7 @@ class QuotesAjaxController
      */
     public function quoteToInvoice(Request $request): JsonResponse
     {
-        $validation = Invoice::validationRules();
+        $validation = $this->invoiceService->getValidationRules();
         $validator  = validator($request->all(), $validation);
 
         if ($validator->fails()) {

@@ -4,9 +4,16 @@ namespace Modules\Crm\Controllers;
 
 use Modules\Crm\Models\Project;
 use Modules\Crm\Models\Task;
+use Modules\Crm\Services\TaskService;
 
 class TasksController
 {
+    protected TaskService $taskService;
+
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
     /** @legacy-file application/modules/tasks/controllers/Tasks.php:32 */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -29,19 +36,19 @@ class TasksController
         }
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $validated = request()->validate(Task::validationRules());
+            $validated = request()->validate($this->taskService->getValidationRules());
             if ($id) {
-                Task::query()->findOrFail($id)->update($validated);
+                Task::findOrFail($id)->update($validated);
             } else {
-                Task::query()->create($validated);
+                Task::create($validated);
             }
 
             return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $task     = $id ? Task::query()->findOrFail($id) : new Task();
-        $projects = Project::query()->orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Models\TaxRate::query()->orderBy('tax_rate_name')->get();
+        $task     = $id ? Task::findOrFail($id) : new Task();
+        $projects = Project::orderBy('project_name')->get();
+        $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
 
         return view('crm::tasks_form', [
             'task'          => $task,
@@ -54,7 +61,7 @@ class TasksController
     /** @legacy-file application/modules/tasks/controllers/Tasks.php:87 */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        Task::query()->findOrFail($id)->delete();
+        Task::findOrFail($id)->delete();
 
         return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_deleted'));
     }

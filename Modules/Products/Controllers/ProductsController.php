@@ -6,6 +6,7 @@ use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\ProductService;
 
 /**
  * ProductsController.
@@ -14,6 +15,12 @@ use Modules\Products\Models\Unit;
  */
 class ProductsController
 {
+    protected ProductService $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
     /**
      * Display a paginated list of products.
      *
@@ -64,16 +71,16 @@ class ProductsController
         // Handle form submission
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
-            $rules     = Product::validationRules();
+            $rules     = $this->productService->getValidationRules();
             $validated = request()->validate($rules);
 
             if ($id) {
                 // Update existing
-                $product = Product::query()->findOrFail($id);
+                $product = Product::findOrFail($id);
                 $product->update($validated);
             } else {
                 // Create new
-                Product::query()->create($validated);
+                Product::create($validated);
             }
 
             return redirect()->route('products.index')
@@ -82,7 +89,7 @@ class ProductsController
 
         // Load existing record for editing
         if ($id) {
-            $product = Product::query()->find($id);
+            $product = Product::find($id);
             if ( ! $product) {
                 abort(404);
             }
@@ -92,9 +99,9 @@ class ProductsController
         }
 
         // Load related data for dropdowns
-        $families = Family::query()->orderBy('family_name')->get();
-        $units    = Unit::query()->orderBy('unit_name')->get();
-        $taxRates = TaxRate::query()->orderBy('tax_rate_name')->get();
+        $families = Family::orderBy('family_name')->get();
+        $units    = Unit::orderBy('unit_name')->get();
+        $taxRates = TaxRate::orderBy('tax_rate_name')->get();
 
         return view('products::form', [
             'product'   => $product,

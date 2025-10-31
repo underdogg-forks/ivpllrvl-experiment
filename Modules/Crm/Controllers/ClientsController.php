@@ -3,9 +3,16 @@
 namespace Modules\Crm\Controllers;
 
 use Modules\Crm\Models\Client;
+use Modules\Crm\Services\ClientService;
 
 class ClientsController
 {
+    protected ClientService $clientService;
+
+    public function __construct(ClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
     /** @legacy-file application/modules/clients/controllers/Clients.php:31 */
     public function index(): \Illuminate\Http\RedirectResponse
     {
@@ -42,17 +49,17 @@ class ClientsController
         }
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $validated = request()->validate(Client::validationRules());
+            $validated = request()->validate($this->clientService->getValidationRules());
             if ($id) {
-                Client::query()->findOrFail($id)->update($validated);
+                Client::findOrFail($id)->update($validated);
             } else {
-                Client::query()->create($validated);
+                Client::create($validated);
             }
 
             return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $client = $id ? Client::query()->findOrFail($id) : new Client();
+        $client = $id ? Client::findOrFail($id) : new Client();
 
         return view('crm::clients_form', ['client' => $client]);
     }
@@ -60,7 +67,7 @@ class ClientsController
     /** @legacy-file application/modules/clients/controllers/Clients.php:205 */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        Client::query()->findOrFail($id)->delete();
+        Client::findOrFail($id)->delete();
 
         return redirect()->route('clients.index')->with('alert_success', trans('record_successfully_deleted'));
     }
