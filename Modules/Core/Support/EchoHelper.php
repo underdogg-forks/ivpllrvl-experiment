@@ -98,7 +98,7 @@ class EchoHelper
      */
     public static function _csrf_field(): void
     {
-        echo '<input type="hidden" name="' . csrf_token() . '" value="' . csrf_token() . '">';
+        echo '<input type="hidden" name="_token" value="' . csrf_token() . '">';
     }
 
     /**
