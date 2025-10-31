@@ -44,6 +44,7 @@ Route::post('/invoice_groups/form/{id}', [InvoiceGroupsController::class, 'form'
 // Delete routes (POST for safety)
 Route::post('/invoices/delete/{invoiceId}', [InvoicesController::class, 'delete'])->name('invoices.delete');
 Route::post('/invoices/recurring/stop/{id}', [RecurringController::class, 'stop'])->name('invoices.recurring.stop');
+Route::post('/invoices/recurring/delete/{id}', [RecurringController::class, 'delete'])->name('invoices.recurring.delete');
 Route::post('/invoice_groups/delete/{id}', [InvoiceGroupsController::class, 'delete'])->name('invoice_groups.delete');
 
 // Management routes
