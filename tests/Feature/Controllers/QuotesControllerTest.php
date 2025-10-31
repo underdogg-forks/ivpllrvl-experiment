@@ -246,9 +246,14 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         $quoteId = $quote->quote_id;
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'quote_id' => $quoteId,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.delete', ['quote_id' => $quoteId]));
+        $response = $this->actingAs($user)->post(route('quotes.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('quotes.index'));
@@ -278,9 +283,14 @@ class QuotesControllerTest extends FeatureTestCase
         $quoteId   = $quote->quote_id;
         $itemId    = $item->item_id;
         $taxRateId = $taxRate->quote_tax_rate_id;
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'quote_id' => $quoteId,
+        ];
 
         /** Act */
-        $this->actingAs($user)->post(route('quotes.delete', ['quote_id' => $quoteId]));
+        $this->actingAs($user)->post(route('quotes.delete', $deleteParams));
 
         /** Assert - verify all related records are deleted */
         $this->assertNull(Quote::find($quoteId));

@@ -195,9 +195,14 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'invoiceId' => $invoice->invoice_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
+        $response = $this->actingAs($user)->post(route('invoices.delete', $deleteParams));
 
         /* Assert */
         $response->assertRedirect();
@@ -214,9 +219,14 @@ class InvoicesControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
         $task    = Task::factory()->create(['invoice_id' => $invoice->invoice_id, 'task_status' => 4]);
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'invoiceId' => $invoice->invoice_id,
+        ];
 
         /* Act */
-        $this->actingAs($user)->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
+        $this->actingAs($user)->post(route('invoices.delete', $deleteParams));
 
         /** Assert */
         $updatedTask = Task::find($task->task_id);
@@ -233,9 +243,14 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         config(['settings.enable_invoice_deletion' => false]);
         $invoice = Invoice::factory()->sent()->create(); // Not a draft
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'invoiceId' => $invoice->invoice_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
+        $response = $this->actingAs($user)->post(route('invoices.delete', $deleteParams));
 
         /* Assert */
         $this->assertNotNull(Invoice::find($invoice->invoice_id)); // Still exists
