@@ -38,6 +38,9 @@ Route::delete('/projects/{project}', [ProjectsController::class, 'destroy'])->na
 Route::delete('/tasks/{task}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 
 // Legacy routes (for backward compatibility)
+// These routes allow existing code to continue using POST-based URLs.
+// New code should use the RESTful routes above with proper HTTP verbs.
+// Note: POST to /form/{id} is handled by update(), POST to /delete/{id} by destroy()
 Route::get('/projects/form', [ProjectsController::class, 'create']);
 Route::get('/projects/form/{project}', [ProjectsController::class, 'edit']);
 Route::post('/projects/form', [ProjectsController::class, 'store']);
