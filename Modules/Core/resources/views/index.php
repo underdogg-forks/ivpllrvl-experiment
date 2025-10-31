@@ -8,7 +8,7 @@
     </div>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('import/index'), 'mdl_import'); ?>
+        <?php echo pager(site_url('import/index'), $imports); ?>
     </div>
 
 </div>

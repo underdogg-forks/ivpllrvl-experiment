@@ -2,7 +2,7 @@
     <h1 class="headerbar-title"><?php _trans('payments'); ?></h1>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('guest/payments/index'), 'mdl_payments'); ?>
+        <?php echo pager(site_url('guest/payments/index'), $payments); ?>
     </div>
 
 </div>

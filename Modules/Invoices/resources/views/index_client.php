@@ -9,7 +9,7 @@
     </div>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('invoices/client/' . $client_id . '/' . $status), 'mdl_invoices'); ?>
+        <?php echo pager(site_url('invoices/client/' . $client_id . '/' . $status), $invoices); ?>
     </div>
 
     <div class="headerbar-item pull-right">

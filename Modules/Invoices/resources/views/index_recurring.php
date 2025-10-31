@@ -2,7 +2,7 @@
     <h1 class="headerbar-title"><?php _trans('recurring_invoices'); ?></h1>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('invoices/recurring/index'), 'mdl_invoices_recurring'); ?>
+        <?php echo pager(site_url('invoices/recurring/index'), $invoices); ?>
     </div>
 </div>
 
