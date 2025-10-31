@@ -180,9 +180,14 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, string> $cancelData */
+        $cancelData = [
+            'btn_cancel' => '1',
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('users.form'), ['btn_cancel' => '1']);
+        $response = $this->actingAs($user)->post(route('users.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('users.index'));
@@ -197,9 +202,14 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $adminUser = User::factory()->create();
         $deleteUser = User::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => $deleteUser->user_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($adminUser)->post(route('users.delete', ['id' => $deleteUser->user_id]));
+        $response = $this->actingAs($adminUser)->post(route('users.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('users.index'));
@@ -218,9 +228,14 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => 99999,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('users.delete', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('users.delete', $deleteParams));
 
         /** Assert */
         $response->assertNotFound();

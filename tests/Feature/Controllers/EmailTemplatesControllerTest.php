@@ -174,9 +174,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, string> $cancelData */
+        $cancelData = [
+            'btn_cancel' => '1',
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.form'), ['btn_cancel' => '1']);
+        $response = $this->actingAs($user)->post(route('email_templates.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -191,9 +196,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => $template->email_template_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.delete', ['id' => $template->email_template_id]));
+        $response = $this->actingAs($user)->post(route('email_templates.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -212,9 +222,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => 99999,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.delete', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('email_templates.delete', $deleteParams));
 
         /** Assert */
         $response->assertNotFound();

@@ -233,9 +233,14 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         /** Would create invoice group */
         $testId = 1;
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => $testId,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoice_groups.delete', ['id' => $testId]));
+        $response = $this->actingAs($user)->post(route('invoice_groups.delete', $deleteParams));
 
         /* Assert */
         /* Would verify invoice group is deleted */

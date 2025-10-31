@@ -168,9 +168,14 @@ class PaymentMethodsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, string> $cancelData */
+        $cancelData = [
+            'btn_cancel' => '1',
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payment_methods.form'), ['btn_cancel' => '1']);
+        $response = $this->actingAs($user)->post(route('payment_methods.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('payment_methods.index'));
@@ -184,12 +189,15 @@ class PaymentMethodsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-
-        /** Act */
-        $response = $this->actingAs($user)->post(route('payment_methods.form'), [
+        
+        /** @var array<string, string> $invalidData */
+        $invalidData = [
             'payment_method_name' => '',
             'btn_submit' => '1',
-        ]);
+        ];
+
+        /** Act */
+        $response = $this->actingAs($user)->post(route('payment_methods.form'), $invalidData);
 
         /** Assert */
         $response->assertSessionHasErrors('payment_method_name');
@@ -204,12 +212,15 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         PaymentMethod::factory()->create(['payment_method_name' => 'Cash']);
-
-        /** Act */
-        $response = $this->actingAs($user)->post(route('payment_methods.form'), [
+        
+        /** @var array<string, string> $duplicateData */
+        $duplicateData = [
             'payment_method_name' => 'Cash',
             'btn_submit' => '1',
-        ]);
+        ];
+
+        /** Act */
+        $response = $this->actingAs($user)->post(route('payment_methods.form'), $duplicateData);
 
         /** Assert */
         $response->assertSessionHasErrors('payment_method_name');
@@ -224,9 +235,14 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => $paymentMethod->payment_method_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payment_methods.delete', ['id' => $paymentMethod->payment_method_id]));
+        $response = $this->actingAs($user)->post(route('payment_methods.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('payment_methods.index'));
@@ -245,9 +261,14 @@ class PaymentMethodsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => 99999,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payment_methods.delete', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('payment_methods.delete', $deleteParams));
 
         /** Assert */
         $response->assertNotFound();

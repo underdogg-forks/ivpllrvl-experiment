@@ -267,9 +267,14 @@ class PaymentsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, string> $cancelData */
+        $cancelData = [
+            'btn_cancel' => '1',
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form'), ['btn_cancel' => '1']);
+        $response = $this->actingAs($user)->post(route('payments.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -284,9 +289,14 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $payment = Payment::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => $payment->payment_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.delete', ['id' => $payment->payment_id]));
+        $response = $this->actingAs($user)->post(route('payments.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -305,9 +315,14 @@ class PaymentsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => 99999,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.delete', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('payments.delete', $deleteParams));
 
         /** Assert */
         $response->assertNotFound();

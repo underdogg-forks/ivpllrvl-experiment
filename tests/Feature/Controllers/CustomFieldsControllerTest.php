@@ -173,9 +173,14 @@ class CustomFieldsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, string> $cancelData */
+        $cancelData = [
+            'btn_cancel' => '1',
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.form'), ['btn_cancel' => '1']);
+        $response = $this->actingAs($user)->post(route('custom_fields.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('custom_fields.index'));
@@ -190,9 +195,14 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $customField = CustomField::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => $customField->custom_field_id,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.delete', ['id' => $customField->custom_field_id]));
+        $response = $this->actingAs($user)->post(route('custom_fields.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('custom_fields.index'));
@@ -211,9 +221,14 @@ class CustomFieldsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
+        
+        /** @var array<string, int> $deleteParams */
+        $deleteParams = [
+            'id' => 99999,
+        ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.delete', ['id' => 99999]));
+        $response = $this->actingAs($user)->post(route('custom_fields.delete', $deleteParams));
 
         /** Assert */
         $response->assertNotFound();
