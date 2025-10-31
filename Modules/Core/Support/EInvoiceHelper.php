@@ -20,16 +20,16 @@ class EInvoiceHelper
      */
     public static function generate_xml_invoice_file($invoice, $items, string $xml_lib, string $filename, $options): string
     {
-        $CI = get_instance();
-
-        $CI->load->library('XMLtemplates/' . $xml_lib . 'Xml', [
+        $className = '\\Modules\\Core\\Libraries\\XMLtemplates\\' . $xml_lib . 'Xml';
+        
+        $xmlGenerator = new $className([
             'invoice'  => $invoice,
             'items'    => $items,
             'filename' => $filename,
             'options'  => $options,
-        ], 'ublciixml');
+        ]);
 
-        $CI->ublciixml->xml();
+        $xmlGenerator->xml();
 
         return UPLOADS_TEMP_FOLDER . $filename . '.xml';
     }

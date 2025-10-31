@@ -21,14 +21,12 @@ class RedirectHelper
      */
     public static function redirect_to($fallback_url_string, $redirect = true)
     {
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
+        $redirect_url = session('redirect_to', $fallback_url_string);
 
-        $redirect_url = ($bridge->session()->userdata('redirect_to')) ? $bridge->session()->userdata('redirect_to') : $fallback_url_string;
-
-        $bridge->session()->unset_userdata('redirect_to');
+        session()->forget('redirect_to');
 
         if ($redirect) {
-            redirect($redirect_url);
+            return redirect($redirect_url);
         }
 
         return $redirect_url;
@@ -41,7 +39,6 @@ class RedirectHelper
      */
     public static function redirect_to_set(): void
     {
-        // TODO: Migrate remaining CodeIgniter dependencies to Laravel
-        $bridge->session()->set_userdata('redirect_to', $CI->uri->uri_string());
+        session(['redirect_to' => request()->path()]);
     }
 }
