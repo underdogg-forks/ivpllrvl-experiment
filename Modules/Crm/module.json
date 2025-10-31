@@ -1,7 +1,7 @@
 {
     "name": "Crm",
     "alias": "crm",
-    "description": "CRM module for managing clients, projects and tasks",
+    "description": "CRM module for managing clients and customer relationships",
     "keywords": [],
     "priority": 6,
     "providers": [

@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Crm\Services;
+namespace Modules\Projects\Services;
 
 use App\Services\BaseService;
-use Modules\Crm\Models\Project;
+use Modules\Projects\Models\Project;
 
 /**
  * ProjectService.

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Crm\Controllers;
+namespace Modules\Projects\Controllers;
 
-use Modules\Crm\Http\Requests\ProjectRequest;
+use Modules\Projects\Http\Requests\ProjectRequest;
 use Modules\Crm\Models\Client;
-use Modules\Crm\Models\Project;
-use Modules\Crm\Services\ProjectService;
+use Modules\Projects\Models\Project;
+use Modules\Projects\Services\ProjectService;
 
 class ProjectsController
 {
@@ -20,7 +20,7 @@ class ProjectsController
     {
         $projects = Project::with('client')->orderBy('project_name')->paginate(15, ['*'], 'page', $page);
 
-        return view('crm::projects_index', [
+        return view('projects::projects_index', [
             'filter_display'     => true,
             'filter_placeholder' => trans('filter_projects'),
             'filter_method'      => 'filter_projects',
@@ -33,7 +33,7 @@ class ProjectsController
         $project = new Project();
         $clients = Client::where('client_active', 1)->orderBy('client_name')->get();
 
-        return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
+        return view('projects::projects_form', ['project' => $project, 'clients' => $clients]);
     }
 
     public function store(ProjectRequest $request): \Illuminate\Http\RedirectResponse
@@ -45,7 +45,7 @@ class ProjectsController
     public function edit(Project $project): \Illuminate\View\View
     {
         $clients = Client::where('client_active', 1)->orderBy('client_name')->get();
-        return view('crm::projects_form', ['project' => $project, 'clients' => $clients]);
+        return view('projects::projects_form', ['project' => $project, 'clients' => $clients]);
     }
 
     public function update(ProjectRequest $request, Project $project): \Illuminate\Http\RedirectResponse
@@ -58,7 +58,7 @@ class ProjectsController
     {
         $project->load(['client', 'tasks']);
 
-        return view('crm::projects_view', [
+        return view('projects::projects_view', [
             'project' => $project,
             'tasks'   => $project->tasks,
         ]);

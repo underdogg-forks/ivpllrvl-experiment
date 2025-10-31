@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\Models;
+namespace Modules\Projects\Models;
 
 use Modules\Core\Models\BaseModel;
 
@@ -39,7 +39,10 @@ class Task extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'project_id',
+        'task_name',
+        'task_status',
+        'task_finish_date',
     ];
 
     /**
@@ -48,13 +51,33 @@ class Task extends BaseModel
      * @var array
      */
     protected $casts = [
-        'task_id' => 'integer',
-        // TODO: Add more casts as needed
+        'task_id'    => 'integer',
+        'project_id' => 'integer',
     ];
 
     /**
-     * Get validation rules for tasks.
-     *
-     * @return array
+     * Task statuses constant.
      */
+    public const STATUSES = [
+        1 => ['label' => 'Not Started', 'class' => 'default'],
+        2 => ['label' => 'In Progress', 'class' => 'info'],
+        3 => ['label' => 'Complete', 'class' => 'success'],
+        4 => ['label' => 'On Hold', 'class' => 'warning'],
+    ];
+
+    /**
+     * Get the project that owns the task.
+     */
+    public function project()
+    {
+        return $this->belongsTo(\Modules\Projects\Models\Project::class, 'project_id', 'project_id');
+    }
+
+    /**
+     * Get the tax rate for the task.
+     */
+    public function taxRate()
+    {
+        return $this->belongsTo(\Modules\Products\Models\TaxRate::class, 'tax_rate_id', 'tax_rate_id');
+    }
 }

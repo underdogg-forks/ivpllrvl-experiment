@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Crm\Controllers;
+namespace Modules\Projects\Controllers;
 
-use Modules\Crm\Http\Requests\TaskRequest;
-use Modules\Crm\Models\Project;
-use Modules\Crm\Models\Task;
-use Modules\Crm\Services\TaskService;
+use Modules\Projects\Http\Requests\TaskRequest;
+use Modules\Projects\Models\Project;
+use Modules\Projects\Models\Task;
+use Modules\Projects\Services\TaskService;
 
 class TasksController
 {
@@ -20,7 +20,7 @@ class TasksController
     {
         $tasks = Task::with(['project', 'taxRate'])->orderBy('task_name')->paginate(15, ['*'], 'page', $page);
 
-        return view('crm::tasks_index', [
+        return view('projects::tasks_index', [
             'filter_display'     => true,
             'filter_placeholder' => trans('filter_tasks'),
             'filter_method'      => 'filter_tasks',
@@ -35,7 +35,7 @@ class TasksController
         $projects = Project::orderBy('project_name')->get();
         $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
 
-        return view('crm::tasks_form', [
+        return view('projects::tasks_form', [
             'task'          => $task,
             'projects'      => $projects,
             'task_statuses' => Task::STATUSES,
@@ -54,7 +54,7 @@ class TasksController
         $projects = Project::orderBy('project_name')->get();
         $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
 
-        return view('crm::tasks_form', [
+        return view('projects::tasks_form', [
             'task'          => $task,
             'projects'      => $projects,
             'task_statuses' => Task::STATUSES,

@@ -5,6 +5,7 @@
     "Products": true,
     "Quotes": true,
     "Crm": true,
+    "Projects": true,
     "Users": true,
     "Custom": true
 }

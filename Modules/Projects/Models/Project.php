@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\Models;
+namespace Modules\Projects\Models;
 
 use Modules\Core\Models\BaseModel;
 
@@ -39,7 +39,9 @@ class Project extends BaseModel
      * @var array
      */
     protected $fillable = [
-        // TODO: Add fillable fields from validation_rules or db schema
+        'client_id',
+        'project_name',
+        'project_status',
     ];
 
     /**
@@ -49,12 +51,22 @@ class Project extends BaseModel
      */
     protected $casts = [
         'project_id' => 'integer',
-        // TODO: Add more casts as needed
+        'client_id'  => 'integer',
     ];
 
     /**
-     * Get validation rules for projects.
-     *
-     * @return array
+     * Get the client that owns the project.
      */
+    public function client()
+    {
+        return $this->belongsTo(\Modules\Crm\Models\Client::class, 'client_id', 'client_id');
+    }
+
+    /**
+     * Get the tasks for the project.
+     */
+    public function tasks()
+    {
+        return $this->hasMany(\Modules\Projects\Models\Task::class, 'project_id', 'project_id');
+    }
 }
