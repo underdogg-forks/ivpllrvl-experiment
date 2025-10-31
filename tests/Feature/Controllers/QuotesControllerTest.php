@@ -10,47 +10,43 @@ use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\Feature\FeatureTestCase;
 
 /**
  * QuotesController Feature Tests.
  *
  * Comprehensive test suite for QuotesController covering all methods
- * with data integrity validation, edge cases, and business logic verification
+ * with data integrity validation, edge cases, and business logic verification.
+ * Uses Laravel HTTP testing helpers for proper feature testing.
  */
 #[CoversClass(QuotesController::class)]
-class QuotesControllerTest extends TestCase
+class QuotesControllerTest extends FeatureTestCase
 {
     /**
      * Test that index method redirects to all quotes status view.
-     *
-     * @return void
      */
     #[Test]
     public function it_redirects_to_all_status_view_from_index(): void
     {
         /** Arrange */
-        $controller = new QuotesController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->index();
+        $response = $this->actingAs($user)->get(route('quotes.index'));
 
-        /* Assert */
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
-        $this->assertEquals(route('quotes.status', ['status' => 'all']), $response->getTargetUrl());
+        /** Assert */
+        $response->assertRedirect(route('quotes.status', ['status' => 'all']));
     }
 
     /**
      * Test that status method displays only draft quotes when draft status is selected.
-     *
-     * @return void
      */
     #[Test]
     public function it_displays_only_draft_quotes_when_draft_status_selected(): void
     {
         /** Arrange */
-        $client = Client::factory()->create();
         $user   = User::factory()->create();
+        $client = Client::factory()->create();
 
         $draftQuote = Quote::factory()->draft()->create([
             'client_id' => $client->client_id,
@@ -62,36 +58,31 @@ class QuotesControllerTest extends TestCase
             'user_id'   => $user->user_id,
         ]);
 
-        $controller = new QuotesController();
-
         /** Act */
-        $response = $controller->status('draft');
+        $response = $this->actingAs($user)->get('/quotes/status/draft');
 
-        /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-
-        $this->assertArrayHasKey('quotes', $viewData);
-        $this->assertArrayHasKey('status', $viewData);
-        $this->assertEquals('draft', $viewData['status']);
+        /** Assert */
+        $response->assertOk();
+        $response->assertViewIs('quotes::index');
+        $response->assertViewHas('quotes');
+        $response->assertViewHas('status', 'draft');
 
         /** Verify only draft quotes are returned */
-        $quoteIds = $viewData['quotes']->pluck('quote_id')->toArray();
+        $quotes   = $response->viewData('quotes');
+        $quoteIds = $quotes->pluck('quote_id')->toArray();
         $this->assertContains($draftQuote->quote_id, $quoteIds);
         $this->assertNotContains($sentQuote->quote_id, $quoteIds);
     }
 
     /**
      * Test that status method displays all quotes when 'all' status is selected.
-     *
-     * @return void
      */
     #[Test]
     public function it_displays_all_quotes_when_all_status_selected(): void
     {
         /** Arrange */
-        $client = Client::factory()->create();
         $user   = User::factory()->create();
+        $client = Client::factory()->create();
 
         $draftQuote = Quote::factory()->draft()->create([
             'client_id' => $client->client_id,
@@ -103,43 +94,39 @@ class QuotesControllerTest extends TestCase
             'user_id'   => $user->user_id,
         ]);
 
-        $controller = new QuotesController();
-
         /** Act */
-        $response = $controller->status('all');
+        $response = $this->actingAs($user)->get('/quotes/status/all');
 
-        /* Assert */
-        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-        $viewData = $response->getData();
-
-        $this->assertArrayHasKey('quotes', $viewData);
-        $this->assertEquals('all', $viewData['status']);
+        /** Assert */
+        $response->assertOk();
+        $response->assertViewHas('quotes');
+        $response->assertViewHas('status', 'all');
 
         /** Verify all quotes are returned */
-        $quoteIds = $viewData['quotes']->pluck('quote_id')->toArray();
+        $quotes   = $response->viewData('quotes');
+        $quoteIds = $quotes->pluck('quote_id')->toArray();
         $this->assertContains($draftQuote->quote_id, $quoteIds);
         $this->assertContains($sentQuote->quote_id, $quoteIds);
     }
 
     /**
      * Test that status method includes quote statuses in view data.
-     *
-     * @return void
      */
     #[Test]
     public function it_includes_quote_statuses_in_view_data_for_status_method(): void
     {
         /** Arrange */
-        $controller = new QuotesController();
+        $user = User::factory()->create();
 
         /** Act */
-        $response = $controller->status('all');
+        $response = $this->actingAs($user)->get('/quotes/status/all');
 
         /** Assert */
-        $viewData = $response->getData();
-        $this->assertArrayHasKey('quote_statuses', $viewData);
-        $this->assertIsArray($viewData['quote_statuses']);
-        $this->assertNotEmpty($viewData['quote_statuses']);
+        $response->assertOk();
+        $response->assertViewHas('quote_statuses');
+        $quoteStatuses = $response->viewData('quote_statuses');
+        $this->assertIsArray($quoteStatuses);
+        $this->assertNotEmpty($quoteStatuses);
     }
 
     /**
