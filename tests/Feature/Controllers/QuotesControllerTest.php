@@ -330,7 +330,8 @@ class QuotesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * Note: Empty payload is correct - IDs are passed via route parameters
+         * Route: POST /quotes/delete_tax/{quote_id}/{quote_tax_rate_id}
          */
         $payload = [];
 
@@ -368,7 +369,8 @@ class QuotesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * Note: Empty payload is correct - IDs are passed via route parameters
+         * Route: POST /quotes/delete_tax/{quote_id}/{quote_tax_rate_id}
          */
         $payload = [];
 

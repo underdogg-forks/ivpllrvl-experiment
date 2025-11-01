@@ -22,17 +22,48 @@ class StripeControllerTest extends FeatureTestCase
     public function it_handles_stripe_webhook_notification(): void
     {
         /** Arrange */
-        // Stripe webhooks are external notifications
+        // Stripe webhooks require event type and data object
+        // Note: Current implementation is a stub/TODO but test reflects real webhook data
 
         /** Act */
         /**
-         * {}
+         * {
+         *     "id": "evt_1234567890",
+         *     "type": "payment_intent.succeeded",
+         *     "data": {
+         *         "object": {
+         *             "id": "pi_1234567890",
+         *             "amount": 10000,
+         *             "currency": "usd",
+         *             "status": "succeeded",
+         *             "metadata": {
+         *                 "invoice_id": "123"
+         *             }
+         *         }
+         *     }
+         * }
          */
-        $payload = [];
+        $payload = [
+            'id' => 'evt_1234567890',
+            'type' => 'payment_intent.succeeded',
+            'data' => [
+                'object' => [
+                    'id' => 'pi_1234567890',
+                    'amount' => 10000,
+                    'currency' => 'usd',
+                    'status' => 'succeeded',
+                    'metadata' => [
+                        'invoice_id' => '123',
+                    ],
+                ],
+            ],
+        ];
 
         $response = $this->post(route('gateways.stripe.notify'), $payload);
 
         /** Assert */
+        // Note: Current stub implementation returns OK without validation
+        // Future implementation should verify webhook signature, handle event types, update payment records
         $response->assertOk();
         $this->assertEquals('OK', $response->getContent());
     }
@@ -45,16 +76,39 @@ class StripeControllerTest extends FeatureTestCase
     {
         /** Arrange */
         // Webhook endpoints should not require authentication
+        // Note: Current implementation is a stub/TODO but test reflects real webhook data
 
         /** Act */
         /**
-         * {}
+         * {
+         *     "id": "evt_0987654321",
+         *     "type": "charge.refunded",
+         *     "data": {
+         *         "object": {
+         *             "id": "ch_0987654321",
+         *             "amount": 5000,
+         *             "refunded": true
+         *         }
+         *     }
+         * }
          */
-        $payload = [];
+        $payload = [
+            'id' => 'evt_0987654321',
+            'type' => 'charge.refunded',
+            'data' => [
+                'object' => [
+                    'id' => 'ch_0987654321',
+                    'amount' => 5000,
+                    'refunded' => true,
+                ],
+            ],
+        ];
 
         $response = $this->post(route('gateways.stripe.notify'), $payload);
 
         /** Assert */
+        // Note: Current stub implementation returns OK without validation
+        // Future implementation should handle different event types (refunds, disputes, etc.)
         $response->assertOk();
     }
 }
