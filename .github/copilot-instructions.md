@@ -1,5 +1,28 @@
 # GitHub Copilot Instructions for InvoicePlane
 
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Architecture](#architecture)
+  - [Current State (Transitional)](#current-state-transitional)
+  - [New Architecture Components](#new-architecture-components)
+- [Migration Guidelines](#migration-guidelines)
+- [Code Style](#code-style)
+- [File Structure Overview](#file-structure-overview)
+- [Testing](#testing)
+- [Security Best Practices](#security-best-practices)
+- [Common Gotchas and Pitfalls](#common-gotchas-and-pitfalls)
+- [Common Patterns](#common-patterns)
+- [Development Workflow](#development-workflow)
+- [Migration Progress](#migration-progress)
+- [Important Notes](#important-notes)
+- [Contribution Workflow](#contribution-workflow)
+- [Performance Considerations](#performance-considerations)
+- [Debugging Tips](#debugging-tips)
+- [Additional Resources](#additional-resources)
+
+---
+
 ## Project Overview
 
 InvoicePlane is a self-hosted open source application for managing invoices, clients and payments. This project is in the process of being migrated from CodeIgniter 3 to a modern Laravel/Illuminate-based architecture with PSR-4 autoloading.
@@ -46,7 +69,7 @@ Each module follows this structure:
 ```
 ModuleName/
 ├── Config/                 # Module configuration
-├── Controllers/            # PSR-4 controllers  
+├── Controllers/            # PSR-4 controllers
 ├── Models/                 # Eloquent models (relationships, scopes only)
 ├── Services/               # Business logic services
 ├── Resources/
@@ -78,7 +101,7 @@ All services MUST extend the abstract `BaseService` class which provides common 
 abstract class BaseService
 {
     abstract protected function getModelClass(): string;
-    
+
     public function create(array $data): Model { /* ... */ }
     public function update(int $id, array $data): bool { /* ... */ }
     public function delete(int $id): ?bool { /* ... */ }
@@ -154,21 +177,11 @@ class QuoteRequest extends FormRequest
             // ... all validation rules
         ];
     }
-    
+
     // Optional: customize validation preparation
     protected function prepareForValidation(): void
     {
         // Transform data before validation if needed
-    }
-}
-    }
-
-    public function deleteQuote(int $quoteId): ?bool
-    {
-        $quote = Quote::findOrFail($quoteId);
-        $deleted = $quote->delete();
-        // Cleanup related records...
-        return $deleted;
     }
 }
 ```
@@ -247,10 +260,10 @@ class QuotesController
     {
         // ✅ Use service methods for business logic
         $statuses = $this->quoteService->getStatuses();
-        
+
         // ✅ Use Eloquent directly (no ::query())
         $quotes = Quote::with(['client', 'user'])->draft()->paginate(15);
-        
+
         return view('quotes::index', compact('quotes', 'statuses'));
     }
 
@@ -312,19 +325,6 @@ class QuotesController
 - ✅ Service injection via constructor
 - ✅ Use `$request->validated()` from FormRequest
 - ✅ Delegate all business logic to services
-        return view('quotes::index', compact('quotes', 'statuses'));
-    }
-
-    public function delete(int $quoteId)
-    {
-        // ✅ Use service for business logic
-        $this->quoteService->deleteQuote($quoteId);
-        
-        return redirect()->route('quotes.index')
-            ->with('success', 'Quote deleted');
-    }
-}
-```
 
 **Service Dependencies:**
 
@@ -348,12 +348,6 @@ class QuoteAmountService
     }
 }
 ```
-
-**NEVER in Controllers:**
-- ❌ `Model::query()->method()` - Use Eloquent directly or service methods
-- ❌ `Model::staticMethod()` - Move to service
-- ❌ Complex business logic - Move to service
-- ❌ Direct database queries - Use Eloquent or service
 
 #### 4. PSR-4 Autoloading
 
@@ -398,13 +392,13 @@ class Invoice extends BaseModel
     protected $table = 'ip_invoices';
     protected $primaryKey = 'invoice_id';
     public $timestamps = false;
-    
+
     protected $fillable = [
         'client_id',
         'invoice_number',
         // ...
     ];
-    
+
     public function client()
     {
         return $this->belongsTo('Modules\Crm\Models\Client', 'client_id');
@@ -443,7 +437,7 @@ class Invoices extends Admin_Controller
         parent::__construct();
         $this->load->model('mdl_invoices');
     }
-    
+
     public function index()
     {
         $data = ['invoices' => $this->mdl_invoices->get()];
@@ -496,7 +490,7 @@ class Invoice_groupsController                // Underscore in name
 ✅ **CORRECT:**
 ```php
 class QuoteItem extends BaseModel            // PascalCase, no underscores
-class TaxRatesController                      // PascalCase, no underscores  
+class TaxRatesController                      // PascalCase, no underscores
 class InvoiceGroupsController                 // PascalCase, no underscores
 ```
 
@@ -713,7 +707,7 @@ See `PHASE-3-IMPLEMENTATION-PLAN.md` for complete testing guidelines and example
    ```php
    // ✅ GOOD - Eloquent automatically escapes
    Invoice::where('client_id', $id)->get();
-   
+
    // ❌ BAD - Raw queries without parameters
    DB::raw("SELECT * FROM invoices WHERE client_id = $id");
    ```
@@ -888,25 +882,25 @@ class Invoice extends BaseModel
     protected $table = 'ip_invoices';
     protected $primaryKey = 'invoice_id';
     public $timestamps = false;
-    
+
     protected $fillable = [
         'client_id',
         'invoice_number',
         'invoice_status_id',
     ];
-    
+
     protected $casts = [
         'invoice_id' => 'integer',
         'client_id' => 'integer',
         'invoice_status_id' => 'integer',
     ];
-    
+
     // Relationships
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
-    
+
     public function items()
     {
         return $this->hasMany(InvoiceItem::class, 'invoice_id');
@@ -930,13 +924,13 @@ class InvoiceController
         $invoices = Invoice::with('client')->get();
         return view('invoices::index', compact('invoices'));
     }
-    
+
     public function show(int $id)
     {
         $invoice = Invoice::with(['client', 'items'])->findOrFail($id);
         return view('invoices::show', compact('invoice'));
     }
-    
+
     public function store(array $data)
     {
         $invoice = Invoice::create($data);
@@ -1079,10 +1073,10 @@ class QuotesControllerTest extends TestCase
     {
         // Arrange
         $draftQuote = Quote::factory()->draft()->create();
-        
+
         // Act
         $response = $this->get('/quotes/status/draft');
-        
+
         // Assert
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertCount(1, $response->getViewData()['quotes']);
@@ -1118,18 +1112,18 @@ For comprehensive migration status and action items, see:
    - Renamed `Entities` → `Models` (all modules)
    - Renamed `Http/Controllers` → `Controllers` (all modules)
    - Updated all namespace references
-   
+
 2. ✅ **Route Definitions (Commit ea5c6c7)**
    - Added comprehensive route files in `Routes/web/` for all 6 modules
    - Implemented POST routes for create/update/delete operations
    - Updated all RouteServiceProviders
    - Prepared for future API routes
-   
+
 3. ✅ **Query Pattern Standardization (Commit dd5f000)**
    - Applied `Model::query()->method()` pattern throughout codebase (45+ controllers)
    - Fixed all namespace issues from structural refactoring
    - Updated all use statements to reference Models instead of Entities
-   
+
 4. ✅ **Module Consolidation (Commit 4c4ff5e)**
    - Merged Users module into Core (controllers, models, views)
    - Custom module already integrated into Core (CustomFields, CustomValues)
@@ -1139,7 +1133,7 @@ For comprehensive migration status and action items, see:
 
 **Estimated Timeline:**
 - Priority 1 controllers: 15-25 hours
-- Priority 2 controllers: 10-15 hours  
+- Priority 2 controllers: 10-15 hours
 - Priority 3 controllers: 15-20 hours
 - Total: 40-60 hours
 
@@ -1200,10 +1194,10 @@ Refer to:
    ```bash
    # Format code
    composer pint
-   
+
    # Run code quality checks
    composer check
-   
+
    # Manually test functionality
    ```
 
@@ -1267,7 +1261,7 @@ Use this checklist in your PR description:
    foreach ($invoices as $invoice) {
        echo $invoice->client->name; // Queries client for each invoice
    }
-   
+
    // ✅ GOOD - 2 queries total
    $invoices = Invoice::with('client')->get();
    foreach ($invoices as $invoice) {
@@ -1289,7 +1283,7 @@ Use this checklist in your PR description:
        return $query->where('invoice_date_due', '<', date('Y-m-d'))
                     ->where('invoice_status_id', '!=', 4);
    }
-   
+
    // Usage
    $overdue = Invoice::overdue()->get();
    ```
