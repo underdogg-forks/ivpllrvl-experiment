@@ -36,6 +36,9 @@ export default defineConfig({
       input: {
         // Main Tailwind CSS styles
         'core/css/style-tailwind': 'resources/assets/core/css/style-tailwind.css',
+
+        // Filament Nord theme stylesheet
+        'core/css/themes/filament-nord': 'resources/assets/core/css/themes/filament-nord.css',
         
         // Existing custom CSS files
         'core/css/custom-pdf': 'resources/assets/core/css/custom-pdf.css',
