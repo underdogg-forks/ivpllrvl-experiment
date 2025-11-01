@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Session;
 use Modules\Core\Services\CustomValuesService;
 use Modules\Core\Services\UserClientsService;
 use Modules\Core\Services\UsersService;
-use Modules\Crm\app\Services\ClientsService;
-use Modules\CustomFields\Services\CustomFieldsService;
-use Modules\Users\Controllers\UserCustomService;
+use Modules\Crm\Services\ClientsService;
+use Modules\Core\Services\CustomFieldsService;
+use Modules\Core\Controllers\UserCustomService;
 
 #[AllowDynamicProperties]
 class UsersController extends AdminController
