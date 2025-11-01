@@ -45,6 +45,76 @@ if ( ! function_exists('storage_path')) {
     }
 }
 
+if ( ! function_exists('uploads_path')) {
+    /**
+     * Get the path to the uploads folder.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function uploads_path($path = '')
+    {
+        return storage_path('app/uploads' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
+if ( ! function_exists('uploads_archive_path')) {
+    /**
+     * Get the path to the uploads archive folder.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function uploads_archive_path($path = '')
+    {
+        return uploads_path('archive' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
+if ( ! function_exists('uploads_customer_files_path')) {
+    /**
+     * Get the path to the uploads customer files folder.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function uploads_customer_files_path($path = '')
+    {
+        return uploads_path('customer_files' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
+if ( ! function_exists('uploads_temp_path')) {
+    /**
+     * Get the path to the uploads temp folder.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function uploads_temp_path($path = '')
+    {
+        return uploads_path('temp' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
+if ( ! function_exists('uploads_temp_mpdf_path')) {
+    /**
+     * Get the path to the uploads temp mpdf folder.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function uploads_temp_mpdf_path($path = '')
+    {
+        return uploads_temp_path('mpdf' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
 if ( ! function_exists('app_path')) {
     /**
      * Get the path to the application folder.
@@ -205,9 +275,9 @@ if ( ! defined('SYSDIR')) {
     define('SYSDIR', 'system');
 }
 
-// Upload paths
+// Upload paths (now in storage for Laravel compatibility)
 if ( ! defined('UPLOADS_FOLDER')) {
-    define('UPLOADS_FOLDER', dirname(__DIR__) . '/uploads' . DIRECTORY_SEPARATOR);
+    define('UPLOADS_FOLDER', dirname(__DIR__) . '/storage/app/uploads' . DIRECTORY_SEPARATOR);
 }
 if ( ! defined('UPLOADS_ARCHIVE_FOLDER')) {
     define('UPLOADS_ARCHIVE_FOLDER', UPLOADS_FOLDER . 'archive' . DIRECTORY_SEPARATOR);
