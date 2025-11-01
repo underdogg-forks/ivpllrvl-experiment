@@ -8,7 +8,7 @@ namespace Modules\Core\Controllers;
  * Handles AJAX requests for settings
  * Migrated from CodeIgniter Ajax controller
  */
-class AjaxController
+class SettingsAjaxController
 {
     /**
      * Generate a random cron key.
