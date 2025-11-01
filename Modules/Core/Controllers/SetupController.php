@@ -30,7 +30,7 @@ use Modules\Setup\Controllers\VersionsService;
 use function Modules\Setup\Controllers\write_file;
 
 #[AllowDynamicProperties]
-class SetupController extends MXController
+class SetupController extends BaseController
 {
     public $errors = 0;
 
