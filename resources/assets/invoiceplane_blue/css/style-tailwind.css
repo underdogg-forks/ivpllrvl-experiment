@@ -1,0 +1,737 @@
+/**
+ * InvoicePlane Styles - Blue Theme
+ * 
+ * This is the blue-themed InvoicePlane stylesheet that combines:
+ * 1. Tailwind CSS base, components, and utilities
+ * 2. Bootstrap-compatible classes implemented with Tailwind
+ * 3. InvoicePlane custom styles
+ */
+
+@import "tailwindcss";
+
+/* ================================
+ * InvoicePlane Color Variables
+ * Based on Bootstrap default palette
+ * ================================ */
+:root {
+  /* Gray scale - Standard Bootstrap */
+  --gray-base: #000;
+  --gray-darker: #222;
+  --gray-dark: #333;
+  --gray: #555;
+  --gray-light: #777;
+  --gray-lighter: #eee;
+  --gray-lightest: #f9f9f9;
+
+  /* Brand colors - InvoicePlane palette */
+  --brand-primary: #2C8EDD;
+  --brand-success: #5cb85c;
+  --brand-info: #5bc0de;
+  --brand-warning: #f0ad4e;
+  --brand-danger: #d9534f;
+
+  /* Dark variants for alerts */
+  --dark-success: #3c763d;
+  --dark-info: #31708f;
+  --dark-warning: #8a6d3b;
+  --dark-danger: #a94442;
+
+  /* Scaffolding */
+  --body-bg: #fff;
+  --text-color: #333;
+  --link-color: #2C8EDD;
+  --link-hover-color: #1a6bb8;
+}
+
+@layer components {
+  /* ================================
+   * BUTTONS
+   * ================================ */
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 150ms ease-in-out, border-color 150ms ease-in-out;
+  }
+  
+  .btn-primary {
+    background-color: var(--brand-primary);
+    color: white;
+    border-color: #2579c4;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2579c4;
+    border-color: #1e68a8;
+  }
+  
+  .btn-default {
+    background-color: white;
+    color: var(--gray-darker);
+    border-color: #ccc;
+  }
+  
+  .btn-default:hover {
+    background-color: var(--gray-lighter);
+    border-color: #adadad;
+  }
+  
+  .btn-success {
+    background-color: var(--brand-success);
+    color: white;
+    border-color: #4cae4c;
+  }
+  
+  .btn-success:hover {
+    background-color: #449d44;
+    border-color: #398439;
+  }
+  
+  .btn-info {
+    background-color: var(--brand-info);
+    color: white;
+    border-color: #46b8da;
+  }
+  
+  .btn-info:hover {
+    background-color: #31b0d5;
+    border-color: #269abc;
+  }
+  
+  .btn-warning {
+    background-color: var(--brand-warning);
+    color: white;
+    border-color: #eea236;
+  }
+  
+  .btn-warning:hover {
+    background-color: #ec971f;
+    border-color: #d58512;
+  }
+  
+  .btn-danger {
+    background-color: var(--brand-danger);
+    color: white;
+    border-color: #d43f3a;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+  }
+  
+  /* Button sizes */
+  .btn-xs {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .btn-lg {
+    padding: 0.625rem 1rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+  
+  .btn-block {
+    width: 100%;
+    display: block;
+  }
+  
+  /* ================================
+   * FORMS
+   * ================================ */
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: var(--gray);
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+  }
+  
+  .form-control:focus {
+    border-color: #66afe9;
+    outline: none;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+  
+  .input-sm {
+    height: 30px;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .input-lg {
+    height: 46px;
+    padding: 0.625rem 1rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+  
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+  
+  .input-group-addon {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: normal;
+    line-height: 1.25;
+    color: var(--gray);
+    text-align: center;
+    background-color: var(--gray-lighter);
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+  }
+  
+  label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 0.25rem;
+    font-weight: normal;
+  }
+  
+  /* ================================
+   * TABLES
+   * ================================ */
+  
+  .table {
+    width: 100%;
+    margin-bottom: 1.25rem;
+    border-collapse: collapse;
+  }
+  
+  .table > thead > tr > th,
+  .table > tbody > tr > th,
+  .table > tfoot > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td {
+    padding: 0.5rem;
+    line-height: 1.25;
+    border-top: 1px solid #ddd;
+  }
+  
+  .table > thead > tr > th {
+    border-bottom: 2px solid #ddd;
+    vertical-align: bottom;
+  }
+  
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: var(--gray-lightest);
+  }
+  
+  .table-bordered {
+    border: 1px solid #ddd;
+  }
+  
+  .table-bordered > thead > tr > th,
+  .table-bordered > tbody > tr > th,
+  .table-bordered > tfoot > tr > th,
+  .table-bordered > thead > tr > td,
+  .table-bordered > tbody > tr > td,
+  .table-bordered > tfoot > tr > td {
+    border: 1px solid #ddd;
+  }
+  
+  .table-hover > tbody > tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* ================================
+   * ALERTS
+   * ================================ */
+  
+  .alert {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid;
+    border-radius: 0.25rem;
+  }
+  
+  .alert-success {
+    color: var(--dark-success);
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+  }
+  
+  .alert-info {
+    color: var(--dark-info);
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+  }
+  
+  .alert-warning {
+    color: var(--dark-warning);
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+  }
+  
+  .alert-danger {
+    color: var(--dark-danger);
+    background-color: #f2dede;
+    border-color: #ebccd1;
+  }
+  
+  /* ================================
+   * PANELS
+   * ================================ */
+  
+  .panel {
+    margin-bottom: 1.25rem;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+  
+  .panel-body {
+    padding: 1rem;
+  }
+  
+  .panel-heading {
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .panel-default > .panel-heading {
+    color: var(--gray-darker);
+    background-color: #f5f5f5;
+    border-color: #ddd;
+  }
+  
+  /* ================================
+   * UTILITIES
+   * ================================ */
+  
+  .pull-left {
+    float: left;
+  }
+  
+  .pull-right {
+    float: right;
+  }
+  
+  .text-left {
+    text-align: left;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  .text-muted {
+    color: #777;
+  }
+  
+  .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* ================================
+   * PAGINATION
+   * ================================ */
+  
+  .pagination {
+    display: flex;
+    list-style: none;
+    border-radius: 0.25rem;
+    padding-left: 0;
+    margin-bottom: 1.25rem;
+  }
+  
+  .pagination > li > a,
+  .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 0.375rem 0.75rem;
+    line-height: 1.25;
+    color: var(--brand-primary);
+    text-decoration: none;
+    background-color: white;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+  }
+  
+  .pagination > li:first-child > a,
+  .pagination > li:first-child > span {
+    margin-left: 0;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+  
+  .pagination > li:last-child > a,
+  .pagination > li:last-child > span {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+  
+  .pagination > li > a:hover {
+    background-color: var(--gray-lighter);
+    border-color: #ddd;
+  }
+  
+  .pagination > .active > a {
+    z-index: 10;
+    color: white;
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+    cursor: default;
+  }
+}
+
+/* Import Tailwind CSS and Bootstrap-compatible classes */
+
+/* Import third-party component styles that don't need refactoring */
+@import "bootstrap-datepicker/dist/css/bootstrap-datepicker3.css";
+@import "font-awesome/css/font-awesome.css";
+@import "dropzone/dist/dropzone.css";
+@import "select2/dist/css/select2.css";
+
+/* Import existing custom CSS files */
+@import "../../core/css/custom.css";
+
+/* ================================
+ * InvoicePlane Core Styles
+ * Using Tailwind's @layer to add custom components
+ * ================================ */
+
+@layer components {
+  /* Fix for Bootstrap 3 collapse table behavior */
+  table.collapse.in {
+    display: table;
+  }
+  
+  /* Alert fix for CI core paragraph */
+  .alert-dismissible p {
+    display: inline;
+  }
+  
+  /* Base HTML styles */
+  html {
+    min-height: 100vh;
+  }
+  
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  
+  img {
+    vertical-align: middle;
+    max-width: 100%;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  
+  /* Text ellipsis helpers */
+  .dib {
+    display: inline-block;
+  }
+  
+  .db {
+    display: block;
+  }
+  
+  .te {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 160px;
+  }
+  
+  /* Variable width text ellipsis */
+  .te.te-1 { max-width: 10vw; }
+  .te.te-2 { max-width: 20vw; }
+  .te.te-3 { max-width: 30vw; }
+  .te.te-4 { max-width: 40vw; }
+  .te.te-5 { max-width: 50vw; }
+  .te.te-6 { max-width: 60vw; }
+  .te.te-7 { max-width: 70vw; }
+  .te.te-8 { max-width: 80vw; }
+  .te.te-9 { max-width: 90vw; }
+  
+  /* Dropzone mobile-first */
+  #previews .name {
+    word-wrap: anywhere;
+  }
+  
+  /* Forms */
+  form {
+    margin: 0;
+  }
+  
+  fieldset {
+    border-radius: 0.25rem;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  fieldset legend {
+    padding: 0 1rem;
+    font-size: 1.125rem;
+    width: auto;
+    border: none;
+    margin: 0;
+  }
+  
+  label {
+    font-weight: normal;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  .discount-field {
+    float: right;
+    max-width: 40%;
+    margin-left: 0.625rem;
+  }
+  
+  .discount-field .input-sm {
+    height: auto;
+    padding: 0.125rem 0.25rem;
+  }
+  
+  .discount-field .input-group-addon {
+    min-width: 20px;
+  }
+  
+  .optional {
+    float: right;
+    font-size: small;
+    color: #777;
+  }
+  
+  /* Enhanced table styles */
+  .table {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .table.no-margin {
+    margin: 0;
+  }
+  
+  .table td {
+    vertical-align: middle !important;
+  }
+  
+  .table tr.bold-border td {
+    border-bottom-width: 2px;
+  }
+  
+  .table.items td {
+    min-width: 150px;
+    max-width: 300px;
+    vertical-align: top !important;
+  }
+  
+  .table.items td.td-icon {
+    max-width: 30px;
+    min-width: initial;
+  }
+  
+  .table.items td.td-amount {
+    max-width: 200px;
+    text-align: right;
+  }
+  
+  .table.items td.td-amount .form-control {
+    text-align: right;
+  }
+  
+  .table.items td.td-textarea {
+    min-width: 300px;
+    max-width: 400px;
+  }
+  
+  .table.items td.td-quantity {
+    max-width: 200px;
+  }
+  
+  .table.items td.td-vert-middle {
+    vertical-align: middle !important;
+  }
+  
+  .table .input-group {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .table .input-group-addon {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .table-responsive {
+    margin-bottom: 0;
+  }
+  
+  #item_table td,
+  #item_table th {
+    padding: 0.1875rem;
+  }
+  
+  #item_table .form-control {
+    margin: 0;
+  }
+  
+  #item_table tr.item input,
+  #item_table tr.item textarea {
+    border-color: #e5e5e5;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  div#item_table textarea {
+    height: 13.5rem;
+  }
+  
+  /* Navigation enhancements */
+  .navbar .navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .navbar .navbar-toggle {
+    padding: 0.375rem 0.5rem;
+    color: #9d9d9d;
+    border-color: #333;
+  }
+  
+  .navbar .navbar-toggle:hover {
+    color: white;
+    border-color: #333;
+  }
+  
+  .navbar .navbar-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .navbar .navbar-nav .fa {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+  
+  .navbar-inner {
+    border-radius: 0;
+    padding: 0;
+    border: none;
+    text-align: right;
+  }
+  
+  /* Headerbar */
+  #headerbar {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .headerbar-title {
+    display: inline-block;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: normal;
+  }
+  
+  .headerbar-item {
+    display: inline-block;
+  }
+  
+  /* InvoicePlane specific components */
+  .quick-actions {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+  
+  /* Custom item table styles */
+  #item_table .input-group {
+    padding-bottom: 0.5rem;
+  }
+  
+  #item_table .ig-addon-aligned {
+    width: 10rem;
+    text-align: right;
+  }
+  
+  #item_table select {
+    padding-left: 0.375rem;
+  }
+  
+  /* Margin utilities */
+  .mb-1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* QR Code table */
+  table.invoice-qr-code-table {
+    width: 100%;
+    line-height: 1.4;
+    font-size: 14px;
+  }
+  
+  img#invoice-qr-code {
+    width: 200px;
+    height: auto;
+  }
+  
+  /* Stamp styles */
+  .stamp {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .stamp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+}
