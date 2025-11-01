@@ -28,28 +28,22 @@ if ($custom_field_usage) {
                 <div id="collapse<?php echo $what; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $what; ?>">
                     <div class="panel-body">
 <?php
-    $need_model = false;
-    if (in_array($what, ['invoice', 'quote'])) {
-        $need_model = true;
-    }
-
+    // Build links from custom field usage data
+    // If display values were pre-fetched, use them; otherwise use IDs
+    $links = [];
     foreach ($custom_field_usage as $obj) {
         $fid = $what . '_id'; // Like invoice_id
         $id  = $obj->{$fid};
-        $fid = $id;
-        if ($need_model) {
-            if ($what === 'invoice') {
-                $record = \Modules\Invoices\Models\Invoice::find($id);
-                $fid = $record ? '#' . $record->invoice_number : $id;
-            } elseif ($what === 'quote') {
-                $record = \Modules\Quotes\Models\Quote::find($id);
-                $fid = $record ? '#' . $record->quote_number : $id;
-            }
+        
+        // Check if display value was pre-fetched and passed to view
+        if (isset($custom_field_usage_display_values) && isset($custom_field_usage_display_values[$id])) {
+            $display = $custom_field_usage_display_values[$id];
+        } else {
+            // Fallback to ID if no display value provided
+            $display = $id;
         }
-        // $val = $what . '_custom_fieldvalue'; // like invoice_custom_fieldvalue
-        // $val = $obj->$val; // todo? get values of single/multiple choice (int: 1 or 2,3,4)
-
-        $links[] = anchor($href . $id, trans($what) . '&nbsp;' . $fid);
+        
+        $links[] = anchor($href . $id, trans($what) . '&nbsp;' . $display);
     }
     echo implode(', ', $links);
 ?>

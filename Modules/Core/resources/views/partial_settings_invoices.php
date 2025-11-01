@@ -598,7 +598,8 @@ if (SUMEX_SETTINGS || $sumex == '1') {
                             <select name="settings[sumex_role]" id="settings[sumex_role]"
                                     class="form-control simple-select">
 <?php
-    $roles = Sumex::ROLES;
+    // Expect $sumex_roles to be passed from controller
+    $roles = $sumex_roles ?? [];
     foreach ($roles as $k => $v) {
 ?>
                                 <option value="<?php echo $k; ?>" <?php check_select(get_setting('sumex_role'), $k) ?>>
@@ -617,7 +618,8 @@ if (SUMEX_SETTINGS || $sumex == '1') {
                             <select name="settings[sumex_place]" id="settings[sumex_place]"
                                     class="form-control simple-select" data-minimum-results-for-search="Infinity">
 <?php
-    $places = Sumex::PLACES;
+    // Expect $sumex_places to be passed from controller
+    $places = $sumex_places ?? [];
     foreach ($places as $k => $v) {
 ?>
                                 <option value="<?php echo $k; ?>" <?php check_select(get_setting('sumex_place'), $k); ?>>
@@ -636,7 +638,8 @@ if (SUMEX_SETTINGS || $sumex == '1') {
                             <select name="settings[sumex_canton]" id="settings[sumex_canton]"
                                     class="form-control simple-select">
 <?php
-    $cantons = Sumex::CANTONS;
+    // Expect $sumex_cantons to be passed from controller
+    $cantons = $sumex_cantons ?? [];
     foreach ($cantons as $k => $v) {
 ?>
                                 <option value="<?php echo $k; ?>" <?php check_select(get_setting('sumex_canton'), $k); ?>>
