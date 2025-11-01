@@ -10,10 +10,33 @@
          backupGlobals="false">
     <testsuites>
         <testsuite name="Feature">
-            <directory>tests/Feature</directory>
+            <directory>Modules/*/Tests/Feature</directory>
         </testsuite>
         <testsuite name="Unit">
-            <directory>tests/Unit</directory>
+            <directory>Modules/*/Tests/Unit</directory>
+        </testsuite>
+        
+        <!-- Module-specific test suites -->
+        <testsuite name="Core">
+            <directory>Modules/Core/Tests</directory>
+        </testsuite>
+        <testsuite name="Quotes">
+            <directory>Modules/Quotes/Tests</directory>
+        </testsuite>
+        <testsuite name="Invoices">
+            <directory>Modules/Invoices/Tests</directory>
+        </testsuite>
+        <testsuite name="Products">
+            <directory>Modules/Products/Tests</directory>
+        </testsuite>
+        <testsuite name="Payments">
+            <directory>Modules/Payments/Tests</directory>
+        </testsuite>
+        <testsuite name="Crm">
+            <directory>Modules/Crm/Tests</directory>
+        </testsuite>
+        <testsuite name="Projects">
+            <directory>Modules/Projects/Tests</directory>
         </testsuite>
     </testsuites>
     <source>
