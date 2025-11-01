@@ -76,11 +76,12 @@ define('CACHE_FOLDER', storage_path('cache') . DIRECTORY_SEPARATOR);
 |--------------------------------------------------------------------------
 |
 | Paths for file uploads and temporary files.
+| Now located in storage/app/uploads for Laravel compatibility.
 |
 */
 
-// Main uploads directory
-define('UPLOADS_FOLDER', base_path('uploads') . DIRECTORY_SEPARATOR);
+// Main uploads directory (now in storage)
+define('UPLOADS_FOLDER', storage_path('app/uploads') . DIRECTORY_SEPARATOR);
 
 // Upload subdirectories
 define('UPLOADS_ARCHIVE_FOLDER', UPLOADS_FOLDER . 'archive' . DIRECTORY_SEPARATOR);

@@ -19,6 +19,12 @@ class StorageStructureTest extends TestCase
         $requiredDirectories = [
             'storage/app',
             'storage/app/public',
+            'storage/app/uploads',
+            'storage/app/uploads/archive',
+            'storage/app/uploads/customer_files',
+            'storage/app/uploads/import',
+            'storage/app/uploads/temp',
+            'storage/app/uploads/temp/mpdf',
             'storage/framework',
             'storage/framework/cache',
             'storage/framework/cache/data',
@@ -47,6 +53,11 @@ class StorageStructureTest extends TestCase
         $writableDirectories = [
             'storage/app',
             'storage/app/public',
+            'storage/app/uploads',
+            'storage/app/uploads/archive',
+            'storage/app/uploads/customer_files',
+            'storage/app/uploads/import',
+            'storage/app/uploads/temp',
             'storage/framework/cache',
             'storage/framework/cache/data',
             'storage/framework/sessions',
@@ -74,6 +85,11 @@ class StorageStructureTest extends TestCase
         $directoriesWithGitignore = [
             'storage/app',
             'storage/app/public',
+            'storage/app/uploads',
+            'storage/app/uploads/archive',
+            'storage/app/uploads/customer_files',
+            'storage/app/uploads/import',
+            'storage/app/uploads/temp',
             'storage/framework/cache',
             'storage/framework/cache/data',
             'storage/framework/sessions',
@@ -102,6 +118,7 @@ class StorageStructureTest extends TestCase
         $appGitignore = file_get_contents($basePath . '/storage/app/.gitignore');
         $this->assertStringContainsString('*', $appGitignore);
         $this->assertStringContainsString('!public/', $appGitignore);
+        $this->assertStringContainsString('!uploads/', $appGitignore);
         $this->assertStringContainsString('!.gitignore', $appGitignore);
 
         // Test storage/framework/cache/.gitignore
@@ -114,6 +131,11 @@ class StorageStructureTest extends TestCase
         $standardGitignoreContent = "*\n!.gitignore\n";
         $standardDirs = [
             'storage/app/public',
+            'storage/app/uploads',
+            'storage/app/uploads/archive',
+            'storage/app/uploads/customer_files',
+            'storage/app/uploads/import',
+            'storage/app/uploads/temp',
             'storage/framework/cache/data',
             'storage/framework/sessions',
             'storage/framework/testing',
@@ -130,5 +152,79 @@ class StorageStructureTest extends TestCase
                 "Incorrect .gitignore content in: {$directory}"
             );
         }
+    }
+
+    /**
+     * Test upload helper functions
+     */
+    public function test_upload_helper_functions(): void
+    {
+        require_once __DIR__ . '/../../bootstrap/helpers.php';
+
+        $basePath = dirname(__DIR__, 2);
+        
+        // Test uploads_path()
+        $this->assertEquals(
+            $basePath . '/storage/app/uploads',
+            rtrim(uploads_path(), DIRECTORY_SEPARATOR)
+        );
+
+        // Test uploads_archive_path()
+        $this->assertEquals(
+            $basePath . '/storage/app/uploads/archive',
+            rtrim(uploads_archive_path(), DIRECTORY_SEPARATOR)
+        );
+
+        // Test uploads_customer_files_path()
+        $this->assertEquals(
+            $basePath . '/storage/app/uploads/customer_files',
+            rtrim(uploads_customer_files_path(), DIRECTORY_SEPARATOR)
+        );
+
+        // Test uploads_temp_path()
+        $this->assertEquals(
+            $basePath . '/storage/app/uploads/temp',
+            rtrim(uploads_temp_path(), DIRECTORY_SEPARATOR)
+        );
+
+        // Test uploads_temp_mpdf_path()
+        $this->assertEquals(
+            $basePath . '/storage/app/uploads/temp/mpdf',
+            rtrim(uploads_temp_mpdf_path(), DIRECTORY_SEPARATOR)
+        );
+    }
+
+    /**
+     * Test that UPLOADS constants point to storage location
+     */
+    public function test_upload_constants_point_to_storage(): void
+    {
+        require_once __DIR__ . '/../../bootstrap/paths.php';
+
+        $basePath = dirname(__DIR__, 2);
+
+        $this->assertStringContainsString(
+            'storage/app/uploads',
+            UPLOADS_FOLDER,
+            'UPLOADS_FOLDER should point to storage/app/uploads'
+        );
+
+        $this->assertStringContainsString(
+            'storage/app/uploads/archive',
+            UPLOADS_ARCHIVE_FOLDER,
+            'UPLOADS_ARCHIVE_FOLDER should point to storage/app/uploads/archive'
+        );
+
+        $this->assertStringContainsString(
+            'storage/app/uploads/customer_files',
+            UPLOADS_CFILES_FOLDER,
+            'UPLOADS_CFILES_FOLDER should point to storage/app/uploads/customer_files'
+        );
+
+        $this->assertStringContainsString(
+            'storage/app/uploads/temp',
+            UPLOADS_TEMP_FOLDER,
+            'UPLOADS_TEMP_FOLDER should point to storage/app/uploads/temp'
+        );
     }
 }
