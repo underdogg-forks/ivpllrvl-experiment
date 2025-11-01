@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoicePlane Tailwind CSS - Bootstrap Classes Demo</title>
+    <link rel="stylesheet" href="../public/assets/core/css/style-tailwind.css">
+    <style>
+        .demo-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+        }
+        .demo-section h2 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #337ab7;
+            color: #337ab7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <h1 class="text-center" style="margin-bottom: 2rem;">InvoicePlane Tailwind CSS Demo</h1>
+        <p class="text-center text-muted" style="margin-bottom: 2rem;">
+            All Bootstrap 3 classes reimplemented with Tailwind CSS
+        </p>
+
+        <!-- Buttons -->
+        <div class="demo-section">
+            <h2>Buttons</h2>
+            <div style="margin-bottom: 1rem;">
+                <button class="btn btn-default">Default</button>
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-success">Success</button>
+                <button class="btn btn-info">Info</button>
+                <button class="btn btn-warning">Warning</button>
+                <button class="btn btn-danger">Danger</button>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <h4 style="margin-bottom: 0.5rem;">Button Sizes:</h4>
+                <button class="btn btn-primary btn-xs">Extra Small</button>
+                <button class="btn btn-primary btn-sm">Small</button>
+                <button class="btn btn-primary">Normal</button>
+                <button class="btn btn-primary btn-lg">Large</button>
+            </div>
+            <div>
+                <button class="btn btn-primary btn-block">Block Button</button>
+            </div>
+        </div>
+
+        <!-- Forms -->
+        <div class="demo-section">
+            <h2>Forms</h2>
+            <form>
+                <div class="form-group">
+                    <label>Text Input</label>
+                    <input type="text" class="form-control" placeholder="Enter text">
+                </div>
+                <div class="form-group">
+                    <label>Input Sizes</label>
+                    <input type="text" class="form-control input-lg" placeholder="Large input">
+                    <br>
+                    <input type="text" class="form-control" placeholder="Normal input">
+                    <br>
+                    <input type="text" class="form-control input-sm" placeholder="Small input">
+                </div>
+                <div class="form-group">
+                    <label>Input Group</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="text" class="form-control" placeholder="Amount">
+                        <span class="input-group-addon">.00</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tables -->
+        <div class="demo-section">
+            <h2>Tables</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Project Name</th>
+                        <th>Client</th>
+                        <th class="text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Website Redesign</td>
+                        <td>Acme Corp</td>
+                        <td class="text-right">$5,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Mobile App Development</td>
+                        <td>Tech Solutions Inc</td>
+                        <td class="text-right">$15,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>SEO Optimization</td>
+                        <td>Digital Marketing Co</td>
+                        <td class="text-right">$2,500.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Alerts -->
+        <div class="demo-section">
+            <h2>Alerts</h2>
+            <div class="alert alert-success">
+                <strong>Success!</strong> Your invoice has been created successfully.
+            </div>
+            <div class="alert alert-info">
+                <strong>Info!</strong> You have 5 pending invoices.
+            </div>
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> This invoice is overdue.
+            </div>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Failed to save the invoice. Please try again.
+            </div>
+        </div>
+
+        <!-- Panels -->
+        <div class="demo-section">
+            <h2>Panels</h2>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Invoice Details</strong>
+                </div>
+                <div class="panel-body">
+                    <p><strong>Invoice Number:</strong> INV-2024-001</p>
+                    <p><strong>Client:</strong> Acme Corporation</p>
+                    <p><strong>Amount:</strong> $5,000.00</p>
+                    <p><strong>Status:</strong> <span class="label label-success">Paid</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="demo-section">
+            <h2>Pagination</h2>
+            <ul class="pagination">
+                <li><a href="#">«</a></li>
+                <li><a href="#">1</a></li>
+                <li class="active"><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">»</a></li>
+            </ul>
+        </div>
+
+        <!-- Utilities -->
+        <div class="demo-section">
+            <h2>Utility Classes</h2>
+            <div style="border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem;">
+                <span class="pull-left">Pulled Left</span>
+                <span class="pull-right">Pulled Right</span>
+                <div class="clearfix"></div>
+            </div>
+            <p class="text-left">Text aligned left</p>
+            <p class="text-center">Text aligned center</p>
+            <p class="text-right">Text aligned right</p>
+            <p class="text-muted">Muted text</p>
+        </div>
+
+        <!-- Header Bar (InvoicePlane Custom) -->
+        <div class="demo-section">
+            <h2>InvoicePlane Custom Components</h2>
+            <div id="headerbar">
+                <h1 class="headerbar-title">Projects</h1>
+                <div class="headerbar-item pull-right">
+                    <a class="btn btn-sm btn-primary" href="#">
+                        <i class="fa fa-plus"></i> New Project
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

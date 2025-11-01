@@ -13,7 +13,10 @@
     },
     "homepage": "https://www.invoiceplane.com",
     "scripts": {
-        "build": "grunt build"
+        "build": "vite build",
+        "build:dev": "NODE_ENV=development vite build",
+        "dev": "vite",
+        "preview": "vite preview"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.1.16",
