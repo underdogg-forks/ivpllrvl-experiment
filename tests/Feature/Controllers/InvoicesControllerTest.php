@@ -332,7 +332,8 @@ class InvoicesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * Note: Empty payload is correct - IDs are passed via route parameters
+         * Route: POST /invoices/delete-tax/{invoiceId}/{taxRateId}
          */
         $payload = [];
 
@@ -362,7 +363,8 @@ class InvoicesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * Note: Empty payload is correct - IDs are passed via route parameters
+         * Route: POST /invoices/delete-tax/{invoiceId}/{taxRateId}
          */
         $payload = [];
 

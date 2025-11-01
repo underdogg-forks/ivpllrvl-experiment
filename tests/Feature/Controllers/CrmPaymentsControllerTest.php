@@ -56,17 +56,30 @@ class CrmPaymentsControllerTest extends FeatureTestCase
     public function it_submits_payment_and_redirects_with_success(): void
     {
         /** Arrange */
-        // Guest payment submission
+        // Guest payment submission requires invoice URL key and payment details
+        // Note: Current implementation is a stub/TODO but test reflects real-world data
 
         /** Act */
         /**
-         * {}
+         * {
+         *     "invoice_url_key": "abc123def456",
+         *     "payment_method": "paypal",
+         *     "amount": "100.00",
+         *     "payment_status": "completed"
+         * }
          */
-        $payload = [];
+        $payload = [
+            'invoice_url_key' => 'abc123def456',
+            'payment_method' => 'paypal',
+            'amount' => '100.00',
+            'payment_status' => 'completed',
+        ];
 
         $response = $this->post(route('guest.payments.submit'), $payload);
 
         /** Assert */
+        // Note: Current stub implementation ignores payload and always succeeds
+        // Future implementation should validate these fields
         $response->assertRedirect();
         $response->assertSessionHas('alert_success');
     }
@@ -78,17 +91,28 @@ class CrmPaymentsControllerTest extends FeatureTestCase
     public function it_allows_payment_submission_without_authentication(): void
     {
         /** Arrange */
-        // No authentication required
+        // No authentication required for guest payments
+        // Note: Current implementation is a stub/TODO but test reflects real-world data
 
         /** Act */
         /**
-         * {}
+         * {
+         *     "invoice_url_key": "xyz789ghi012",
+         *     "payment_method": "stripe",
+         *     "amount": "250.50"
+         * }
          */
-        $payload = [];
+        $payload = [
+            'invoice_url_key' => 'xyz789ghi012',
+            'payment_method' => 'stripe',
+            'amount' => '250.50',
+        ];
 
         $response = $this->post(route('guest.payments.submit'), $payload);
 
         /** Assert */
+        // Note: Current stub implementation ignores payload and always succeeds
+        // Future implementation should validate invoice_url_key exists, amount is positive, etc.
         $response->assertRedirect();
         $response->assertSessionHas('alert_success');
     }
