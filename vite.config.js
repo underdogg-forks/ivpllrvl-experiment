@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { glob } from 'glob';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,10 +7,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /**
  * Vite Configuration for InvoicePlane
  * 
- * Replaces Gruntfile.js with modern build tooling
+ * Modern build tooling with Tailwind CSS support
  * 
  * Features:
- * - SCSS/SASS compilation with autoprefixer
+ * - Tailwind CSS compilation with PostCSS
  * - JavaScript bundling and minification
  * - Asset copying (fonts, locales)
  * - Hot module replacement for development
@@ -25,7 +24,7 @@ export default defineConfig({
   build: {
     // Output to public/assets
     outDir: 'public/assets',
-    emptyOutDir: true,
+    emptyOutDir: false, // Changed to false to preserve other assets
     
     // Generate sourcemaps for debugging
     sourcemap: process.env.NODE_ENV === 'development',
@@ -35,21 +34,22 @@ export default defineConfig({
     
     rollupOptions: {
       input: {
-        // Main application scripts
-        'core/js/scripts': 'resources/assets/core/js/scripts.js',
-        'core/js/dependencies': 'resources/assets/core/js/dependencies-entry.js',
-        'core/js/legacy': 'resources/assets/core/js/legacy-entry.js',
+        // Main Tailwind CSS styles
+        'core/css/style-tailwind': 'resources/assets/core/css/style-tailwind.css',
         
-        // Styles - find all SCSS files
-        ...Object.fromEntries(
-          glob.sync('resources/assets/**/sass/*.scss').map(file => {
-            const name = file
-              .replace('resources/assets/', '')
-              .replace('/sass/', '/css/')
-              .replace('.scss', '');
-            return [name, file];
-          })
-        ),
+        // Existing custom CSS files
+        'core/css/custom-pdf': 'resources/assets/core/css/custom-pdf.css',
+        'core/css/paypal': 'resources/assets/core/css/paypal.css',
+        
+        // Main application script (if it exists)
+        ...((() => {
+          try {
+            require.resolve('./resources/assets/core/js/scripts.js');
+            return { 'core/js/scripts': 'resources/assets/core/js/scripts.js' };
+          } catch {
+            return {};
+          }
+        })()),
       },
       output: {
         // Output naming patterns
@@ -58,7 +58,7 @@ export default defineConfig({
         assetFileNames: (assetInfo) => {
           // Keep CSS in the same structure
           if (assetInfo.name?.endsWith('.css')) {
-            return assetInfo.name.replace('resources/assets/', '');
+            return '[name][extname]';
           }
           return 'assets/[name]-[hash][extname]';
         },
@@ -71,9 +71,8 @@ export default defineConfig({
     port: 5173,
     strictPort: false,
     
-    // Proxy to CodeIgniter backend
+    // Proxy to backend (if needed)
     proxy: {
-      // Proxy all non-asset requests to the PHP backend
       '^(?!/assets/).*': {
         target: 'http://localhost:8000',
         changeOrigin: true,
@@ -86,57 +85,18 @@ export default defineConfig({
     },
   },
   
-  // CSS configuration
+  // CSS configuration with Tailwind CSS
   css: {
-    preprocessorOptions: {
-      scss: {
-        // Add any global SCSS variables/mixins here if needed
-      },
-    },
-    postcss: {
-      plugins: [
-        require('autoprefixer'),
-      ],
-    },
+    postcss: './postcss.config.js',
   },
   
   // Resolve configuration
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'resources/assets'),
-      '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap-sass'),
     },
   },
   
   // Plugin configuration
-  plugins: [
-    // Custom plugin to copy assets
-    {
-      name: 'copy-assets',
-      async buildEnd() {
-        const fs = await import('fs-extra');
-        
-        // Copy datepicker locales
-        await fs.copy(
-          'node_modules/bootstrap-datepicker/js/locales',
-          'public/assets/core/js/locales',
-          { overwrite: true }
-        );
-        
-        // Copy select2 locales
-        await fs.copy(
-          'node_modules/select2/dist/js/i18n',
-          'public/assets/core/js/locales/select2',
-          { overwrite: true }
-        );
-        
-        // Copy font-awesome fonts
-        await fs.copy(
-          'node_modules/font-awesome/fonts',
-          'public/assets/core/fonts',
-          { overwrite: true }
-        );
-      },
-    },
-  ],
+  plugins: [],
 });
