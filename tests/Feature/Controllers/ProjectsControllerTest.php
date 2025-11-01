@@ -78,7 +78,7 @@ class ProjectsControllerTest extends FeatureTestCase
         $client = Client::factory()->create();
         /**
          * {
-         *     "client_id": <client_id>,
+         *     "client_id": 1,
          *     "project_name": "Test Project",
          *     "project_status": 1
          * }
@@ -168,7 +168,7 @@ class ProjectsControllerTest extends FeatureTestCase
 
         /**
          * {
-         *     "client_id": <client_id>,
+         *     "client_id": 1,
          *     "project_name": "Updated Name"
          * }
          */

@@ -153,9 +153,9 @@ class CustomFieldsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "custom_field_table": "<custom_field_table>",
+         *     "custom_field_table": "ip_clients",
          *     "custom_field_label": "Updated Label",
-         *     "custom_field_column": "<custom_field_column>",
+         *     "custom_field_column": "client_custom",
          *     "btn_submit": "1"
          * }
          */
@@ -216,15 +216,18 @@ class CustomFieldsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <custom_field_id>
+         *     "custom_field_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $customField->custom_field_id,
+        $deletePayload = [
+            'custom_field_id' => $customField->custom_field_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('custom_fields.delete', ['id' => $customField->custom_field_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('custom_fields.index'));
@@ -246,15 +249,18 @@ class CustomFieldsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "custom_field_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'custom_field_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('custom_fields.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

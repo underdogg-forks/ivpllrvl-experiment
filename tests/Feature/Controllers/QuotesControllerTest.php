@@ -249,7 +249,7 @@ class QuotesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "quote_id": <quote_id>
+         *     "quote_id": 1
          * }
          */
         $deleteParams = [
@@ -290,7 +290,7 @@ class QuotesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "quote_id": <quote_id>
+         *     "quote_id": 1
          * }
          */
         $deleteParams = [

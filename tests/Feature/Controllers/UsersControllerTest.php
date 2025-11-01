@@ -124,7 +124,7 @@ class UsersControllerTest extends FeatureTestCase
          *     "user_name": "New User",
          *     "user_email": "newuser@example.com",
          *     "user_password": "password123",
-         *     "user_type": <user_type>,
+         *     "user_type": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -157,13 +157,16 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $adminUser = User::factory()->create();
-        $editUser = User::factory()->create(['user_name' => 'Old Name']);
-        
+        $editUser = User::factory()->create([
+            'user_name' => 'Old Name',
+            'user_email' => 'old@example.com',
+        ]);
+
         /**
          * {
          *     "user_name": "Updated Name",
-         *     "user_email": "<user_email>",
-         *     "user_type": <user_type>,
+         *     "user_email": "old@example.com",
+         *     "user_type": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -224,15 +227,18 @@ class UsersControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <user_id>
+         *     "user_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $deleteUser->user_id,
+        $deletePayload = [
+            'user_id' => $deleteUser->user_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($adminUser)->post(route('users.delete', $deleteParams));
+        $response = $this->actingAs($adminUser)->post(
+            route('users.delete', ['id' => $deleteUser->user_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('users.index'));
@@ -254,15 +260,18 @@ class UsersControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "user_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'user_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('users.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('users.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

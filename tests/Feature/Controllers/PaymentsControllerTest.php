@@ -146,10 +146,10 @@ class PaymentsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "invoice_id": <invoice_id>,
+         *     "invoice_id": 1,
          *     "payment_date": "2024-01-15",
          *     "payment_amount": "100.00",
-         *     "payment_method_id": <payment_method_id>,
+         *     "payment_method_id": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -186,8 +186,8 @@ class PaymentsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "invoice_id": <invoice_id>,
-         *     "payment_date": "<payment_date>",
+         *     "invoice_id": 1,
+         *     "payment_date": "2024-01-15",
          *     "payment_amount": "75.00",
          *     "btn_submit": "1"
          * }
@@ -254,7 +254,7 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Act */
         /**
          * {
-         *     "invoice_id": <invoice_id>,
+         *     "invoice_id": 1,
          *     "payment_amount": "100.00",
          *     "btn_submit": "1"
          * }
@@ -284,7 +284,7 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Act */
         /**
          * {
-         *     "invoice_id": <invoice_id>,
+         *     "invoice_id": 1,
          *     "payment_date": "2024-01-15",
          *     "btn_submit": "1"
          * }
@@ -338,15 +338,18 @@ class PaymentsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <payment_id>
+         *     "payment_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $payment->payment_id,
+        $deletePayload = [
+            'payment_id' => $payment->payment_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('payments.delete', ['id' => $payment->payment_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -368,15 +371,18 @@ class PaymentsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "payment_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'payment_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('payments.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

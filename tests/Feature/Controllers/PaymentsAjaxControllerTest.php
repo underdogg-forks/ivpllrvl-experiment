@@ -32,10 +32,10 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "invoice_id": <invoice_id>,
+         *     "invoice_id": 1,
          *     "payment_date": "2024-01-15",
          *     "payment_amount": "100.00",
-         *     "payment_method_id": <payment_method_id>
+         *     "payment_method_id": 1
          * }
          */
         $paymentData = [
@@ -133,7 +133,7 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         /** Act */
         /**
          * {
-         *     "invoice_id": <invoice_id>,
+         *     "invoice_id": 1,
          *     "payment_amount": "100.00"
          * }
          */
@@ -165,7 +165,7 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         /** Act */
         /**
          * {
-         *     "invoice_id": <invoice_id>,
+         *     "invoice_id": 1,
          *     "payment_date": "2024-01-15"
          * }
          */

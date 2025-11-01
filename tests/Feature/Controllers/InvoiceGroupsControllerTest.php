@@ -236,15 +236,18 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 1
+         *     "invoice_group_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $testId,
+        $deletePayload = [
+            'invoice_group_id' => $testId,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoice_groups.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('invoice_groups.delete', ['id' => $testId]),
+            $deletePayload
+        );
 
         /* Assert */
         /* Would verify invoice group is deleted */

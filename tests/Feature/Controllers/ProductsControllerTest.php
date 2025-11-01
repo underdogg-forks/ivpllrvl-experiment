@@ -347,15 +347,18 @@ class ProductsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 1
+         *     "product_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $testId,
+        $deletePayload = [
+            'product_id' => $testId,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('products.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('products.delete', ['id' => $testId]),
+            $deletePayload
+        );
 
         /* Assert */
         /* Would verify product is deleted */

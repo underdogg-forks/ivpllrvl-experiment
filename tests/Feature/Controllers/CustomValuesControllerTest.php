@@ -119,7 +119,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "custom_field_id": <custom_field_id>,
+         *     "custom_field_id": 1,
          *     "custom_value_value": "Test Value",
          *     "btn_submit": "1"
          * }
@@ -159,7 +159,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "custom_field_id": <custom_field_id>,
+         *     "custom_field_id": 1,
          *     "custom_value_value": "Updated Value",
          *     "btn_submit": "1"
          * }
@@ -221,15 +221,18 @@ class CustomValuesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <custom_value_id>
+         *     "custom_value_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $customValue->custom_value_id,
+        $deletePayload = [
+            'custom_value_id' => $customValue->custom_value_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_values.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('custom_values.delete', ['id' => $customValue->custom_value_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('custom_values.index'));
@@ -251,15 +254,18 @@ class CustomValuesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "custom_value_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'custom_value_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_values.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('custom_values.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

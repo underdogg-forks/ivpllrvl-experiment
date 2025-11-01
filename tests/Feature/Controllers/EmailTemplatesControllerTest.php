@@ -155,8 +155,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /**
          * {
          *     "email_template_title": "Updated Title",
-         *     "email_template_subject": "<email_template_subject>",
-         *     "email_template_body": "<email_template_body>",
+         *     "email_template_subject": "Invoice Reminder",
+         *     "email_template_body": "Please pay your invoice.",
          *     "btn_submit": "1"
          * }
          */
@@ -217,15 +217,18 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <email_template_id>
+         *     "email_template_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $template->email_template_id,
+        $deletePayload = [
+            'email_template_id' => $template->email_template_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('email_templates.delete', ['id' => $template->email_template_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -247,15 +250,18 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "email_template_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'email_template_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('email_templates.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

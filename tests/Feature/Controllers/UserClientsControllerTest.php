@@ -126,8 +126,8 @@ class UserClientsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "user_id": <user_id>,
-         *     "client_id": <client_id>,
+         *     "user_id": 1,
+         *     "client_id": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -168,8 +168,8 @@ class UserClientsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "user_id": <user_id>,
-         *     "client_id": <client_id>,
+         *     "user_id": 1,
+         *     "client_id": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -205,7 +205,7 @@ class UserClientsControllerTest extends FeatureTestCase
         /** Act */
         /**
          * {
-         *     "client_id": <client_id>,
+         *     "client_id": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -232,7 +232,7 @@ class UserClientsControllerTest extends FeatureTestCase
         /** Act */
         /**
          * {
-         *     "user_id": <user_id>,
+         *     "user_id": 1,
          *     "btn_submit": "1"
          * }
          */
@@ -288,22 +288,25 @@ class UserClientsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <user_client_id>
+         *     "user_client_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $userClient->id,
+        $deletePayload = [
+            'user_client_id' => $userClient->user_client_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('user_clients.delete', ['id' => $userClient->user_client_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('user_clients.index'));
         $response->assertSessionHas('alert_success');
         
         $this->assertDatabaseMissing('ip_user_clients', [
-            'id' => $userClient->id,
+            'user_client_id' => $userClient->user_client_id,
         ]);
     }
 
@@ -318,15 +321,18 @@ class UserClientsControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "user_client_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'user_client_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('user_clients.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

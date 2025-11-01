@@ -74,7 +74,7 @@ class TasksControllerTest extends FeatureTestCase
         $project = Project::factory()->create();
         /**
          * {
-         *     "project_id": <project_id>,
+         *     "project_id": 1,
          *     "task_name": "Test Task",
          *     "task_status": 1,
          *     "task_finish_date": "2025-12-31"

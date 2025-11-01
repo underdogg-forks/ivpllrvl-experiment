@@ -198,7 +198,7 @@ class InvoicesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "invoiceId": <invoice_id>
+         *     "invoiceId": 1
          * }
          */
         $deleteParams = [
@@ -226,7 +226,7 @@ class InvoicesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "invoiceId": <invoice_id>
+         *     "invoiceId": 1
          * }
          */
         $deleteParams = [
@@ -254,7 +254,7 @@ class InvoicesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "invoiceId": <invoice_id>
+         *     "invoiceId": 1
          * }
          */
         $deleteParams = [

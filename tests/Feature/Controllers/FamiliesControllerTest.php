@@ -243,15 +243,18 @@ class FamiliesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": <family_id>
+         *     "family_id": 1
          * }
          */
-        $deleteParams = [
-            'id' => $family->family_id,
+        $deletePayload = [
+            'family_id' => $family->family_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('families.delete', ['id' => $family->family_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('families.index'));
@@ -273,15 +276,18 @@ class FamiliesControllerTest extends FeatureTestCase
         
         /**
          * {
-         *     "id": 99999
+         *     "family_id": 99999
          * }
          */
-        $deleteParams = [
-            'id' => 99999,
+        $deletePayload = [
+            'family_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('families.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();
