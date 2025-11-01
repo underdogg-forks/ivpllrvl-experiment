@@ -2,13 +2,13 @@
 
 namespace Modules\Invoices\Controllers;
 
-use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
 use Modules\Core\Models\InvoiceCustom;
+use Modules\Core\Services\UserService;
 use Modules\Crm\Models\Task;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
@@ -28,6 +28,23 @@ use Sumex;
  */
 class InvoicesController
 {
+    /**
+     * User service instance.
+     *
+     * @var UserService
+     */
+    protected UserService $userService;
+
+    /**
+     * Constructor.
+     *
+     * @param UserService $userService
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Redirect to all invoices status view.
      *
@@ -183,10 +200,7 @@ class InvoicesController
         $items = Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
 
         // Check if user change is allowed (more than one admin user)
-        $changeUser = DB::table('ip_users')
-            ->where('user_type', 1)
-            ->where('user_active', 1)
-            ->count() > 1;
+        $changeUser = $this->userService->hasMultipleActiveAdmins();
 
         $data = [
             'invoice'           => $invoice,

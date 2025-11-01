@@ -2,9 +2,11 @@
 
 namespace Modules\Quotes\Services;
 
-use DB;
+use Illuminate\Support\Facades\DB as FacadeDB;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
+use Modules\Quotes\Models\QuoteItem;
+use Modules\Quotes\Models\QuoteItemAmount;
 use Modules\Quotes\Models\QuoteTaxRate;
 
 /**
@@ -44,20 +46,28 @@ class QuoteAmountService
     {
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
 
-        // Get the basic totals from quote item amounts
-        $quoteAmounts = DB::table('ip_quote_item_amounts')
+        // Get all item IDs for this quote
+        $itemIds = QuoteItem::where('quote_id', $quoteId)->pluck('item_id');
+
+        // Get the basic totals from quote item amounts using Eloquent
+        $quoteAmounts = QuoteItemAmount::whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) AS quote_item_subtotal,
                 SUM(item_tax_total) AS quote_item_tax_total,
                 SUM(item_subtotal) + SUM(item_tax_total) AS quote_total,
                 SUM(item_discount) AS quote_item_discount
             ')
-            ->whereIn('item_id', function ($query) use ($quoteId) {
-                $query->select('item_id')
-                    ->from('ip_quote_items')
-                    ->where('quote_id', $quoteId);
-            })
             ->first();
+
+        // Handle case when no items exist
+        if (! $quoteAmounts || $quoteAmounts->quote_item_subtotal === null) {
+            $quoteAmounts = (object) [
+                'quote_item_subtotal'  => 0.0,
+                'quote_item_tax_total' => 0.0,
+                'quote_total'          => 0.0,
+                'quote_item_discount'  => 0.0,
+            ];
+        }
 
         // Calculate subtotal and total based on legacy or new calculation mode
         $legacyCalculation = config_item('legacy_calculation');
@@ -120,15 +130,14 @@ class QuoteAmountService
      */
     public function getGlobalDiscount(int $quoteId): float
     {
-        $result = DB::table('ip_quote_item_amounts')
+        // Get all item IDs for this quote
+        $itemIds = QuoteItem::where('quote_id', $quoteId)->pluck('item_id');
+
+        // Calculate global discount using Eloquent
+        $result = QuoteItemAmount::whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) - (SUM(item_total) - SUM(item_tax_total) + SUM(item_discount)) AS global_discount
             ')
-            ->whereIn('item_id', function ($query) use ($quoteId) {
-                $query->select('item_id')
-                    ->from('ip_quote_items')
-                    ->where('quote_id', $quoteId);
-            })
             ->first();
 
         return (float) ($result->global_discount ?? 0.0);
@@ -173,15 +182,11 @@ class QuoteAmountService
             }
 
             // Update quote amount with total tax
-            DB::table('ip_quote_amounts')
-                ->where('quote_id', $quoteId)
-                ->update([
-                    'quote_tax_total' => DB::raw('(
-                        SELECT SUM(quote_tax_rate_amount)
-                        FROM ip_quote_tax_rates
-                        WHERE quote_id = ' . $quoteId . '
-                    )'),
-                ]);
+            $quoteTaxTotal = QuoteTaxRate::where('quote_id', $quoteId)
+                ->sum('quote_tax_rate_amount');
+
+            QuoteAmount::where('quote_id', $quoteId)
+                ->update(['quote_tax_total' => $quoteTaxTotal]);
 
             // Get updated quote amount
             $quoteAmount = QuoteAmount::where('quote_id', $quoteId)->first();
@@ -215,61 +220,41 @@ class QuoteAmountService
      */
     public function getTotalQuoted(?string $period = null): float
     {
+        $query = QuoteAmount::query();
+
         switch ($period) {
             case 'month':
-                $result = DB::table('ip_quote_amounts')
-                    ->selectRaw('SUM(quote_total) AS total_quoted')
-                    ->whereIn('quote_id', function ($query) {
-                        $query->select('quote_id')
-                            ->from('ip_quotes')
-                            ->whereRaw('MONTH(quote_date_created) = MONTH(NOW())')
-                            ->whereRaw('YEAR(quote_date_created) = YEAR(NOW())');
-                    })
-                    ->first();
+                $query->whereHas('quote', function ($q) {
+                    $q->whereRaw('MONTH(quote_date_created) = MONTH(NOW())')
+                      ->whereRaw('YEAR(quote_date_created) = YEAR(NOW())');
+                });
                 break;
 
             case 'last_month':
-                $result = DB::table('ip_quote_amounts')
-                    ->selectRaw('SUM(quote_total) AS total_quoted')
-                    ->whereIn('quote_id', function ($query) {
-                        $query->select('quote_id')
-                            ->from('ip_quotes')
-                            ->whereRaw('MONTH(quote_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
-                            ->whereRaw('YEAR(quote_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
-                    })
-                    ->first();
+                $query->whereHas('quote', function ($q) {
+                    $q->whereRaw('MONTH(quote_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
+                      ->whereRaw('YEAR(quote_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
+                });
                 break;
 
             case 'year':
-                $result = DB::table('ip_quote_amounts')
-                    ->selectRaw('SUM(quote_total) AS total_quoted')
-                    ->whereIn('quote_id', function ($query) {
-                        $query->select('quote_id')
-                            ->from('ip_quotes')
-                            ->whereRaw('YEAR(quote_date_created) = YEAR(NOW())');
-                    })
-                    ->first();
+                $query->whereHas('quote', function ($q) {
+                    $q->whereRaw('YEAR(quote_date_created) = YEAR(NOW())');
+                });
                 break;
 
             case 'last_year':
-                $result = DB::table('ip_quote_amounts')
-                    ->selectRaw('SUM(quote_total) AS total_quoted')
-                    ->whereIn('quote_id', function ($query) {
-                        $query->select('quote_id')
-                            ->from('ip_quotes')
-                            ->whereRaw('YEAR(quote_date_created) = YEAR(NOW() - INTERVAL 1 YEAR)');
-                    })
-                    ->first();
+                $query->whereHas('quote', function ($q) {
+                    $q->whereRaw('YEAR(quote_date_created) = YEAR(NOW() - INTERVAL 1 YEAR)');
+                });
                 break;
 
             default:
-                $result = DB::table('ip_quote_amounts')
-                    ->selectRaw('SUM(quote_total) AS total_quoted')
-                    ->first();
+                // No filter - all quotes
                 break;
         }
 
-        return (float) ($result->total_quoted ?? 0.0);
+        return (float) $query->sum('quote_total');
     }
 
     /**
@@ -281,107 +266,46 @@ class QuoteAmountService
      */
     public function getStatusTotals(string $period = 'this-month'): array
     {
+        $query = QuoteAmount::query()
+            ->join('ip_quotes', 'ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
+            ->selectRaw('
+                ip_quotes.quote_status_id,
+                SUM(ip_quote_amounts.quote_total) AS sum_total,
+                COUNT(*) AS num_total
+            ')
+            ->groupBy('ip_quotes.quote_status_id');
+
         switch ($period) {
             case 'last-month':
-                $results = DB::table('ip_quote_amounts')
-                    ->selectRaw('
-                        quote_status_id,
-                        SUM(quote_total) AS sum_total,
-                        COUNT(*) AS num_total
-                    ')
-                    ->join('ip_quotes', function ($join) {
-                        $join->on('ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
-                            ->whereRaw('MONTH(ip_quotes.quote_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
-                            ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
-                    })
-                    ->groupBy('ip_quotes.quote_status_id')
-                    ->get()
-                    ->toArray();
+                $query->whereRaw('MONTH(ip_quotes.quote_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
+                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'this-quarter':
-                $results = DB::table('ip_quote_amounts')
-                    ->selectRaw('
-                        quote_status_id,
-                        SUM(quote_total) AS sum_total,
-                        COUNT(*) AS num_total
-                    ')
-                    ->join('ip_quotes', function ($join) {
-                        $join->on('ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
-                            ->whereRaw('QUARTER(ip_quotes.quote_date_created) = QUARTER(NOW())')
-                            ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
-                    })
-                    ->groupBy('ip_quotes.quote_status_id')
-                    ->get()
-                    ->toArray();
+                $query->whereRaw('QUARTER(ip_quotes.quote_date_created) = QUARTER(NOW())')
+                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'last-quarter':
-                $results = DB::table('ip_quote_amounts')
-                    ->selectRaw('
-                        quote_status_id,
-                        SUM(quote_total) AS sum_total,
-                        COUNT(*) AS num_total
-                    ')
-                    ->join('ip_quotes', function ($join) {
-                        $join->on('ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
-                            ->whereRaw('QUARTER(ip_quotes.quote_date_created) = QUARTER(NOW() - INTERVAL 1 QUARTER)')
-                            ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
-                    })
-                    ->groupBy('ip_quotes.quote_status_id')
-                    ->get()
-                    ->toArray();
+                $query->whereRaw('QUARTER(ip_quotes.quote_date_created) = QUARTER(NOW() - INTERVAL 1 QUARTER)')
+                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'this-year':
-                $results = DB::table('ip_quote_amounts')
-                    ->selectRaw('
-                        quote_status_id,
-                        SUM(quote_total) AS sum_total,
-                        COUNT(*) AS num_total
-                    ')
-                    ->join('ip_quotes', function ($join) {
-                        $join->on('ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
-                            ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
-                    })
-                    ->groupBy('ip_quotes.quote_status_id')
-                    ->get()
-                    ->toArray();
+                $query->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'last-year':
-                $results = DB::table('ip_quote_amounts')
-                    ->selectRaw('
-                        quote_status_id,
-                        SUM(quote_total) AS sum_total,
-                        COUNT(*) AS num_total
-                    ')
-                    ->join('ip_quotes', function ($join) {
-                        $join->on('ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
-                            ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW() - INTERVAL 1 YEAR)');
-                    })
-                    ->groupBy('ip_quotes.quote_status_id')
-                    ->get()
-                    ->toArray();
+                $query->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW() - INTERVAL 1 YEAR)');
                 break;
 
             default: // 'this-month'
-                $results = DB::table('ip_quote_amounts')
-                    ->selectRaw('
-                        quote_status_id,
-                        SUM(quote_total) AS sum_total,
-                        COUNT(*) AS num_total
-                    ')
-                    ->join('ip_quotes', function ($join) {
-                        $join->on('ip_quotes.quote_id', '=', 'ip_quote_amounts.quote_id')
-                            ->whereRaw('MONTH(ip_quotes.quote_date_created) = MONTH(NOW())')
-                            ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
-                    })
-                    ->groupBy('ip_quotes.quote_status_id')
-                    ->get()
-                    ->toArray();
+                $query->whereRaw('MONTH(ip_quotes.quote_date_created) = MONTH(NOW())')
+                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
         }
+
+        $results = $query->get()->toArray();
 
         $return   = [];
         $statuses = $this->quoteService->getStatuses();

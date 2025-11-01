@@ -4,9 +4,9 @@ namespace Modules\Core\Controllers;
 
 use AllowDynamicProperties;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Modules\Core\Controllers\GuestController as BaseGuestController;
+use Modules\Core\Models\Upload;
 use Modules\CustomFields\Services\CustomFieldsService;
 
 use Modules\Invoices\Services\InvoicesService;
@@ -226,7 +226,9 @@ class View extends BaseGuestController
      */
     private function getAttachments(string $url_key): array
     {
-        $results = DB::table('ip_uploads')->select('file_name_new', 'file_name_original')->where('url_key', $url_key)->get();
+        $results = Upload::select('file_name_new', 'file_name_original')
+            ->where('url_key', $url_key)
+            ->get();
         $names   = [];
         foreach ($results as $row) {
             $names[] = [

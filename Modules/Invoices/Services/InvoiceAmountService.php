@@ -2,11 +2,13 @@
 
 namespace Modules\Invoices\Services;
 
-use DB;
 use Illuminate\Support\Collection;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\ItemAmount;
+use Modules\Payments\Models\Payment;
 
 class InvoiceAmountService
 {
@@ -14,18 +16,17 @@ class InvoiceAmountService
     {
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
 
-        $invoiceAmounts = DB::table('ip_invoice_item_amounts')
+        // Get all item IDs for this invoice
+        $itemIds = Item::where('invoice_id', $invoiceId)->pluck('item_id');
+
+        // Get the basic totals from invoice item amounts using Eloquent
+        $invoiceAmounts = ItemAmount::whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) AS invoice_item_subtotal,
                 SUM(item_tax_total) AS invoice_item_tax_total,
                 SUM(item_subtotal) + SUM(item_tax_total) AS invoice_total,
                 SUM(item_discount) AS invoice_item_discount
             ')
-            ->whereIn('item_id', function ($query) use ($invoiceId) {
-                $query->select('item_id')
-                    ->from('ip_invoice_items')
-                    ->where('invoice_id', $invoiceId);
-            })
             ->first();
 
         $invoiceAmounts = $invoiceAmounts ?: (object) [
@@ -47,8 +48,8 @@ class InvoiceAmountService
             $invoiceTotal        = $invoiceItemSubtotal + $invoiceAmounts->invoice_item_tax_total;
         }
 
-        $invoicePaid = DB::table('ip_payments')
-            ->where('invoice_id', $invoiceId)
+        // Get total paid using Payment model
+        $invoicePaid = Payment::where('invoice_id', $invoiceId)
             ->sum('payment_amount');
         $invoicePaid = $invoicePaid ? (float) $invoicePaid : 0.0;
 
@@ -84,15 +85,14 @@ class InvoiceAmountService
 
     public function getGlobalDiscount(int $invoiceId): float
     {
-        $result = DB::table('ip_invoice_item_amounts')
+        // Get all item IDs for this invoice
+        $itemIds = Item::where('invoice_id', $invoiceId)->pluck('item_id');
+
+        // Calculate global discount using Eloquent
+        $result = ItemAmount::whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) - (SUM(item_total) - SUM(item_tax_total) + SUM(item_discount)) AS global_discount
             ')
-            ->whereIn('item_id', function ($query) use ($invoiceId) {
-                $query->select('item_id')
-                    ->from('ip_invoice_items')
-                    ->where('invoice_id', $invoiceId);
-            })
             ->first();
 
         return (float) ($result->global_discount ?? 0.0);
@@ -128,15 +128,12 @@ class InvoiceAmountService
                 ->update(['invoice_tax_rate_amount' => $invoiceTaxRateAmount]);
         });
 
-        DB::table('ip_invoice_amounts')
-            ->where('invoice_id', $invoiceId)
-            ->update([
-                'invoice_tax_total' => DB::raw('(
-                    SELECT SUM(invoice_tax_rate_amount)
-                    FROM ip_invoice_tax_rates
-                    WHERE invoice_id = ' . $invoiceId . '
-                )'),
-            ]);
+        // Update invoice amount with total tax using Eloquent sum
+        $invoiceTaxTotal = InvoiceTaxRate::where('invoice_id', $invoiceId)
+            ->sum('invoice_tax_rate_amount');
+
+        InvoiceAmount::where('invoice_id', $invoiceId)
+            ->update(['invoice_tax_total' => $invoiceTaxTotal]);
 
         $invoiceAmount = InvoiceAmount::where('invoice_id', $invoiceId)->first();
 
@@ -211,7 +208,7 @@ class InvoiceAmountService
 
     private function sumByPeriod(string $column, ?string $period = null): float
     {
-        $query = DB::table('ip_invoice_amounts');
+        $query = InvoiceAmount::query();
 
         $this->applyPeriodFilter($query, $period);
 
@@ -224,29 +221,25 @@ class InvoiceAmountService
     {
         switch ($period) {
             case 'month':
-                $query->whereIn('invoice_id', function ($q) {
-                    $q->select('invoice_id')->from('ip_invoices')
-                        ->whereRaw('MONTH(invoice_date_created) = MONTH(NOW())')
-                        ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW())');
+                $query->whereHas('invoice', function ($q) {
+                    $q->whereRaw('MONTH(invoice_date_created) = MONTH(NOW())')
+                      ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW())');
                 });
                 break;
             case 'last_month':
-                $query->whereIn('invoice_id', function ($q) {
-                    $q->select('invoice_id')->from('ip_invoices')
-                        ->whereRaw('MONTH(invoice_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
-                        ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
+                $query->whereHas('invoice', function ($q) {
+                    $q->whereRaw('MONTH(invoice_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
+                      ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
                 });
                 break;
             case 'year':
-                $query->whereIn('invoice_id', function ($q) {
-                    $q->select('invoice_id')->from('ip_invoices')
-                        ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW())');
+                $query->whereHas('invoice', function ($q) {
+                    $q->whereRaw('YEAR(invoice_date_created) = YEAR(NOW())');
                 });
                 break;
             case 'last_year':
-                $query->whereIn('invoice_id', function ($q) {
-                    $q->select('invoice_id')->from('ip_invoices')
-                        ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW() - INTERVAL 1 YEAR)');
+                $query->whereHas('invoice', function ($q) {
+                    $q->whereRaw('YEAR(invoice_date_created) = YEAR(NOW() - INTERVAL 1 YEAR)');
                 });
                 break;
         }
@@ -254,26 +247,23 @@ class InvoiceAmountService
 
     private function statusTotalsForPeriod(?string $firstExpression, string $yearExpression, string $type = 'MONTH'): Collection
     {
-        $query = DB::table('ip_invoice_amounts')
+        $query = InvoiceAmount::query()
+            ->join('ip_invoices', 'ip_invoices.invoice_id', '=', 'ip_invoice_amounts.invoice_id')
             ->selectRaw('
-                invoice_status_id,
-                SUM(invoice_total) AS sum_total,
-                SUM(invoice_paid) AS sum_paid,
-                SUM(invoice_balance) AS sum_balance,
+                ip_invoices.invoice_status_id,
+                SUM(ip_invoice_amounts.invoice_total) AS sum_total,
+                SUM(ip_invoice_amounts.invoice_paid) AS sum_paid,
+                SUM(ip_invoice_amounts.invoice_balance) AS sum_balance,
                 COUNT(*) AS num_total
             ')
-            ->join('ip_invoices', function ($join) use ($firstExpression, $yearExpression, $type) {
-                $join->on('ip_invoices.invoice_id', '=', 'ip_invoice_amounts.invoice_id')
-                    ->whereRaw($yearExpression);
+            ->whereRaw($yearExpression)
+            ->groupBy('ip_invoices.invoice_status_id');
 
-                if ($firstExpression) {
-                    $column = $type === 'QUARTER' ? 'QUARTER(ip_invoices.invoice_date_created)' : 'MONTH(ip_invoices.invoice_date_created)';
-                    $join->whereRaw($column . ' = ' . $firstExpression);
-                }
-            })
-            ->groupBy('ip_invoices.invoice_status_id')
-            ->get();
+        if ($firstExpression) {
+            $column = $type === 'QUARTER' ? 'QUARTER(ip_invoices.invoice_date_created)' : 'MONTH(ip_invoices.invoice_date_created)';
+            $query->whereRaw($column . ' = ' . $firstExpression);
+        }
 
-        return $query;
+        return $query->get();
     }
 }

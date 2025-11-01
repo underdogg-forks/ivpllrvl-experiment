@@ -2,7 +2,6 @@
 
 namespace Modules\Quotes\Services;
 
-use DB;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteItemAmount;
 
@@ -131,15 +130,14 @@ class QuoteItemService
      */
     public function getItemsSubtotal(int $quoteId): float
     {
-        $result = DB::table('ip_quote_item_amounts')
-            ->selectRaw('SUM(item_subtotal) AS items_subtotal')
-            ->whereIn('item_id', function ($query) use ($quoteId) {
-                $query->select('item_id')
-                    ->from('ip_quote_items')
-                    ->where('quote_id', $quoteId);
-            })
-            ->first();
+        // Get all item IDs for this quote
+        $itemIds = QuoteItem::where('quote_id', $quoteId)
+            ->pluck('item_id');
 
-        return (float) ($result->items_subtotal ?? 0.0);
+        // Sum the subtotals from quote_item_amounts
+        $result = QuoteItemAmount::whereIn('item_id', $itemIds)
+            ->sum('item_subtotal');
+
+        return (float) ($result ?? 0.0);
     }
 }

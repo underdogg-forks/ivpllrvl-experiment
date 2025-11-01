@@ -53,4 +53,16 @@ class UserService extends BaseService
             'user_type'     => 'required|integer',
         ];
     }
+
+    /**
+     * Check if there are multiple active admin users.
+     *
+     * Used to determine if user change functionality should be enabled.
+     *
+     * @return bool
+     */
+    public function hasMultipleActiveAdmins(): bool
+    {
+        return User::active()->admin()->count() > 1;
+    }
 }

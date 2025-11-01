@@ -2,9 +2,9 @@
 
 namespace Modules\Quotes\Controllers;
 
-use DB;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
+use Modules\Core\Services\UserService;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Quotes\Models\Quote;
@@ -39,15 +39,27 @@ class QuotesController
     protected QuoteAmountService $quoteAmountService;
 
     /**
+     * User service instance.
+     *
+     * @var UserService
+     */
+    protected UserService $userService;
+
+    /**
      * Constructor.
      *
      * @param QuoteService       $quoteService
      * @param QuoteAmountService $quoteAmountService
+     * @param UserService        $userService
      */
-    public function __construct(QuoteService $quoteService, QuoteAmountService $quoteAmountService)
-    {
+    public function __construct(
+        QuoteService $quoteService,
+        QuoteAmountService $quoteAmountService,
+        UserService $userService
+    ) {
         $this->quoteService       = $quoteService;
         $this->quoteAmountService = $quoteAmountService;
+        $this->userService        = $userService;
     }
 
     /**
@@ -183,10 +195,7 @@ class QuotesController
         $units = Unit::all();
 
         // Check if there are multiple admin users (for user change functionality)
-        $changeUser = DB::table('ip_users')
-            ->where('user_type', 1)
-            ->where('user_active', 1)
-            ->count() > 1;
+        $changeUser = $this->userService->hasMultipleActiveAdmins();
 
         return view('quotes::view', [
             'quote'           => $quote,

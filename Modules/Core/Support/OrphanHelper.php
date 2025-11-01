@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Support;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * OrphanHelper.
  *
@@ -38,7 +40,7 @@ class OrphanHelper
         ];
 
         foreach ($queries as $query) {
-            \Illuminate\Support\Facades\DB::statement($query);
+            DB::statement($query);
         }
     }
 }
