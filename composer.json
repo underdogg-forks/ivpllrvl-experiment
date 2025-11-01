@@ -19,7 +19,7 @@
         "endroid/qr-code": "^4.8.5",
         "filament/filament": "^4.1.10",
         "guzzlehttp/guzzle": "^7.10",
-        "laravel/framework": "^12.36.1",
+        "laravel/framework": "*",
         "moneyphp/money": "^4.8",
         "mpdf/mpdf": "^8.2.6",
         "nwidart/laravel-modules": "^11.1.10",
