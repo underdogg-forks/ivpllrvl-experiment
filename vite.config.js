@@ -36,6 +36,15 @@ export default defineConfig({
       input: {
         // Main Tailwind CSS styles
         'core/css/style-tailwind': 'resources/assets/core/css/style-tailwind.css',
+
+        // Nord Theme - Brand new theme with Nord color palette
+        'nord/css/style-tailwind': 'resources/assets/nord/css/style-tailwind.css',
+
+        // InvoicePlane Default Theme
+        'invoiceplane/css/style-tailwind': 'resources/assets/invoiceplane/css/style-tailwind.css',
+
+        // InvoicePlane Blue Theme
+        'invoiceplane_blue/css/style-tailwind': 'resources/assets/invoiceplane_blue/css/style-tailwind.css',
         
         // Existing custom CSS files
         'core/css/custom-pdf': 'resources/assets/core/css/custom-pdf.css',
