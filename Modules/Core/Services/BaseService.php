@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Modules\Core\Services;
 
 /**
  * BaseService.
