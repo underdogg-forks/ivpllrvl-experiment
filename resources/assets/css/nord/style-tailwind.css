@@ -1,0 +1,605 @@
+/**
+ * InvoicePlane Styles - Nord Theme
+ * 
+ * This is the Nord-themed stylesheet that combines:
+ * 1. Tailwind CSS base, components, and utilities with Nord color palette
+ * 2. Bootstrap-compatible classes implemented with Tailwind
+ * 3. InvoicePlane custom styles with Nord theming
+ */
+
+@import "tailwindcss";
+
+/* Import Tailwind CSS and Bootstrap-compatible classes */
+@import "../../core/css/bootstrap-tailwind.css";
+
+/* Import third-party component styles that don't need refactoring */
+@import "bootstrap-datepicker/dist/css/bootstrap-datepicker3.css";
+@import "font-awesome/css/font-awesome.css";
+@import "dropzone/dist/dropzone.css";
+@import "select2/dist/css/select2.css";
+
+/* Import existing custom CSS files */
+@import "../../core/css/custom.css";
+
+/* ================================
+ * Nord Color Palette Theme
+ * Tailwind v4 CSS tokens
+ * ================================ */
+
+@theme {
+    --color-secondary-50: #E3E9F0;
+    --color-secondary-100: #D1D7E0;
+    --color-secondary-200: #A7B1C5;
+    --color-secondary-300: #8C9AB3;
+    --color-secondary-400: #71829B;
+    --color-secondary-500: #5E81AC;
+    --color-secondary-600: #527397;
+    --color-secondary-700: #466582;
+    --color-secondary-800: #3A576D;
+    --color-secondary-900: #2E4958;
+    --color-secondary-950: #223B43;
+
+    /* Polar Night: Used for dark backgrounds and text */
+    --color-polarnight-50: #e5e9f0;
+    --color-polarnight-100: #d1d7e0;
+    --color-polarnight-200: #a7b1c5;
+    --color-polarnight-300: #8c9ab3;
+    --color-polarnight-400: #71829b;
+    --color-polarnight-500: #4c566a;
+    --color-polarnight-600: #434c5e;
+    --color-polarnight-700: #3b4252;
+    --color-polarnight-800: #2e3440;
+    --color-polarnight-900: #232831;
+    --color-polarnight-950: #1b2027;
+
+    /* Snow Storm: Used for light backgrounds and text */
+    --color-snowstorm-400: #d8dee9;
+    --color-snowstorm-500: #e5e9f0;
+    --color-snowstorm-600: #eceff4;
+
+    /* Frost: Used for primary and secondary accents */
+    --color-frost-400: #8fbcbb;
+    --color-frost-500: #88c0d0;
+    --color-frost-600: #81a1c1;
+    --color-frost-700: #5e81ac;
+
+    /* Aurora: Used for success, warning, etc. */
+    --color-aurora-danger: #bf616a;
+    --color-aurora-warning: #ebcb8b;
+    --color-aurora-success: #a3be8c;
+    --color-aurora-info: #81a1c1;
+    --color-aurora-purple: #b48ead;
+    --color-aurora-orange: #d08770;
+
+    /* Semantic color mapping to Nord palette */
+    --color-danger: var(--color-aurora-danger);
+    --color-warning: var(--color-aurora-warning);
+    --color-success: var(--color-aurora-success);
+    --color-info: var(--color-aurora-info);
+
+    /* Main theme colors from the Frost palette */
+    --color-primary: var(--color-frost-500);
+    --color-primary-100: #E5F3F7;
+    --color-primary-200: #CCE7EF;
+    --color-primary-300: #B3DBE7;
+    --color-primary-400: var(--color-frost-400);
+    --color-primary-500: var(--color-frost-500);
+    --color-primary-600: var(--color-frost-600);
+    --color-primary-700: var(--color-frost-700);
+    --color-primary-800: var(--color-frost-700);
+    --color-primary-900: var(--color-polarnight-800);
+    --color-primary-950: var(--color-polarnight-900);
+
+    /* General UI colors from Polarnight & Snowstorm */
+    --color-background-light: var(--color-snowstorm-500);
+    --color-background-dark: var(--color-polarnight-800);
+    --color-surface-light: var(--color-snowstorm-600);
+    --color-surface-dark: var(--color-polarnight-700);
+    --color-text-dark: var(--color-polarnight-600);
+    --color-text-light: var(--color-snowstorm-500);
+    --color-text-subtle: var(--color-polarnight-500);
+    --color-border-light: var(--color-snowstorm-400);
+    --color-border-dark: var(--color-polarnight-700);
+}
+
+/* ================================
+ * InvoicePlane Core Styles
+ * Using Tailwind's @layer to add custom components
+ * ================================ */
+
+@layer components {
+  /* Fix for Bootstrap 3 collapse table behavior */
+  table.collapse.in {
+    display: table;
+  }
+  
+  /* Alert fix for CI core paragraph */
+  .alert-dismissible p {
+    display: inline;
+  }
+  
+  /* Base HTML styles */
+  html {
+    min-height: 100vh;
+  }
+  
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  
+  img {
+    vertical-align: middle;
+    max-width: 100%;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  
+  /* Text ellipsis helpers */
+  .dib {
+    display: inline-block;
+  }
+  
+  .db {
+    display: block;
+  }
+  
+  .te {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 160px;
+  }
+  
+  /* Variable width text ellipsis */
+  .te.te-1 { max-width: 10vw; }
+  .te.te-2 { max-width: 20vw; }
+  .te.te-3 { max-width: 30vw; }
+  .te.te-4 { max-width: 40vw; }
+  .te.te-5 { max-width: 50vw; }
+  .te.te-6 { max-width: 60vw; }
+  .te.te-7 { max-width: 70vw; }
+  .te.te-8 { max-width: 80vw; }
+  .te.te-9 { max-width: 90vw; }
+  
+  /* Dropzone mobile-first */
+  #previews .name {
+    word-wrap: anywhere;
+  }
+  
+  /* Forms */
+  form {
+    margin: 0;
+  }
+  
+  fieldset {
+    border-radius: 0.25rem;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  fieldset legend {
+    padding: 0 1rem;
+    font-size: 1.125rem;
+    width: auto;
+    border: none;
+    margin: 0;
+  }
+  
+  label {
+    font-weight: normal;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  .discount-field {
+    float: right;
+    max-width: 40%;
+    margin-left: 0.625rem;
+  }
+  
+  .discount-field .input-sm {
+    height: auto;
+    padding: 0.125rem 0.25rem;
+  }
+  
+  .discount-field .input-group-addon {
+    min-width: 20px;
+  }
+  
+  .optional {
+    float: right;
+    font-size: small;
+    color: #777;
+  }
+  
+  /* Enhanced table styles */
+  .table {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .table.no-margin {
+    margin: 0;
+  }
+  
+  .table td {
+    vertical-align: middle !important;
+  }
+  
+  .table tr.bold-border td {
+    border-bottom-width: 2px;
+  }
+  
+  .table.items td {
+    min-width: 150px;
+    max-width: 300px;
+    vertical-align: top !important;
+  }
+  
+  .table.items td.td-icon {
+    max-width: 30px;
+    min-width: initial;
+  }
+  
+  .table.items td.td-amount {
+    max-width: 200px;
+    text-align: right;
+  }
+  
+  .table.items td.td-amount .form-control {
+    text-align: right;
+  }
+  
+  .table.items td.td-textarea {
+    min-width: 300px;
+    max-width: 400px;
+  }
+  
+  .table.items td.td-quantity {
+    max-width: 200px;
+  }
+  
+  .table.items td.td-vert-middle {
+    vertical-align: middle !important;
+  }
+  
+  .table .input-group {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .table .input-group-addon {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .table-responsive {
+    margin-bottom: 0;
+  }
+  
+  #item_table td,
+  #item_table th {
+    padding: 0.1875rem;
+  }
+  
+  #item_table .form-control {
+    margin: 0;
+  }
+  
+  #item_table tr.item input,
+  #item_table tr.item textarea {
+    border-color: #e5e5e5;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  div#item_table textarea {
+    height: 13.5rem;
+  }
+  
+  /* Navigation enhancements */
+  .navbar .navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .navbar .navbar-toggle {
+    padding: 0.375rem 0.5rem;
+    color: #9d9d9d;
+    border-color: #333;
+  }
+  
+  .navbar .navbar-toggle:hover {
+    color: white;
+    border-color: #333;
+  }
+  
+  .navbar .navbar-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .navbar .navbar-nav .fa {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+  
+  .navbar-inner {
+    border-radius: 0;
+    padding: 0;
+    border: none;
+    text-align: right;
+  }
+  
+  /* Headerbar */
+  #headerbar {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .headerbar-title {
+    display: inline-block;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: normal;
+  }
+  
+  .headerbar-item {
+    display: inline-block;
+  }
+  
+  /* InvoicePlane specific components */
+  .quick-actions {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+  
+  /* Custom item table styles */
+  #item_table .input-group {
+    padding-bottom: 0.5rem;
+  }
+  
+  #item_table .ig-addon-aligned {
+    width: 10rem;
+    text-align: right;
+  }
+  
+  #item_table select {
+    padding-left: 0.375rem;
+  }
+  
+  /* Margin utilities */
+  .mb-1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* QR Code table */
+  table.invoice-qr-code-table {
+    width: 100%;
+    line-height: 1.4;
+    font-size: 14px;
+  }
+  
+  img#invoice-qr-code {
+    width: 200px;
+    height: auto;
+  }
+  
+  /* Stamp styles */
+  .stamp {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .stamp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* ================================
+   * Nord Theme Component Styles
+   * Filament-inspired design language
+   * ================================ */
+
+  /* Layout and backgrounds */
+  .fi-layout {
+    @apply bg-[var(--color-background-light)] dark:bg-[var(--color-background-dark)];
+  }
+
+  .fi-topbar nav, .fi-sidebar-header {
+    @apply bg-[var(--color-background-light)] dark:bg-[var(--color-background-dark)];
+  }
+
+  .fi-body {
+    @apply bg-[var(--color-snowstorm-500)] dark:bg-polarnight-900;
+  }
+
+  /* Buttons */
+  .fi-btn-color-primary {
+    @apply bg-[var(--color-primary-500)];
+  }
+
+  .fi-btn:not(.fi-btn-group .fi-btn) {
+    @apply rounded-full;
+  }
+
+  .fi-btn-group > .fi-btn:first-of-type {
+    @apply rounded-s-full;
+  }
+
+  .fi-btn-group > .fi-btn:last-of-type {
+    @apply rounded-e-full;
+  }
+
+  .fi-btn-group {
+    @apply rounded-full;
+  }
+
+  .fi-btn.fi-color-primary .fi-btn-label {
+    @apply text-primary-950;
+  }
+
+  /* Tables */
+  .fi-ta-ctn, .fi-ta-ctn .fi-ta-ctn-with-header {
+    @apply dark:bg-[var(--color-surface-dark)];
+  }
+
+  .fi-ta-table thead tr {
+    @apply bg-[var(--color-surface-light)] dark:bg-[var(--color-surface-dark)];
+  }
+
+  .fi-ta-ctn {
+    @apply shadow-md rounded-2xl border-none ring-0 dark:ring-1 divide-gray-100 dark:divide-white/20;
+  }
+
+  /* Sidebar and navigation */
+  .fi-sidebar-item-label, .fi-topbar-item-label {
+    @apply dark:text-gray-400;
+  }
+
+  .fi-sidebar-item-active a svg, .fi-topbar-item-active a svg {
+    @apply text-primary-800;
+  }
+
+  .fi-sidebar-item-active a span, .fi-topbar-item-active a span {
+    @apply text-primary-800 dark:text-primary-400;
+  }
+
+  .fi-sidebar-item .fi-sidebar-item-button, .fi-topbar-item .fi-topbar-item-button {
+    @apply rounded-lg hover:bg-[var(--color-snowstorm-400)] dark:hover:bg-white/5;
+  }
+
+  .fi-sidebar-item-active .fi-sidebar-item-button, .fi-topbar-item-active .fi-topbar-item-button {
+    @apply rounded-lg bg-[var(--color-snowstorm-600)] dark:focus-visible:bg-white/5 dark:bg-white/5;
+  }
+
+  .fi-sidebar-item-button .fi-badge, .fi-topbar-item-button .fi-badge {
+    @apply bg-primary-300 dark:bg-primary-200;
+  }
+
+  .fi-sidebar-item-button .fi-badge span span, .fi-topbar-item-button .fi-badge span span {
+    @apply text-gray-700;
+  }
+
+  .fi-topbar-item-active a, .fi-topbar-item-active button {
+    @apply bg-secondary-500 hover:bg-secondary-400 dark:bg-primary-500 dark:text-secondary-500 dark:hover:bg-primary-400;
+  }
+
+  .fi-topbar-item-active svg {
+    @apply dark:text-secondary-500;
+  }
+
+  .fi-topbar .fi-tenant-menu {
+    @apply lg:!hidden;
+  }
+
+  .fi-tenant-menu {
+    @apply rounded-lg mt-4;
+  }
+
+  /* Forms */
+  .fi-fo-field-wrp-label span {
+    @apply text-[var(--color-polarnight-500)];
+  }
+
+  .fi-input-wrp {
+    @apply ring-1 ring-[var(--color-snowstorm-400)] dark:ring-white/20;
+  }
+
+  .fi-input {
+    @apply disabled:!bg-gray-50 dark:disabled:!bg-gray-800;
+  }
+
+  .fi-fo-field-wrp-error-message {
+    @apply text-[var(--color-aurora-danger)] dark:text-[var(--color-aurora-orange)];
+  }
+
+  .fi-invalid {
+    @apply ring-[var(--color-aurora-danger)] dark:ring-[var(--color-aurora-orange)];
+  }
+
+  .fi-fo-field-wrp-helper-text {
+    @apply text-gray-500 dark:text-gray-300;
+  }
+
+  /* Search fields */
+  .fi-global-search-field .fi-input-wrp, .fi-ta-search-field .fi-input-wrp {
+    @apply rounded-full bg-[var(--color-snowstorm-500)] dark:bg-gray-900;
+  }
+
+  .fi-global-search-field .fi-input-wrp {
+    @apply ring-4 ring-white dark:ring-gray-800;
+  }
+
+  .fi-global-search-field .fi-input-wrp .fi-input-wrp-prefix {
+    @apply bg-white dark:bg-gray-800 rounded-full ps-2 mr-2;
+  }
+
+  /* Breadcrumbs and headers */
+  .fi-breadcrumbs-item-label {
+    @apply text-[var(--color-polarnight-500)];
+  }
+
+  .fi-header-heading, .fi-ta-header-cell-label, .fi-btn-color-gray span {
+    @apply text-[var(--color-polarnight-600)] dark:text-[var(--color-snowstorm-500)];
+  }
+
+  /* Tabs */
+  .fi-tabs-item-active {
+    @apply bg-primary-100;
+  }
+
+  .fi-tabs-item-active span {
+    @apply !text-secondary-900 dark:!text-gray-100;
+  }
+
+  /* Sections and panels */
+  .fi-section, .fi-wi-stats-overview-stat, .fi-ta-ctn, .fi-tenant-menu, .fi-dropdown-panel {
+    @apply border border-transparent dark:bg-secondary-900;
+  }
+
+  .dark .fi-section, .dark .fi-wi-stats-overview-stat, .dark .fi-ta-ctn, .dark .fi-tenant-menu, .dark .fi-dropdown-panel {
+    background: linear-gradient(var(--color-polarnight-800), var(--color-polarnight-700)),
+    linear-gradient(to right, var(--color-secondary-800), var(--color-polarnight-700));
+    background-clip: padding-box, border-box;
+    background-origin: border-box;
+  }
+
+  .fi-section, .fi-wi-stats-overview-stat {
+    @apply shadow-md rounded-2xl border-none ring-0 dark:ring-1;
+  }
+
+  .fi-wi-widget .fi-section, .fi-wi-stats-overview-stat {
+    @apply dark:ring-gray-700 dark:hover:text-white/70 dark:hover:ring-gray-500;
+  }
+
+  /* Toggles */
+  .fi-ta-toggle > div.fi-color-custom, .fi-fo-toggle.fi-color-custom {
+    @apply bg-primary-500;
+  }
+
+  .fi-ta-toggle > div.fi-color-gray, .fi-fo-toggle.fi-color-gray {
+    @apply bg-gray-200;
+  }
+
+  /* Badges */
+  .fi-badge {
+    @apply rounded-xl;
+  }
+}
