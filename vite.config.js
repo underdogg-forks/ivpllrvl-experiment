@@ -38,7 +38,7 @@ export default defineConfig({
         'core/css/style-tailwind': 'resources/assets/core/css/style-tailwind.css',
 
         // Nord Theme - Brand new theme with Nord color palette
-        'css/nord/style-tailwind': 'resources/assets/css/nord/style-tailwind.css',
+        'nord/css/style-tailwind': 'resources/assets/nord/css/style-tailwind.css',
         
         // Existing custom CSS files
         'core/css/custom-pdf': 'resources/assets/core/css/custom-pdf.css',

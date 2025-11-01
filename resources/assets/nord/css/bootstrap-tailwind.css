@@ -1,11 +1,45 @@
 /**
- * Bootstrap-compatible classes using Tailwind CSS v4
+ * Bootstrap-compatible classes using Tailwind CSS v4 with Nord Theme
  * 
  * This file provides Bootstrap 3 class names but implements them using Tailwind utilities.
  * This allows views to keep using Bootstrap classes while the actual styling comes from Tailwind.
+ * Colors are based on the Nord color palette.
  */
 
 @import "tailwindcss";
+
+/* ================================
+ * Nord Color Variables
+ * Based on the Nord color palette
+ * ================================ */
+:root {
+  /* Gray scale - Nord Polar Night & Snow Storm */
+  --gray-base: #4C566A;
+  --gray-darker: #2E3440;
+  --gray-dark: #3B4252;
+  --gray: #4C566A;
+  --gray-light: #d8dee9;
+  --gray-lighter: #eceff4;
+  --gray-lightest: #e5e9f0;
+
+  /* Brand colors - Nord palette */
+  --brand-primary: #4C566A;
+  --brand-success: #8FBCBB;
+  --dark-success: #052e16;
+  --brand-info: #88C0D0;
+  --dark-info: #082f49;
+  --ivpl-info: #54a0c6;
+  --brand-warning: #EBCB8B;
+  --dark-warning: #8a6d3b;
+  --brand-danger: #BF616A;
+  --dark-danger: #450a0a;
+
+  /* Scaffolding */
+  --body-bg: #4C566A;
+  --text-color: #d8dee9;
+  --link-color: #d8dee9;
+  --link-hover-color: #eceff4;
+}
 
 @layer components {
   /* ================================
@@ -27,69 +61,69 @@
   }
   
   .btn-primary {
-    background-color: #337ab7;
-    color: white;
-    border-color: #2e6da4;
+    background-color: var(--brand-primary);
+    color: var(--gray-lightest);
+    border-color: var(--gray-dark);
   }
   
   .btn-primary:hover {
-    background-color: #286090;
-    border-color: #204d74;
+    background-color: var(--gray-dark);
+    border-color: var(--gray-darker);
   }
   
   .btn-default {
-    background-color: white;
-    color: #333;
-    border-color: #ccc;
+    background-color: var(--gray-lightest);
+    color: var(--gray-darker);
+    border-color: var(--gray-light);
   }
   
   .btn-default:hover {
-    background-color: #e6e6e6;
-    border-color: #adadad;
+    background-color: var(--gray-lighter);
+    border-color: var(--gray);
   }
   
   .btn-success {
-    background-color: #5cb85c;
+    background-color: var(--brand-success);
     color: white;
-    border-color: #4cae4c;
+    border-color: #7aafae;
   }
   
   .btn-success:hover {
-    background-color: #449d44;
-    border-color: #398439;
+    background-color: #7aafae;
+    border-color: #6a9f9e;
   }
   
   .btn-info {
-    background-color: #5bc0de;
+    background-color: var(--brand-info);
     color: white;
-    border-color: #46b8da;
+    border-color: #76b3c3;
   }
   
   .btn-info:hover {
-    background-color: #31b0d5;
-    border-color: #269abc;
+    background-color: #76b3c3;
+    border-color: #64a6b6;
   }
   
   .btn-warning {
-    background-color: #f0ad4e;
-    color: white;
-    border-color: #eea236;
+    background-color: var(--brand-warning);
+    color: var(--gray-darker);
+    border-color: #e5c078;
   }
   
   .btn-warning:hover {
-    background-color: #ec971f;
-    border-color: #d58512;
+    background-color: #e5c078;
+    border-color: #deb565;
   }
   
   .btn-danger {
-    background-color: #d9534f;
+    background-color: var(--brand-danger);
     color: white;
-    border-color: #d43f3a;
+    border-color: #b3545d;
   }
   
   .btn-danger:hover {
-    background-color: #c9302c;
-    border-color: #ac2925;
+    background-color: #b3545d;
+    border-color: #a64850;
   }
   
   /* Button sizes */
@@ -130,17 +164,17 @@
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
     line-height: 1.25;
-    color: #555;
+    color: var(--gray);
     background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid var(--gray-light);
     border-radius: 0.25rem;
     transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
   }
   
   .form-control:focus {
-    border-color: #66afe9;
+    border-color: var(--brand-info);
     outline: none;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(136, 192, 208, 0.6);
   }
   
   .input-sm {
@@ -169,10 +203,10 @@
     font-size: 0.875rem;
     font-weight: normal;
     line-height: 1.25;
-    color: #555;
+    color: var(--gray);
     text-align: center;
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: var(--gray-lighter);
+    border: 1px solid var(--gray-light);
     border-radius: 0.25rem;
     white-space: nowrap;
   }
@@ -202,20 +236,20 @@
   .table > tfoot > tr > td {
     padding: 0.5rem;
     line-height: 1.25;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--gray-light);
   }
   
   .table > thead > tr > th {
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid var(--gray-light);
     vertical-align: bottom;
   }
   
   .table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #f9f9f9;
+    background-color: var(--gray-lightest);
   }
   
   .table-bordered {
-    border: 1px solid #ddd;
+    border: 1px solid var(--gray-light);
   }
   
   .table-bordered > thead > tr > th,
@@ -224,11 +258,11 @@
   .table-bordered > thead > tr > td,
   .table-bordered > tbody > tr > td,
   .table-bordered > tfoot > tr > td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--gray-light);
   }
   
   .table-hover > tbody > tr:hover {
-    background-color: #f5f5f5;
+    background-color: var(--gray-lightest);
   }
   
   /* ================================
@@ -243,27 +277,27 @@
   }
   
   .alert-success {
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
+    color: var(--dark-success);
+    background-color: #d8f5f0;
+    border-color: #c3ede5;
   }
   
   .alert-info {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1;
+    color: var(--dark-info);
+    background-color: #daf2f8;
+    border-color: #c5ebf4;
   }
   
   .alert-warning {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
-    border-color: #faebcc;
+    color: var(--dark-warning);
+    background-color: #fdf8e8;
+    border-color: #fbf2d4;
   }
   
   .alert-danger {
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
+    color: var(--dark-danger);
+    background-color: #f8e3e5;
+    border-color: #f2d3d6;
   }
   
   /* ================================
@@ -273,7 +307,7 @@
   .panel {
     margin-bottom: 1.25rem;
     background-color: white;
-    border: 1px solid #ddd;
+    border: 1px solid var(--gray-light);
     border-radius: 0.25rem;
   }
   
@@ -283,13 +317,13 @@
   
   .panel-heading {
     padding: 0.625rem 1rem;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--gray-light);
   }
   
   .panel-default > .panel-heading {
-    color: #333;
-    background-color: #f5f5f5;
-    border-color: #ddd;
+    color: var(--gray-darker);
+    background-color: var(--gray-lightest);
+    border-color: var(--gray-light);
   }
   
   /* ================================
@@ -344,10 +378,10 @@
     float: left;
     padding: 0.375rem 0.75rem;
     line-height: 1.25;
-    color: #337ab7;
+    color: var(--brand-primary);
     text-decoration: none;
     background-color: white;
-    border: 1px solid #ddd;
+    border: 1px solid var(--gray-light);
     margin-left: -1px;
   }
   
@@ -365,15 +399,15 @@
   }
   
   .pagination > li > a:hover {
-    background-color: #eee;
-    border-color: #ddd;
+    background-color: var(--gray-lighter);
+    border-color: var(--gray-light);
   }
   
   .pagination > .active > a {
     z-index: 10;
     color: white;
-    background-color: #337ab7;
-    border-color: #337ab7;
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
     cursor: default;
   }
 }
