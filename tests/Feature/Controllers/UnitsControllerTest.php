@@ -67,7 +67,12 @@ class UnitsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{unit_name: string, unit_name_plrl: string} $unitData */
+        /**
+         * {
+         *     "unit_name": "Kilogram",
+         *     "unit_name_plrl": "Kilograms"
+         * }
+         */
         $unitData = [
             'unit_name' => 'Kilogram',
             'unit_name_plrl' => 'Kilograms',
@@ -118,7 +123,12 @@ class UnitsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $unit = Unit::factory()->create(['unit_name' => 'Old Name']);
         
-        /** @var array{unit_name: string, unit_name_plrl: string} $updateData */
+        /**
+         * {
+         *     "unit_name": "Updated Name",
+         *     "unit_name_plrl": "Updated Names"
+         * }
+         */
         $updateData = [
             'unit_name' => 'Updated Name',
             'unit_name_plrl' => 'Updated Names',

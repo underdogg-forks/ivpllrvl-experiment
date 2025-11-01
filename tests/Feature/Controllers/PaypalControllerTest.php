@@ -25,7 +25,12 @@ class PaypalControllerTest extends FeatureTestCase
         // PayPal IPN notifications are external webhooks
 
         /** Act */
-        $response = $this->post(route('gateways.paypal.notify'));
+        /**
+         * {}
+         */
+        $payload = [];
+
+        $response = $this->post(route('gateways.paypal.notify'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -42,7 +47,12 @@ class PaypalControllerTest extends FeatureTestCase
         // Webhook endpoints should not require authentication
 
         /** Act */
-        $response = $this->post(route('gateways.paypal.notify'));
+        /**
+         * {}
+         */
+        $payload = [];
+
+        $response = $this->post(route('gateways.paypal.notify'), $payload);
 
         /** Assert */
         $response->assertOk();

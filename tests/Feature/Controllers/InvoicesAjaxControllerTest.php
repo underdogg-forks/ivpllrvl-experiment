@@ -40,10 +40,17 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user   = User::factory()->create();
         $client = Client::factory()->create();
 
+        /**
+         * {
+         *     "client_id": 1,
+         *     "user_id": 1,
+         *     "invoice_date_created": "2024-01-01"
+         * }
+         */
         $payload = [
             'client_id'            => $client->client_id,
             'user_id'              => $user->user_id,
-            'invoice_date_created' => date('Y-m-d'),
+            'invoice_date_created' => '2024-01-01',
         ];
 
         /** Act */
@@ -98,14 +105,26 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             ],
         ];
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "items": "[{\"item_id\":null,\"item_name\":\"Test Item 1\",\"item_quantity\":2,\"item_price\":100,\"item_discount_amount\":0},{\"item_id\":null,\"item_name\":\"Test Item 2\",\"item_quantity\":1,\"item_price\":50,\"item_discount_amount\":0}]",
+         *     "invoice_discount_percent": 0,
+         *     "invoice_discount_amount": 0,
+         *     "invoice_number": "INV-001",
+         *     "invoice_date_created": "2024-01-01",
+         *     "invoice_date_due": "2024-01-31",
+         *     "invoice_status_id": 1
+         * }
+         */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
             'items'                    => json_encode($items),
             'invoice_discount_percent' => 0,
             'invoice_discount_amount'  => 0,
             'invoice_number'           => 'INV-001',
-            'invoice_date_created'     => date('Y-m-d'),
-            'invoice_date_due'         => date('Y-m-d', strtotime('+30 days')),
+            'invoice_date_created'     => '2024-01-01',
+            'invoice_date_due'         => '2024-01-31',
             'invoice_status_id'        => 1,
         ];
 
@@ -161,12 +180,24 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             ],
         ];
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "items": "[{\"item_id\":1,\"item_name\":\"Updated Item\",\"item_quantity\":3,\"item_price\":150,\"item_discount_amount\":0}]",
+         *     "invoice_number": "INV-002",
+         *     "invoice_date_created": "2024-01-01",
+         *     "invoice_date_due": "2024-01-31",
+         *     "invoice_status_id": 2,
+         *     "invoice_discount_percent": 0,
+         *     "invoice_discount_amount": 0
+         * }
+         */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
             'items'                    => json_encode($items),
             'invoice_number'           => 'INV-002',
-            'invoice_date_created'     => date('Y-m-d'),
-            'invoice_date_due'         => date('Y-m-d', strtotime('+30 days')),
+            'invoice_date_created'     => '2024-01-01',
+            'invoice_date_due'         => '2024-01-31',
             'invoice_status_id'        => 2,
             'invoice_discount_percent' => 0,
             'invoice_discount_amount'  => 0,
@@ -207,6 +238,13 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
         
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "items": "[]",
+         *     "invoice_date_created": "invalid-date"
+         * }
+         */
         $payload = [
             'invoice_id'           => $invoice->invoice_id,
             'items'                => json_encode([]),
@@ -248,14 +286,26 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             ],
         ];
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "items": "[{\"item_id\":null,\"item_name\":\"Test Item\",\"item_quantity\":1,\"item_price\":100,\"item_discount_amount\":0}]",
+         *     "invoice_discount_percent": 10,
+         *     "invoice_discount_amount": 20,
+         *     "invoice_number": "INV-001",
+         *     "invoice_date_created": "2024-01-01",
+         *     "invoice_date_due": "2024-01-31",
+         *     "invoice_status_id": 1
+         * }
+         */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
             'items'                    => json_encode($items),
             'invoice_discount_percent' => 10,
             'invoice_discount_amount'  => 20, // Should be cleared
             'invoice_number'           => 'INV-001',
-            'invoice_date_created'     => date('Y-m-d'),
-            'invoice_date_due'         => date('Y-m-d', strtotime('+30 days')),
+            'invoice_date_created'     => '2024-01-01',
+            'invoice_date_due'         => '2024-01-31',
             'invoice_status_id'        => 1,
         ];
 
@@ -294,6 +344,12 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             ],
         ];
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "items": "[{\"item_id\":null,\"item_name\":\"\",\"item_quantity\":5,\"item_price\":100,\"item_discount_amount\":0}]"
+         * }
+         */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'items'      => json_encode($items),
@@ -328,6 +384,13 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         $taxRate = TaxRate::factory()->create(['tax_rate_percent' => 20]);
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "tax_rate_id": 1,
+         *     "include_item_tax": 1
+         * }
+         */
         $payload = [
             'invoice_id'       => $invoice->invoice_id,
             'tax_rate_id'      => $taxRate->tax_rate_id,
@@ -364,6 +427,11 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         $item    = Item::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
+        /**
+         * {
+         *     "item_id": 1
+         * }
+         */
         $payload = ['item_id' => $item->item_id];
 
         /** Act */
@@ -392,6 +460,11 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
     {
         /* Arrange */
         $user    = User::factory()->create();
+        /**
+         * {
+         *     "item_id": 99999
+         * }
+         */
         $payload = ['item_id' => 99999];
 
         /** Act */
@@ -470,11 +543,20 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $sourceInvoice = Invoice::factory()->draft()->create();
         Item::factory()->count(3)->create(['invoice_id' => $sourceInvoice->invoice_id]);
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "client_id": 1,
+         *     "user_id": 1,
+         *     "invoice_date_created": "2024-01-01",
+         *     "invoice_change_client": 0
+         * }
+         */
         $payload = [
             'invoice_id'            => $sourceInvoice->invoice_id,
             'client_id'             => $client->client_id,
             'user_id'               => $user->user_id,
-            'invoice_date_created'  => date('Y-m-d'),
+            'invoice_date_created'  => '2024-01-01',
             'invoice_change_client' => 0,
         ];
 
@@ -509,6 +591,12 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         $newUser = User::factory()->create();
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "user_id": 1
+         * }
+         */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'user_id'    => $newUser->user_id,
@@ -541,6 +629,12 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "user_id": 99999
+         * }
+         */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'user_id'    => 99999,
@@ -573,6 +667,12 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice   = Invoice::factory()->draft()->create();
         $newClient = Client::factory()->create();
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "client_id": 1
+         * }
+         */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'client_id'  => $newClient->client_id,
@@ -609,12 +709,22 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user   = User::factory()->create();
         $client = Client::factory()->create();
 
+        /**
+         * {
+         *     "client_id": 1,
+         *     "user_id": 1,
+         *     "invoice_group_id": 1,
+         *     "recur_start_date": "2024-01-01",
+         *     "recur_end_date": "2025-01-01",
+         *     "recur_frequency": "1M"
+         * }
+         */
         $payload = [
             'client_id'        => $client->client_id,
             'user_id'          => $user->user_id,
             'invoice_group_id' => 1,
-            'recur_start_date' => date('Y-m-d'),
-            'recur_end_date'   => date('Y-m-d', strtotime('+1 year')),
+            'recur_start_date' => '2024-01-01',
+            'recur_end_date'   => '2025-01-01',
             'recur_frequency'  => '1M',
         ];
 
@@ -668,9 +778,15 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $sourceInvoice = Invoice::factory()->paid()->create();
         Item::factory()->count(2)->create(['invoice_id' => $sourceInvoice->invoice_id]);
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "invoice_date_created": "2024-01-01"
+         * }
+         */
         $payload = [
             'invoice_id'           => $sourceInvoice->invoice_id,
-            'invoice_date_created' => date('Y-m-d'),
+            'invoice_date_created' => '2024-01-01',
         ];
 
         /** Act */
@@ -860,8 +976,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_discount_percent' => 0,
             'invoice_discount_amount'  => 0,
             'invoice_number'           => 'INV-001',
-            'invoice_date_created'     => date('Y-m-d'),
-            'invoice_date_due'         => date('Y-m-d', strtotime('+30 days')),
+            'invoice_date_created'     => '2024-01-01',
+            'invoice_date_due'         => '2024-01-31',
             'invoice_status_id'        => 1,
         ];
 
@@ -914,14 +1030,26 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             ],
         ];
 
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "items": "[{\"item_id\":null,\"item_name\":\"Item 1\",\"item_quantity\":1,\"item_price\":100,\"item_discount_amount\":0},{\"item_id\":null,\"item_name\":\"Item 2\",\"item_quantity\":1,\"item_price\":50,\"item_discount_amount\":0}]",
+         *     "invoice_discount_percent": 0,
+         *     "invoice_discount_amount": 30.00,
+         *     "invoice_number": "INV-001",
+         *     "invoice_date_created": "2024-01-01",
+         *     "invoice_date_due": "2024-01-31",
+         *     "invoice_status_id": 1
+         * }
+         */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
             'items'                    => json_encode($items),
             'invoice_discount_percent' => 0,
             'invoice_discount_amount'  => 30.00, // 20% global discount on 150 total
             'invoice_number'           => 'INV-001',
-            'invoice_date_created'     => date('Y-m-d'),
-            'invoice_date_due'         => date('Y-m-d', strtotime('+30 days')),
+            'invoice_date_created'     => '2024-01-01',
+            'invoice_date_due'         => '2024-01-31',
             'invoice_status_id'        => 1,
         ];
 

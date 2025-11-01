@@ -30,7 +30,14 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
         
-        /** @var array{invoice_id: int, payment_date: string, payment_amount: string, payment_method_id: int} $paymentData */
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_date": "2024-01-15",
+         *     "payment_amount": "100.00",
+         *     "payment_method_id": 1
+         * }
+         */
         $paymentData = [
             'invoice_id' => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
@@ -62,10 +69,18 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), [
+        /**
+         * {
+         *     "payment_date": "invalid-date",
+         *     "payment_amount": "not-a-number"
+         * }
+         */
+        $payload = [
             'payment_date' => 'invalid-date',
             'payment_amount' => 'not-a-number',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -83,10 +98,18 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), [
+        /**
+         * {
+         *     "payment_date": "2024-01-15",
+         *     "payment_amount": "100.00"
+         * }
+         */
+        $payload = [
             'payment_date' => '2024-01-15',
             'payment_amount' => '100.00',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -108,10 +131,18 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), [
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_amount": "100.00"
+         * }
+         */
+        $payload = [
             'invoice_id' => $invoice->invoice_id,
             'payment_amount' => '100.00',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -132,10 +163,18 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), [
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_date": "2024-01-15"
+         * }
+         */
+        $payload = [
             'invoice_id' => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -156,11 +195,20 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         PaymentMethod::factory()->count(3)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.modal_add_payment'), [
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "invoice_balance": "100.00",
+         *     "invoice_payment_method": 1
+         * }
+         */
+        $modalPayload = [
             'invoice_id' => 1,
             'invoice_balance' => '100.00',
             'invoice_payment_method' => 1,
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.ajax.modal_add_payment'), $modalPayload);
 
         /** Assert */
         $response->assertOk();

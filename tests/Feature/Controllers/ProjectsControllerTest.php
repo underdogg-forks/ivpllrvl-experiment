@@ -76,6 +76,13 @@ class ProjectsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
+        /**
+         * {
+         *     "client_id": 1,
+         *     "project_name": "Test Project",
+         *     "project_status": 1
+         * }
+         */
         $projectData = [
             'client_id'      => $client->client_id,
             'project_name'   => 'Test Project',
@@ -103,6 +110,11 @@ class ProjectsControllerTest extends FeatureTestCase
     public function it_fails_to_create_project_with_invalid_data(): void
     {
         /** Arrange */
+        /**
+         * {
+         *     "project_name": "Test Project"
+         * }
+         */
         $projectData = [
             'project_name' => 'Test Project',
             // Missing required client_id
@@ -154,6 +166,12 @@ class ProjectsControllerTest extends FeatureTestCase
             'project_name' => 'Old Name',
         ]);
 
+        /**
+         * {
+         *     "client_id": 1,
+         *     "project_name": "Updated Name"
+         * }
+         */
         $updateData = [
             'client_id'    => $client->client_id,
             'project_name' => 'Updated Name',

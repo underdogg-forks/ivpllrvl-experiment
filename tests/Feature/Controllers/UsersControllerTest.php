@@ -119,7 +119,15 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $adminUser = User::factory()->create();
         
-        /** @var array{user_name: string, user_email: string, user_password: string, user_type: int, btn_submit: string} $userData */
+        /**
+         * {
+         *     "user_name": "New User",
+         *     "user_email": "newuser@example.com",
+         *     "user_password": "password123",
+         *     "user_type": 1,
+         *     "btn_submit": "1"
+         * }
+         */
         $userData = [
             'user_name' => 'New User',
             'user_email' => 'newuser@example.com',
@@ -149,9 +157,19 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $adminUser = User::factory()->create();
-        $editUser = User::factory()->create(['user_name' => 'Old Name']);
-        
-        /** @var array{user_name: string, user_email: string, btn_submit: string} $updateData */
+        $editUser = User::factory()->create([
+            'user_name' => 'Old Name',
+            'user_email' => 'old@example.com',
+        ]);
+
+        /**
+         * {
+         *     "user_name": "Updated Name",
+         *     "user_email": "old@example.com",
+         *     "user_type": 1,
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'user_name' => 'Updated Name',
             'user_email' => $editUser->user_email,
@@ -181,7 +199,11 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -203,13 +225,20 @@ class UsersControllerTest extends FeatureTestCase
         $adminUser = User::factory()->create();
         $deleteUser = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
-        $deleteParams = [
-            'id' => $deleteUser->user_id,
+        /**
+         * {
+         *     "user_id": 1
+         * }
+         */
+        $deletePayload = [
+            'user_id' => $deleteUser->user_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($adminUser)->post(route('users.delete', $deleteParams));
+        $response = $this->actingAs($adminUser)->post(
+            route('users.delete', ['id' => $deleteUser->user_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('users.index'));
@@ -229,13 +258,20 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
-        $deleteParams = [
-            'id' => 99999,
+        /**
+         * {
+         *     "user_id": 99999
+         * }
+         */
+        $deletePayload = [
+            'user_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('users.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('users.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

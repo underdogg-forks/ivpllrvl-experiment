@@ -144,7 +144,15 @@ class PaymentsControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
         
-        /** @var array{invoice_id: int, payment_date: string, payment_amount: string, payment_method_id: int, btn_submit: string} $paymentData */
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_date": "2024-01-15",
+         *     "payment_amount": "100.00",
+         *     "payment_method_id": 1,
+         *     "btn_submit": "1"
+         * }
+         */
         $paymentData = [
             'invoice_id' => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
@@ -176,7 +184,14 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $payment = Payment::factory()->create(['payment_amount' => '50.00']);
         
-        /** @var array{invoice_id: int, payment_date: string, payment_amount: string, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_date": "2024-01-15",
+         *     "payment_amount": "75.00",
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'invoice_id' => $payment->invoice_id,
             'payment_date' => $payment->payment_date,
@@ -207,11 +222,20 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form'), [
+        /**
+         * {
+         *     "payment_date": "2024-01-15",
+         *     "payment_amount": "100.00",
+         *     "btn_submit": "1"
+         * }
+         */
+        $missingInvoicePayload = [
             'payment_date' => '2024-01-15',
             'payment_amount' => '100.00',
             'btn_submit' => '1',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.form'), $missingInvoicePayload);
 
         /** Assert */
         $response->assertSessionHasErrors('invoice_id');
@@ -228,11 +252,20 @@ class PaymentsControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form'), [
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_amount": "100.00",
+         *     "btn_submit": "1"
+         * }
+         */
+        $missingDatePayload = [
             'invoice_id' => $invoice->invoice_id,
             'payment_amount' => '100.00',
             'btn_submit' => '1',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.form'), $missingDatePayload);
 
         /** Assert */
         $response->assertSessionHasErrors('payment_date');
@@ -249,11 +282,20 @@ class PaymentsControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form'), [
+        /**
+         * {
+         *     "invoice_id": 1,
+         *     "payment_date": "2024-01-15",
+         *     "btn_submit": "1"
+         * }
+         */
+        $missingAmountPayload = [
             'invoice_id' => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
             'btn_submit' => '1',
-        ]);
+        ];
+
+        $response = $this->actingAs($user)->post(route('payments.form'), $missingAmountPayload);
 
         /** Assert */
         $response->assertSessionHasErrors('payment_amount');
@@ -268,7 +310,11 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -290,13 +336,20 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $payment = Payment::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
-        $deleteParams = [
-            'id' => $payment->payment_id,
+        /**
+         * {
+         *     "payment_id": 1
+         * }
+         */
+        $deletePayload = [
+            'payment_id' => $payment->payment_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('payments.delete', ['id' => $payment->payment_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -316,13 +369,20 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
-        $deleteParams = [
-            'id' => 99999,
+        /**
+         * {
+         *     "payment_id": 99999
+         * }
+         */
+        $deletePayload = [
+            'payment_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('payments.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

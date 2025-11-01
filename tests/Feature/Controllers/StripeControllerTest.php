@@ -25,7 +25,12 @@ class StripeControllerTest extends FeatureTestCase
         // Stripe webhooks are external notifications
 
         /** Act */
-        $response = $this->post(route('gateways.stripe.notify'));
+        /**
+         * {}
+         */
+        $payload = [];
+
+        $response = $this->post(route('gateways.stripe.notify'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -42,7 +47,12 @@ class StripeControllerTest extends FeatureTestCase
         // Webhook endpoints should not require authentication
 
         /** Act */
-        $response = $this->post(route('gateways.stripe.notify'));
+        /**
+         * {}
+         */
+        $payload = [];
+
+        $response = $this->post(route('gateways.stripe.notify'), $payload);
 
         /** Assert */
         $response->assertOk();

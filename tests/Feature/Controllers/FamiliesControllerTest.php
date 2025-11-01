@@ -94,7 +94,12 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{family_name: string, btn_submit: string} $familyData */
+        /**
+         * {
+         *     "family_name": "Electronics",
+         *     "btn_submit": "1"
+         * }
+         */
         $familyData = [
             'family_name' => 'Electronics',
             'btn_submit' => '1',
@@ -122,7 +127,12 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $family = Family::factory()->create(['family_name' => 'Old Name']);
         
-        /** @var array{family_name: string, btn_submit: string} $updateData */
+        /**
+         * {
+         *     "family_name": "Updated Name",
+         *     "btn_submit": "1"
+         * }
+         */
         $updateData = [
             'family_name' => 'Updated Name',
             'btn_submit' => '1',
@@ -150,7 +160,11 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{btn_cancel: string} $cancelData */
+        /**
+         * {
+         *     "btn_cancel": "1"
+         * }
+         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -171,7 +185,12 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{family_name: string, btn_submit: string} $invalidData */
+        /**
+         * {
+         *     "family_name": "",
+         *     "btn_submit": "1"
+         * }
+         */
         $invalidData = [
             'family_name' => '',
             'btn_submit' => '1',
@@ -194,7 +213,12 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Family::factory()->create(['family_name' => 'Existing Family']);
         
-        /** @var array{family_name: string, btn_submit: string} $duplicateData */
+        /**
+         * {
+         *     "family_name": "Existing Family",
+         *     "btn_submit": "1"
+         * }
+         */
         $duplicateData = [
             'family_name' => 'Existing Family',
             'btn_submit' => '1',
@@ -217,13 +241,20 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $family = Family::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
-        $deleteParams = [
-            'id' => $family->family_id,
+        /**
+         * {
+         *     "family_id": 1
+         * }
+         */
+        $deletePayload = [
+            'family_id' => $family->family_id,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('families.delete', ['id' => $family->family_id]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertRedirect(route('families.index'));
@@ -243,13 +274,20 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{id: int} $deleteParams */
-        $deleteParams = [
-            'id' => 99999,
+        /**
+         * {
+         *     "family_id": 99999
+         * }
+         */
+        $deletePayload = [
+            'family_id' => 99999,
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.delete', $deleteParams));
+        $response = $this->actingAs($user)->post(
+            route('families.delete', ['id' => 99999]),
+            $deletePayload
+        );
 
         /** Assert */
         $response->assertNotFound();

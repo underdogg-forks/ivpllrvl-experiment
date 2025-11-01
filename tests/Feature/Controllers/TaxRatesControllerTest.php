@@ -67,7 +67,12 @@ class TaxRatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /** @var array{tax_rate_name: string, tax_rate_percent: string} $taxRateData */
+        /**
+         * {
+         *     "tax_rate_name": "VAT 20%",
+         *     "tax_rate_percent": "20.00"
+         * }
+         */
         $taxRateData = [
             'tax_rate_name' => 'VAT 20%',
             'tax_rate_percent' => '20.00',
@@ -121,7 +126,12 @@ class TaxRatesControllerTest extends FeatureTestCase
             'tax_rate_percent' => '10.00',
         ]);
         
-        /** @var array{tax_rate_name: string, tax_rate_percent: string} $updateData */
+        /**
+         * {
+         *     "tax_rate_name": "Updated VAT",
+         *     "tax_rate_percent": "25.00"
+         * }
+         */
         $updateData = [
             'tax_rate_name' => 'Updated VAT',
             'tax_rate_percent' => '25.00',
