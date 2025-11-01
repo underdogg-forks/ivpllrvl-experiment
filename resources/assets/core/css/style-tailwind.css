@@ -1,0 +1,331 @@
+/**
+ * InvoicePlane Styles - Tailwind CSS Version
+ * 
+ * This is the main stylesheet that combines:
+ * 1. Tailwind CSS base, components, and utilities
+ * 2. Bootstrap-compatible classes implemented with Tailwind
+ * 3. InvoicePlane custom styles
+ */
+
+/* Import Tailwind CSS and Bootstrap-compatible classes */
+@import "./bootstrap-tailwind.css";
+
+/* Import third-party component styles that don't need refactoring */
+@import "bootstrap-datepicker/dist/css/bootstrap-datepicker3.css";
+@import "font-awesome/css/font-awesome.css";
+@import "dropzone/dist/dropzone.css";
+@import "select2/dist/css/select2.css";
+
+/* Import existing custom CSS files */
+@import "./custom.css";
+
+/* ================================
+ * InvoicePlane Core Styles
+ * Using Tailwind's @layer to add custom components
+ * ================================ */
+
+@layer components {
+  /* Fix for Bootstrap 3 collapse table behavior */
+  table.collapse.in {
+    display: table;
+  }
+  
+  /* Alert fix for CI core paragraph */
+  .alert-dismissible p {
+    display: inline;
+  }
+  
+  /* Base HTML styles */
+  html {
+    min-height: 100vh;
+  }
+  
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  
+  img {
+    vertical-align: middle;
+    max-width: 100%;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  
+  /* Text ellipsis helpers */
+  .dib {
+    display: inline-block;
+  }
+  
+  .db {
+    display: block;
+  }
+  
+  .te {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 160px;
+  }
+  
+  /* Variable width text ellipsis */
+  .te.te-1 { max-width: 10vw; }
+  .te.te-2 { max-width: 20vw; }
+  .te.te-3 { max-width: 30vw; }
+  .te.te-4 { max-width: 40vw; }
+  .te.te-5 { max-width: 50vw; }
+  .te.te-6 { max-width: 60vw; }
+  .te.te-7 { max-width: 70vw; }
+  .te.te-8 { max-width: 80vw; }
+  .te.te-9 { max-width: 90vw; }
+  
+  /* Dropzone mobile-first */
+  #previews .name {
+    word-wrap: anywhere;
+  }
+  
+  /* Forms */
+  form {
+    margin: 0;
+  }
+  
+  fieldset {
+    border-radius: 0.25rem;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  fieldset legend {
+    padding: 0 1rem;
+    font-size: 1.125rem;
+    width: auto;
+    border: none;
+    margin: 0;
+  }
+  
+  label {
+    font-weight: normal;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  .discount-field {
+    float: right;
+    max-width: 40%;
+    margin-left: 0.625rem;
+  }
+  
+  .discount-field .input-sm {
+    height: auto;
+    padding: 0.125rem 0.25rem;
+  }
+  
+  .discount-field .input-group-addon {
+    min-width: 20px;
+  }
+  
+  .optional {
+    float: right;
+    font-size: small;
+    color: #777;
+  }
+  
+  /* Enhanced table styles */
+  .table {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .table.no-margin {
+    margin: 0;
+  }
+  
+  .table td {
+    vertical-align: middle !important;
+  }
+  
+  .table tr.bold-border td {
+    border-bottom-width: 2px;
+  }
+  
+  .table.items td {
+    min-width: 150px;
+    max-width: 300px;
+    vertical-align: top !important;
+  }
+  
+  .table.items td.td-icon {
+    max-width: 30px;
+    min-width: initial;
+  }
+  
+  .table.items td.td-amount {
+    max-width: 200px;
+    text-align: right;
+  }
+  
+  .table.items td.td-amount .form-control {
+    text-align: right;
+  }
+  
+  .table.items td.td-textarea {
+    min-width: 300px;
+    max-width: 400px;
+  }
+  
+  .table.items td.td-quantity {
+    max-width: 200px;
+  }
+  
+  .table.items td.td-vert-middle {
+    vertical-align: middle !important;
+  }
+  
+  .table .input-group {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .table .input-group-addon {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .table-responsive {
+    margin-bottom: 0;
+  }
+  
+  #item_table td,
+  #item_table th {
+    padding: 0.1875rem;
+  }
+  
+  #item_table .form-control {
+    margin: 0;
+  }
+  
+  #item_table tr.item input,
+  #item_table tr.item textarea {
+    border-color: #e5e5e5;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  div#item_table textarea {
+    height: 13.5rem;
+  }
+  
+  /* Navigation enhancements */
+  .navbar .navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .navbar .navbar-toggle {
+    padding: 0.375rem 0.5rem;
+    color: #9d9d9d;
+    border-color: #333;
+  }
+  
+  .navbar .navbar-toggle:hover {
+    color: white;
+    border-color: #333;
+  }
+  
+  .navbar .navbar-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .navbar .navbar-nav .fa {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+  
+  .navbar-inner {
+    border-radius: 0;
+    padding: 0;
+    border: none;
+    text-align: right;
+  }
+  
+  /* Headerbar */
+  #headerbar {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .headerbar-title {
+    display: inline-block;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: normal;
+  }
+  
+  .headerbar-item {
+    display: inline-block;
+  }
+  
+  /* InvoicePlane specific components */
+  .quick-actions {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+  
+  /* Custom item table styles */
+  #item_table .input-group {
+    padding-bottom: 0.5rem;
+  }
+  
+  #item_table .ig-addon-aligned {
+    width: 10rem;
+    text-align: right;
+  }
+  
+  #item_table select {
+    padding-left: 0.375rem;
+  }
+  
+  /* Margin utilities */
+  .mb-1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* QR Code table */
+  table.invoice-qr-code-table {
+    width: 100%;
+    line-height: 1.4;
+    font-size: 14px;
+  }
+  
+  img#invoice-qr-code {
+    width: 200px;
+    height: auto;
+  }
+  
+  /* Stamp styles */
+  .stamp {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .stamp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+}

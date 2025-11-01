@@ -1,0 +1,379 @@
+/**
+ * Bootstrap-compatible classes using Tailwind CSS v4
+ * 
+ * This file provides Bootstrap 3 class names but implements them using Tailwind utilities.
+ * This allows views to keep using Bootstrap classes while the actual styling comes from Tailwind.
+ */
+
+@import "tailwindcss";
+
+@layer components {
+  /* ================================
+   * BUTTONS
+   * ================================ */
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 150ms ease-in-out, border-color 150ms ease-in-out;
+  }
+  
+  .btn-primary {
+    background-color: #337ab7;
+    color: white;
+    border-color: #2e6da4;
+  }
+  
+  .btn-primary:hover {
+    background-color: #286090;
+    border-color: #204d74;
+  }
+  
+  .btn-default {
+    background-color: white;
+    color: #333;
+    border-color: #ccc;
+  }
+  
+  .btn-default:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+  }
+  
+  .btn-success {
+    background-color: #5cb85c;
+    color: white;
+    border-color: #4cae4c;
+  }
+  
+  .btn-success:hover {
+    background-color: #449d44;
+    border-color: #398439;
+  }
+  
+  .btn-info {
+    background-color: #5bc0de;
+    color: white;
+    border-color: #46b8da;
+  }
+  
+  .btn-info:hover {
+    background-color: #31b0d5;
+    border-color: #269abc;
+  }
+  
+  .btn-warning {
+    background-color: #f0ad4e;
+    color: white;
+    border-color: #eea236;
+  }
+  
+  .btn-warning:hover {
+    background-color: #ec971f;
+    border-color: #d58512;
+  }
+  
+  .btn-danger {
+    background-color: #d9534f;
+    color: white;
+    border-color: #d43f3a;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+  }
+  
+  /* Button sizes */
+  .btn-xs {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .btn-lg {
+    padding: 0.625rem 1rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+  
+  .btn-block {
+    width: 100%;
+    display: block;
+  }
+  
+  /* ================================
+   * FORMS
+   * ================================ */
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: #555;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+  }
+  
+  .form-control:focus {
+    border-color: #66afe9;
+    outline: none;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+  
+  .input-sm {
+    height: 30px;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  .input-lg {
+    height: 46px;
+    padding: 0.625rem 1rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+  
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+  
+  .input-group-addon {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: normal;
+    line-height: 1.25;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+  }
+  
+  label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 0.25rem;
+    font-weight: normal;
+  }
+  
+  /* ================================
+   * TABLES
+   * ================================ */
+  
+  .table {
+    width: 100%;
+    margin-bottom: 1.25rem;
+    border-collapse: collapse;
+  }
+  
+  .table > thead > tr > th,
+  .table > tbody > tr > th,
+  .table > tfoot > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td {
+    padding: 0.5rem;
+    line-height: 1.25;
+    border-top: 1px solid #ddd;
+  }
+  
+  .table > thead > tr > th {
+    border-bottom: 2px solid #ddd;
+    vertical-align: bottom;
+  }
+  
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  .table-bordered {
+    border: 1px solid #ddd;
+  }
+  
+  .table-bordered > thead > tr > th,
+  .table-bordered > tbody > tr > th,
+  .table-bordered > tfoot > tr > th,
+  .table-bordered > thead > tr > td,
+  .table-bordered > tbody > tr > td,
+  .table-bordered > tfoot > tr > td {
+    border: 1px solid #ddd;
+  }
+  
+  .table-hover > tbody > tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* ================================
+   * ALERTS
+   * ================================ */
+  
+  .alert {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid;
+    border-radius: 0.25rem;
+  }
+  
+  .alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+  }
+  
+  .alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+  }
+  
+  .alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+  }
+  
+  .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+  }
+  
+  /* ================================
+   * PANELS
+   * ================================ */
+  
+  .panel {
+    margin-bottom: 1.25rem;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+  
+  .panel-body {
+    padding: 1rem;
+  }
+  
+  .panel-heading {
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .panel-default > .panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+  }
+  
+  /* ================================
+   * UTILITIES
+   * ================================ */
+  
+  .pull-left {
+    float: left;
+  }
+  
+  .pull-right {
+    float: right;
+  }
+  
+  .text-left {
+    text-align: left;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  .text-muted {
+    color: #777;
+  }
+  
+  .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* ================================
+   * PAGINATION
+   * ================================ */
+  
+  .pagination {
+    display: flex;
+    list-style: none;
+    border-radius: 0.25rem;
+    padding-left: 0;
+    margin-bottom: 1.25rem;
+  }
+  
+  .pagination > li > a,
+  .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 0.375rem 0.75rem;
+    line-height: 1.25;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: white;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+  }
+  
+  .pagination > li:first-child > a,
+  .pagination > li:first-child > span {
+    margin-left: 0;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+  
+  .pagination > li:last-child > a,
+  .pagination > li:last-child > span {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+  
+  .pagination > li > a:hover {
+    background-color: #eee;
+    border-color: #ddd;
+  }
+  
+  .pagination > .active > a {
+    z-index: 10;
+    color: white;
+    background-color: #337ab7;
+    border-color: #337ab7;
+    cursor: default;
+  }
+}
