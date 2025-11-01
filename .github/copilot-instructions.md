@@ -410,6 +410,11 @@ class Invoice extends BaseModel
 
 Views use plain PHP (not Blade) and are rendered via Illuminate View:
 
+**Configuration:**
+- PHP is configured as the primary template engine in `AppServiceProvider`
+- View files use `.php` extension (not `.blade.php`)
+- PhpEngine is registered first, Blade is available as secondary
+
 **OLD (CodeIgniter):**
 ```php
 $this->load->view('invoice_view', $data);
