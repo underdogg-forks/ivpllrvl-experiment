@@ -5,6 +5,9 @@ namespace Modules\Payments\Controllers;
 use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentLog;
 use Modules\Payments\Models\PaymentMethod;
+use Modules\Payments\Services\PaymentService;
+use Modules\Payments\Services\PaymentMethodService;
+use Modules\Invoices\Services\InvoiceService;
 
 /**
  * PaymentsController.
@@ -13,6 +16,43 @@ use Modules\Payments\Models\PaymentMethod;
  */
 class PaymentsController
 {
+    /**
+     * Payment service instance.
+     *
+     * @var PaymentService
+     */
+    protected PaymentService $paymentService;
+
+    /**
+     * PaymentMethod service instance.
+     *
+     * @var PaymentMethodService
+     */
+    protected PaymentMethodService $paymentMethodService;
+
+    /**
+     * Invoice service instance.
+     *
+     * @var InvoiceService
+     */
+    protected InvoiceService $invoiceService;
+
+    /**
+     * Constructor.
+     *
+     * @param PaymentService       $paymentService
+     * @param PaymentMethodService $paymentMethodService
+     * @param InvoiceService       $invoiceService
+     */
+    public function __construct(
+        PaymentService $paymentService,
+        PaymentMethodService $paymentMethodService,
+        InvoiceService $invoiceService
+    ) {
+        $this->paymentService       = $paymentService;
+        $this->paymentMethodService = $paymentMethodService;
+        $this->invoiceService       = $invoiceService;
+    }
     /**
      * Display a paginated list of payments.
      *
@@ -75,11 +115,10 @@ class PaymentsController
 
             if ($id) {
                 // Update existing
-                $payment = Payment::query()->findOrFail($id);
-                $payment->update($validated);
+                $this->paymentService->update($id, $validated);
             } else {
                 // Create new
-                $payment = Payment::query()->create($validated);
+                $payment = $this->paymentService->create($validated);
                 $id      = $payment->payment_id;
             }
 
@@ -103,13 +142,10 @@ class PaymentsController
         }
 
         // Load related data
-        $paymentMethods = PaymentMethod::query()->orderBy('payment_method_name')->get();
+        $paymentMethods = $this->paymentMethodService->getAllOrdered();
 
         // Load open invoices (invoices with balance > 0)
-        $openInvoices = \Modules\Invoices\Models\Invoice::query()->where('invoice_balance', '>', 0)
-            ->with('client')
-            ->orderBy('invoice_date_created', 'desc')
-            ->get();
+        $openInvoices = $this->invoiceService->getOpenInvoices();
 
         // Custom fields - deferred to Custom module
         $customFields = [];
@@ -167,8 +203,7 @@ class PaymentsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $payment = Payment::query()->findOrFail($id);
-        $payment->delete();
+        $this->paymentService->delete($id);
 
         return redirect()->route('payments.index')
             ->with('alert_success', trans('record_successfully_deleted'));

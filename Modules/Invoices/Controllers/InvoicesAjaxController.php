@@ -4,7 +4,9 @@ namespace Modules\Invoices\Controllers;
 
 use Modules\Core\Models\InvoiceCustom;
 use Modules\Core\Models\User;
+use Modules\Core\Services\UserService;
 use Modules\Crm\Models\Client;
+use Modules\Crm\Services\ClientService;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoicesRecurring;
 use Modules\Invoices\Models\Item;
@@ -12,6 +14,7 @@ use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceItemService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
+use Modules\Invoices\Services\InvoicesRecurringService;
 
 /**
  * AJAX controller for invoice operations.
@@ -23,6 +26,25 @@ use Modules\Invoices\Services\InvoiceTaxRateService;
  */
 class InvoicesAjaxController
 {
+    protected InvoiceService $invoiceService;
+    protected InvoiceItemService $invoiceItemService;
+    protected UserService $userService;
+    protected ClientService $clientService;
+    protected InvoicesRecurringService $invoicesRecurringService;
+
+    public function __construct(
+        InvoiceService $invoiceService,
+        InvoiceItemService $invoiceItemService,
+        UserService $userService,
+        ClientService $clientService,
+        InvoicesRecurringService $invoicesRecurringService
+    ) {
+        $this->invoiceService = $invoiceService;
+        $this->invoiceItemService = $invoiceItemService;
+        $this->userService = $userService;
+        $this->clientService = $clientService;
+        $this->invoicesRecurringService = $invoicesRecurringService;
+    }
     /**
      * Save invoice with items, tax rates, and custom fields.
      *
@@ -37,10 +59,10 @@ class InvoicesAjaxController
     public function save(): array
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice   = Invoice::query()->findOrFail($invoiceId);
+        $invoice   = $this->invoiceService->findOrFail($invoiceId);
 
         // Validate invoice
-        $validationRules = app(InvoiceService::class)->getSaveValidationRules();
+        $validationRules = $this->invoiceService->getSaveValidationRules();
         $validator       = validator(request()->all(), $validationRules);
 
         if ($validator->fails()) {
@@ -158,18 +180,16 @@ class InvoicesAjaxController
     {
         $itemId = request()->input('item_id');
 
-        $item = Item::query()->where('invoice_id', $invoiceId)
-            ->where('item_id', $itemId)
-            ->first();
+        $item = $this->invoiceItemService->findByInvoiceAndItemId($invoiceId, $itemId);
 
         if ( ! $item) {
             return ['success' => 0];
         }
 
-        app(InvoiceItemService::class)->deleteItem($itemId);
+        $this->invoiceItemService->deleteItem($itemId);
 
         // Recalculate invoice
-        $invoice = Invoice::query()->findOrFail($invoiceId);
+        $invoice = $this->invoiceService->findOrFail($invoiceId);
         $invoice->recalculate();
 
         return ['success' => 1];
@@ -189,7 +209,7 @@ class InvoicesAjaxController
     public function getItem(): array
     {
         $itemId = request()->input('item_id');
-        $item   = Item::query()->find($itemId);
+        $item   = $this->invoiceItemService->find($itemId);
 
         return $item ? $item->toArray() : [];
     }
@@ -210,8 +230,8 @@ class InvoicesAjaxController
         $invoiceId = request()->input('invoice_id');
         $invoice   = Invoice::with(['client', 'user'])->findOrFail($invoiceId);
 
-        $clients = Client::query()->orderBy('client_name')->get();
-        $users   = User::query()->all();
+        $clients = $this->clientService->getAllOrderedByName();
+        $users   = $this->userService->getAll();
 
         return view('invoices::modal_copy_invoice', compact('invoice', 'clients', 'users'));
     }
@@ -236,7 +256,7 @@ class InvoicesAjaxController
         $includeInvoiceTaxRates = request()->input('invoice_change_client', 0) == 0;
 
         // Create new invoice
-        $newInvoice = Invoice::query()->create([
+        $newInvoice = $this->invoiceService->createInvoice([
             'client_id'            => $clientId,
             'user_id'              => $userId,
             'invoice_date_created' => $invoiceDate,
@@ -266,8 +286,8 @@ class InvoicesAjaxController
     public function modalChangeUser()
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice   = Invoice::query()->findOrFail($invoiceId);
-        $users     = User::query()->all();
+        $invoice   = $this->invoiceService->findOrFail($invoiceId);
+        $users     = $this->userService->getAll();
 
         return view('invoices::modal_change_user', compact('invoice', 'users'));
     }
@@ -288,12 +308,12 @@ class InvoicesAjaxController
         $invoiceId = request()->input('invoice_id');
         $userId    = request()->input('user_id');
 
-        $user = User::query()->find($userId);
+        $user = $this->userService->find($userId);
         if ( ! $user) {
             return ['success' => 0, 'error' => 'User not found'];
         }
 
-        Invoice::query()->where('invoice_id', $invoiceId)->update(['user_id' => $userId]);
+        $this->invoiceService->updateInvoice($invoiceId, ['user_id' => $userId]);
 
         return ['success' => 1];
     }
@@ -313,7 +333,7 @@ class InvoicesAjaxController
     {
         $invoiceId = request()->input('invoice_id');
         $invoice   = Invoice::with('client')->findOrFail($invoiceId);
-        $clients   = Client::query()->orderBy('client_name')->get();
+        $clients   = $this->clientService->getAllOrderedByName();
 
         return view('invoices::modal_change_client', compact('invoice', 'clients'));
     }
@@ -334,12 +354,12 @@ class InvoicesAjaxController
         $invoiceId = request()->input('invoice_id');
         $clientId  = request()->input('client_id');
 
-        $client = Client::query()->find($clientId);
+        $client = $this->clientService->find($clientId);
         if ( ! $client) {
             return ['success' => 0, 'error' => 'Client not found'];
         }
 
-        Invoice::query()->where('invoice_id', $invoiceId)->update(['client_id' => $clientId]);
+        $this->invoiceService->updateInvoice($invoiceId, ['client_id' => $clientId]);
 
         return ['success' => 1];
     }
@@ -357,8 +377,8 @@ class InvoicesAjaxController
      */
     public function modalCreateInvoice()
     {
-        $clients = Client::query()->orderBy('client_name')->get();
-        $users   = User::query()->all();
+        $clients = $this->clientService->getAllOrderedByName();
+        $users   = $this->userService->getAll();
 
         return view('invoices::modal_create_invoice', compact('clients', 'users'));
     }
@@ -376,7 +396,7 @@ class InvoicesAjaxController
      */
     public function create(): array
     {
-        $invoice = Invoice::query()->create([
+        $invoice = $this->invoiceService->createInvoice([
             'client_id'            => request()->input('client_id'),
             'user_id'              => request()->input('user_id'),
             'invoice_date_created' => request()->input('invoice_date_created'),
@@ -402,7 +422,7 @@ class InvoicesAjaxController
      */
     public function createRecurring(): array
     {
-        $recurring = InvoicesRecurring::query()->create([
+        $recurring = $this->invoicesRecurringService->create([
             'client_id'        => request()->input('client_id'),
             'user_id'          => request()->input('user_id'),
             'invoice_group_id' => request()->input('invoice_group_id'),
@@ -430,8 +450,8 @@ class InvoicesAjaxController
      */
     public function modalCreateRecurring()
     {
-        $clients = Client::query()->orderBy('client_name')->get();
-        $users   = User::query()->all();
+        $clients = $this->clientService->getAllOrderedByName();
+        $users   = $this->userService->getAll();
 
         return view('invoices::modal_create_recurring', compact('clients', 'users'));
     }
@@ -506,10 +526,10 @@ class InvoicesAjaxController
         $sourceId   = request()->input('invoice_id');
         $creditDate = request()->input('invoice_date_created');
 
-        $sourceInvoice = Invoice::query()->findOrFail($sourceId);
+        $sourceInvoice = $this->invoiceService->findOrFail($sourceId);
 
         // Create credit invoice
-        $creditInvoice = Invoice::query()->create([
+        $creditInvoice = $this->invoiceService->createInvoice([
             'client_id'            => $sourceInvoice->client_id,
             'user_id'              => $sourceInvoice->user_id,
             'invoice_date_created' => $creditDate,

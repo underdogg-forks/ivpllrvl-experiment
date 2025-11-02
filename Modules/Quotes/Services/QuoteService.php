@@ -284,6 +284,18 @@ class QuoteService
     }
 
     /**
+     * Get quote by URL key.
+     *
+     * @param string $urlKey
+     *
+     * @return Quote
+     */
+    public function getByUrlKey(string $urlKey): Quote
+    {
+        return Quote::where('quote_url_key', $urlKey)->firstOrFail();
+    }
+
+    /**
      * Reject quote by URL key.
      *
      * @param string $quoteUrlKey
@@ -295,6 +307,19 @@ class QuoteService
         return Quote::whereIn('quote_status_id', [2, 3])
             ->where('quote_url_key', $quoteUrlKey)
             ->update(['quote_status_id' => 5]);
+    }
+
+    /**
+     * Update a quote by ID.
+     *
+     * @param int   $quoteId
+     * @param array $data
+     *
+     * @return int
+     */
+    public function updateQuote(int $quoteId, array $data): int
+    {
+        return Quote::where('quote_id', $quoteId)->update($data);
     }
 
     /**

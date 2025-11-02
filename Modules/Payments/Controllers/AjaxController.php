@@ -4,6 +4,8 @@ namespace Modules\Payments\Controllers;
 
 use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentMethod;
+use Modules\Payments\Services\PaymentService;
+use Modules\Payments\Services\PaymentMethodService;
 
 /**
  * AjaxController.
@@ -13,6 +15,34 @@ use Modules\Payments\Models\PaymentMethod;
  */
 class AjaxController
 {
+    /**
+     * Payment service instance.
+     *
+     * @var PaymentService
+     */
+    protected PaymentService $paymentService;
+
+    /**
+     * Payment method service instance.
+     *
+     * @var PaymentMethodService
+     */
+    protected PaymentMethodService $paymentMethodService;
+
+    /**
+     * Constructor.
+     *
+     * @param PaymentService       $paymentService
+     * @param PaymentMethodService $paymentMethodService
+     */
+    public function __construct(
+        PaymentService $paymentService,
+        PaymentMethodService $paymentMethodService
+    ) {
+        $this->paymentService       = $paymentService;
+        $this->paymentMethodService = $paymentMethodService;
+    }
+
     /**
      * Add a payment via AJAX.
      *
@@ -36,7 +66,7 @@ class AjaxController
             ]);
         }
 
-        $payment = Payment::query()->create($validator->validated());
+        $payment = $this->paymentService->create($validator->validated());
 
         return response()->json([
             'success'    => 1,

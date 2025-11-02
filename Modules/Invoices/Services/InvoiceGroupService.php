@@ -2,10 +2,16 @@
 
 namespace Modules\Invoices\Services;
 
+use App\Services\BaseService;
 use Modules\Invoices\Models\InvoiceGroup;
 
-class InvoiceGroupService
+class InvoiceGroupService extends BaseService
 {
+    protected function getModelClass(): string
+    {
+        return InvoiceGroup::class;
+    }
+
     public function getValidationRules(): array
     {
         return [
@@ -29,6 +35,16 @@ class InvoiceGroupService
         }
 
         return $identifier;
+    }
+
+    /**
+     * Get all invoice groups.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return InvoiceGroup::all();
     }
 
     private function setNextInvoiceNumber(InvoiceGroup $invoiceGroup): void

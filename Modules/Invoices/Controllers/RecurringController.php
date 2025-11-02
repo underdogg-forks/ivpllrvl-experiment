@@ -3,9 +3,26 @@
 namespace Modules\Invoices\Controllers;
 
 use Modules\Invoices\Models\InvoicesRecurring;
+use Modules\Invoices\Services\InvoicesRecurringService;
 
 class RecurringController
 {
+    /**
+     * InvoicesRecurring service instance.
+     *
+     * @var InvoicesRecurringService
+     */
+    protected InvoicesRecurringService $invoicesRecurringService;
+
+    /**
+     * Constructor.
+     *
+     * @param InvoicesRecurringService $invoicesRecurringService
+     */
+    public function __construct(InvoicesRecurringService $invoicesRecurringService)
+    {
+        $this->invoicesRecurringService = $invoicesRecurringService;
+    }
     /**
      * Display list of recurring invoices with filter.
      *
@@ -50,8 +67,7 @@ class RecurringController
      */
     public function stop(int $invoiceRecurringId)
     {
-        $recurringInvoice = InvoicesRecurring::query()->findOrFail($invoiceRecurringId);
-        $recurringInvoice->update(['recur_status' => 0]); // 0 = stopped
+        $this->invoicesRecurringService->stopRecurring($invoiceRecurringId);
 
         return redirect()->route('invoices.recurring.index')
             ->with('alert_success', trans('recurring_invoice_stopped'));
@@ -72,8 +88,7 @@ class RecurringController
      */
     public function delete(int $invoiceRecurringId)
     {
-        $recurringInvoice = InvoicesRecurring::query()->findOrFail($invoiceRecurringId);
-        $recurringInvoice->delete();
+        $this->invoicesRecurringService->delete($invoiceRecurringId);
 
         return redirect()->route('invoices.recurring.index')
             ->with('alert_success', trans('recurring_invoice_deleted'));

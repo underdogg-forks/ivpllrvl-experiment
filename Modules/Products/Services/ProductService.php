@@ -21,4 +21,16 @@ class ProductService extends BaseService
     {
         return Product::class;
     }
+
+    /**
+     * Get products by IDs.
+     *
+     * @param array $productIds
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByIds(array $productIds)
+    {
+        return Product::whereIn('product_id', $productIds)->get();
+    }
 }

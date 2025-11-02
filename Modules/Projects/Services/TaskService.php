@@ -16,4 +16,17 @@ class TaskService extends BaseService
     {
         return Task::class;
     }
+
+    /**
+     * Update tasks by invoice ID.
+     *
+     * @param int   $invoiceId
+     * @param array $data
+     *
+     * @return int
+     */
+    public function updateByInvoiceId(int $invoiceId, array $data): int
+    {
+        return $this->query()->where('invoice_id', $invoiceId)->update($data);
+    }
 }

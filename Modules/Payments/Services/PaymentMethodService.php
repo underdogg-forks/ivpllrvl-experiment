@@ -19,4 +19,25 @@ class PaymentMethodService extends BaseService
     {
         return PaymentMethod::class;
     }
+
+    /**
+     * Get all payment methods ordered by name.
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllPaginated(int $perPage = 15, int $page = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return PaymentMethod::orderBy('payment_method_name')
+            ->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    /**
+     * Get all payment methods ordered by name (not paginated).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOrdered()
+    {
+        return PaymentMethod::orderBy('payment_method_name')->get();
+    }
 }

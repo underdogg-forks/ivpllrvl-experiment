@@ -3,6 +3,7 @@
 namespace Modules\Crm\Controllers;
 
 use Modules\Crm\Models\Client;
+use Modules\Crm\Services\ClientService;
 
 /**
  * AjaxController (CRM).
@@ -13,16 +14,33 @@ use Modules\Crm\Models\Client;
  */
 class AjaxController
 {
+    /**
+     * Client service instance.
+     *
+     * @var ClientService
+     */
+    protected ClientService $clientService;
+
+    /**
+     * Constructor.
+     *
+     * @param ClientService $clientService
+     */
+    public function __construct(ClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
+
     public function modalClientLookup()
     {
-        $clients = Client::query()->where('client_active', 1)->orderBy('client_name')->get();
+        $clients = $this->clientService->getActiveClients();
 
         return view('crm::modal_client_lookup', ['clients' => $clients]);
     }
 
     public function getClientDetails(int $clientId)
     {
-        $client = Client::query()->findOrFail($clientId);
+        $client = $this->clientService->findOrFail($clientId);
 
         return response()->json($client);
     }

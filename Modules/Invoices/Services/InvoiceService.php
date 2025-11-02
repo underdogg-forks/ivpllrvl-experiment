@@ -87,6 +87,16 @@ class InvoiceService
         return bin2hex(random_bytes(16));
     }
 
+    public function getByUrlKey(string $urlKey): Invoice
+    {
+        return Invoice::where('invoice_url_key', $urlKey)->firstOrFail();
+    }
+
+    public function urlKeyExists(string $urlKey): bool
+    {
+        return Invoice::where('invoice_url_key', $urlKey)->exists();
+    }
+
     public function getInvoiceGroupId(int $invoiceId): int
     {
         $invoice = Invoice::findOrFail($invoiceId);
@@ -175,5 +185,38 @@ class InvoiceService
         $now     = new DateTime();
 
         return $now->diff($dueDate)->days;
+    }
+
+    public function getOpenInvoices()
+    {
+        return Invoice::where('invoice_balance', '>', 0)
+            ->with('client')
+            ->orderBy('invoice_date_created', 'desc')
+            ->get();
+    }
+
+    public function createInvoice(array $data): Invoice
+    {
+        $invoice = Invoice::create($data);
+
+        // Create invoice amount record
+        $invoice->amounts()->create([
+            'invoice_id' => $invoice->invoice_id,
+        ]);
+
+        return $invoice;
+    }
+
+    /**
+     * Update an invoice by ID.
+     *
+     * @param int   $invoiceId
+     * @param array $data
+     *
+     * @return int
+     */
+    public function updateInvoice(int $invoiceId, array $data): int
+    {
+        return Invoice::where('invoice_id', $invoiceId)->update($data);
     }
 }

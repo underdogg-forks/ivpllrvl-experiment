@@ -8,9 +8,23 @@ use Modules\Invoices\Models\InvoicesRecurring;
 use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceGroupService;
 use Modules\Invoices\Services\InvoiceService;
+use Modules\Invoices\Services\InvoicesRecurringService;
 
 class CronController
 {
+    protected InvoiceService $invoiceService;
+    protected InvoiceGroupService $invoiceGroupService;
+    protected InvoicesRecurringService $invoicesRecurringService;
+
+    public function __construct(
+        InvoiceService $invoiceService,
+        InvoiceGroupService $invoiceGroupService,
+        InvoicesRecurringService $invoicesRecurringService
+    ) {
+        $this->invoiceService = $invoiceService;
+        $this->invoiceGroupService = $invoiceGroupService;
+        $this->invoicesRecurringService = $invoicesRecurringService;
+    }
     public function recur(?string $cronKey = null): void
     {
         $settingCronKey = get_setting('cron_key');
@@ -65,7 +79,7 @@ class CronController
                 'invoice_discount_percent' => $invoice->invoice_discount_percent,
             ];
 
-            $newInvoice = Invoice::query()->create($dbArray);
+            $newInvoice = $this->invoiceService->createInvoice($dbArray);
             $targetId   = $newInvoice->invoice_id;
 
             if (defined('IP_DEBUG') && IP_DEBUG) {
@@ -105,18 +119,16 @@ class CronController
 
     private function getInvoiceNumber(int $invoiceGroupId): string
     {
-        $invoiceGroup = InvoiceGroup::query()->findOrFail($invoiceGroupId);
+        $invoiceGroup = $this->invoiceGroupService->findOrFail($invoiceGroupId);
 
-        return app(InvoiceGroupService::class)->generateInvoiceNumber($invoiceGroup);
+        return $this->invoiceGroupService->generateInvoiceNumber($invoiceGroup);
     }
 
     private function getUrlKey(): string
     {
-        $invoiceService = app(InvoiceService::class);
-
         do {
-            $urlKey = $invoiceService->generateUrlKey();
-            $exists = Invoice::query()->where('invoice_url_key', $urlKey)->exists();
+            $urlKey = $this->invoiceService->generateUrlKey();
+            $exists = $this->invoiceService->urlKeyExists($urlKey);
         } while ($exists);
 
         return $urlKey;
@@ -143,7 +155,7 @@ class CronController
 
     private function setNextRecurDate(int $recurringId): void
     {
-        $recurring = InvoicesRecurring::query()->findOrFail($recurringId);
+        $recurring = $this->invoicesRecurringService->findOrFail($recurringId);
 
         $currentDate = $recurring->recur_next_date;
         $frequency   = $recurring->recur_frequency;

@@ -9,6 +9,8 @@ use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
 use Modules\Core\Models\InvoiceCustom;
 use Modules\Core\Services\UserService;
+use Modules\Core\Services\CustomFieldService;
+use Modules\Core\Services\CustomValueService;
 use Modules\Crm\Models\Task;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
@@ -16,9 +18,15 @@ use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
 use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceService;
+use Modules/Invoices\Services\InvoiceItemService;
+use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Payments\Models\PaymentMethod;
+use Modules/Payments\Services\PaymentMethodService;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\TaxRateService;
+use Modules\Products\Services\UnitService;
+use Modules\Projects\Services\TaskService;
 use Sumex;
 
 /**
@@ -36,13 +44,104 @@ class InvoicesController
     protected UserService $userService;
 
     /**
+     * Invoice service instance.
+     *
+     * @var InvoiceService
+     */
+    protected InvoiceService $invoiceService;
+
+    /**
+     * InvoiceItem service instance.
+     *
+     * @var InvoiceItemService
+     */
+    protected InvoiceItemService $invoiceItemService;
+
+    /**
+     * InvoiceTaxRate service instance.
+     *
+     * @var InvoiceTaxRateService
+     */
+    protected InvoiceTaxRateService $invoiceTaxRateService;
+
+    /**
+     * CustomField service instance.
+     *
+     * @var CustomFieldService
+     */
+    protected CustomFieldService $customFieldService;
+
+    /**
+     * CustomValue service instance.
+     *
+     * @var CustomValueService
+     */
+    protected CustomValueService $customValueService;
+
+    /**
+     * TaxRate service instance.
+     *
+     * @var TaxRateService
+     */
+    protected TaxRateService $taxRateService;
+
+    /**
+     * Unit service instance.
+     *
+     * @var UnitService
+     */
+    protected UnitService $unitService;
+
+    /**
+     * PaymentMethod service instance.
+     *
+     * @var PaymentMethodService
+     */
+    protected PaymentMethodService $paymentMethodService;
+
+    /**
+     * Task service instance.
+     *
+     * @var TaskService
+     */
+    protected TaskService $taskService;
+
+    /**
      * Constructor.
      *
-     * @param UserService $userService
+     * @param UserService            $userService
+     * @param InvoiceService         $invoiceService
+     * @param InvoiceItemService     $invoiceItemService
+     * @param InvoiceTaxRateService  $invoiceTaxRateService
+     * @param CustomFieldService     $customFieldService
+     * @param CustomValueService     $customValueService
+     * @param TaxRateService         $taxRateService
+     * @param UnitService            $unitService
+     * @param PaymentMethodService   $paymentMethodService
+     * @param TaskService            $taskService
      */
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
+    public function __construct(
+        UserService $userService,
+        InvoiceService $invoiceService,
+        InvoiceItemService $invoiceItemService,
+        InvoiceTaxRateService $invoiceTaxRateService,
+        CustomFieldService $customFieldService,
+        CustomValueService $customValueService,
+        TaxRateService $taxRateService,
+        UnitService $unitService,
+        PaymentMethodService $paymentMethodService,
+        TaskService $taskService
+    ) {
+        $this->userService           = $userService;
+        $this->invoiceService        = $invoiceService;
+        $this->invoiceItemService    = $invoiceItemService;
+        $this->invoiceTaxRateService = $invoiceTaxRateService;
+        $this->customFieldService    = $customFieldService;
+        $this->customValueService    = $customValueService;
+        $this->taxRateService        = $taxRateService;
+        $this->unitService           = $unitService;
+        $this->paymentMethodService  = $paymentMethodService;
+        $this->taskService           = $taskService;
     }
 
     /**
@@ -182,22 +281,22 @@ class InvoicesController
             ->findOrFail($invoiceId);
 
         // Get custom fields and values
-        $fields       = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();
-        $customFields = CustomField::query()->where('custom_field_table', 'ip_invoice_custom')->get();
+        $fields       = InvoiceCustom::where('invoice_id', $invoiceId)->get();
+        $customFields = $this->customFieldService->getByTable('ip_invoice_custom');
         $customValues = [];
 
         foreach ($customFields as $customField) {
             if (in_array($customField->custom_field_type, CustomValue::customValueFields())) {
-                $values                                      = CustomValue::query()->where('custom_field_id', $customField->custom_field_id)->get();
+                $values                                      = $this->customValueService->getByFieldId($customField->custom_field_id);
                 $customValues[$customField->custom_field_id] = $values;
             }
         }
 
         // Check for payment custom fields
-        $paymentCfExist = CustomField::query()->where('custom_field_table', 'ip_payment_custom')->exists() ? 'yes' : 'no';
+        $paymentCfExist = $this->customFieldService->existsForTable('ip_payment_custom') ? 'yes' : 'no';
 
         // Get items
-        $items = Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
+        $items = $this->invoiceItemService->getItemsByInvoiceId($invoiceId);
 
         // Check if user change is allowed (more than one admin user)
         $changeUser = $this->userService->hasMultipleActiveAdmins();
@@ -207,10 +306,10 @@ class InvoicesController
             'items'             => $items,
             'invoice_id'        => $invoiceId,
             'change_user'       => $changeUser,
-            'tax_rates'         => TaxRate::query()->all(),
-            'invoice_tax_rates' => InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->get(),
-            'units'             => Unit::query()->all(),
-            'payment_methods'   => PaymentMethod::query()->all(),
+            'tax_rates'         => $this->taxRateService->getAll(),
+            'invoice_tax_rates' => $this->invoiceTaxRateService->getTaxRatesByInvoiceId($invoiceId),
+            'units'             => $this->unitService->getAll(),
+            'payment_methods'   => $this->paymentMethodService->getAllOrdered(),
             'custom_fields'     => $customFields,
             'custom_values'     => $customValues,
             'custom_js_vars'    => [
@@ -218,7 +317,7 @@ class InvoicesController
                 'currency_symbol_placement' => config('settings.currency_symbol_placement'),
                 'decimal_point'             => config('settings.decimal_point'),
             ],
-            'invoice_statuses'   => app(InvoiceService::class)->getStatuses(),
+            'invoice_statuses'   => $this->invoiceService->getStatuses(),
             'payment_cf_exist'   => $paymentCfExist,
             'legacy_calculation' => config('legacy_calculation'),
         ];
@@ -243,16 +342,15 @@ class InvoicesController
      */
     public function delete(int $invoiceId): RedirectResponse
     {
-        $invoice       = Invoice::query()->findOrFail($invoiceId);
+        $invoice       = $this->invoiceService->findOrFail($invoiceId);
         $invoiceStatus = $invoice->invoice_status_id;
 
         if ($invoiceStatus == 1 || config('settings.enable_invoice_deletion') === true) {
             // If invoice refers to tasks, mark them back to 'Complete'
-            Task::query()->where('invoice_id', $invoiceId)
-                ->update(['task_status' => 3]); // 3 = Complete
+            $this->taskService->updateByInvoiceId($invoiceId, ['task_status' => 3]); // 3 = Complete
 
             // Delete the invoice
-            app(InvoiceService::class)->deleteInvoice($invoiceId);
+            $this->invoiceService->deleteInvoice($invoiceId);
         } else {
             session()->flash('alert_error', trans('invoice_deletion_forbidden'));
         }
@@ -310,8 +408,8 @@ class InvoicesController
      */
     public function generateXml(int $invoiceId): Response
     {
-        $invoice = Invoice::query()->findOrFail($invoiceId);
-        $items   = Item::query()->where('invoice_id', $invoiceId)->get();
+        $invoice = $this->invoiceService->findOrFail($invoiceId);
+        $items   = $this->invoiceItemService->getItemsByInvoiceId($invoiceId);
 
         // Check e-invoice usage
         $einvoice = get_einvoice_usage($invoice, $items, false);
@@ -379,8 +477,8 @@ class InvoicesController
      */
     public function generateSumexCopy(int $invoiceId): Response
     {
-        $invoice = Invoice::query()->findOrFail($invoiceId);
-        $items   = Item::query()->where('invoice_id', $invoiceId)->get();
+        $invoice = $this->invoiceService->findOrFail($invoiceId);
+        $items   = $this->invoiceItemService->getItemsByInvoiceId($invoiceId);
 
         $sumex = new Sumex([
             'invoice' => $invoice,
@@ -411,7 +509,7 @@ class InvoicesController
      */
     public function deleteInvoiceTax(int $invoiceId, int $invoiceTaxRateId): RedirectResponse
     {
-        InvoiceTaxRate::query()->where('invoice_tax_rate_id', $invoiceTaxRateId)->delete();
+        $this->invoiceTaxRateService->delete($invoiceTaxRateId);
 
         // Recalculate invoice amounts
         $invoiceAmountService = app(InvoiceAmountService::class);

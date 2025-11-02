@@ -71,4 +71,28 @@ class CustomFieldService extends BaseService
 
         return $nicenames[$element] ?? '';
     }
+
+    /**
+     * Get custom fields by table name.
+     *
+     * @param string $tableName
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByTable(string $tableName): \Illuminate\Database\Eloquent\Collection
+    {
+        return CustomField::where('custom_field_table', $tableName)->get();
+    }
+
+    /**
+     * Check if custom fields exist for a table.
+     *
+     * @param string $tableName
+     *
+     * @return bool
+     */
+    public function existsForTable(string $tableName): bool
+    {
+        return CustomField::where('custom_field_table', $tableName)->exists();
+    }
 }

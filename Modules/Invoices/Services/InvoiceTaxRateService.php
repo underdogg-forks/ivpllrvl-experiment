@@ -2,10 +2,16 @@
 
 namespace Modules\Invoices\Services;
 
+use App\Services\BaseService;
 use Modules\Invoices\Models\InvoiceTaxRate;
 
-class InvoiceTaxRateService
+class InvoiceTaxRateService extends BaseService
 {
+    protected function getModelClass(): string
+    {
+        return InvoiceTaxRate::class;
+    }
+
     public function getValidationRules(): array
     {
         return [
@@ -13,6 +19,11 @@ class InvoiceTaxRateService
             'tax_rate_id'      => 'required|integer',
             'include_item_tax' => 'required|integer',
         ];
+    }
+
+    public function getTaxRatesByInvoiceId(int $invoiceId): \Illuminate\Database\Eloquent\Collection
+    {
+        return InvoiceTaxRate::where('invoice_id', $invoiceId)->get();
     }
 
     public function saveTaxRate(array $data): ?InvoiceTaxRate

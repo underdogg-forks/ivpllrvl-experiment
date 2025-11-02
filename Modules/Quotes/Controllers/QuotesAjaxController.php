@@ -7,13 +7,17 @@ use Illuminate\Http\Request;
 use Modules\Core\Models\InvoiceGroup;
 use Modules\Core\Models\QuoteCustom;
 use Modules\Core\Models\User;
+use Modules\Core\Services\UserService;
 use Modules\Crm\Models\Client;
+use Modules\Crm\Services\ClientService;
 use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Services\InvoiceGroupService;
 use Modules\Invoices\Services\InvoiceItemService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\TaxRateService;
 use Modules\Products\Services\UnitService;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
@@ -37,6 +41,10 @@ class QuotesAjaxController
     protected QuoteTaxRateService $quoteTaxRateService;
     protected UnitService $unitService;
     protected InvoiceService $invoiceService;
+    protected UserService $userService;
+    protected ClientService $clientService;
+    protected InvoiceGroupService $invoiceGroupService;
+    protected TaxRateService $taxRateService;
 
     public function __construct(
         QuoteService $quoteService,
@@ -44,7 +52,11 @@ class QuotesAjaxController
         QuoteItemService $quoteItemService,
         QuoteTaxRateService $quoteTaxRateService,
         UnitService $unitService,
-        InvoiceService $invoiceService
+        InvoiceService $invoiceService,
+        UserService $userService,
+        ClientService $clientService,
+        InvoiceGroupService $invoiceGroupService,
+        TaxRateService $taxRateService
     ) {
         $this->quoteService = $quoteService;
         $this->quoteAmountService = $quoteAmountService;
@@ -52,6 +64,10 @@ class QuotesAjaxController
         $this->quoteTaxRateService = $quoteTaxRateService;
         $this->unitService = $unitService;
         $this->invoiceService = $invoiceService;
+        $this->userService = $userService;
+        $this->clientService = $clientService;
+        $this->invoiceGroupService = $invoiceGroupService;
+        $this->taxRateService = $taxRateService;
     }
     /**
      * Save quote with items, tax rates, and custom fields.
@@ -254,8 +270,8 @@ class QuotesAjaxController
         $itemId  = (int) $request->input('item_id');
 
         // Verify quote exists
-        $quote = Quote::query()->find($quoteId);
-        if ($quote || empty($itemId)) {
+        $quote = $this->quoteService->find($quoteId);
+        if ($quote && ! empty($itemId)) {
             $deleted = QuoteItem::deleteItem($itemId);
             if ($deleted) {
                 $success = 1;
@@ -281,7 +297,7 @@ class QuotesAjaxController
     public function getItem(Request $request): JsonResponse
     {
         $itemId = (int) $request->input('item_id');
-        $item   = QuoteItem::query()->find($itemId);
+        $item   = $this->quoteItemService->find($itemId);
 
         return response()->json($item ?? []);
     }
@@ -305,11 +321,11 @@ class QuotesAjaxController
         $clientId = (int) $request->input('client_id');
 
         $quote  = Quote::with('client')->findOrFail($quoteId);
-        $client = Client::query()->find($clientId);
+        $client = $this->clientService->find($clientId);
 
         $data = [
-            'invoice_groups' => InvoiceGroup::query()->all(),
-            'tax_rates'      => TaxRate::query()->all(),
+            'invoice_groups' => $this->invoiceGroupService->getAll(),
+            'tax_rates'      => $this->taxRateService->getAll(),
             'quote_id'       => $quoteId,
             'quote'          => $quote,
             'client'         => $client,
@@ -399,7 +415,7 @@ class QuotesAjaxController
     public function changeUser(Request $request): JsonResponse
     {
         $userId = (int) $request->input('user_id');
-        $user   = User::query()->find($userId);
+        $user   = $this->userService->find($userId);
 
         if ( ! $user) {
             return response()->json([
@@ -409,7 +425,7 @@ class QuotesAjaxController
         }
 
         $quoteId = (int) $request->input('quote_id');
-        Quote::query()->where('quote_id', $quoteId)->update(['user_id' => $userId]);
+        $this->quoteService->updateQuote($quoteId, ['user_id' => $userId]);
 
         return response()->json([
             'success'  => 1,
@@ -460,7 +476,7 @@ class QuotesAjaxController
     public function changeClient(Request $request): JsonResponse
     {
         $clientId = (int) $request->input('client_id');
-        $client   = Client::query()->find($clientId);
+        $client   = $this->clientService->find($clientId);
 
         if ( ! $client) {
             return response()->json([
@@ -470,7 +486,7 @@ class QuotesAjaxController
         }
 
         $quoteId = (int) $request->input('quote_id');
-        Quote::query()->where('quote_id', $quoteId)->update(['client_id' => $clientId]);
+        $this->quoteService->updateQuote($quoteId, ['client_id' => $clientId]);
 
         return response()->json([
             'success'  => 1,
@@ -494,11 +510,11 @@ class QuotesAjaxController
     public function modalCreateQuote(Request $request)
     {
         $clientId = (int) $request->input('client_id');
-        $client   = Client::query()->find($clientId);
+        $client   = $this->clientService->find($clientId);
 
         $data = [
-            'invoice_groups' => InvoiceGroup::query()->all(),
-            'tax_rates'      => TaxRate::query()->all(),
+            'invoice_groups' => $this->invoiceGroupService->getAll(),
+            'tax_rates'      => $this->taxRateService->getAll(),
             'client'         => $client,
             'clients'        => Client::latest()->get(),
         ];
@@ -555,10 +571,10 @@ class QuotesAjaxController
      */
     public function modalQuoteToInvoice(int $quoteId)
     {
-        $quote = Quote::query()->findOrFail($quoteId);
+        $quote = $this->quoteService->findOrFail($quoteId);
 
         $data = [
-            'invoice_groups' => InvoiceGroup::query()->all(),
+            'invoice_groups' => $this->invoiceGroupService->getAll(),
             'quote_id'       => $quoteId,
             'quote'          => $quote,
         ];
@@ -602,16 +618,16 @@ class QuotesAjaxController
             'invoice_group_id' => $request->input('invoice_group_id', $quote->invoice_group_id),
         ]);
 
-        $invoiceId = Invoice::query()->createInvoice($invoiceData, false);
+        $invoiceId = Invoice::createInvoice($invoiceData, false);
 
         // Update invoice discounts
-        Invoice::query()->where('invoice_id', $invoiceId)->update([
+        $this->invoiceService->updateInvoice($invoiceId, [
             'invoice_discount_amount'  => $quote->quote_discount_amount,
             'invoice_discount_percent' => $quote->quote_discount_percent,
         ]);
 
         // Save invoice ID to quote
-        Quote::query()->where('quote_id', $quoteId)->update(['invoice_id' => $invoiceId]);
+        $this->quoteService->updateQuote($quoteId, ['invoice_id' => $invoiceId]);
 
         // Prepare global discount for items
         $globalDiscount = [
