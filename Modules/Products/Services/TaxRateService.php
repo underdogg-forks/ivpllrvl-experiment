@@ -19,4 +19,14 @@ class TaxRateService extends BaseService
     {
         return TaxRate::class;
     }
+
+    /**
+     * Get all tax rates.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return TaxRate::all();
+    }
 }

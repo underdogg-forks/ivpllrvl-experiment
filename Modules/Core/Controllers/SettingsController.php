@@ -9,17 +9,70 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Models\EmailTemplate;
 use Modules\Core\Models\TaxRate;
+use Modules\Core\Services\EmailTemplateService;
+use Modules\Core\Services\CustomFieldService;
 use Modules\Invoices\app\Models\InvoiceGroup;
 use Modules\Invoices\Models\Template;
+use Modules\Invoices\Services\InvoiceGroupService;
+use Modules\Invoices\Services\TemplateService;
 use Modules\Payments\app\Models\PaymentMethod;
+use Modules\Payments\Services\PaymentMethodService;
+use Modules\Products\Services\TaxRateService;
 
 #[AllowDynamicProperties]
 class SettingsController extends AdminController
 {
     /**
+     * InvoiceGroup service instance.
+     *
+     * @var InvoiceGroupService
+     */
+    protected InvoiceGroupService $invoiceGroupService;
+
+    /**
+     * TaxRate service instance.
+     *
+     * @var TaxRateService
+     */
+    protected TaxRateService $taxRateService;
+
+    /**
+     * EmailTemplate service instance.
+     *
+     * @var EmailTemplateService
+     */
+    protected EmailTemplateService $emailTemplateService;
+
+    /**
+     * PaymentMethod service instance.
+     *
+     * @var PaymentMethodService
+     */
+    protected PaymentMethodService $paymentMethodService;
+
+    /**
+     * CustomField service instance.
+     *
+     * @var CustomFieldService
+     */
+    protected CustomFieldService $customFieldService;
+
+    /**
      * SettingsController constructor.
      */
-    public function __construct() {}
+    public function __construct(
+        InvoiceGroupService $invoiceGroupService,
+        TaxRateService $taxRateService,
+        EmailTemplateService $emailTemplateService,
+        PaymentMethodService $paymentMethodService,
+        CustomFieldService $customFieldService
+    ) {
+        $this->invoiceGroupService  = $invoiceGroupService;
+        $this->taxRateService       = $taxRateService;
+        $this->emailTemplateService = $emailTemplateService;
+        $this->paymentMethodService = $paymentMethodService;
+        $this->customFieldService   = $customFieldService;
+    }
 
     /**
      * @originalName index
@@ -74,12 +127,12 @@ class SettingsController extends AdminController
             return redirect()->route('settings.index');
         }
         // Load required resources using Eloquent
-        $invoice_groups  = InvoiceGroup::query()->all();
-        $tax_rates       = TaxRate::query()->all();
-        $email_templates = EmailTemplate::query()->all();
-        $payment_methods = PaymentMethod::query()->all();
-        $templates       = Template::query()->all();
-        $custom_fields   = \Modules\CustomFields\Models\CustomField::query()->all();
+        $invoice_groups  = InvoiceGroup::all();
+        $tax_rates       = $this->taxRateService->getAll();
+        $email_templates = EmailTemplate::all();
+        $payment_methods = $this->paymentMethodService->getAllOrdered();
+        $templates       = Template::all();
+        $custom_fields   = \Modules\CustomFields\Models\CustomField::all();
 
         return view('settings.index', [
             'gateways'        => $gateways,
