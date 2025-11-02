@@ -17,6 +17,31 @@ use Tests\Feature\FeatureTestCase;
 #[CoversClass(SetupController::class)]
 class SetupControllerTest extends FeatureTestCase
 {
+    /**
+     * Helper method to advance the setup workflow to a specific step.
+     * 
+     * This reduces code duplication by handling common workflow advancement logic:
+     * - Sets the session to the current step
+     * - POSTs continue data to the current route
+     * - Returns the response for assertion
+     * 
+     * @param string $currentStep The current step name (e.g., 'prerequisites')
+     * @param string $currentRoute The current route name (e.g., 'setup.prerequisites')
+     * @param array<string, mixed> $additionalData Additional form data beyond 'btn_continue'
+     * @return \Illuminate\Testing\TestResponse
+     */
+    private function advanceToStep(string $currentStep, string $currentRoute, array $additionalData = []): \Illuminate\Testing\TestResponse
+    {
+        // Set the session to the current step
+        session(['install_step' => $currentStep]);
+        
+        // Merge continue button with any additional data
+        $postData = array_merge(['btn_continue' => '1'], $additionalData);
+        
+        // POST to the route to advance
+        return $this->post(route($currentRoute), $postData);
+    }
+    
     // ==================== ROUTE: GET /setup (index) ====================
     
     /**
@@ -158,12 +183,8 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_advances_to_database_configuration(): void
     {
-        /** Arrange */
-        session(['install_step' => 'prerequisites']);
-        $continueData = ['btn_continue' => '1'];
-
         /** Act */
-        $response = $this->post(route('setup.prerequisites'), $continueData);
+        $response = $this->advanceToStep('prerequisites', 'setup.prerequisites');
 
         /** Assert */
         $response->assertRedirect(route('setup.configure-database'));
@@ -278,12 +299,8 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_advances_to_upgrade_tables_from_install(): void
     {
-        /** Arrange */
-        session(['install_step' => 'install_tables']);
-        $continueData = ['btn_continue' => '1'];
-
         /** Act */
-        $response = $this->post(route('setup.install-tables'), $continueData);
+        $response = $this->advanceToStep('install_tables', 'setup.install-tables');
 
         /** Assert */
         $response->assertRedirect(route('setup.upgrade-tables'));
@@ -335,12 +352,10 @@ class SetupControllerTest extends FeatureTestCase
     public function it_advances_to_create_user_for_new_install(): void
     {
         /** Arrange */
-        session(['install_step' => 'upgrade_tables']);
         session(['is_upgrade' => false]);
-        $continueData = ['btn_continue' => '1'];
-
+        
         /** Act */
-        $response = $this->post(route('setup.upgrade-tables'), $continueData);
+        $response = $this->advanceToStep('upgrade_tables', 'setup.upgrade-tables');
 
         /** Assert */
         $response->assertRedirect(route('setup.create-user'));
@@ -355,12 +370,10 @@ class SetupControllerTest extends FeatureTestCase
     public function it_advances_to_calculation_info_for_upgrade(): void
     {
         /** Arrange */
-        session(['install_step' => 'upgrade_tables']);
         session(['is_upgrade' => true]);
-        $continueData = ['btn_continue' => '1'];
-
+        
         /** Act */
-        $response = $this->post(route('setup.upgrade-tables'), $continueData);
+        $response = $this->advanceToStep('upgrade_tables', 'setup.upgrade-tables');
 
         /** Assert */
         $response->assertRedirect(route('setup.calculation-info'));
@@ -412,16 +425,14 @@ class SetupControllerTest extends FeatureTestCase
     public function it_creates_admin_user(): void
     {
         /** Arrange */
-        session(['install_step' => 'create_user']);
         $userData = [
-            'btn_continue' => '1',
             'user_email' => 'admin@example.com',
             'user_password' => 'password123',
             'user_password_confirm' => 'password123',
         ];
 
         /** Act */
-        $response = $this->post(route('setup.create-user'), $userData);
+        $response = $this->advanceToStep('create_user', 'setup.create-user', $userData);
 
         /** Assert */
         $response->assertRedirect(route('setup.calculation-info'));
@@ -494,12 +505,8 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_advances_to_complete(): void
     {
-        /** Arrange */
-        session(['install_step' => 'calculation_info']);
-        $continueData = ['btn_continue' => '1'];
-
         /** Act */
-        $response = $this->post(route('setup.calculation-info'), $continueData);
+        $response = $this->advanceToStep('calculation_info', 'setup.calculation-info');
 
         /** Assert */
         $response->assertRedirect(route('setup.complete'));

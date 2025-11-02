@@ -318,75 +318,63 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     }
 
     /**
-     * Test form validates required title.
+     * Data provider for required field validation tests.
+     * 
+     * @return array<string, array{field: string, data: array<string, string>}>
      */
-    #[Group('validation')]
-    #[Test]
-    public function it_validates_required_title(): void
+    public static function requiredFieldsProvider(): array
     {
-        /** Arrange */
-        $user = User::factory()->create();
-        $invalidData = [
-            'email_template_title' => '',
-            'email_template_subject' => 'Subject',
-            'email_template_body' => 'Body',
-            'btn_submit' => '1',
+        return [
+            'title is required' => [
+                'field' => 'email_template_title',
+                'data' => [
+                    'email_template_title' => '',
+                    'email_template_subject' => 'Subject',
+                    'email_template_body' => 'Body',
+                    'btn_submit' => '1',
+                ],
+            ],
+            'subject is required' => [
+                'field' => 'email_template_subject',
+                'data' => [
+                    'email_template_title' => 'Title',
+                    'email_template_subject' => '',
+                    'email_template_body' => 'Body',
+                    'btn_submit' => '1',
+                ],
+            ],
+            'body is required' => [
+                'field' => 'email_template_body',
+                'data' => [
+                    'email_template_title' => 'Title',
+                    'email_template_subject' => 'Subject',
+                    'email_template_body' => '',
+                    'btn_submit' => '1',
+                ],
+            ],
         ];
-
-        /** Act */
-        $this->actingAs($user);
-        $response = $this->post(route('email_templates.form'), $invalidData);
-
-        /** Assert */
-        $response->assertSessionHasErrors('email_template_title');
     }
 
     /**
-     * Test form validates required subject.
+     * Test form validates required fields.
+     * 
+     * @param string $field The field name that should have validation errors
+     * @param array<string, string> $data The invalid form data
      */
     #[Group('validation')]
     #[Test]
-    public function it_validates_required_subject(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('requiredFieldsProvider')]
+    public function it_validates_required_fields(string $field, array $data): void
     {
         /** Arrange */
         $user = User::factory()->create();
-        $invalidData = [
-            'email_template_title' => 'Title',
-            'email_template_subject' => '',
-            'email_template_body' => 'Body',
-            'btn_submit' => '1',
-        ];
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->post(route('email_templates.form'), $invalidData);
+        $response = $this->post(route('email_templates.form'), $data);
 
         /** Assert */
-        $response->assertSessionHasErrors('email_template_subject');
-    }
-
-    /**
-     * Test form validates required body.
-     */
-    #[Group('validation')]
-    #[Test]
-    public function it_validates_required_body(): void
-    {
-        /** Arrange */
-        $user = User::factory()->create();
-        $invalidData = [
-            'email_template_title' => 'Title',
-            'email_template_subject' => 'Subject',
-            'email_template_body' => '',
-            'btn_submit' => '1',
-        ];
-
-        /** Act */
-        $this->actingAs($user);
-        $response = $this->post(route('email_templates.form'), $invalidData);
-
-        /** Assert */
-        $response->assertSessionHasErrors('email_template_body');
+        $response->assertSessionHasErrors($field);
     }
 
     /**

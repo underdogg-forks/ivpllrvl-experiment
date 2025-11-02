@@ -13,6 +13,13 @@ use Tests\Feature\FeatureTestCase;
 /**
  * CRM AjaxController Feature Tests.
  *
+ * @deprecated This test class has been split into focused test files for better organization:
+ *             - ClientsAjaxModalTest.php - Modal client lookup functionality
+ *             - ClientsAjaxDetailsTest.php - Client details retrieval
+ *             - ClientsAjaxEdgeCasesTest.php - Edge cases and validation
+ * 
+ * This file is kept temporarily for backwards compatibility and will be removed in a future release.
+ * 
  * Comprehensive test suite covering all AJAX routes for CRM operations.
  */
 #[CoversClass(ClientsAjaxController::class)]
