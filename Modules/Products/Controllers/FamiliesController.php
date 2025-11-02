@@ -1,47 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Products\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Modules\Products\Http\Requests\FamilyRequest;
 use Modules\Products\Models\Family;
 use Modules\Products\Services\FamilyService;
 
 /**
- * FamiliesController.
+ * FamiliesController
  *
- * Handles product family management (product categories/groups)
+ * Handles product family management operations including listing, creating,
+ * editing, updating, and deleting families. Product families are categories
+ * or groups that organize products (e.g., Services, Hardware, Software, etc.)
+ *
+ * @legacy-file application/modules/families/controllers/Families.php
  */
 class FamiliesController
 {
     /**
-     * Family service instance.
-     *
-     * @var FamilyService
+     * @param FamilyService $familyService Service for family business logic
      */
-    protected FamilyService $familyService;
-
-    /**
-     * Constructor.
-     *
-     * @param FamilyService $familyService
-     */
-    public function __construct(FamilyService $familyService)
-    {
-        $this->familyService = $familyService;
+    public function __construct(
+        private readonly FamilyService $familyService
+    ) {
     }
+
     /**
      * Display a paginated list of product families.
      *
-     * @param int $page Page number for pagination
+     * Returns families with pagination and filter configuration for the view.
      *
-     * @return \Illuminate\View\View
+     * @param int $page Page number for pagination (default: 0)
+     *
+     * @return View
      *
      * @legacy-function index
-     *
      * @legacy-file application/modules/families/controllers/Families.php
-     *
      * @legacy-line 32
      */
-    public function index(int $page = 0): \Illuminate\View\View
+    public function index(int $page = 0): View
     {
         $families = $this->familyService->getAllPaginated(15, $page);
 
@@ -54,80 +55,103 @@ class FamiliesController
     }
 
     /**
-     * Display form for creating or editing a product family.
+     * Show the form for creating a new product family.
      *
-     * @param int|null $id Family ID (null for create)
+     * Provides empty family instance for the creation form.
      *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @return View
      *
-     * @legacy-function form
-     *
+     * @legacy-function form (new family)
      * @legacy-file application/modules/families/controllers/Families.php
-     *
      * @legacy-line 47
      */
-    public function form(?int $id = null)
+    public function create(): View
     {
-        // Handle cancel button
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('families.index');
-        }
-
-        // Handle form submission
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            // Validate input
-            $validated = request()->validate([
-                'family_name' => 'required|string|max:255|unique:ip_families,family_name' . ($id ? ',' . $id . ',family_id' : ''),
-            ]);
-
-            if ($id) {
-                // Update existing
-                $this->familyService->update($id, $validated);
-            } else {
-                // Create new
-                $this->familyService->create($validated);
-            }
-
-            return redirect()->route('families.index')
-                ->with('alert_success', trans('record_successfully_saved'));
-        }
-
-        // Load existing record for editing
-        if ($id) {
-            $family = $this->familyService->find($id);
-            if ( ! $family) {
-                abort(404);
-            }
-            $isUpdate = true;
-        } else {
-            $family   = new Family();
-            $isUpdate = false;
-        }
+        $family = new Family();
 
         return view('products::families_form', [
             'family'    => $family,
-            'is_update' => $isUpdate,
+            'is_update' => false,
         ]);
     }
 
     /**
-     * Delete a product family.
+     * Store a newly created product family in the database.
      *
-     * @param int $id Family ID
+     * @param FamilyRequest $request Validated request data
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     *
+     * @legacy-function form (save)
+     * @legacy-file application/modules/families/controllers/Families.php
+     * @legacy-line 47
+     */
+    public function store(FamilyRequest $request): RedirectResponse
+    {
+        $this->familyService->create($request->validated());
+
+        return redirect()
+            ->route('families.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    /**
+     * Show the form for editing the specified product family.
+     *
+     * @param Family $family The family to edit (route model binding)
+     *
+     * @return View
+     *
+     * @legacy-function form (edit family)
+     * @legacy-file application/modules/families/controllers/Families.php
+     * @legacy-line 47
+     */
+    public function edit(Family $family): View
+    {
+        return view('products::families_form', [
+            'family'    => $family,
+            'is_update' => true,
+        ]);
+    }
+
+    /**
+     * Update the specified product family in the database.
+     *
+     * @param FamilyRequest $request Validated request data
+     * @param Family        $family  The family to update (route model binding)
+     *
+     * @return RedirectResponse
+     *
+     * @legacy-function form (update)
+     * @legacy-file application/modules/families/controllers/Families.php
+     * @legacy-line 47
+     */
+    public function update(FamilyRequest $request, Family $family): RedirectResponse
+    {
+        $this->familyService->update($family->family_id, $request->validated());
+
+        return redirect()
+            ->route('families.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    /**
+     * Remove the specified product family from the database.
+     *
+     * @param Family $family The family to delete (route model binding)
+     *
+     * @return RedirectResponse
      *
      * @legacy-function delete
-     *
      * @legacy-file application/modules/families/controllers/Families.php
-     *
      * @legacy-line 84
      */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function destroy(Family $family): RedirectResponse
     {
-        $this->familyService->delete($id);
+        $this->familyService->delete($family->family_id);
 
-        return redirect()->route('families.index')
+        return redirect()
+            ->route('families.index')
             ->with('alert_success', trans('record_successfully_deleted'));
     }
 }
