@@ -42,4 +42,14 @@ class UnitService extends BaseService
 
         return ($quantity == 1) ? $unit->unit_name : $unit->unit_name_plrl;
     }
+
+    /**
+     * Get all units.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return Unit::all();
+    }
 }

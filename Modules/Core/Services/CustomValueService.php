@@ -33,4 +33,16 @@ class CustomValueService extends BaseService
             'custom_values_order' => 'nullable|integer',
         ];
     }
+
+    /**
+     * Get custom values by field ID.
+     *
+     * @param int $customFieldId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByFieldId(int $customFieldId)
+    {
+        return CustomValue::where('custom_field_id', $customFieldId)->get();
+    }
 }

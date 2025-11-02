@@ -70,4 +70,16 @@ class InvoiceItemService
 
         return (float) ($result ?? 0.0);
     }
+
+    /**
+     * Get invoice items by invoice ID.
+     *
+     * @param int $invoiceId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getItemsByInvoiceId(int $invoiceId)
+    {
+        return Item::where('invoice_id', $invoiceId)->orderBy('item_order')->get();
+    }
 }
