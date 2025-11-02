@@ -123,7 +123,7 @@ class InvoiceControllerTest extends FeatureTestCase
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->get(route('invoice.create'));
+        $response = $this->get(route('invoice.form'));
 
         /** Assert */
         $response->assertOk();
