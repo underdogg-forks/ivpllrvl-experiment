@@ -178,7 +178,7 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -375,7 +375,7 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertSessionHasErrors(['task_finish_date']);
@@ -403,7 +403,7 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -435,7 +435,7 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -542,7 +542,7 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -572,7 +572,7 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -605,7 +605,7 @@ class TasksControllerTest extends FeatureTestCase
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->put(route('tasks.form', ['id' => $task->task_id]), $updateData);
+        $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));

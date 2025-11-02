@@ -184,7 +184,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('projects.form', ['id' => $project->project_id]), $updateData);
+        $response = $this->post(route('projects.form', ['id' => $project->project_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('projects.index'));
@@ -372,7 +372,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('projects.form', ['id' => $project->project_id]), $updateData);
+        $response = $this->post(route('projects.form', ['id' => $project->project_id]), $updateData);
 
         /** Assert */
         $response->assertSessionHasErrors(['project_status']);
@@ -567,7 +567,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('projects.form', ['id' => $project->project_id]), $updateData);
+        $response = $this->post(route('projects.form', ['id' => $project->project_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('projects.index'));
