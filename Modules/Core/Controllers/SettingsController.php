@@ -67,6 +67,7 @@ class SettingsController extends AdminController
         PaymentMethodService $paymentMethodService,
         CustomFieldService $customFieldService
     ) {
+        parent::__construct();
         $this->invoiceGroupService  = $invoiceGroupService;
         $this->taxRateService       = $taxRateService;
         $this->emailTemplateService = $emailTemplateService;

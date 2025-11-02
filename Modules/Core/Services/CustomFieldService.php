@@ -79,7 +79,7 @@ class CustomFieldService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByTable(string $tableName)
+    public function getByTable(string $tableName): \Illuminate\Database\Eloquent\Collection
     {
         return CustomField::where('custom_field_table', $tableName)->get();
     }

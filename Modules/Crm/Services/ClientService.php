@@ -32,8 +32,8 @@ class ClientService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllOrderedByName()
+    public function getAllOrderedByName(): Collection
     {
-        return Client::orderBy('client_name')->get();
+        return $this->query()->orderBy('client_name')->get();
     }
 }
