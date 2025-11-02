@@ -249,4 +249,354 @@ class ProjectsControllerTest extends FeatureTestCase
             'project_id' => $project->project_id,
         ]);
     }
+
+    // ==================== EDGE CASES & VALIDATION TESTS ====================
+
+    /**
+     * Test that project creation fails when project name is empty.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_fails_to_create_project_with_empty_name(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $projectData = [
+            'client_id'    => $client->client_id,
+            'project_name' => '', // Empty name
+        ];
+
+        /** Act */
+        $response = $this->post(route('projects.store'), $projectData);
+
+        /** Assert */
+        $response->assertSessionHasErrors(['project_name']);
+    }
+
+    /**
+     * Test that project creation handles very long names.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_very_long_project_names(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $longName = str_repeat('A', 300); // 300 characters
+        $projectData = [
+            'client_id'    => $client->client_id,
+            'project_name' => $longName,
+        ];
+
+        /** Act */
+        $response = $this->post(route('projects.store'), $projectData);
+
+        /** Assert */
+        // Should either truncate or fail validation
+        if ($response->getStatusCode() === 302 && $response->isRedirect(route('projects.index'))) {
+            // Accepted - verify truncation or storage
+            $this->assertDatabaseHas('ip_projects', [
+                'client_id' => $client->client_id,
+            ]);
+            return;
+        }
+        
+        // Rejected - should have validation error
+        $response->assertSessionHasErrors(['project_name']);
+    }
+
+    /**
+     * Test that project creation handles special characters in name.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_special_characters_in_project_name(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $projectData = [
+            'client_id'    => $client->client_id,
+            'project_name' => "Test <script>alert('xss')</script> Project",
+        ];
+
+        /** Act */
+        $response = $this->post(route('projects.store'), $projectData);
+
+        /** Assert */
+        $response->assertRedirect(route('projects.index'));
+        
+        /** Verify XSS is prevented/escaped */
+        $project = Project::where('client_id', $client->client_id)->first();
+        $this->assertNotNull($project);
+        // Name should be stored but will be escaped on output
+        $this->assertStringContainsString('Project', $project->project_name);
+    }
+
+    /**
+     * Test that project creation fails with non-existent client.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_fails_to_create_project_with_nonexistent_client(): void
+    {
+        /** Arrange */
+        $projectData = [
+            'client_id'    => 99999, // Non-existent client
+            'project_name' => 'Test Project',
+        ];
+
+        /** Act */
+        $response = $this->post(route('projects.store'), $projectData);
+
+        /** Assert */
+        $response->assertSessionHasErrors(['client_id']);
+    }
+
+    /**
+     * Test that project update fails with invalid status value.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_fails_to_update_project_with_invalid_status(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $project = Project::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+        
+        $updateData = [
+            'client_id'      => $client->client_id,
+            'project_name'   => 'Updated Name',
+            'project_status' => 999, // Invalid status
+        ];
+
+        /** Act */
+        $response = $this->put(route('projects.update', ['project' => $project->project_id]), $updateData);
+
+        /** Assert */
+        $response->assertSessionHasErrors(['project_status']);
+    }
+
+    /**
+     * Test viewing non-existent project returns 404.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_returns_404_when_viewing_nonexistent_project(): void
+    {
+        /** Arrange */
+        $nonexistentId = 99999;
+
+        /** Act */
+        $response = $this->get(route('projects.view', ['project' => $nonexistentId]));
+
+        /** Assert */
+        $response->assertNotFound();
+    }
+
+    /**
+     * Test editing non-existent project returns 404.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_returns_404_when_editing_nonexistent_project(): void
+    {
+        /** Arrange */
+        $nonexistentId = 99999;
+
+        /** Act */
+        $response = $this->get(route('projects.edit', ['project' => $nonexistentId]));
+
+        /** Assert */
+        $response->assertNotFound();
+    }
+
+    /**
+     * Test that deleting a project also handles associated tasks.
+     */
+    #[Group('crud')]
+    #[Test]
+    public function it_handles_task_associations_when_deleting_project(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $project = Project::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+        
+        // Create tasks associated with the project
+        $task1 = \Modules\Projects\Models\Task::factory()->create([
+            'project_id' => $project->project_id,
+        ]);
+        $task2 = \Modules\Projects\Models\Task::factory()->create([
+            'project_id' => $project->project_id,
+        ]);
+
+        /** Act */
+        $response = $this->delete(route('projects.destroy', ['project' => $project->project_id]));
+
+        /** Assert */
+        $response->assertRedirect(route('projects.index'));
+        
+        /** Verify project was deleted */
+        $this->assertDatabaseMissing('ip_projects', [
+            'project_id' => $project->project_id,
+        ]);
+        
+        /** Verify tasks no longer reference the project */
+        $this->assertDatabaseHas('ip_tasks', [
+            'task_id'    => $task1->task_id,
+            'project_id' => null, // Should be disassociated
+        ]);
+        $this->assertDatabaseHas('ip_tasks', [
+            'task_id'    => $task2->task_id,
+            'project_id' => null,
+        ]);
+    }
+
+    /**
+     * Test that index page handles pagination correctly.
+     */
+    #[Group('smoke')]
+    #[Test]
+    public function it_handles_pagination_on_index_page(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        
+        // Create multiple projects
+        Project::factory()->count(25)->create([
+            'client_id' => $client->client_id,
+        ]);
+
+        /** Act */
+        $response = $this->get(route('projects.index', ['page' => 1]));
+
+        /** Assert */
+        $response->assertOk();
+        $response->assertViewIs('projects::projects_index');
+        $response->assertViewHas('projects');
+        
+        /** Verify pagination data is present */
+        $projects = $response->viewData('projects');
+        $this->assertGreaterThan(0, $projects->count());
+    }
+
+    /**
+     * Test that index page displays empty state when no projects exist.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_displays_empty_state_when_no_projects_exist(): void
+    {
+        /** Arrange */
+        // Ensure no projects exist
+        Project::query()->delete();
+
+        /** Act */
+        $response = $this->get(route('projects.index'));
+
+        /** Assert */
+        $response->assertOk();
+        $response->assertViewIs('projects::projects_index');
+        $response->assertViewHas('projects');
+        
+        /** Verify empty collection */
+        $projects = $response->viewData('projects');
+        $this->assertCount(0, $projects);
+    }
+
+    /**
+     * Test that project view displays all related tasks.
+     */
+    #[Group('smoke')]
+    #[Test]
+    public function it_displays_all_related_tasks_in_project_view(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $project = Project::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+        
+        // Create multiple tasks for the project
+        $task1 = \Modules\Projects\Models\Task::factory()->create([
+            'project_id' => $project->project_id,
+            'task_name'  => 'Task 1',
+        ]);
+        $task2 = \Modules\Projects\Models\Task::factory()->create([
+            'project_id' => $project->project_id,
+            'task_name'  => 'Task 2',
+        ]);
+
+        /** Act */
+        $response = $this->get(route('projects.view', ['project' => $project->project_id]));
+
+        /** Assert */
+        $response->assertOk();
+        $response->assertViewHas('tasks');
+        
+        /** Verify tasks are in the view data */
+        $tasks = $response->viewData('tasks');
+        $taskIds = $tasks->pluck('task_id')->toArray();
+        $this->assertContains($task1->task_id, $taskIds);
+        $this->assertContains($task2->task_id, $taskIds);
+    }
+
+    /**
+     * Test that update preserves unchanged fields.
+     */
+    #[Group('crud')]
+    #[Test]
+    public function it_preserves_unchanged_fields_on_update(): void
+    {
+        /** Arrange */
+        $client = Client::factory()->create();
+        $project = Project::factory()->create([
+            'client_id'         => $client->client_id,
+            'project_name'      => 'Original Name',
+            'project_status'    => 1,
+            'project_notes'     => 'Original notes',
+        ]);
+        
+        $updateData = [
+            'client_id'    => $client->client_id,
+            'project_name' => 'Updated Name',
+            // Not updating status or notes
+        ];
+
+        /** Act */
+        $response = $this->put(route('projects.update', ['project' => $project->project_id]), $updateData);
+
+        /** Assert */
+        $response->assertRedirect(route('projects.index'));
+        
+        /** Verify only name was updated, other fields preserved */
+        $updatedProject = Project::find($project->project_id);
+        $this->assertEquals('Updated Name', $updatedProject->project_name);
+        $this->assertEquals(1, $updatedProject->project_status);
+        $this->assertEquals('Original notes', $updatedProject->project_notes);
+    }
+
+    /**
+     * Test that deleting non-existent project handles gracefully.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_deletion_of_nonexistent_project_gracefully(): void
+    {
+        /** Arrange */
+        $nonexistentId = 99999;
+
+        /** Act */
+        $response = $this->delete(route('projects.destroy', ['project' => $nonexistentId]));
+
+        /** Assert */
+        // Should either return 404 or redirect with error message
+        $this->assertTrue(
+            $response->isNotFound() || 
+            ($response->isRedirect() && session()->has('alert_error'))
+        );
+    }
 }

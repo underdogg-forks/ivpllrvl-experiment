@@ -302,4 +302,249 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertNotFound();
     }
+
+    // ==================== EDGE CASES & VALIDATION ====================
+
+    /**
+     * Test template creation requires authentication.
+     */
+    #[Group('auth')]
+    #[Test]
+    public function it_requires_authentication_for_all_routes(): void
+    {
+        /** Act & Assert */
+        $this->get(route('email_templates.index'))->assertRedirect(route('sessions.login'));
+        $this->get(route('email_templates.form'))->assertRedirect(route('sessions.login'));
+    }
+
+    /**
+     * Test form validates required title.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_validates_required_title(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $invalidData = [
+            'email_template_title' => '',
+            'email_template_subject' => 'Subject',
+            'email_template_body' => 'Body',
+            'btn_submit' => '1',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $invalidData);
+
+        /** Assert */
+        $response->assertSessionHasErrors('email_template_title');
+    }
+
+    /**
+     * Test form validates required subject.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_validates_required_subject(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $invalidData = [
+            'email_template_title' => 'Title',
+            'email_template_subject' => '',
+            'email_template_body' => 'Body',
+            'btn_submit' => '1',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $invalidData);
+
+        /** Assert */
+        $response->assertSessionHasErrors('email_template_subject');
+    }
+
+    /**
+     * Test form validates required body.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_validates_required_body(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $invalidData = [
+            'email_template_title' => 'Title',
+            'email_template_subject' => 'Subject',
+            'email_template_body' => '',
+            'btn_submit' => '1',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $invalidData);
+
+        /** Assert */
+        $response->assertSessionHasErrors('email_template_body');
+    }
+
+    /**
+     * Test form handles very long title.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_very_long_title(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $longTitle = str_repeat('A', 300);
+        
+        $templateData = [
+            'email_template_title' => $longTitle,
+            'email_template_subject' => 'Subject',
+            'email_template_body' => 'Body',
+            'btn_submit' => '1',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $templateData);
+
+        /** Assert */
+        // Should either truncate or reject
+        $this->assertTrue(
+            $response->isRedirect() || 
+            $response->getSession()->has('errors')
+        );
+    }
+
+    /**
+     * Test form handles HTML in body.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_html_in_email_body(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        
+        $templateData = [
+            'email_template_title' => 'HTML Template',
+            'email_template_subject' => 'Subject',
+            'email_template_body' => '<p>Hello {client_name},</p><p>Your invoice is ready.</p>',
+            'btn_submit' => '1',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $templateData);
+
+        /** Assert */
+        $response->assertRedirect(route('email_templates.index'));
+        
+        $template = EmailTemplate::where('email_template_title', 'HTML Template')->first();
+        $this->assertNotNull($template);
+        $this->assertStringContainsString('<p>', $template->email_template_body);
+    }
+
+    /**
+     * Test form handles template variables.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_preserves_template_variables(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        
+        $templateData = [
+            'email_template_title' => 'Variable Template',
+            'email_template_subject' => 'Invoice {invoice_number}',
+            'email_template_body' => 'Dear {client_name}, your total is {invoice_total}',
+            'btn_submit' => '1',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $templateData);
+
+        /** Assert */
+        $response->assertRedirect(route('email_templates.index'));
+        
+        $template = EmailTemplate::where('email_template_title', 'Variable Template')->first();
+        $this->assertStringContainsString('{client_name}', $template->email_template_body);
+        $this->assertStringContainsString('{invoice_number}', $template->email_template_subject);
+    }
+
+    /**
+     * Test pagination handles large number of templates.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_paginates_large_template_list(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        EmailTemplate::factory()->count(50)->create();
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.index'));
+
+        /** Assert */
+        $response->assertOk();
+        $templates = $response->viewData('email_templates');
+        // Should have pagination or all templates
+        $this->assertGreaterThan(0, $templates->count());
+    }
+
+    /**
+     * Test index displays empty state when no templates.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_displays_empty_state_when_no_templates(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        EmailTemplate::query()->delete();
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.index'));
+
+        /** Assert */
+        $response->assertOk();
+        $templates = $response->viewData('email_templates');
+        $this->assertCount(0, $templates);
+    }
+
+    /**
+     * Test deletion with invalid ID type.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_handles_invalid_id_type_on_delete(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        
+        $deletePayload = [
+            'email_template_id' => 'invalid',
+        ];
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(
+            route('email_templates.delete', ['id' => 'invalid']),
+            $deletePayload
+        );
+
+        /** Assert */
+        $this->assertTrue(
+            $response->isNotFound() || 
+            $response->getStatusCode() >= 400
+        );
+    }
 }

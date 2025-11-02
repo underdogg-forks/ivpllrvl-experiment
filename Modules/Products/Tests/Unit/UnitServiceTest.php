@@ -41,6 +41,20 @@ class UnitServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_gets_unit_name(): void
     {
-        $this->markTestIncomplete('Requires database setup with unit data');
+        /** Arrange */
+        $this->cleanupTables(['ip_units']);
+        
+        $unit = \Modules\Products\Models\Unit::create([
+            'unit_name' => 'Hour',
+            'unit_name_plrl' => 'Hours',
+        ]);
+
+        /** Act */
+        $singularName = $this->service->getUnitName($unit->unit_id, 1);
+        $pluralName = $this->service->getUnitName($unit->unit_id, 2);
+
+        /** Assert */
+        $this->assertEquals('Hour', $singularName);
+        $this->assertEquals('Hours', $pluralName);
     }
 }
