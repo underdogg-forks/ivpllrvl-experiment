@@ -3,7 +3,7 @@
 namespace Modules\Invoices\Controllers;
 
 use AllowDynamicProperties;
-use App\Helpers\MailerHelper;
+use Modules\Core\Support\MailerHelper;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Controllers\BaseController;
 
