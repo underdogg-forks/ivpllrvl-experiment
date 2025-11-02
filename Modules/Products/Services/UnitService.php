@@ -48,7 +48,7 @@ class UnitService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll()
+    public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
         return Unit::all();
     }
