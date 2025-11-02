@@ -719,7 +719,11 @@ vendor/bin/phpunit tests/Feature
 vendor/bin/phpunit --coverage-html coverage
 ```
 
-See `PHASE-3-IMPLEMENTATION-PLAN.md` for complete testing guidelines and examples.
+### Test Coverage Resources
+
+- **PHASE-3-IMPLEMENTATION-PLAN.md** - Complete testing guidelines and examples
+- **TEST-COVERAGE-TODO.md** - Incomplete unit tests and implementation guide
+- **ROUTE-COVERAGE-ANALYSIS.md** - Detailed route-by-route coverage analysis (212 routes)
 
 ## Security Best Practices
 
