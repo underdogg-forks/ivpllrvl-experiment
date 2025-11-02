@@ -27,6 +27,6 @@ class TaskService extends BaseService
      */
     public function updateByInvoiceId(int $invoiceId, array $data): int
     {
-        return Task::where('invoice_id', $invoiceId)->update($data);
+        return $this->query()->where('invoice_id', $invoiceId)->update($data);
     }
 }
