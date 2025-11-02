@@ -63,42 +63,29 @@ class PaymentMethodsController
      *
      * @legacy-line 42
      */
-    public function form(?int $id = null)
+    public function form($id = null)
     {
-        // Handle cancel button
-        if (request()->post('btn_cancel')) {
-            return redirect()->route('payment_methods.index');
+        if (request()->input('btn_cancel')) {
+            redirect()->route('payment_methods');
         }
-
-        // Handle form submission
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
-            // Validate input with unique constraint
-            $validated = request()->validate([
-                'payment_method_name' => 'required|string|max:255|unique:ip_payment_methods,payment_method_name' . ($id ? ',' . $id . ',payment_method_id' : ''),
-            ]);
-
-            if ($id) {
-                // Update existing
-                $this->paymentMethodService->update($id, $validated);
-            } else {
-                // Create new
-                $this->paymentMethodService->create($validated);
+        $this->filterInput();
+        // <<<--- filters _POST array for nastiness
+        if (request()->input('is_update') == 0 && request()->input('payment_method_name') != '') {
+            $check = DB::get_where('ip_payment_methods', ['payment_method_name' => request()->input('payment_method_name')])->result();
+            if ( ! empty($check)) {
+                session()->flash('alert_error', trans('payment_method_already_exists'));
+                redirect()->route('payment_methods/form');
             }
-
-            return redirect()->route('payment_methods.index')
-                ->with('alert_success', trans('record_successfully_saved'));
         }
-
-        // Load existing record for editing
-        if ($id) {
-            $paymentMethod = $this->paymentMethodService->find($id);
-            if ( ! $paymentMethod) {
-                abort(404);
+        if ((new PaymentMethodsService())->runValidation()) {
+            (new PaymentMethodsService())->save($id);
+            redirect()->route('payment_methods');
+        }
+        if ($id && ! request()->input('btn_submit')) {
+            if ( ! (new PaymentMethodsService())->prepForm($id)) {
+                show_404();
             }
-            $isUpdate = true;
-        } else {
-            $paymentMethod = new PaymentMethod();
-            $isUpdate      = false;
+            (new PaymentMethodsService())->setFormValue('is_update', true);
         }
 
         return view('payments::payment_methods_form', [
