@@ -310,6 +310,19 @@ class QuoteService
     }
 
     /**
+     * Update a quote by ID.
+     *
+     * @param int   $quoteId
+     * @param array $data
+     *
+     * @return int
+     */
+    public function updateQuote(int $quoteId, array $data): int
+    {
+        return Quote::where('quote_id', $quoteId)->update($data);
+    }
+
+    /**
      * Approve quote by ID.
      *
      * @param int $quoteId

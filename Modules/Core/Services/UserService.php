@@ -65,4 +65,14 @@ class UserService extends BaseService
     {
         return User::active()->admin()->count() > 1;
     }
+
+    /**
+     * Get all users.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return User::all();
+    }
 }

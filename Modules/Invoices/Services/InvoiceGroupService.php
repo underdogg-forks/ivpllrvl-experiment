@@ -37,6 +37,16 @@ class InvoiceGroupService extends BaseService
         return $identifier;
     }
 
+    /**
+     * Get all invoice groups.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return InvoiceGroup::all();
+    }
+
     private function setNextInvoiceNumber(InvoiceGroup $invoiceGroup): void
     {
         $invoiceGroup->increment('invoice_group_next_id');

@@ -82,4 +82,19 @@ class InvoiceItemService
     {
         return Item::where('invoice_id', $invoiceId)->orderBy('item_order')->get();
     }
+
+    /**
+     * Find an item by invoice ID and item ID.
+     *
+     * @param int $invoiceId
+     * @param int $itemId
+     *
+     * @return Item|null
+     */
+    public function findByInvoiceAndItemId(int $invoiceId, int $itemId): ?Item
+    {
+        return Item::where('invoice_id', $invoiceId)
+            ->where('item_id', $itemId)
+            ->first();
+    }
 }

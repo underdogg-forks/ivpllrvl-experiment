@@ -26,4 +26,14 @@ class ClientService extends BaseService
     {
         return Client::where('client_active', 1)->orderBy('client_name')->get();
     }
+
+    /**
+     * Get all clients ordered by name.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOrderedByName()
+    {
+        return Client::orderBy('client_name')->get();
+    }
 }

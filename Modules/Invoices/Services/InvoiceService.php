@@ -92,6 +92,11 @@ class InvoiceService
         return Invoice::where('invoice_url_key', $urlKey)->firstOrFail();
     }
 
+    public function urlKeyExists(string $urlKey): bool
+    {
+        return Invoice::where('invoice_url_key', $urlKey)->exists();
+    }
+
     public function getInvoiceGroupId(int $invoiceId): int
     {
         $invoice = Invoice::findOrFail($invoiceId);
@@ -200,5 +205,18 @@ class InvoiceService
         ]);
 
         return $invoice;
+    }
+
+    /**
+     * Update an invoice by ID.
+     *
+     * @param int   $invoiceId
+     * @param array $data
+     *
+     * @return int
+     */
+    public function updateInvoice(int $invoiceId, array $data): int
+    {
+        return Invoice::where('invoice_id', $invoiceId)->update($data);
     }
 }
