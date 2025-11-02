@@ -13,7 +13,7 @@ use Modules\Payments\Services\PaymentMethodService;
  * Handles AJAX requests for payments
  * Migrated from CodeIgniter Ajax controller
  */
-class AjaxController
+class PaymentsAjaxController
 {
     /**
      * Payment service instance.
