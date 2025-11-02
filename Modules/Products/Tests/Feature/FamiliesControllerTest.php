@@ -30,7 +30,8 @@ class FamiliesControllerTest extends FeatureTestCase
         Family::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('families.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('families.index'));
 
         /** Assert */
         $response->assertOk();
@@ -52,7 +53,8 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('families.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('families.form'));
 
         /** Assert */
         $response->assertOk();
@@ -77,7 +79,8 @@ class FamiliesControllerTest extends FeatureTestCase
         $family = Family::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('families.form', ['id' => $family->family_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('families.form', ['id' => $family->family_id]));
 
         /** Assert */
         $response->assertOk();
@@ -111,7 +114,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.form'), $familyData);
+        $this->actingAs($user);
+        $response = $this->post(route('families.form'), $familyData);
 
         /** Assert */
         $response->assertRedirect(route('families.index'));
@@ -145,7 +149,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.form', ['id' => $family->family_id]), $updateData);
+        $this->actingAs($user);
+        $response = $this->post(route('families.form', ['id' => $family->family_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('families.index'));
@@ -177,7 +182,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.form'), $cancelData);
+        $this->actingAs($user);
+        $response = $this->post(route('families.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('families.index'));
@@ -204,7 +210,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.form'), $invalidData);
+        $this->actingAs($user);
+        $response = $this->post(route('families.form'), $invalidData);
 
         /** Assert */
         $response->assertSessionHasErrors('family_name');
@@ -232,7 +239,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('families.form'), $duplicateData);
+        $this->actingAs($user);
+        $response = $this->post(route('families.form'), $duplicateData);
 
         /** Assert */
         $response->assertSessionHasErrors('family_name');
@@ -259,7 +267,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('families.delete', ['id' => $family->family_id]),
             $deletePayload
         );
@@ -293,7 +302,8 @@ class FamiliesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('families.delete', ['id' => 99999]),
             $deletePayload
         );

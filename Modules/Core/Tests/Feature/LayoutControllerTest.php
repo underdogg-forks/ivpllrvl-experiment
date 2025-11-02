@@ -28,7 +28,8 @@ class LayoutControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('layout.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('layout.index'));
 
         /** Assert */
         $response->assertOk();

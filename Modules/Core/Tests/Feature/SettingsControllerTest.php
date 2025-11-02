@@ -32,7 +32,8 @@ class SettingsControllerTest extends FeatureTestCase
         Setting::factory()->create(['setting_key' => 'currency_code', 'setting_value' => 'USD']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('settings.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('settings.index'));
 
         /** Assert */
         $response->assertOk();
@@ -59,7 +60,8 @@ class SettingsControllerTest extends FeatureTestCase
         Setting::factory()->create(['setting_key' => 'invoice_prefix', 'setting_value' => 'INV-']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('settings.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('settings.index'));
 
         /** Assert */
         $settings = $response->viewData('settings');
@@ -89,7 +91,8 @@ class SettingsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('settings.save'), $settingsData);
+        $this->actingAs($user);
+        $response = $this->post(route('settings.save'), $settingsData);
 
         /** Assert */
         $response->assertRedirect(route('settings.index'));
@@ -123,7 +126,8 @@ class SettingsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('settings.save'), $settingsData);
+        $this->actingAs($user);
+        $response = $this->post(route('settings.save'), $settingsData);
 
         /** Assert */
         $response->assertRedirect(route('settings.index'));
@@ -159,7 +163,8 @@ class SettingsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('settings.save'), $settingsData);
+        $this->actingAs($user);
+        $response = $this->post(route('settings.save'), $settingsData);
 
         /** Assert */
         $response->assertRedirect(route('settings.index'));
@@ -189,7 +194,8 @@ class SettingsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('settings.save'));
+        $this->actingAs($user);
+        $response = $this->get(route('settings.save'));
 
         /** Assert */
         $response->assertRedirect(route('settings.index'));
@@ -206,7 +212,8 @@ class SettingsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('settings.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('settings.index'));
 
         /** Assert */
         $response->assertOk();

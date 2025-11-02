@@ -32,7 +32,8 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         Family::factory()->count(2)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.ajax.modal_product_lookups'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.ajax.modal_product_lookups'));
 
         /** Assert */
         $response->assertOk();
@@ -57,7 +58,8 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         $product2 = Product::factory()->create(['family_id' => $family2->family_id]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.ajax.modal_product_lookups', [
+        $this->actingAs($user);
+        $response = $this->get(route('products.ajax.modal_product_lookups', [
             'filter_family' => $family1->family_id,
         ]));
 
@@ -78,7 +80,8 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         Product::factory()->create(['product_name' => 'Gadget']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.ajax.modal_product_lookups', [
+        $this->actingAs($user);
+        $response = $this->get(route('products.ajax.modal_product_lookups', [
             'filter_product' => 'Widget',
         ]));
 
@@ -98,7 +101,8 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.ajax.modal_product_lookups', [
+        $this->actingAs($user);
+        $response = $this->get(route('products.ajax.modal_product_lookups', [
             'filter_product' => 'test',
         ]));
 
@@ -118,7 +122,8 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.ajax.modal_product_lookups', [
+        $this->actingAs($user);
+        $response = $this->get(route('products.ajax.modal_product_lookups', [
             'reset_table' => '1',
         ]));
 
@@ -138,7 +143,8 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.ajax.modal_product_lookups'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.ajax.modal_product_lookups'));
 
         /** Assert */
         $response->assertOk();

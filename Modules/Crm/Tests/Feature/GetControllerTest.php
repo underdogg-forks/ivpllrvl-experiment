@@ -61,7 +61,8 @@ class GetControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('guest.get'));
+        $this->actingAs($user);
+        $response = $this->get(route('guest.get'));
 
         /** Assert */
         $response->assertOk();

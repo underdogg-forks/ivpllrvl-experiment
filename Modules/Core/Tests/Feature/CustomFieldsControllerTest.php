@@ -30,7 +30,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         CustomField::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_fields.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_fields.index'));
 
         /** Assert */
         $response->assertOk();
@@ -52,7 +53,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         CustomField::factory()->create(['custom_field_table' => 'ip_invoices', 'custom_field_label' => 'Field C']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_fields.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_fields.index'));
 
         /** Assert */
         $response->assertOk();
@@ -73,7 +75,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_fields.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_fields.form'));
 
         /** Assert */
         $response->assertOk();
@@ -97,7 +100,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $customField = CustomField::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_fields.form', ['id' => $customField->custom_field_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_fields.form', ['id' => $customField->custom_field_id]));
 
         /** Assert */
         $response->assertOk();
@@ -134,7 +138,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.form'), $customFieldData);
+        $this->actingAs($user);
+        $response = $this->post(route('custom_fields.form'), $customFieldData);
 
         /** Assert */
         $response->assertRedirect(route('custom_fields.index'));
@@ -173,7 +178,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.form', ['id' => $customField->custom_field_id]), $updateData);
+        $this->actingAs($user);
+        $response = $this->post(route('custom_fields.form', ['id' => $customField->custom_field_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('custom_fields.index'));
@@ -205,7 +211,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_fields.form'), $cancelData);
+        $this->actingAs($user);
+        $response = $this->post(route('custom_fields.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('custom_fields.index'));
@@ -232,7 +239,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('custom_fields.delete', ['id' => $customField->custom_field_id]),
             $deletePayload
         );
@@ -266,7 +274,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('custom_fields.delete', ['id' => 99999]),
             $deletePayload
         );
@@ -286,7 +295,8 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_fields.form', ['id' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_fields.form', ['id' => 99999]));
 
         /** Assert */
         $response->assertNotFound();

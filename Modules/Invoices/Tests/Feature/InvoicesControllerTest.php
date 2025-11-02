@@ -33,7 +33,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.index'));
 
         /* Assert */
         $response->assertRedirect(route('invoices.status', ['status' => 'all']));
@@ -52,7 +53,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $sentInvoice  = Invoice::factory()->sent()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/invoices/status/draft');
+        $this->actingAs($user);
+        $response = $this->get('/invoices/status/draft');
 
         /* Assert */
         $response->assertOk();
@@ -80,7 +82,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $paidInvoice  = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/invoices/status/all');
+        $this->actingAs($user);
+        $response = $this->get('/invoices/status/all');
 
         /** Assert */
         $response->assertOk();
@@ -103,7 +106,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/invoices/status/all');
+        $this->actingAs($user);
+        $response = $this->get('/invoices/status/all');
 
         /** Assert */
         $response->assertOk();
@@ -124,7 +128,8 @@ class InvoicesControllerTest extends FeatureTestCase
         Item::factory()->count(3)->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
         $response->assertOk();
@@ -147,7 +152,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /* Act */
-        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.view', ['invoiceId' => 99999]));
 
         /** Assert */
         $response->assertNotFound();
@@ -165,7 +171,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
         $response->assertOk();
@@ -186,7 +193,8 @@ class InvoicesControllerTest extends FeatureTestCase
         TaxRate::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /** Assert */
         $response->assertOk();
@@ -216,7 +224,8 @@ class InvoicesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.delete', $deleteParams));
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.delete', $deleteParams));
 
         /* Assert */
         $response->assertRedirect();
@@ -274,7 +283,8 @@ class InvoicesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.delete', $deleteParams));
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.delete', $deleteParams));
 
         /* Assert */
         $this->assertNotNull(Invoice::find($invoice->invoice_id)); // Still exists
@@ -292,7 +302,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.archive'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.archive'));
 
         /* Assert */
         $response->assertOk();
@@ -311,7 +322,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /* Act */
-        $response = $this->actingAs($user)->get(route('invoices.download', ['filename' => '../../../etc/passwd']));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.download', ['filename' => '../../../etc/passwd']));
 
         /* Assert - Expect 404 for invalid path */
         $response->assertNotFound();
@@ -328,7 +340,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /* Act */
-        $response = $this->actingAs($user)->get(route('invoices.download', ['filename' => 'non-existent-file.pdf']));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.download', ['filename' => 'non-existent-file.pdf']));
 
         /* Assert - Expect 404 */
         $response->assertNotFound();
@@ -353,7 +366,8 @@ class InvoicesControllerTest extends FeatureTestCase
          */
         $payload = [];
 
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoices.delete_tax', [
                 'invoiceId' => $invoice->invoice_id,
                 'taxRateId' => $taxRate->invoice_tax_rate_id,
@@ -384,7 +398,8 @@ class InvoicesControllerTest extends FeatureTestCase
          */
         $payload = [];
 
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoices.delete_tax', [
                 'invoiceId' => $invoice->invoice_id,
                 'taxRateId' => $taxRate->invoice_tax_rate_id,
@@ -414,7 +429,8 @@ class InvoicesControllerTest extends FeatureTestCase
          */
         $recalculatePayload = [];
 
-        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'), $recalculatePayload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.recalculate_all'), $recalculatePayload);
 
         /* Assert */
         $response->assertRedirect();
@@ -439,7 +455,8 @@ class InvoicesControllerTest extends FeatureTestCase
          */
         $recalculatePayload = [];
 
-        $response = $this->actingAs($user)->post(route('invoices.recalculate_all'), $recalculatePayload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.recalculate_all'), $recalculatePayload);
 
         /* Assert */
         $response->assertRedirect();
@@ -478,7 +495,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $paidInvoice  = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/invoices/status/paid');
+        $this->actingAs($user);
+        $response = $this->get('/invoices/status/paid');
 
         /** Assert */
         $response->assertOk();
@@ -502,7 +520,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $paidInvoice    = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/invoices/status/overdue');
+        $this->actingAs($user);
+        $response = $this->get('/invoices/status/overdue');
 
         /** Assert */
         $response->assertOk();
@@ -524,7 +543,8 @@ class InvoicesControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create(['sumex_id' => 12345]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
         /* Assert */
         $response->assertOk();
@@ -542,7 +562,8 @@ class InvoicesControllerTest extends FeatureTestCase
         Invoice::factory()->count(30)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/invoices/status/all');
+        $this->actingAs($user);
+        $response = $this->get('/invoices/status/all');
 
         /** Assert */
         $response->assertOk();

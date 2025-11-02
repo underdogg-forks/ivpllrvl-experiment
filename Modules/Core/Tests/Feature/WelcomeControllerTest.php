@@ -28,7 +28,8 @@ class WelcomeControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('welcome'));
+        $this->actingAs($user);
+        $response = $this->get(route('welcome'));
 
         /** Assert */
         $response->assertOk();

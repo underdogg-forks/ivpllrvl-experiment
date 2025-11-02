@@ -69,7 +69,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.save'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -108,7 +109,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.save'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -158,7 +160,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.save'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -205,7 +208,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.save'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -246,7 +250,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.save_tax_rate'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.save_tax_rate'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -283,7 +288,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $payload = ['item_id' => $item->item_id];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('quotes.ajax.delete_item', ['quoteId' => $quote->quote_id]),
             $payload
         );
@@ -317,7 +323,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $payload = ['item_id' => 99999];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('quotes.ajax.delete_item', ['quoteId' => 99999]),
             $payload
         );
@@ -344,7 +351,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.ajax.get_item', ['item_id' => $item->item_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.ajax.get_item', ['item_id' => $item->item_id]));
 
         /** Assert */
         $response->assertOk();
@@ -363,7 +371,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.ajax.get_item', ['item_id' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.ajax.get_item', ['item_id' => 99999]));
 
         /** Assert */
         $response->assertOk();
@@ -411,7 +420,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.copy'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.copy'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -454,7 +464,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.change_user'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.change_user'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -494,7 +505,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.change_user'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.change_user'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -532,7 +544,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.change_client'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.change_client'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -575,7 +588,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.create'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.create'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -641,7 +655,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.quote_to_invoice'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.quote_to_invoice'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -686,7 +701,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.ajax.quote_to_invoice'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.ajax.quote_to_invoice'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -711,7 +727,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         User::factory()->count(2)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.modal.copy', ['quote_id' => $quote->quote_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.modal.copy', ['quote_id' => $quote->quote_id]));
 
         /** Assert */
         $response->assertOk();
@@ -734,7 +751,8 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         User::factory()->count(2)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.modal.create'));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.modal.create'));
 
         /** Assert */
         $response->assertOk();

@@ -30,7 +30,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         EmailTemplate::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('email_templates.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.index'));
 
         /** Assert */
         $response->assertOk();
@@ -52,7 +53,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         EmailTemplate::factory()->create(['email_template_title' => 'Quote Email']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('email_templates.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.index'));
 
         /** Assert */
         $response->assertOk();
@@ -75,7 +77,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('email_templates.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.form'));
 
         /** Assert */
         $response->assertOk();
@@ -99,7 +102,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $template = EmailTemplate::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('email_templates.form', ['id' => $template->email_template_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.form', ['id' => $template->email_template_id]));
 
         /** Assert */
         $response->assertOk();
@@ -136,7 +140,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.form'), $templateData);
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $templateData);
 
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -174,7 +179,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.form', ['id' => $template->email_template_id]), $updateData);
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form', ['id' => $template->email_template_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -206,7 +212,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('email_templates.form'), $cancelData);
+        $this->actingAs($user);
+        $response = $this->post(route('email_templates.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -233,7 +240,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('email_templates.delete', ['id' => $template->email_template_id]),
             $deletePayload
         );
@@ -267,7 +275,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('email_templates.delete', ['id' => 99999]),
             $deletePayload
         );
@@ -287,7 +296,8 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('email_templates.form', ['id' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('email_templates.form', ['id' => 99999]));
 
         /** Assert */
         $response->assertNotFound();

@@ -29,7 +29,8 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice_groups.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice_groups.index'));
 
         /* Assert */
         $response->assertOk();
@@ -48,7 +49,8 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         /** Would create multiple invoice groups with different names */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice_groups.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice_groups.index'));
 
         /* Assert */
         $response->assertOk();
@@ -67,7 +69,8 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         /** Would create 20 invoice groups */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice_groups.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice_groups.index'));
 
         /** Assert */
         $response->assertOk();
@@ -86,7 +89,8 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice_groups.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice_groups.form'));
 
         /* Assert */
         $response->assertOk();
@@ -253,7 +257,8 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoice_groups.delete', ['id' => $testId]),
             $deletePayload
         );

@@ -56,7 +56,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.create'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.create'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -132,7 +133,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -208,7 +210,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -257,7 +260,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -316,7 +320,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -363,7 +368,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -406,7 +412,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save_tax_rate'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save_tax_rate'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -444,7 +451,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $payload = ['item_id' => $item->item_id];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoices.ajax.delete_item', ['invoiceId' => $invoice->invoice_id]),
             $payload
         );
@@ -478,7 +486,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $payload = ['item_id' => 99999];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoices.ajax.delete_item', ['invoiceId' => 99999]),
             $payload
         );
@@ -506,7 +515,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.ajax.get_item', ['item_id' => $item->item_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.ajax.get_item', ['item_id' => $item->item_id]));
 
         /* Assert */
         $response->assertOk();
@@ -526,7 +536,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.ajax.get_item', ['item_id' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.ajax.get_item', ['item_id' => 99999]));
 
         /* Assert */
         $response->assertOk();
@@ -574,7 +585,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.copy'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.copy'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -617,7 +629,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.change_user'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.change_user'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -656,7 +669,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.change_user'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.change_user'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -695,7 +709,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.change_client'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.change_client'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -746,7 +761,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.create_recurring'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.create_recurring'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -769,7 +785,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.ajax.recur_start_date', ['recur_frequency' => '1M']));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.ajax.recur_start_date', ['recur_frequency' => '1M']));
 
         /* Assert */
         $response->assertOk();
@@ -809,7 +826,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.create_credit'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.create_credit'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -835,7 +853,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         User::factory()->count(2)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.modal.copy', ['invoice_id' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.modal.copy', ['invoice_id' => $invoice->invoice_id]));
 
         /* Assert */
         $response->assertOk();
@@ -860,7 +879,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         User::factory()->count(2)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.modal.create'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.modal.create'));
 
         /* Assert */
         $response->assertOk();
@@ -884,7 +904,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         User::factory()->count(3)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.modal.change_user', ['invoice_id' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.modal.change_user', ['invoice_id' => $invoice->invoice_id]));
 
         /* Assert */
         $response->assertOk();
@@ -908,7 +929,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         Client::factory()->count(4)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.modal.change_client', ['invoice_id' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.modal.change_client', ['invoice_id' => $invoice->invoice_id]));
 
         /* Assert */
         $response->assertOk();
@@ -932,7 +954,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         User::factory()->count(2)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.modal.create_recurring'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.modal.create_recurring'));
 
         /* Assert */
         $response->assertOk();
@@ -953,7 +976,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->paid()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.modal.create_credit', ['invoice_id' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.modal.create_credit', ['invoice_id' => $invoice->invoice_id]));
 
         /* Assert */
         $response->assertOk();
@@ -1007,7 +1031,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();
@@ -1080,7 +1105,8 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.ajax.save'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.ajax.save'), $payload);
 
         /* Assert */
         $response->assertOk();

@@ -32,7 +32,8 @@ class PaymentsControllerTest extends FeatureTestCase
         Payment::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('payments.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('payments.index'));
 
         /** Assert */
         $response->assertOk();
@@ -57,7 +58,8 @@ class PaymentsControllerTest extends FeatureTestCase
         Payment::factory()->create(['payment_date' => '2024-01-03']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('payments.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('payments.index'));
 
         /** Assert */
         $response->assertOk();
@@ -85,7 +87,8 @@ class PaymentsControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('payments.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('payments.index'));
 
         /** Assert */
         $response->assertOk();
@@ -106,7 +109,8 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('payments.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('payments.form'));
 
         /** Assert */
         $response->assertOk();
@@ -127,7 +131,8 @@ class PaymentsControllerTest extends FeatureTestCase
         $payment = Payment::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('payments.form', ['id' => $payment->payment_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('payments.form', ['id' => $payment->payment_id]));
 
         /** Assert */
         $response->assertOk();
@@ -168,7 +173,8 @@ class PaymentsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form'), $paymentData);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.form'), $paymentData);
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -207,7 +213,8 @@ class PaymentsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form', ['id' => $payment->payment_id]), $updateData);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.form', ['id' => $payment->payment_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -242,7 +249,8 @@ class PaymentsControllerTest extends FeatureTestCase
             'btn_submit' => '1',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.form'), $missingInvoicePayload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.form'), $missingInvoicePayload);
 
         /** Assert */
         $response->assertSessionHasErrors('invoice_id');
@@ -272,7 +280,8 @@ class PaymentsControllerTest extends FeatureTestCase
             'btn_submit' => '1',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.form'), $missingDatePayload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.form'), $missingDatePayload);
 
         /** Assert */
         $response->assertSessionHasErrors('payment_date');
@@ -302,7 +311,8 @@ class PaymentsControllerTest extends FeatureTestCase
             'btn_submit' => '1',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.form'), $missingAmountPayload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.form'), $missingAmountPayload);
 
         /** Assert */
         $response->assertSessionHasErrors('payment_amount');
@@ -328,7 +338,8 @@ class PaymentsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.form'), $cancelData);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('payments.index'));
@@ -355,7 +366,8 @@ class PaymentsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('payments.delete', ['id' => $payment->payment_id]),
             $deletePayload
         );
@@ -389,7 +401,8 @@ class PaymentsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('payments.delete', ['id' => 99999]),
             $deletePayload
         );

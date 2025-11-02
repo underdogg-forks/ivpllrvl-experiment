@@ -678,11 +678,33 @@ class QuotesControllerTest extends TestCase
 }
 ```
 
+**Test Code Style (CRITICAL):**
+
+For readability, ALWAYS split `actingAs()` from HTTP method calls on separate lines:
+
+```php
+// ✅ CORRECT - Split for readability
+/** Act */
+$this->actingAs($user);
+$response = $this->post(route('quotes.ajax.save'), $payload);
+
+// ❌ WRONG - Chained, harder to read
+/** Act */
+$response = $this->actingAs($user)->post(route('quotes.ajax.save'), $payload);
+```
+
+**Reasoning:**
+- Improves readability by separating authentication from HTTP action
+- Makes it easier to scan tests for authentication patterns
+- Follows single responsibility principle (one action per line)
+- Easier to debug when tests fail
+
 **Documentation Requirements:**
 - Use PHPDoc blocks (not PHP comments)
 - Follow "Arrange, Act, Assert" pattern
 - Test data integrity, not just HTTP status
 - Cover happy path, validation, edge cases, authentication
+- Split authentication (`actingAs`) from HTTP calls (`get`, `post`, etc.)
 
 ### Running Tests
 
@@ -697,7 +719,11 @@ vendor/bin/phpunit tests/Feature
 vendor/bin/phpunit --coverage-html coverage
 ```
 
-See `PHASE-3-IMPLEMENTATION-PLAN.md` for complete testing guidelines and examples.
+### Test Coverage Resources
+
+- **PHASE-3-IMPLEMENTATION-PLAN.md** - Complete testing guidelines and examples
+- **TEST-COVERAGE-TODO.md** - Incomplete unit tests and implementation guide
+- **ROUTE-COVERAGE-ANALYSIS.md** - Detailed route-by-route coverage analysis (212 routes)
 
 ## Security Best Practices
 

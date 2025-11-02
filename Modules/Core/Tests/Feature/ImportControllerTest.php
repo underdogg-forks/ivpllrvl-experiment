@@ -28,7 +28,8 @@ class ImportControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('import.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('import.index'));
 
         /** Assert */
         $response->assertOk();

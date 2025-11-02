@@ -32,7 +32,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         CustomValue::factory()->count(5)->create(['custom_field_id' => $customField->custom_field_id]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_values.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_values.index'));
 
         /** Assert */
         $response->assertOk();
@@ -53,7 +54,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         CustomValue::factory()->create(['custom_field_id' => $customField->custom_field_id]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_values.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_values.index'));
 
         /** Assert */
         $response->assertOk();
@@ -74,7 +76,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_values.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_values.form'));
 
         /** Assert */
         $response->assertOk();
@@ -100,7 +103,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         $customValue = CustomValue::factory()->create(['custom_field_id' => $customField->custom_field_id]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_values.form', ['id' => $customValue->custom_value_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_values.form', ['id' => $customValue->custom_value_id]));
 
         /** Assert */
         $response->assertOk();
@@ -137,7 +141,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_values.form'), $customValueData);
+        $this->actingAs($user);
+        $response = $this->post(route('custom_values.form'), $customValueData);
 
         /** Assert */
         $response->assertRedirect(route('custom_values.index'));
@@ -178,7 +183,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_values.form', ['id' => $customValue->custom_value_id]), $updateData);
+        $this->actingAs($user);
+        $response = $this->post(route('custom_values.form', ['id' => $customValue->custom_value_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('custom_values.index'));
@@ -210,7 +216,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('custom_values.form'), $cancelData);
+        $this->actingAs($user);
+        $response = $this->post(route('custom_values.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('custom_values.index'));
@@ -238,7 +245,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('custom_values.delete', ['id' => $customValue->custom_value_id]),
             $deletePayload
         );
@@ -272,7 +280,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('custom_values.delete', ['id' => 99999]),
             $deletePayload
         );
@@ -292,7 +301,8 @@ class CustomValuesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('custom_values.form', ['id' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('custom_values.form', ['id' => 99999]));
 
         /** Assert */
         $response->assertNotFound();

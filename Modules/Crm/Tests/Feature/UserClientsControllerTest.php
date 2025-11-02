@@ -35,7 +35,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('user_clients.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('user_clients.index'));
 
         /** Assert */
         $response->assertOk();
@@ -59,7 +60,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('user_clients.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('user_clients.index'));
 
         /** Assert */
         $response->assertOk();
@@ -80,7 +82,8 @@ class UserClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('user_clients.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('user_clients.form'));
 
         /** Assert */
         $response->assertOk();
@@ -108,7 +111,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('user_clients.form', ['id' => $userClient->id]));
+        $this->actingAs($user);
+        $response = $this->get(route('user_clients.form', ['id' => $userClient->id]));
 
         /** Assert */
         $response->assertOk();
@@ -144,7 +148,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.form'), $userClientData);
+        $this->actingAs($user);
+        $response = $this->post(route('user_clients.form'), $userClientData);
 
         /** Assert */
         $response->assertRedirect(route('user_clients.index'));
@@ -187,7 +192,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.form', ['id' => $userClient->id]), $updateData);
+        $this->actingAs($user);
+        $response = $this->post(route('user_clients.form', ['id' => $userClient->id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('user_clients.index'));
@@ -221,7 +227,8 @@ class UserClientsControllerTest extends FeatureTestCase
             'btn_submit' => '1',
         ];
 
-        $response = $this->actingAs($user)->post(route('user_clients.form'), $missingUserPayload);
+        $this->actingAs($user);
+        $response = $this->post(route('user_clients.form'), $missingUserPayload);
 
         /** Assert */
         $response->assertSessionHasErrors('user_id');
@@ -248,7 +255,8 @@ class UserClientsControllerTest extends FeatureTestCase
             'btn_submit' => '1',
         ];
 
-        $response = $this->actingAs($user)->post(route('user_clients.form'), $missingClientPayload);
+        $this->actingAs($user);
+        $response = $this->post(route('user_clients.form'), $missingClientPayload);
 
         /** Assert */
         $response->assertSessionHasErrors('client_id');
@@ -274,7 +282,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('user_clients.form'), $cancelData);
+        $this->actingAs($user);
+        $response = $this->post(route('user_clients.form'), $cancelData);
 
         /** Assert */
         $response->assertRedirect(route('user_clients.index'));
@@ -305,7 +314,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('user_clients.delete', ['id' => $userClient->user_client_id]),
             $deletePayload
         );
@@ -339,7 +349,8 @@ class UserClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('user_clients.delete', ['id' => 99999]),
             $deletePayload
         );

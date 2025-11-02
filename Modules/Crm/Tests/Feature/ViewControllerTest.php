@@ -61,7 +61,8 @@ class ViewControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('guest.view'));
+        $this->actingAs($user);
+        $response = $this->get(route('guest.view'));
 
         /** Assert */
         $response->assertOk();

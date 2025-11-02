@@ -28,7 +28,8 @@ class VersionsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('versions.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('versions.index'));
 
         /** Assert */
         $response->assertOk();
