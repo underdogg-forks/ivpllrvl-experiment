@@ -43,8 +43,7 @@ class FamiliesController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $families = Family::ordered()
-            ->paginate(15, ['*'], 'page', $page);
+        $families = $this->familyService->getAllPaginated(15, $page);
 
         return view('products::families_index', [
             'filter_display'     => true,

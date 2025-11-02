@@ -27,7 +27,7 @@ class UserClientsController
     /** @legacy-file application/modules/user_clients/controllers/User_clients.php */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $userClients = UserClient::with(['user', 'client'])->paginate(15, ['*'], 'page', $page);
+        $userClients = $this->userClientService->getAllPaginated($page);
 
         return view('crm::user_clients_index', ['user_clients' => $userClients]);
     }

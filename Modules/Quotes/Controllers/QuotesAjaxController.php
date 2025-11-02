@@ -271,7 +271,7 @@ class QuotesAjaxController
 
         // Verify quote exists
         $quote = $this->quoteService->find($quoteId);
-        if ($quote || empty($itemId)) {
+        if ($quote && ! empty($itemId)) {
             $deleted = QuoteItem::deleteItem($itemId);
             if ($deleted) {
                 $success = 1;

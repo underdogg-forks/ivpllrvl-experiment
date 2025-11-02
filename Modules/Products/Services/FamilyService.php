@@ -19,4 +19,17 @@ class FamilyService extends BaseService
     {
         return Family::class;
     }
+
+    /**
+     * Get all families ordered and paginated.
+     *
+     * @param int $perPage
+     * @param int $page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllPaginated(int $perPage = 15, int $page = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return Family::ordered()->paginate($perPage, ['*'], 'page', $page);
+    }
 }
