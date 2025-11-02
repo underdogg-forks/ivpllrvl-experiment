@@ -15,10 +15,10 @@ use Tests\Feature\FeatureTestCase;
  *
  * Comprehensive test suite covering all AJAX routes for CRM operations.
  */
-#[CoversClass(CrmAjaxController::class)]
-class CrmAjaxControllerTest extends FeatureTestCase
+#[CoversClass(ClientsAjaxController::class)]
+class ClientsAjaxControllerTest extends FeatureTestCase
 {
-    // ==================== ROUTE: GET /crm/ajax/modal_client_lookup ====================
+    // ==================== ROUTE: GET /clients/ajax/modal_client_lookup ====================
     
     /**
      * Test modalClientLookup displays active clients.
