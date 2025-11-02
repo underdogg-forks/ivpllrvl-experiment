@@ -11,7 +11,7 @@ use Modules\Products\Models\Product;
  * Handles AJAX requests for products
  * Migrated from CodeIgniter Ajax controller
  */
-class AjaxController
+class ProductsAjaxController
 {
     /**
      * Display modal for product lookups.
