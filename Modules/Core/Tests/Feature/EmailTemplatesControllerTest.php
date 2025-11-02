@@ -116,6 +116,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form creates new email template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "New Template",
+     *   "email_template_subject": "Subject",
+     *   "email_template_body": "Body content",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('crud')]
     #[Test]
@@ -124,14 +132,6 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /**
-         * {
-         *     "email_template_title": "New Template",
-         *     "email_template_subject": "Subject",
-         *     "email_template_body": "Body content",
-         *     "btn_submit": "1"
-         * }
-         */
         $templateData = [
             'email_template_title' => 'New Template',
             'email_template_subject' => 'Subject',
@@ -154,6 +154,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form updates existing email template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "Updated Title",
+     *   "email_template_subject": "Invoice Reminder",
+     *   "email_template_body": "Please pay your invoice.",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('crud')]
     #[Test]
@@ -163,14 +171,6 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create(['email_template_title' => 'Old Title']);
         
-        /**
-         * {
-         *     "email_template_title": "Updated Title",
-         *     "email_template_subject": "Invoice Reminder",
-         *     "email_template_body": "Please pay your invoice.",
-         *     "btn_submit": "1"
-         * }
-         */
         $updateData = [
             'email_template_title' => 'Updated Title',
             'email_template_subject' => $template->email_template_subject,
@@ -194,6 +194,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form redirects on cancel.
+     * 
+     * JSON Payload:
+     * {
+     *   "btn_cancel": "1"
+     * }
      */
     #[Group('smoke')]
     #[Test]
@@ -202,11 +207,6 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /**
-         * {
-         *     "btn_cancel": "1"
-         * }
-         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -221,6 +221,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test delete removes email template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_id": 1
+     * }
      */
     #[Group('crud')]
     #[Test]
@@ -229,21 +234,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create();
-        
-        /**
-         * {
-         *     "email_template_id": 1
-         * }
-         */
-        $deletePayload = [
-            'email_template_id' => $template->email_template_id,
-        ];
 
         /** Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('email_templates.delete', ['id' => $template->email_template_id]),
-            $deletePayload
+            route('email_templates.delete', ['id' => $template->email_template_id])
         );
 
         /** Assert */
@@ -257,6 +252,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test delete returns 404 for non-existent template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_id": 99999
+     * }
      */
     #[Group('smoke')]
     #[Test]
@@ -264,21 +264,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
-        /**
-         * {
-         *     "email_template_id": 99999
-         * }
-         */
-        $deletePayload = [
-            'email_template_id' => 99999,
-        ];
 
         /** Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('email_templates.delete', ['id' => 99999]),
-            $deletePayload
+            route('email_templates.delete', ['id' => 99999])
         );
 
         /** Assert */
@@ -318,79 +308,75 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     }
 
     /**
-     * Test form validates required title.
+     * Data provider for required field validation tests.
+     * 
+     * @return array<string, array{field: string, data: array<string, string>}>
      */
-    #[Group('validation')]
-    #[Test]
-    public function it_validates_required_title(): void
+    public static function requiredFieldsProvider(): array
     {
-        /** Arrange */
-        $user = User::factory()->create();
-        $invalidData = [
-            'email_template_title' => '',
-            'email_template_subject' => 'Subject',
-            'email_template_body' => 'Body',
-            'btn_submit' => '1',
+        return [
+            'title is required' => [
+                'field' => 'email_template_title',
+                'data' => [
+                    'email_template_title' => '',
+                    'email_template_subject' => 'Subject',
+                    'email_template_body' => 'Body',
+                    'btn_submit' => '1',
+                ],
+            ],
+            'subject is required' => [
+                'field' => 'email_template_subject',
+                'data' => [
+                    'email_template_title' => 'Title',
+                    'email_template_subject' => '',
+                    'email_template_body' => 'Body',
+                    'btn_submit' => '1',
+                ],
+            ],
+            'body is required' => [
+                'field' => 'email_template_body',
+                'data' => [
+                    'email_template_title' => 'Title',
+                    'email_template_subject' => 'Subject',
+                    'email_template_body' => '',
+                    'btn_submit' => '1',
+                ],
+            ],
         ];
-
-        /** Act */
-        $this->actingAs($user);
-        $response = $this->post(route('email_templates.form'), $invalidData);
-
-        /** Assert */
-        $response->assertSessionHasErrors('email_template_title');
     }
 
     /**
-     * Test form validates required subject.
+     * Test form validates required fields.
+     * 
+     * @param string $field The field name that should have validation errors
+     * @param array<string, string> $data The invalid form data
      */
     #[Group('validation')]
     #[Test]
-    public function it_validates_required_subject(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('requiredFieldsProvider')]
+    public function it_validates_required_fields(string $field, array $data): void
     {
         /** Arrange */
         $user = User::factory()->create();
-        $invalidData = [
-            'email_template_title' => 'Title',
-            'email_template_subject' => '',
-            'email_template_body' => 'Body',
-            'btn_submit' => '1',
-        ];
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->post(route('email_templates.form'), $invalidData);
+        $response = $this->post(route('email_templates.form'), $data);
 
         /** Assert */
-        $response->assertSessionHasErrors('email_template_subject');
-    }
-
-    /**
-     * Test form validates required body.
-     */
-    #[Group('validation')]
-    #[Test]
-    public function it_validates_required_body(): void
-    {
-        /** Arrange */
-        $user = User::factory()->create();
-        $invalidData = [
-            'email_template_title' => 'Title',
-            'email_template_subject' => 'Subject',
-            'email_template_body' => '',
-            'btn_submit' => '1',
-        ];
-
-        /** Act */
-        $this->actingAs($user);
-        $response = $this->post(route('email_templates.form'), $invalidData);
-
-        /** Assert */
-        $response->assertSessionHasErrors('email_template_body');
+        $response->assertSessionHasErrors($field);
     }
 
     /**
      * Test form handles very long title.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "AAAA...300 chars",
+     *   "email_template_subject": "Subject",
+     *   "email_template_body": "Body",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('edge-cases')]
     #[Test]
@@ -421,6 +407,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form handles HTML in body.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "HTML Template",
+     *   "email_template_subject": "Subject",
+     *   "email_template_body": "<p>Hello {client_name},</p><p>Your invoice is ready.</p>",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('edge-cases')]
     #[Test]
@@ -450,6 +444,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form handles template variables.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "Variable Template",
+     *   "email_template_subject": "Invoice {invoice_number}",
+     *   "email_template_body": "Dear {client_name}, your total is {invoice_total}",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('edge-cases')]
     #[Test]
@@ -522,6 +524,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test deletion with invalid ID type.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_id": "invalid"
+     * }
      */
     #[Group('validation')]
     #[Test]
@@ -529,16 +536,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
-        $deletePayload = [
-            'email_template_id' => 'invalid',
-        ];
 
         /** Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('email_templates.delete', ['id' => 'invalid']),
-            $deletePayload
+            route('email_templates.delete', ['id' => 'invalid'])
         );
 
         /** Assert */
