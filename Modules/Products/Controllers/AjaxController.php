@@ -4,6 +4,7 @@ namespace Modules\Products\Controllers;
 
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
+use Modules\Products\Services\ProductService;
 
 /**
  * AjaxController.
@@ -13,6 +14,22 @@ use Modules\Products\Models\Product;
  */
 class AjaxController
 {
+    /**
+     * Product service instance.
+     *
+     * @var ProductService
+     */
+    protected ProductService $productService;
+
+    /**
+     * Constructor.
+     *
+     * @param ProductService $productService
+     */
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
     /**
      * Display modal for product lookups.
      *
@@ -64,7 +81,7 @@ class AjaxController
     {
         $product_ids = request()->post('product_ids');
 
-        $products = Product::query()->whereIn('product_id', $product_ids)->get();
+        $products = $this->productService->getByIds($product_ids);
 
         foreach ($products as $product) {
             $product->product_price = format_amount($product->product_price);

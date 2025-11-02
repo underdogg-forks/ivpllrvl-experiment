@@ -87,6 +87,11 @@ class InvoiceService
         return bin2hex(random_bytes(16));
     }
 
+    public function getByUrlKey(string $urlKey): Invoice
+    {
+        return Invoice::where('invoice_url_key', $urlKey)->firstOrFail();
+    }
+
     public function getInvoiceGroupId(int $invoiceId): int
     {
         $invoice = Invoice::findOrFail($invoiceId);

@@ -3,6 +3,7 @@
 namespace Modules\Products\Controllers;
 
 use Modules\Products\Models\Family;
+use Modules\Products\Services\FamilyService;
 
 /**
  * FamiliesController.
@@ -11,6 +12,22 @@ use Modules\Products\Models\Family;
  */
 class FamiliesController
 {
+    /**
+     * Family service instance.
+     *
+     * @var FamilyService
+     */
+    protected FamilyService $familyService;
+
+    /**
+     * Constructor.
+     *
+     * @param FamilyService $familyService
+     */
+    public function __construct(FamilyService $familyService)
+    {
+        $this->familyService = $familyService;
+    }
     /**
      * Display a paginated list of product families.
      *
@@ -66,11 +83,10 @@ class FamiliesController
 
             if ($id) {
                 // Update existing
-                $family = Family::query()->findOrFail($id);
-                $family->update($validated);
+                $this->familyService->update($id, $validated);
             } else {
                 // Create new
-                Family::query()->create($validated);
+                $this->familyService->create($validated);
             }
 
             return redirect()->route('families.index')
@@ -79,7 +95,7 @@ class FamiliesController
 
         // Load existing record for editing
         if ($id) {
-            $family = Family::query()->find($id);
+            $family = $this->familyService->find($id);
             if ( ! $family) {
                 abort(404);
             }
@@ -110,8 +126,7 @@ class FamiliesController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $family = Family::query()->findOrFail($id);
-        $family->delete();
+        $this->familyService->delete($id);
 
         return redirect()->route('families.index')
             ->with('alert_success', trans('record_successfully_deleted'));

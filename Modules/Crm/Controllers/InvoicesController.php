@@ -2,6 +2,8 @@
 
 namespace Modules\Crm\Controllers;
 
+use Modules\Invoices\Services\InvoiceService;
+
 /**
  * InvoicesController (Guest).
  *
@@ -11,6 +13,23 @@ namespace Modules\Crm\Controllers;
  */
 class InvoicesController
 {
+    /**
+     * Invoice service instance.
+     *
+     * @var InvoiceService
+     */
+    protected InvoiceService $invoiceService;
+
+    /**
+     * Constructor.
+     *
+     * @param InvoiceService $invoiceService
+     */
+    public function __construct(InvoiceService $invoiceService)
+    {
+        $this->invoiceService = $invoiceService;
+    }
+
     public function index()
     {
         // Guest invoice list
@@ -20,7 +39,7 @@ class InvoicesController
     public function view(string $urlKey)
     {
         // Guest invoice view by URL key
-        $invoice = \Modules\Invoices\Models\Invoice::query()->where('invoice_url_key', $urlKey)->firstOrFail();
+        $invoice = $this->invoiceService->getByUrlKey($urlKey);
 
         return view('crm::guest_invoice_view', ['invoice' => $invoice]);
     }

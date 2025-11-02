@@ -284,6 +284,18 @@ class QuoteService
     }
 
     /**
+     * Get quote by URL key.
+     *
+     * @param string $urlKey
+     *
+     * @return Quote
+     */
+    public function getByUrlKey(string $urlKey): Quote
+    {
+        return Quote::where('quote_url_key', $urlKey)->firstOrFail();
+    }
+
+    /**
      * Reject quote by URL key.
      *
      * @param string $quoteUrlKey
