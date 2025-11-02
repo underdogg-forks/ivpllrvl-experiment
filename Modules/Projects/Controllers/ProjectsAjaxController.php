@@ -10,7 +10,7 @@ use Modules\Projects\app\Services\TasksService;
 use function Modules\Tasks\Controllers\view;
 
 #[AllowDynamicProperties]
-class AjaxController extends AdminController
+class ProjectsAjaxController extends AdminController
 {
     /**
      * Render the task lookups modal populated with default tax rate and invoice tasks.
