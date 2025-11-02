@@ -116,6 +116,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form creates new email template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "New Template",
+     *   "email_template_subject": "Subject",
+     *   "email_template_body": "Body content",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('crud')]
     #[Test]
@@ -124,14 +132,6 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /**
-         * {
-         *     "email_template_title": "New Template",
-         *     "email_template_subject": "Subject",
-         *     "email_template_body": "Body content",
-         *     "btn_submit": "1"
-         * }
-         */
         $templateData = [
             'email_template_title' => 'New Template',
             'email_template_subject' => 'Subject',
@@ -154,6 +154,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form updates existing email template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "Updated Title",
+     *   "email_template_subject": "Invoice Reminder",
+     *   "email_template_body": "Please pay your invoice.",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('crud')]
     #[Test]
@@ -163,14 +171,6 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create(['email_template_title' => 'Old Title']);
         
-        /**
-         * {
-         *     "email_template_title": "Updated Title",
-         *     "email_template_subject": "Invoice Reminder",
-         *     "email_template_body": "Please pay your invoice.",
-         *     "btn_submit": "1"
-         * }
-         */
         $updateData = [
             'email_template_title' => 'Updated Title',
             'email_template_subject' => $template->email_template_subject,
@@ -194,6 +194,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form redirects on cancel.
+     * 
+     * JSON Payload:
+     * {
+     *   "btn_cancel": "1"
+     * }
      */
     #[Group('smoke')]
     #[Test]
@@ -202,11 +207,6 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         
-        /**
-         * {
-         *     "btn_cancel": "1"
-         * }
-         */
         $cancelData = [
             'btn_cancel' => '1',
         ];
@@ -221,6 +221,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test delete removes email template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_id": 1
+     * }
      */
     #[Group('crud')]
     #[Test]
@@ -232,7 +237,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->get(
+        $response = $this->post(
             route('email_templates.delete', ['id' => $template->email_template_id])
         );
 
@@ -247,6 +252,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test delete returns 404 for non-existent template.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_id": 99999
+     * }
      */
     #[Group('smoke')]
     #[Test]
@@ -257,7 +267,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->get(
+        $response = $this->post(
             route('email_templates.delete', ['id' => 99999])
         );
 
@@ -359,6 +369,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form handles very long title.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "AAAA...300 chars",
+     *   "email_template_subject": "Subject",
+     *   "email_template_body": "Body",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('edge-cases')]
     #[Test]
@@ -389,6 +407,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form handles HTML in body.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "HTML Template",
+     *   "email_template_subject": "Subject",
+     *   "email_template_body": "<p>Hello {client_name},</p><p>Your invoice is ready.</p>",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('edge-cases')]
     #[Test]
@@ -418,6 +444,14 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test form handles template variables.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_title": "Variable Template",
+     *   "email_template_subject": "Invoice {invoice_number}",
+     *   "email_template_body": "Dear {client_name}, your total is {invoice_total}",
+     *   "btn_submit": "1"
+     * }
      */
     #[Group('edge-cases')]
     #[Test]
@@ -490,6 +524,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
     /**
      * Test deletion with invalid ID type.
+     * 
+     * JSON Payload:
+     * {
+     *   "email_template_id": "invalid"
+     * }
      */
     #[Group('validation')]
     #[Test]
@@ -500,7 +539,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->get(
+        $response = $this->post(
             route('email_templates.delete', ['id' => 'invalid'])
         );
 
