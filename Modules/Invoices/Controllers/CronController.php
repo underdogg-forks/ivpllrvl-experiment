@@ -2,214 +2,106 @@
 
 namespace Modules\Invoices\Controllers;
 
-use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceGroup;
-use Modules\Invoices\Models\InvoicesRecurring;
-use Modules\Invoices\Services\InvoiceAmountService;
-use Modules\Invoices\Services\InvoiceGroupService;
-use Modules\Invoices\Services\InvoiceService;
-use Modules\Invoices\Services\InvoicesRecurringService;
+use AllowDynamicProperties;
+use App\Helpers\MailerHelper;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Controllers\BaseController;
 
-class CronController
+#[AllowDynamicProperties]
+class CronController extends BaseController
 {
-    protected InvoiceService $invoiceService;
-    protected InvoiceGroupService $invoiceGroupService;
-    protected InvoicesRecurringService $invoicesRecurringService;
-
-    public function __construct(
-        InvoiceService $invoiceService,
-        InvoiceGroupService $invoiceGroupService,
-        InvoicesRecurringService $invoicesRecurringService
-    ) {
-        $this->invoiceService = $invoiceService;
-        $this->invoiceGroupService = $invoiceGroupService;
-        $this->invoicesRecurringService = $invoicesRecurringService;
-    }
-    public function recur(?string $cronKey = null): void
+    /**
+     * Validate the provided cron key, generate invoices for all active recurring schedules, update their next run dates, and optionally email the generated invoices.
+     *
+     * If the provided cron key does not match the system setting, an error is logged, an HTTP 500 error is shown, and execution is terminated.
+     *
+     * @param string|null $cron_key the cron key used to authorize this operation; if null, the system setting will be used for comparison
+     */
+    public function recur($cron_key = null)
     {
-        $settingCronKey = get_setting('cron_key');
-
-        if ($cronKey !== $settingCronKey) {
-            log_message('error', '[Cron Recurring Invoices] Wrong cron key provided! ' . ($cronKey ?? 'null'));
-            http_response_code(500);
+        // Check the provided cron key
+        if ($cron_key != get_setting('cron_key')) {
+            Log::error('[CronController RecurringController InvoicesController] Wrong cron key provided! ' . $cron_key);
+            show_error(trans('wrong_cron_key_provided'), 500);
             exit('Wrong cron key!');
         }
-
-        $invoicesRecurring = InvoicesRecurring::active()
-            ->with(['invoice', 'client'])
-            ->get();
-
-        foreach ($invoicesRecurring as $invoiceRecurring) {
-            $recurInfo = [
-                'invoice_id'           => $invoiceRecurring->invoice_id,
-                'client_id'            => $invoiceRecurring->client_id,
-                'invoice_group_id'     => $invoiceRecurring->invoice_group_id,
-                'invoice_status_id'    => $invoiceRecurring->invoice_status_id,
-                'invoice_number'       => $invoiceRecurring->invoice_number,
-                'invoice_recurring_id' => $invoiceRecurring->invoice_recurring_id,
-                'recur_start_date'     => $invoiceRecurring->recur_start_date,
-                'recur_end_date'       => $invoiceRecurring->recur_end_date,
-                'recur_frequency'      => $invoiceRecurring->recur_frequency,
-                'recur_next_date'      => $invoiceRecurring->recur_next_date,
-                'recur_status'         => $invoiceRecurring->recur_status,
-            ];
-
-            if (defined('IP_DEBUG') && IP_DEBUG) {
-                log_message('debug', '[Cron Recurring Invoices] Recurring Info: ' . json_encode($recurInfo, JSON_PRETTY_PRINT));
+        // Gather a list of recurring invoices to generate
+        $invoices_recurring = (new InvoicesRecurringService())->active()->get()->result();
+        $recurInfo          = [];
+        foreach ($invoices_recurring as $invoice_recurring) {
+            $recurInfo = ['invoice_id' => $invoice_recurring->invoice_id, 'client_id' => $invoice_recurring->client_id, 'invoice_group_id' => $invoice_recurring->invoice_group_id, 'invoice_status_id' => $invoice_recurring->invoice_status_id, 'invoice_number' => $invoice_recurring->invoice_number, 'invoice_recurring_id' => $invoice_recurring->invoice_recurring_id, 'recur_start_date' => $invoice_recurring->recur_start_date, 'recur_end_date' => $invoice_recurring->recur_end_date, 'recur_frequency' => $invoice_recurring->recur_frequency, 'recur_next_date' => $invoice_recurring->recur_next_date, 'recur_status' => $invoice_recurring->recur_status];
+            if (IP_DEBUG) {
+                log_message('debug', '[CronController RecurringController InvoicesController] RecurringController Info: ' . json_encode($recurInfo, JSON_PRETTY_PRINT));
             }
-
-            $sourceId = $invoiceRecurring->invoice_id;
-            $invoice  = Invoice::with(['items', 'taxRates', 'client', 'user'])->findOrFail($sourceId);
-
-            if (get_setting('einvoicing') && function_exists('get_einvoice_usage')) {
+            // This is the original invoice id
+            $source_id = $invoice_recurring->invoice_id;
+            // This is the original invoice
+            $invoice = (new InvoicesService())->getById($source_id);
+            // Automatic calculation mode
+            if (get_setting('einvoicing')) {
+// TODO: Laravel autoloads helpers - $this->load->helper('e-invoice');
+                // Only for shift legacy_calculation mode
                 get_einvoice_usage($invoice, [], false);
             }
-
-            $dbArray = [
-                'client_id'                => $invoice->client_id,
-                'payment_method'           => $invoice->payment_method,
-                'invoice_date_created'     => $invoiceRecurring->recur_next_date,
-                'invoice_date_due'         => $this->getDateDue($invoiceRecurring->recur_next_date),
-                'invoice_group_id'         => $invoice->invoice_group_id,
-                'user_id'                  => $invoice->user_id,
-                'invoice_number'           => $this->getInvoiceNumber($invoice->invoice_group_id),
-                'invoice_url_key'          => $this->getUrlKey(),
-                'invoice_terms'            => $invoice->invoice_terms,
-                'invoice_discount_amount'  => $invoice->invoice_discount_amount,
-                'invoice_discount_percent' => $invoice->invoice_discount_percent,
-            ];
-
-            $newInvoice = $this->invoiceService->createInvoice($dbArray);
-            $targetId   = $newInvoice->invoice_id;
-
-            if (defined('IP_DEBUG') && IP_DEBUG) {
-                log_message('debug', '[Cron Recurring Invoices] Recurring Invoice with id ' . $targetId . ' was created');
+            // Create the new invoice
+            $db_array = ['client_id' => $invoice->client_id, 'payment_method' => $invoice->payment_method, 'invoice_date_created' => $invoice_recurring->recur_next_date, 'invoice_date_due' => (new InvoicesService())->getDateDue($invoice_recurring->recur_next_date), 'invoice_group_id' => $invoice->invoice_group_id, 'user_id' => $invoice->user_id, 'invoice_number' => (new InvoicesService())->getInvoiceNumber($invoice->invoice_group_id), 'invoice_url_key' => (new InvoicesService())->getUrlKey(), 'invoice_terms' => $invoice->invoice_terms, 'invoice_discount_amount' => $invoice->invoice_discount_amount, 'invoice_discount_percent' => $invoice->invoice_discount_percent];
+            // This is the new invoice id
+            $target_id = (new InvoicesService())->create($db_array, false);
+            if (IP_DEBUG) {
+                log_message('debug', '[CronController RecurringController InvoicesController] RecurringController Invoice with id ' . $target_id . ' was created');
             }
-
-            $this->copyInvoice($sourceId, $targetId);
-
-            if (defined('IP_DEBUG') && IP_DEBUG) {
-                log_message('debug', '[Cron Recurring Invoices] Recurring Invoice with sourceId ' . $sourceId . ' was copied to id ' . $targetId);
+            // Copy the original invoice to the new invoice
+            (new InvoicesService())->copyInvoice($source_id, $target_id, false);
+            if (IP_DEBUG) {
+                log_message('debug', '[CronController RecurringController InvoicesController] RecurringController Invoice with sourceId ' . $source_id . ' was copied to id ' . $target_id);
             }
-
-            $this->setNextRecurDate($invoiceRecurring->invoice_recurring_id);
-
-            if (defined('IP_DEBUG') && IP_DEBUG) {
-                log_message('debug', '[Cron Recurring Invoices] Next Recurring date was set');
+            // Update the next recur date for the recurring invoice
+            (new InvoicesRecurringService())->setNextRecurDate($invoice_recurring->invoice_recurring_id);
+            if (IP_DEBUG) {
+                log_message('debug', '[CronController RecurringController InvoicesController] Next RecurringController date was set');
             }
-
-            if (get_setting('automatic_email_on_recur') && function_exists('mailer_configured') && mailer_configured()) {
-                $this->emailNewInvoice($targetId, $invoice);
+            // Email the new invoice if applicable
+            if (get_setting('automatic_email_on_recur') && MailerHelper::mailerConfigured()) {
+                $new_invoice = (new InvoicesService())->getById($target_id);
+                // Set the email body, use default email template if available
+                $email_template_id = get_setting('email_invoice_template');
+                if ( ! $email_template_id) {
+                    Log::error('[CronController RecurringController InvoicesController] No email template set in the system settings!');
+                    continue;
+                }
+                $email_template = (new EmailTemplatesService())->where('email_template_id', $email_template_id)->get();
+                if ($email_template->numRows() == 0) {
+                    Log::error('[CronController RecurringController InvoicesController] No email template set in the system settings!');
+                    continue;
+                }
+                $tpl = $email_template->row();
+                // Prepare the attachments
+                $attachment_files = (new UploadsService())->getInvoiceUploads($target_id);
+                // Prepare the body
+                $body = $tpl->email_template_body;
+                if (mb_strlen($body) != mb_strlen(strip_tags($body))) {
+                    $body = htmlspecialchars_decode($body, ENT_COMPAT);
+                } else {
+                    $body = htmlspecialchars_decode(nl2br($body), ENT_COMPAT);
+                }
+                $from          = empty($tpl->email_template_from_email) ? [$invoice->user_email, ''] : [$tpl->email_template_from_email, $tpl->email_template_from_name];
+                $subject       = empty($tpl->email_template_subject) ? trans('invoice') . ' #' . $new_invoice->invoice_number : $tpl->email_template_subject;
+                $pdf_template  = $tpl->email_template_pdf_template;
+                $to            = $invoice->client_email;
+                $cc            = $tpl->email_template_cc;
+                $bcc           = $tpl->email_template_bcc;
+                $email_invoice = email_invoice($target_id, $pdf_template, $from, $to, $subject, $body, $cc, $bcc, $attachment_files);
+                if ($email_invoice) {
+                    (new InvoicesService())->markSent($target_id);
+                } else {
+                    Log::error('[CronController RecurringController InvoicesController] Invoice ' . $target_id . 'could not be sent. Please review your Email settings.');
+                }
             } else {
-                log_message('error', '[Cron Recurring Invoices] automatic_email_on_recur not set or mailer not configured');
+                Log::error('[CronController RecurringController InvoicesController] Automatic_email_on_recur was not set or mailer was not configured');
             }
         }
-
-        if (defined('IP_DEBUG') && IP_DEBUG) {
-            log_message('debug', '[Cron Recurring Invoices] ' . $invoicesRecurring->count() . ' recurring invoices processed');
+        if (IP_DEBUG) {
+            log_message('debug', '[CronController RecurringController InvoicesController] ' . count($invoices_recurring) . ' recurring invoices processed');
         }
-    }
-
-    private function getDateDue(string $createdDate): string
-    {
-        $daysUntilDue = get_setting('invoices_due_after') ?: 30;
-
-        return date('Y-m-d', strtotime($createdDate . ' + ' . $daysUntilDue . ' days'));
-    }
-
-    private function getInvoiceNumber(int $invoiceGroupId): string
-    {
-        $invoiceGroup = $this->invoiceGroupService->findOrFail($invoiceGroupId);
-
-        return $this->invoiceGroupService->generateInvoiceNumber($invoiceGroup);
-    }
-
-    private function getUrlKey(): string
-    {
-        do {
-            $urlKey = $this->invoiceService->generateUrlKey();
-            $exists = $this->invoiceService->urlKeyExists($urlKey);
-        } while ($exists);
-
-        return $urlKey;
-    }
-
-    private function copyInvoice(int $sourceId, int $targetId): void
-    {
-        $sourceInvoice = Invoice::with(['items', 'taxRates'])->findOrFail($sourceId);
-
-        foreach ($sourceInvoice->items as $item) {
-            $newItem             = $item->replicate();
-            $newItem->invoice_id = $targetId;
-            $newItem->save();
-        }
-
-        foreach ($sourceInvoice->taxRates as $taxRate) {
-            $newTaxRate             = $taxRate->replicate();
-            $newTaxRate->invoice_id = $targetId;
-            $newTaxRate->save();
-        }
-
-        app(InvoiceAmountService::class)->calculate($targetId);
-    }
-
-    private function setNextRecurDate(int $recurringId): void
-    {
-        $recurring = $this->invoicesRecurringService->findOrFail($recurringId);
-
-        $currentDate = $recurring->recur_next_date;
-        $frequency   = $recurring->recur_frequency;
-
-        $intervals = [
-            1 => '+1 week',
-            2 => '+2 weeks',
-            3 => '+1 month',
-            4 => '+3 months',
-            5 => '+6 months',
-            6 => '+1 year',
-        ];
-
-        $interval = $intervals[$frequency] ?? '+1 month';
-        $nextDate = date('Y-m-d', strtotime($currentDate . ' ' . $interval));
-
-        $recurring->update(['recur_next_date' => $nextDate]);
-    }
-
-    private function emailNewInvoice(int $invoiceId, Invoice $originalInvoice): void
-    {
-        $emailTemplateId = get_setting('email_invoice_template');
-
-        if ( ! $emailTemplateId) {
-            log_message('error', '[Cron Recurring Invoices] No email template set in system settings!');
-
-            return;
-        }
-
-        if ( ! function_exists('email_invoice')) {
-            log_message('error', '[Cron Recurring Invoices] email_invoice helper not available');
-
-            return;
-        }
-
-        $newInvoice = Invoice::with(['client', 'user'])->findOrFail($invoiceId);
-
-        $emailSent = email_invoice(
-            $invoiceId,
-            get_setting('default_invoice_template'),
-            [$originalInvoice->user->user_email ?? '', ''],
-            $newInvoice->client->client_email ?? '',
-            trans('invoice') . ' #' . $newInvoice->invoice_number,
-            trans('new_recurring_invoice_email_body'),
-            '',
-            ''
-        );
-
-        if ($emailSent) {
-            $newInvoice->update(['invoice_status_id' => 2]);
-
-            return;
-        }
-
-        log_message('error', '[Cron Recurring Invoices] Invoice ' . $invoiceId . ' could not be sent. Check Email settings.');
     }
 }
