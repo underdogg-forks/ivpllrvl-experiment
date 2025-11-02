@@ -34,11 +34,13 @@ class UploadControllerTest extends FeatureTestCase
         if (is_dir($this->testUploadDir)) {
             $files = glob($this->testUploadDir . '/*');
             foreach ($files as $file) {
-                if (is_file($file)) {
-                    @unlink($file);
+                if (is_file($file) && file_exists($file)) {
+                    unlink($file);
                 }
             }
-            @rmdir($this->testUploadDir);
+            if (file_exists($this->testUploadDir)) {
+                rmdir($this->testUploadDir);
+            }
         }
         parent::tearDown();
     }
@@ -233,8 +235,10 @@ class UploadControllerTest extends FeatureTestCase
         $response->assertOk();
         $this->assertTrue(is_dir($testDir));
         
-        // Cleanup
-        @rmdir($testDir);
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($testDir) && is_dir($testDir)) {
+            rmdir($testDir);
+        }
     }
 
     /**
@@ -257,8 +261,10 @@ class UploadControllerTest extends FeatureTestCase
         $response->assertOk();
         $this->assertTrue(is_dir($testDir));
         
-        // Cleanup
-        @rmdir($testDir);
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($testDir) && is_dir($testDir)) {
+            rmdir($testDir);
+        }
     }
 
     // ==================== ROUTE: GET /upload/show-files ====================
@@ -346,8 +352,10 @@ class UploadControllerTest extends FeatureTestCase
             'message' => 'upload_file_deleted_successfully',
         ]);
         
-        // Cleanup
-        @unlink($filePath);
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
     }
 
     /**
@@ -440,8 +448,10 @@ class UploadControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertOk();
         
-        // Cleanup
-        @unlink($filePath);
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
     }
 
     /**

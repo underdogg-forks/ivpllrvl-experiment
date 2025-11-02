@@ -160,10 +160,16 @@ class ImportControllerTest extends FeatureTestCase
         $this->assertContains('invoices.csv', $files);
         $this->assertNotContains('malicious.php', $files);
         
-        // Cleanup
-        @unlink($uploadDir . '/clients.csv');
-        @unlink($uploadDir . '/invoices.csv');
-        @unlink($uploadDir . '/malicious.php');
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($uploadDir . '/clients.csv')) {
+            unlink($uploadDir . '/clients.csv');
+        }
+        if (file_exists($uploadDir . '/invoices.csv')) {
+            unlink($uploadDir . '/invoices.csv');
+        }
+        if (file_exists($uploadDir . '/malicious.php')) {
+            unlink($uploadDir . '/malicious.php');
+        }
     }
 
     /**
@@ -197,8 +203,10 @@ class ImportControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertRedirect(route('import.index'));
         
-        // Cleanup
-        @unlink($uploadDir . '/clients.csv');
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($uploadDir . '/clients.csv')) {
+            unlink($uploadDir . '/clients.csv');
+        }
     }
 
     /**
@@ -282,8 +290,10 @@ class ImportControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertRedirect(route('import.index'));
         
-        // Cleanup
-        @unlink($uploadDir . '/invoice_items.csv');
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($uploadDir . '/invoice_items.csv')) {
+            unlink($uploadDir . '/invoice_items.csv');
+        }
     }
 
     /**
@@ -316,8 +326,10 @@ class ImportControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertRedirect(route('import.index'));
         
-        // Cleanup
-        @unlink($uploadDir . '/payments.csv');
+        // Cleanup - use file_exists to avoid errors
+        if (file_exists($uploadDir . '/payments.csv')) {
+            unlink($uploadDir . '/payments.csv');
+        }
     }
 
     // ==================== ROUTE: GET /import/delete/{id} (delete) ====================
