@@ -2,7 +2,6 @@
 
 namespace Modules\Invoices\Services;
 
-use DB;
 use Modules\Invoices\Models\Item;
 use Modules\Invoices\Models\ItemAmount;
 
@@ -61,15 +60,14 @@ class InvoiceItemService
 
     public function getItemsSubtotal(int $invoiceId): float
     {
-        $result = DB::table('ip_invoice_item_amounts')
-            ->selectRaw('SUM(item_subtotal) AS items_subtotal')
-            ->whereIn('item_id', function ($query) use ($invoiceId) {
-                $query->select('item_id')
-                    ->from('ip_invoice_items')
-                    ->where('invoice_id', $invoiceId);
-            })
-            ->first();
+        // Get all item IDs for this invoice
+        $itemIds = Item::where('invoice_id', $invoiceId)
+            ->pluck('item_id');
 
-        return (float) ($result->items_subtotal ?? 0.0);
+        // Sum the subtotals from invoice_item_amounts
+        $result = ItemAmount::whereIn('item_id', $itemIds)
+            ->sum('item_subtotal');
+
+        return (float) ($result ?? 0.0);
     }
 }
