@@ -57,7 +57,7 @@ class ProjectsControllerTest extends FeatureTestCase
         $client = Client::factory()->create(['client_active' => 1]);
 
         /** Act */
-        $response = $this->get(route('projects.create'));
+        $response = $this->get(route('projects.form'));
 
         /** Assert */
         $response->assertOk();
@@ -94,7 +94,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.store'), $projectData);
+        $response = $this->post(route('projects.form'), $projectData);
 
         /** Assert */
         $response->assertRedirect(route('projects.index'));
@@ -125,7 +125,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.store'), $projectData);
+        $response = $this->post(route('projects.form'), $projectData);
 
         /** Assert */
         $response->assertSessionHasErrors(['client_id']);
@@ -145,7 +145,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->get(route('projects.edit', ['project' => $project->project_id]));
+        $response = $this->get(route('projects.form', ['id' => $project->project_id]));
 
         /** Assert */
         $response->assertOk();
@@ -184,7 +184,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('projects.update', ['project' => $project->project_id]), $updateData);
+        $response = $this->put(route('projects.form', ['id' => $project->project_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('projects.index'));
@@ -267,7 +267,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.store'), $projectData);
+        $response = $this->post(route('projects.form'), $projectData);
 
         /** Assert */
         $response->assertSessionHasErrors(['project_name']);
@@ -289,7 +289,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.store'), $projectData);
+        $response = $this->post(route('projects.form'), $projectData);
 
         /** Assert */
         // Should either truncate or fail validation
@@ -320,7 +320,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.store'), $projectData);
+        $response = $this->post(route('projects.form'), $projectData);
 
         /** Assert */
         $response->assertRedirect(route('projects.index'));
@@ -346,7 +346,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.store'), $projectData);
+        $response = $this->post(route('projects.form'), $projectData);
 
         /** Assert */
         $response->assertSessionHasErrors(['client_id']);
@@ -372,7 +372,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('projects.update', ['project' => $project->project_id]), $updateData);
+        $response = $this->put(route('projects.form', ['id' => $project->project_id]), $updateData);
 
         /** Assert */
         $response->assertSessionHasErrors(['project_status']);
@@ -406,7 +406,7 @@ class ProjectsControllerTest extends FeatureTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $response = $this->get(route('projects.edit', ['project' => $nonexistentId]));
+        $response = $this->get(route('projects.form', ['id' => $nonexistentId]));
 
         /** Assert */
         $response->assertNotFound();
@@ -567,7 +567,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->put(route('projects.update', ['project' => $project->project_id]), $updateData);
+        $response = $this->put(route('projects.form', ['id' => $project->project_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('projects.index'));
