@@ -1,16 +1,14 @@
 <?php
 
-namespace Modules\Projects\app\Http\Controllers;
+namespace Modules\Projects\Controllers;
 
 use AllowDynamicProperties;
 use Illuminate\Http\Request;
 use Modules\Core\Controllers\AdminController;
-use Modules\Projects\app\Services\TasksService;
-
-use function Modules\Tasks\Controllers\view;
+use Modules\Projects\Services\TasksService;
 
 #[AllowDynamicProperties]
-class ProjectsAjaxController extends AdminController
+class TasksAjaxController extends AdminController
 {
     /**
      * Render the task lookups modal populated with default tax rate and invoice tasks.
