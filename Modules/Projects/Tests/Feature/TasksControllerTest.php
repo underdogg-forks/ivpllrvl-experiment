@@ -282,15 +282,23 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
+        $this->actingAs($user);
         $response = $this->post(route('tasks.store'), $taskData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
         
-        /** Verify XSS is prevented */
-        $task = Task::where('task_status', 1)->orderBy('task_id', 'desc')->first();
-        $this->assertNotNull($task);
-        $this->assertStringContainsString('Task', $task->task_name);
+        /** Verify XSS is prevented - use database assertion instead of static model call */
+        $this->assertDatabaseHas('ip_tasks', [
+            'task_status' => 1,
+        ]);
+        // Additional check: task name should contain safe content
+        $tasks = \Illuminate\Support\Facades\DB::table('ip_tasks')
+            ->where('task_status', 1)
+            ->orderBy('task_id', 'desc')
+            ->first();
+        $this->assertNotNull($tasks);
+        $this->assertStringContainsString('Task', $tasks->task_name);
     }
 
     /**
@@ -596,15 +604,18 @@ class TasksControllerTest extends FeatureTestCase
         ];
 
         /** Act */
+        $this->actingAs($user);
         $response = $this->put(route('tasks.update', ['task' => $task->task_id]), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tasks.index'));
         
-        /** Verify only name was updated */
-        $updatedTask = Task::find($task->task_id);
-        $this->assertEquals('Updated Name', $updatedTask->task_name);
-        $this->assertEquals('Original description', $updatedTask->task_description);
-        $this->assertEquals(1, $updatedTask->task_status);
+        /** Verify only name was updated - use database assertions */
+        $this->assertDatabaseHas('ip_tasks', [
+            'task_id' => $task->task_id,
+            'task_name' => 'Updated Name',
+            'task_description' => 'Original description',
+            'task_status' => 1,
+        ]);
     }
 }

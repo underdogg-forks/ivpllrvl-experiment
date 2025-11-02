@@ -298,10 +298,11 @@ class ProjectsControllerTest extends FeatureTestCase
             $this->assertDatabaseHas('ip_projects', [
                 'client_id' => $client->client_id,
             ]);
-        } else {
-            // Rejected - should have validation error
-            $response->assertSessionHasErrors(['project_name']);
+            return;
         }
+        
+        // Rejected - should have validation error
+        $response->assertSessionHasErrors(['project_name']);
     }
 
     /**
