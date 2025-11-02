@@ -48,7 +48,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $paymentData);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.add'), $paymentData);
 
         /** Assert */
         $response->assertOk();
@@ -83,7 +84,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
             'payment_amount' => 'not-a-number',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -112,7 +114,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
             'payment_amount' => '100.00',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -145,7 +148,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
             'payment_amount' => '100.00',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -177,7 +181,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
             'payment_date' => '2024-01-15',
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.ajax.add'), $payload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.add'), $payload);
 
         /** Assert */
         $response->assertOk();
@@ -212,7 +217,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
             'invoice_payment_method' => 1,
         ];
 
-        $response = $this->actingAs($user)->post(route('payments.ajax.modal_add_payment'), $modalPayload);
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.modal_add_payment'), $modalPayload);
 
         /** Assert */
         $response->assertOk();
@@ -237,7 +243,8 @@ class PaymentsAjaxControllerTest extends FeatureTestCase
         PaymentMethod::factory()->create(['payment_method_name' => 'Credit Card']);
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('payments.ajax.modal_add_payment'));
+        $this->actingAs($user);
+        $response = $this->post(route('payments.ajax.modal_add_payment'));
 
         /** Assert */
         $response->assertOk();

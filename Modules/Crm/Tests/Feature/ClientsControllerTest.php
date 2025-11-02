@@ -30,7 +30,8 @@ class ClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.index'));
 
         /** Assert */
         $response->assertRedirect(route('clients.status', ['status' => 'active']));
@@ -50,7 +51,8 @@ class ClientsControllerTest extends FeatureTestCase
         $inactiveClient = Client::factory()->create(['client_active' => 0]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.status', ['status' => 'active']));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.status', ['status' => 'active']));
 
         /** Assert */
         $response->assertOk();
@@ -77,7 +79,8 @@ class ClientsControllerTest extends FeatureTestCase
         $inactiveClient = Client::factory()->create(['client_active' => 0]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.status', ['status' => 'inactive']));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.status', ['status' => 'inactive']));
 
         /** Assert */
         $response->assertOk();
@@ -104,7 +107,8 @@ class ClientsControllerTest extends FeatureTestCase
         $inactiveClient = Client::factory()->create(['client_active' => 0]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.status', ['status' => 'all']));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.status', ['status' => 'all']));
 
         /** Assert */
         $response->assertOk();
@@ -128,7 +132,8 @@ class ClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.status', ['status' => 'active']));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.status', ['status' => 'active']));
 
         /** Assert */
         $response->assertOk();
@@ -148,7 +153,8 @@ class ClientsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.create'));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.create'));
 
         /** Assert */
         $response->assertOk();
@@ -184,7 +190,8 @@ class ClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('clients.store'), $clientData);
+        $this->actingAs($user);
+        $response = $this->post(route('clients.store'), $clientData);
 
         /** Assert */
         $response->assertRedirect(route('clients.index'));
@@ -208,7 +215,8 @@ class ClientsControllerTest extends FeatureTestCase
         $client = Client::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.edit', $client));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.edit', $client));
 
         /** Assert */
         $response->assertOk();
@@ -248,7 +256,8 @@ class ClientsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->put(route('clients.update', $client), $updateData);
+        $this->actingAs($user);
+        $response = $this->put(route('clients.update', $client), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('clients.index'));
@@ -272,7 +281,8 @@ class ClientsControllerTest extends FeatureTestCase
         $client = Client::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->delete(route('clients.destroy', $client));
+        $this->actingAs($user);
+        $response = $this->delete(route('clients.destroy', $client));
 
         /** Assert */
         $response->assertRedirect(route('clients.index'));
@@ -297,7 +307,8 @@ class ClientsControllerTest extends FeatureTestCase
         Client::factory()->create(['client_name' => 'Beta Company', 'client_active' => 1]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('clients.status', ['status' => 'active']));
+        $this->actingAs($user);
+        $response = $this->get(route('clients.status', ['status' => 'active']));
 
         /** Assert */
         $response->assertOk();

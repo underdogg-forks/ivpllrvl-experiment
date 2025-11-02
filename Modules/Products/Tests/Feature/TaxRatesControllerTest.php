@@ -30,7 +30,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         TaxRate::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('tax_rates.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('tax_rates.index'));
 
         /** Assert */
         $response->assertOk();
@@ -49,7 +50,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('tax_rates.create'));
+        $this->actingAs($user);
+        $response = $this->get(route('tax_rates.create'));
 
         /** Assert */
         $response->assertOk();
@@ -83,7 +85,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('tax_rates.store'), $taxRateData);
+        $this->actingAs($user);
+        $response = $this->post(route('tax_rates.store'), $taxRateData);
 
         /** Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -107,7 +110,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         $taxRate = TaxRate::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('tax_rates.edit', $taxRate));
+        $this->actingAs($user);
+        $response = $this->get(route('tax_rates.edit', $taxRate));
 
         /** Assert */
         $response->assertOk();
@@ -144,7 +148,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->put(route('tax_rates.update', $taxRate), $updateData);
+        $this->actingAs($user);
+        $response = $this->put(route('tax_rates.update', $taxRate), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -169,7 +174,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         $taxRate = TaxRate::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->delete(route('tax_rates.destroy', $taxRate));
+        $this->actingAs($user);
+        $response = $this->delete(route('tax_rates.destroy', $taxRate));
 
         /** Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -194,7 +200,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         TaxRate::factory()->create(['tax_rate_name' => 'Reduced Rate', 'tax_rate_percent' => '5.00']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('tax_rates.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('tax_rates.index'));
 
         /** Assert */
         $response->assertOk();
@@ -221,7 +228,8 @@ class TaxRatesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('tax_rates.store'), $taxRateData);
+        $this->actingAs($user);
+        $response = $this->post(route('tax_rates.store'), $taxRateData);
 
         /** Assert */
         $response->assertRedirect(route('tax_rates.index'));

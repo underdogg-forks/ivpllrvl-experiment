@@ -28,7 +28,8 @@ class SetupControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('setup.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('setup.index'));
 
         /** Assert */
         $response->assertOk();

@@ -28,7 +28,8 @@ class MailerControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('mailer.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('mailer.index'));
 
         /** Assert */
         $response->assertOk();

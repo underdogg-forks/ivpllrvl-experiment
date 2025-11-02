@@ -34,7 +34,8 @@ class QuotesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.index'));
 
         /** Assert */
         $response->assertRedirect(route('quotes.status', ['status' => 'all']));
@@ -62,7 +63,8 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get('/quotes/status/draft');
+        $this->actingAs($user);
+        $response = $this->get('/quotes/status/draft');
 
         /** Assert */
         $response->assertOk();
@@ -99,7 +101,8 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get('/quotes/status/all');
+        $this->actingAs($user);
+        $response = $this->get('/quotes/status/all');
 
         /** Assert */
         $response->assertOk();
@@ -124,7 +127,8 @@ class QuotesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get('/quotes/status/all');
+        $this->actingAs($user);
+        $response = $this->get('/quotes/status/all');
 
         /** Assert */
         $response->assertOk();
@@ -154,7 +158,8 @@ class QuotesControllerTest extends FeatureTestCase
         $item2 = QuoteItem::factory()->create(['quote_id' => $quote->quote_id]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
         /** Assert */
         $response->assertOk();
@@ -183,7 +188,8 @@ class QuotesControllerTest extends FeatureTestCase
         $nonExistentQuoteId = 99999;
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.view', ['quote_id' => $nonExistentQuoteId]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.view', ['quote_id' => $nonExistentQuoteId]));
 
         /** Assert */
         $response->assertNotFound();
@@ -206,7 +212,8 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
         /** Assert */
         $response->assertOk();
@@ -231,7 +238,8 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
         /** Assert */
         $response->assertOk();
@@ -267,7 +275,8 @@ class QuotesControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('quotes.delete', $deleteParams));
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.delete', $deleteParams));
 
         /** Assert */
         $response->assertRedirect(route('quotes.index'));
@@ -347,7 +356,8 @@ class QuotesControllerTest extends FeatureTestCase
          */
         $payload = [];
 
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('quotes.delete_tax', [
                 'quote_id'          => $quote->quote_id,
                 'quote_tax_rate_id' => $quoteTaxRateId,
@@ -386,7 +396,8 @@ class QuotesControllerTest extends FeatureTestCase
          */
         $payload = [];
 
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('quotes.delete_tax', [
                 'quote_id'          => $quote->quote_id,
                 'quote_tax_rate_id' => $taxRate->quote_tax_rate_id,
@@ -426,7 +437,8 @@ class QuotesControllerTest extends FeatureTestCase
          */
         $recalculatePayload = [];
 
-        $response = $this->actingAs($user)->post(route('quotes.recalculate_all'), $recalculatePayload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.recalculate_all'), $recalculatePayload);
 
         /** Assert */
         $response->assertRedirect();
@@ -450,7 +462,8 @@ class QuotesControllerTest extends FeatureTestCase
          */
         $recalculatePayload = [];
 
-        $response = $this->actingAs($user)->post(route('quotes.recalculate_all'), $recalculatePayload);
+        $this->actingAs($user);
+        $response = $this->post(route('quotes.recalculate_all'), $recalculatePayload);
 
         /** Assert */
         $response->assertRedirect();
@@ -477,7 +490,8 @@ class QuotesControllerTest extends FeatureTestCase
         }
 
         /** Act */
-        $response = $this->actingAs($user)->get('/quotes/status/draft');
+        $this->actingAs($user);
+        $response = $this->get('/quotes/status/draft');
 
         /** Assert */
         $response->assertOk();
@@ -509,7 +523,8 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get('/quotes/status/sent');
+        $this->actingAs($user);
+        $response = $this->get('/quotes/status/sent');
 
         /** Assert */
         $response->assertOk();
@@ -542,7 +557,8 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get('/quotes/status/approved');
+        $this->actingAs($user);
+        $response = $this->get('/quotes/status/approved');
 
         /** Assert */
         $response->assertOk();

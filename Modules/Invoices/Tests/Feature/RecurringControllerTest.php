@@ -31,7 +31,8 @@ class RecurringControllerTest extends FeatureTestCase
         $recurring2 = InvoicesRecurring::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.recurring'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.recurring'));
 
         /* Assert */
         $response->assertOk();
@@ -52,7 +53,8 @@ class RecurringControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.recurring'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.recurring'));
 
         /** Assert */
         $response->assertOk();
@@ -72,7 +74,8 @@ class RecurringControllerTest extends FeatureTestCase
         InvoicesRecurring::factory()->count(20)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.recurring'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.recurring'));
 
         /** Assert */
         $response->assertOk();
@@ -91,7 +94,8 @@ class RecurringControllerTest extends FeatureTestCase
         $recurring = InvoicesRecurring::factory()->create(['recur_status' => 1]);
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoices.recurring.stop', ['id' => $recurring->invoice_recurring_id])
         );
 
@@ -113,7 +117,8 @@ class RecurringControllerTest extends FeatureTestCase
         $recurring = InvoicesRecurring::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('invoices.recurring.stop', ['id' => $recurring->invoice_recurring_id])
         );
 
@@ -136,7 +141,8 @@ class RecurringControllerTest extends FeatureTestCase
         ];
 
         /* Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.stop', $stopParams));
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.recurring.stop', $stopParams));
 
         /* Assert */
         $response->assertNotFound();
@@ -160,7 +166,8 @@ class RecurringControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', $deleteParams));
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.recurring.delete', $deleteParams));
 
         /* Assert */
         $response->assertRedirect();
@@ -184,7 +191,8 @@ class RecurringControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', $deleteParams));
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.recurring.delete', $deleteParams));
 
         /* Assert */
         $response->assertRedirect();
@@ -205,7 +213,8 @@ class RecurringControllerTest extends FeatureTestCase
         ];
 
         /* Act */
-        $response = $this->actingAs($user)->post(route('invoices.recurring.delete', $deleteParams));
+        $this->actingAs($user);
+        $response = $this->post(route('invoices.recurring.delete', $deleteParams));
 
         /* Assert */
         $response->assertNotFound();
@@ -222,7 +231,8 @@ class RecurringControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoices.recurring'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoices.recurring'));
 
         /** Assert */
         $response->assertOk();

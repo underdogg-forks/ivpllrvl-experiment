@@ -30,7 +30,8 @@ class InvoiceControllerTest extends FeatureTestCase
         Invoice::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice.index'));
 
         /** Assert */
         $response->assertOk();
@@ -57,7 +58,8 @@ class InvoiceControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice.index'));
 
         /** Assert */
         $response->assertOk();
@@ -79,7 +81,8 @@ class InvoiceControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice.show', ['id' => $invoice->invoice_id]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice.show', ['id' => $invoice->invoice_id]));
 
         /** Assert */
         $response->assertOk();
@@ -101,7 +104,8 @@ class InvoiceControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice.show', ['id' => 99999]));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice.show', ['id' => 99999]));
 
         /** Assert */
         $response->assertNotFound();
@@ -118,7 +122,8 @@ class InvoiceControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('invoice.create'));
+        $this->actingAs($user);
+        $response = $this->get(route('invoice.create'));
 
         /** Assert */
         $response->assertOk();

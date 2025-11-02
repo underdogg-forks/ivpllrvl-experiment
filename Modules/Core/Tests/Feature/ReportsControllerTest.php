@@ -28,7 +28,8 @@ class ReportsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('reports.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('reports.index'));
 
         /** Assert */
         $response->assertOk();

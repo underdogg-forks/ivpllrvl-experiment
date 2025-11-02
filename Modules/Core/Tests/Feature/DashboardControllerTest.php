@@ -36,7 +36,8 @@ class DashboardControllerTest extends FeatureTestCase
         Quote::factory()->count(3)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $this->actingAs($user);
+        $response = $this->get(route('dashboard'));
 
         /** Assert */
         $response->assertOk();
@@ -58,7 +59,8 @@ class DashboardControllerTest extends FeatureTestCase
         Client::factory()->count(7)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $this->actingAs($user);
+        $response = $this->get(route('dashboard'));
 
         /** Assert */
         $response->assertOk();
@@ -78,7 +80,8 @@ class DashboardControllerTest extends FeatureTestCase
         Invoice::factory()->count(15)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $this->actingAs($user);
+        $response = $this->get(route('dashboard'));
 
         /** Assert */
         $response->assertOk();
@@ -98,7 +101,8 @@ class DashboardControllerTest extends FeatureTestCase
         Quote::factory()->count(8)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $this->actingAs($user);
+        $response = $this->get(route('dashboard'));
 
         /** Assert */
         $response->assertOk();
@@ -117,7 +121,8 @@ class DashboardControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $this->actingAs($user);
+        $response = $this->get(route('dashboard'));
 
         /** Assert */
         $response->assertOk();

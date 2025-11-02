@@ -28,7 +28,8 @@ class ProductsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.index'));
 
         /* Assert */
         $response->assertOk();
@@ -51,7 +52,8 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create product with family, unit, and tax rate */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.index'));
 
         /* Assert */
         $response->assertOk();
@@ -70,7 +72,8 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create products with different names */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.index'));
 
         /* Assert */
         $response->assertOk();
@@ -89,7 +92,8 @@ class ProductsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.index'));
 
         /** Assert */
         $response->assertOk();
@@ -110,7 +114,8 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create 20 products */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.index'));
 
         /* Assert */
         $response->assertOk();
@@ -129,7 +134,8 @@ class ProductsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.form'));
 
         /* Assert */
         $response->assertOk();
@@ -185,7 +191,8 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create multiple families */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.form'));
 
         /** Assert */
         $response->assertOk();
@@ -205,7 +212,8 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create multiple units */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.form'));
 
         /** Assert */
         $response->assertOk();
@@ -225,7 +233,8 @@ class ProductsControllerTest extends FeatureTestCase
         /** Would create multiple tax rates */
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('products.form'));
+        $this->actingAs($user);
+        $response = $this->get(route('products.form'));
 
         /** Assert */
         $viewData = $response->getData();
@@ -369,7 +378,8 @@ class ProductsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(
+        $this->actingAs($user);
+        $response = $this->post(
             route('products.delete', ['id' => $testId]),
             $deletePayload
         );

@@ -30,7 +30,8 @@ class UnitsControllerTest extends FeatureTestCase
         Unit::factory()->count(5)->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('units.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('units.index'));
 
         /** Assert */
         $response->assertOk();
@@ -49,7 +50,8 @@ class UnitsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('units.create'));
+        $this->actingAs($user);
+        $response = $this->get(route('units.create'));
 
         /** Assert */
         $response->assertOk();
@@ -83,7 +85,8 @@ class UnitsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->post(route('units.store'), $unitData);
+        $this->actingAs($user);
+        $response = $this->post(route('units.store'), $unitData);
 
         /** Assert */
         $response->assertRedirect(route('units.index'));
@@ -107,7 +110,8 @@ class UnitsControllerTest extends FeatureTestCase
         $unit = Unit::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('units.edit', $unit));
+        $this->actingAs($user);
+        $response = $this->get(route('units.edit', $unit));
 
         /** Assert */
         $response->assertOk();
@@ -141,7 +145,8 @@ class UnitsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->actingAs($user)->put(route('units.update', $unit), $updateData);
+        $this->actingAs($user);
+        $response = $this->put(route('units.update', $unit), $updateData);
 
         /** Assert */
         $response->assertRedirect(route('units.index'));
@@ -165,7 +170,8 @@ class UnitsControllerTest extends FeatureTestCase
         $unit = Unit::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->delete(route('units.destroy', $unit));
+        $this->actingAs($user);
+        $response = $this->delete(route('units.destroy', $unit));
 
         /** Assert */
         $response->assertRedirect(route('units.index'));
@@ -190,7 +196,8 @@ class UnitsControllerTest extends FeatureTestCase
         Unit::factory()->create(['unit_name' => 'Beta Unit']);
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('units.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('units.index'));
 
         /** Assert */
         $response->assertOk();

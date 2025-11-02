@@ -129,7 +129,8 @@ class CrmPaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('guest.payments'));
+        $this->actingAs($user);
+        $response = $this->get(route('guest.payments'));
 
         /** Assert */
         $response->assertOk();

@@ -61,7 +61,8 @@ class GuestControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('guest.index'));
+        $this->actingAs($user);
+        $response = $this->get(route('guest.index'));
 
         /** Assert */
         $response->assertOk();

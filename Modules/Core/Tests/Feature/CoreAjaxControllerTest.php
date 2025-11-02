@@ -28,7 +28,8 @@ class CoreAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('core.ajax.get_cron_key'));
+        $this->actingAs($user);
+        $response = $this->get(route('core.ajax.get_cron_key'));
 
         /** Assert */
         $response->assertOk();
@@ -49,8 +50,10 @@ class CoreAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response1 = $this->actingAs($user)->get(route('core.ajax.get_cron_key'));
-        $response2 = $this->actingAs($user)->get(route('core.ajax.get_cron_key'));
+        $this->actingAs($user);
+        $response1 = $this->get(route('core.ajax.get_cron_key'));
+        $this->actingAs($user);
+        $response2 = $this->get(route('core.ajax.get_cron_key'));
 
         /** Assert */
         $key1 = $response1->json('key');
@@ -69,7 +72,8 @@ class CoreAjaxControllerTest extends FeatureTestCase
         $user = User::factory()->create();
 
         /** Act */
-        $response = $this->actingAs($user)->get(route('core.ajax.get_cron_key'));
+        $this->actingAs($user);
+        $response = $this->get(route('core.ajax.get_cron_key'));
 
         /** Assert */
         $key = $response->json('key');
