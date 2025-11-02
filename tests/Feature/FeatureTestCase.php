@@ -32,4 +32,58 @@ abstract class FeatureTestCase extends TestCase
 
         return $this->actingAs($user);
     }
+
+    /**
+     * Make a POST request as an authenticated user.
+     *
+     * @param  \Modules\Core\Models\User|null  $user
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $headers
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function postAs($user, string $uri, array $data = [], array $headers = [])
+    {
+        return $this->actingAs($user)->post($uri, $data, $headers);
+    }
+
+    /**
+     * Make a POST request as a newly created user.
+     *
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $headers
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function postAsUser(string $uri, array $data = [], array $headers = [])
+    {
+        $user = \Modules\Core\Models\User::factory()->create();
+        return $this->actingAs($user)->post($uri, $data, $headers);
+    }
+
+    /**
+     * Make a GET request as an authenticated user.
+     *
+     * @param  \Modules\Core\Models\User|null  $user
+     * @param  string  $uri
+     * @param  array  $headers
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function getAs($user, string $uri, array $headers = [])
+    {
+        return $this->actingAs($user)->get($uri, $headers);
+    }
+
+    /**
+     * Make a GET request as a newly created user.
+     *
+     * @param  string  $uri
+     * @param  array  $headers
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function getAsUser(string $uri, array $headers = [])
+    {
+        $user = \Modules\Core\Models\User::factory()->create();
+        return $this->actingAs($user)->get($uri, $headers);
+    }
 }
