@@ -14,6 +14,22 @@ use Illuminate\Http\Request;
 class InvoiceGroupsController
 {
     /**
+     * InvoiceGroup service instance.
+     *
+     * @var InvoiceGroupService
+     */
+    protected InvoiceGroupService $invoiceGroupService;
+
+    /**
+     * Constructor.
+     *
+     * @param InvoiceGroupService $invoiceGroupService
+     */
+    public function __construct(InvoiceGroupService $invoiceGroupService)
+    {
+        $this->invoiceGroupService = $invoiceGroupService;
+    }
+    /**
      * Display a paginated list of invoice groups
      * 
      * @param int $page Page number for pagination
@@ -53,16 +69,15 @@ class InvoiceGroupsController
         // Handle form submission
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
-            $rules = app(InvoiceGroupService::class)->getValidationRules();
+            $rules = $this->invoiceGroupService->getValidationRules();
             $validated = request()->validate($rules);
             
             if ($id) {
                 // Update existing
-                $invoiceGroup = InvoiceGroup::query()->findOrFail($id);
-                $invoiceGroup->update($validated);
+                $this->invoiceGroupService->update($id, $validated);
             } else {
                 // Create new
-                InvoiceGroup::query()->create($validated);
+                $this->invoiceGroupService->create($validated);
             }
             
             return redirect()->route('invoice_groups.index')
@@ -71,7 +86,7 @@ class InvoiceGroupsController
 
         // Load existing record for editing
         if ($id) {
-            $invoiceGroup = InvoiceGroup::query()->find($id);
+            $invoiceGroup = $this->invoiceGroupService->find($id);
             if (!$invoiceGroup) {
                 abort(404);
             }
@@ -100,8 +115,7 @@ class InvoiceGroupsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $invoiceGroup = InvoiceGroup::query()->findOrFail($id);
-        $invoiceGroup->delete();
+        $this->invoiceGroupService->delete($id);
         
         return redirect()->route('invoice_groups.index')
             ->with('alert_success', trans('record_successfully_deleted'));

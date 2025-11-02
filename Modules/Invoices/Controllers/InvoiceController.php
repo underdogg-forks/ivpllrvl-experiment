@@ -3,6 +3,7 @@
 namespace Modules\Invoices\Controllers;
 
 use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Services\InvoiceService;
 
 /**
  * Invoice Controller.
@@ -12,6 +13,22 @@ use Modules\Invoices\Models\Invoice;
  */
 class InvoiceController
 {
+    /**
+     * Invoice service instance.
+     *
+     * @var InvoiceService
+     */
+    protected InvoiceService $invoiceService;
+
+    /**
+     * Constructor.
+     *
+     * @param InvoiceService $invoiceService
+     */
+    public function __construct(InvoiceService $invoiceService)
+    {
+        $this->invoiceService = $invoiceService;
+    }
     /**
      * Display a listing of invoices.
      *
@@ -61,14 +78,7 @@ class InvoiceController
      */
     public function store(array $data): Invoice
     {
-        $invoice = Invoice::query()->create($data);
-
-        // Create invoice amount record
-        $invoice->amounts()->create([
-            'invoice_id' => $invoice->invoice_id,
-        ]);
-
-        return $invoice;
+        return $this->invoiceService->createInvoice($data);
     }
 
     /**
@@ -80,7 +90,7 @@ class InvoiceController
      */
     public function edit(int $id)
     {
-        $invoice = Invoice::query()->findOrFail($id);
+        $invoice = $this->invoiceService->findOrFail($id);
 
         return view('invoices::edit', compact('invoice'));
     }
@@ -95,7 +105,7 @@ class InvoiceController
      */
     public function update(int $id, array $data): bool
     {
-        $invoice = Invoice::query()->findOrFail($id);
+        $invoice = $this->invoiceService->findOrFail($id);
 
         return $invoice->update($data);
     }
@@ -109,7 +119,7 @@ class InvoiceController
      */
     public function destroy(int $id): bool
     {
-        $invoice = Invoice::query()->findOrFail($id);
+        $invoice = $this->invoiceService->findOrFail($id);
 
         return $invoice->delete();
     }

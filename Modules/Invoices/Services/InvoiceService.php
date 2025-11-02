@@ -189,4 +189,16 @@ class InvoiceService
             ->orderBy('invoice_date_created', 'desc')
             ->get();
     }
+
+    public function createInvoice(array $data): Invoice
+    {
+        $invoice = Invoice::create($data);
+
+        // Create invoice amount record
+        $invoice->amounts()->create([
+            'invoice_id' => $invoice->invoice_id,
+        ]);
+
+        return $invoice;
+    }
 }
