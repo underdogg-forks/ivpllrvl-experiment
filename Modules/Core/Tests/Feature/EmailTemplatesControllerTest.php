@@ -229,21 +229,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $template = EmailTemplate::factory()->create();
-        
-        /**
-         * {
-         *     "email_template_id": 1
-         * }
-         */
-        $deletePayload = [
-            'email_template_id' => $template->email_template_id,
-        ];
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->post(
-            route('email_templates.delete', ['id' => $template->email_template_id]),
-            $deletePayload
+        $response = $this->get(
+            route('email_templates.delete', ['id' => $template->email_template_id])
         );
 
         /** Assert */
@@ -264,21 +254,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
-        /**
-         * {
-         *     "email_template_id": 99999
-         * }
-         */
-        $deletePayload = [
-            'email_template_id' => 99999,
-        ];
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->post(
-            route('email_templates.delete', ['id' => 99999]),
-            $deletePayload
+        $response = $this->get(
+            route('email_templates.delete', ['id' => 99999])
         );
 
         /** Assert */
@@ -517,16 +497,11 @@ class EmailTemplatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
-        $deletePayload = [
-            'email_template_id' => 'invalid',
-        ];
 
         /** Act */
         $this->actingAs($user);
-        $response = $this->post(
-            route('email_templates.delete', ['id' => 'invalid']),
-            $deletePayload
+        $response = $this->get(
+            route('email_templates.delete', ['id' => 'invalid'])
         );
 
         /** Assert */

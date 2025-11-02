@@ -93,6 +93,10 @@ class SetupControllerTest extends FeatureTestCase
         $response->assertOk();
         $response->assertViewIs('core::setup.lang');
         $response->assertViewHas('languages');
+        
+        // Verify languages data is not empty
+        $languages = $response->viewData('languages');
+        $this->assertNotEmpty($languages, 'Languages list should not be empty');
     }
 
     /**
@@ -157,6 +161,12 @@ class SetupControllerTest extends FeatureTestCase
         $response->assertViewIs('core::setup.prerequisites');
         $response->assertViewHas('basics');
         $response->assertViewHas('writables');
+        
+        // Verify prerequisites data contains expected information
+        $basics = $response->viewData('basics');
+        $writables = $response->viewData('writables');
+        $this->assertNotEmpty($basics, 'Basic requirements should be checked');
+        $this->assertNotEmpty($writables, 'Writable paths should be checked');
     }
 
     /**
@@ -210,6 +220,10 @@ class SetupControllerTest extends FeatureTestCase
         $response->assertOk();
         $response->assertViewIs('core::setup.configure_database');
         $response->assertViewHas('database');
+        
+        // Verify database configuration data is present
+        $database = $response->viewData('database');
+        $this->assertIsArray($database, 'Database configuration should be an array');
     }
 
     /**
