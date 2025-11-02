@@ -21,7 +21,7 @@ class InvoiceTaxRateService extends BaseService
         ];
     }
 
-    public function getTaxRatesByInvoiceId(int $invoiceId)
+    public function getTaxRatesByInvoiceId(int $invoiceId): \Illuminate\Database\Eloquent\Collection
     {
         return InvoiceTaxRate::where('invoice_id', $invoiceId)->get();
     }

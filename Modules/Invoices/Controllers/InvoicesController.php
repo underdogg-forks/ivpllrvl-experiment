@@ -15,7 +15,7 @@ use Modules\Crm\Models\Task;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules/Invoices\Models\Item;
+use Modules\Invoices\Models\Item;
 use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules/Invoices\Services\InvoiceItemService;
