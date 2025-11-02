@@ -181,4 +181,12 @@ class InvoiceService
 
         return $now->diff($dueDate)->days;
     }
+
+    public function getOpenInvoices()
+    {
+        return Invoice::where('invoice_balance', '>', 0)
+            ->with('client')
+            ->orderBy('invoice_date_created', 'desc')
+            ->get();
+    }
 }

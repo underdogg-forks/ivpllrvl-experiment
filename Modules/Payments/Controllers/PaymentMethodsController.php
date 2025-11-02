@@ -3,6 +3,7 @@
 namespace Modules\Payments\Controllers;
 
 use Modules\Payments\Models\PaymentMethod;
+use Modules\Payments\Services\PaymentMethodService;
 
 /**
  * PaymentMethodsController.
@@ -11,6 +12,22 @@ use Modules\Payments\Models\PaymentMethod;
  */
 class PaymentMethodsController
 {
+    /**
+     * PaymentMethod service instance.
+     *
+     * @var PaymentMethodService
+     */
+    protected PaymentMethodService $paymentMethodService;
+
+    /**
+     * Constructor.
+     *
+     * @param PaymentMethodService $paymentMethodService
+     */
+    public function __construct(PaymentMethodService $paymentMethodService)
+    {
+        $this->paymentMethodService = $paymentMethodService;
+    }
     /**
      * Display a paginated list of payment methods.
      *
@@ -26,8 +43,7 @@ class PaymentMethodsController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $paymentMethods = PaymentMethod::query()->orderBy('payment_method_name')
-            ->paginate(15, ['*'], 'page', $page);
+        $paymentMethods = $this->paymentMethodService->getAllPaginated(15, $page);
 
         return view('payments::payment_methods_index', [
             'payment_methods' => $paymentMethods,
@@ -63,11 +79,10 @@ class PaymentMethodsController
 
             if ($id) {
                 // Update existing
-                $paymentMethod = PaymentMethod::query()->findOrFail($id);
-                $paymentMethod->update($validated);
+                $this->paymentMethodService->update($id, $validated);
             } else {
                 // Create new
-                PaymentMethod::query()->create($validated);
+                $this->paymentMethodService->create($validated);
             }
 
             return redirect()->route('payment_methods.index')
@@ -76,7 +91,7 @@ class PaymentMethodsController
 
         // Load existing record for editing
         if ($id) {
-            $paymentMethod = PaymentMethod::query()->find($id);
+            $paymentMethod = $this->paymentMethodService->find($id);
             if ( ! $paymentMethod) {
                 abort(404);
             }
@@ -107,8 +122,7 @@ class PaymentMethodsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $paymentMethod = PaymentMethod::query()->findOrFail($id);
-        $paymentMethod->delete();
+        $this->paymentMethodService->delete($id);
 
         return redirect()->route('payment_methods.index')
             ->with('alert_success', trans('record_successfully_deleted'));
