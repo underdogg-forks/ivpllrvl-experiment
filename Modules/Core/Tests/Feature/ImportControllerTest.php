@@ -222,6 +222,10 @@ class ImportControllerTest extends FeatureTestCase
 
         /** Assert */
         $response->assertRedirect(route('import.index'));
+        
+        // Verify no imports were created
+        $importCount = \Modules\Core\Models\Import::count();
+        $this->assertEquals(0, $importCount, 'No imports should be created when files array is empty');
     }
 
     /**
