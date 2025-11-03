@@ -2,160 +2,187 @@
 
 namespace Modules\Core\Controllers;
 
-use AllowDynamicProperties;
 use Modules\Core\Support\MailerHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Modules\Core\Controllers\AdminController;
-use Modules\Core\Services\EmailTemplatesService;
-use Modules\Core\Services\CustomFieldsService;
-use Modules\Invoices\Services\InvoicesService;
-use Modules\Invoices\Services\TemplatesService;
-use Modules\Quotes\Services\QuotesService;
-use Modules\Core\Services\UploadsService;
+use Modules\Core\Services\EmailTemplateService;
+use Modules\Core\Services\CustomFieldService;
+use Modules\Invoices\Services\InvoiceService;
+use Modules\Invoices\Services\TemplateService;
+use Modules\Quotes\Services\QuoteService;
+use Modules\Core\Services\UploadService;
 
-#[AllowDynamicProperties]
-class MailerController extends AdminController
+/**
+ * MailerController
+ *
+ * Handles email composition and sending for invoices and quotes
+ *
+ * @legacy-file application/modules/mailer/controllers/Mailer.php
+ */
+class MailerController
 {
-    private bool $mailer_configured;
+    protected EmailTemplateService $emailTemplateService;
+    protected CustomFieldService $customFieldService;
+    protected InvoiceService $invoiceService;
+    protected TemplateService $templateService;
+    protected QuoteService $quoteService;
+    protected UploadService $uploadService;
+    protected bool $mailer_configured;
 
     /**
-     * Initialize the MailerController and ensure the mailer is configured.
+     * Initialize the MailerController with dependency injection.
      *
-     * If the mailer is not configured, aborts with HTTP 503 and renders the `mailer.not_configured` view.
+     * @param EmailTemplateService $emailTemplateService
+     * @param CustomFieldService $customFieldService
+     * @param InvoiceService $invoiceService
+     * @param TemplateService $templateService
+     * @param QuoteService $quoteService
+     * @param UploadService $uploadService
      */
-    public function __construct()
-    {
-        parent::__construct();
+    public function __construct(
+        EmailTemplateService $emailTemplateService,
+        CustomFieldService $customFieldService,
+        InvoiceService $invoiceService,
+        TemplateService $templateService,
+        QuoteService $quoteService,
+        UploadService $uploadService
+    ) {
+        $this->emailTemplateService = $emailTemplateService;
+        $this->customFieldService = $customFieldService;
+        $this->invoiceService = $invoiceService;
+        $this->templateService = $templateService;
+        $this->quoteService = $quoteService;
+        $this->uploadService = $uploadService;
         $this->mailer_configured = MailerHelper::mailerConfigured();
-        if ( ! $this->mailer_configured) {
-            abort(response()->view('mailer.not_configured'), 503);
+
+        if (!$this->mailer_configured) {
+            abort(response()->view('core::mailer_not_configured'), 503);
         }
     }
 
     /**
-     * Display the invoice mail composer view populated with templates, custom fields, PDF templates, and invoice data.
+     * Display the invoice mail composer view.
      *
-     * @param Request $request    the HTTP request instance
-     * @param int     $invoice_id the ID of the invoice to compose an email for
+     * @param Request $request
+     * @param int $invoice_id
      *
-     * @return \Illuminate\Contracts\View\View The rendered mailer.invoice view populated with:
-     *                                         - selected_email_template: ID of the chosen email template
-     *                                         - selected_pdf_template: chosen PDF template for the invoice
-     *                                         - email_templates: list of invoice email templates
-     *                                         - email_template: JSON-encoded selected email template (or '{}')
-     *                                         - custom_fields: custom fields grouped by table
-     *                                         - pdf_templates: available invoice PDF templates
-     *                                         - invoice: the invoice model
+     * @return \Illuminate\Contracts\View\View|void
+     *
+     * @legacy-function invoice
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function invoice(Request $request, int $invoice_id)
     {
-        if ( ! $this->mailer_configured) {
+        if (!$this->mailer_configured) {
             return;
         }
-        $invoice           = (new InvoicesService())->getById($invoice_id);
+
+        $invoice = $this->invoiceService->getById($invoice_id);
         $email_template_id = select_email_invoice_template($invoice);
-        $email_template    = '{}';
+        $email_template = '{}';
+
         if ($email_template_id) {
-            $email_template = json_encode((new EmailTemplatesService())->getById($email_template_id));
-        }
-        $custom_fields = [];
-        foreach (array_keys((new CustomFieldsService())->customTables()) as $table) {
-            $custom_fields[$table] = (new CustomFieldsService())->byTable($table)->get()->result();
+            $email_template = json_encode($this->emailTemplateService->getById($email_template_id));
         }
 
-        return view('mailer.invoice', [
+        $custom_fields = [];
+        foreach (array_keys($this->customFieldService->customTables()) as $table) {
+            $custom_fields[$table] = $this->customFieldService->byTable($table)->get()->result();
+        }
+
+        return view('core::mailer_invoice', [
             'selected_email_template' => $email_template_id,
-            'selected_pdf_template'   => select_pdf_invoice_template($invoice),
-            'email_templates'         => (new EmailTemplatesService())->where('email_template_type', 'invoice')->get()->result(),
-            'email_template'          => $email_template,
-            'custom_fields'           => $custom_fields,
-            'pdf_templates'           => (new TemplatesService())->getInvoiceTemplates(),
-            'invoice'                 => $invoice,
+            'selected_pdf_template' => select_pdf_invoice_template($invoice),
+            'email_templates' => $this->emailTemplateService->where('email_template_type', 'invoice')->get()->result(),
+            'email_template' => $email_template,
+            'custom_fields' => $custom_fields,
+            'pdf_templates' => $this->templateService->getInvoiceTemplates(),
+            'invoice' => $invoice,
         ]);
     }
 
     /**
-     * Display the mailer UI for a specific quote, including templates, custom fields, and PDF options.
+     * Display the mailer UI for a specific quote.
      *
-     * If the mailer is not configured, the method exits without rendering the view.
+     * @param Request $request
+     * @param int $quote_id
      *
-     * @param Request $request  the current HTTP request
-     * @param int     $quote_id the ID of the quote to prepare for emailing
+     * @return \Illuminate\View\View|void
      *
-     * @return \Illuminate\View\View The rendered 'mailer.quote' view containing:
-     *                               - selected_email_template: the chosen email template ID
-     *                               - selected_pdf_template: the chosen PDF template ID
-     *                               - email_templates: available email templates of type 'quote'
-     *                               - email_template: JSON-encoded selected email template or '{}' if none
-     *                               - custom_fields: custom fields grouped by table
-     *                               - pdf_templates: available quote PDF templates
-     *                               - quote: the quote model instance
+     * @legacy-function quote
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function quote(Request $request, int $quote_id)
     {
-        if ( ! $this->mailer_configured) {
+        if (!$this->mailer_configured) {
             return;
         }
+
         $email_template_id = get_setting('email_quote_template');
-        $email_template    = '{}';
+        $email_template = '{}';
+
         if ($email_template_id) {
-            $email_template = json_encode((new EmailTemplatesService())->getById($email_template_id));
-        }
-        $custom_fields = [];
-        foreach (array_keys((new CustomFieldsService())->customTables()) as $table) {
-            $custom_fields[$table] = (new CustomFieldsService())->byTable($table)->get()->result();
+            $email_template = json_encode($this->emailTemplateService->getById($email_template_id));
         }
 
-        return view('mailer.quote', [
+        $custom_fields = [];
+        foreach (array_keys($this->customFieldService->customTables()) as $table) {
+            $custom_fields[$table] = $this->customFieldService->byTable($table)->get()->result();
+        }
+
+        return view('core::mailer_quote', [
             'selected_email_template' => $email_template_id,
-            'selected_pdf_template'   => get_setting('pdf_quote_template'),
-            'email_templates'         => (new EmailTemplatesService())->where('email_template_type', 'quote')->get()->result(),
-            'email_template'          => $email_template,
-            'custom_fields'           => $custom_fields,
-            'pdf_templates'           => (new TemplatesService())->getQuoteTemplates(),
-            'quote'                   => (new QuotesService())->getById($quote_id),
+            'selected_pdf_template' => get_setting('pdf_quote_template'),
+            'email_templates' => $this->emailTemplateService->where('email_template_type', 'quote')->get()->result(),
+            'email_template' => $email_template,
+            'custom_fields' => $custom_fields,
+            'pdf_templates' => $this->templateService->getQuoteTemplates(),
+            'quote' => $this->quoteService->getById($quote_id),
         ]);
     }
 
     /**
      * Send an invoice email with an optional PDF and attachments.
      *
-     * This will read email fields from the request, normalize the body HTML,
-     * attach any invoice uploads, ensure the invoice number exists, and attempt
-     * to send the email. On success the invoice is marked as sent and a success
-     * flash message is set.
+     * @param Request $request
+     * @param string $invoice_id
      *
-     * @param Request $request    incoming HTTP request containing email fields (to, from, subject, body, cc, bcc, pdf_template) and an optional cancel button
-     * @param string  $invoice_id identifier of the invoice to email
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response redirects to the invoice view on success or when cancelled, redirects back to the mailer form on failure, or returns a 503 response if the mailer is not configured
+     * @legacy-function sendInvoice
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function sendInvoice(Request $request, string $invoice_id)
     {
         if ($request->has('btn_cancel')) {
             return Redirect::to('invoices/view/' . $invoice_id);
         }
-        if ( ! $this->mailer_configured) {
-            return abort(response()->view('mailer.not_configured'), 503);
+
+        if (!$this->mailer_configured) {
+            return abort(response()->view('core::mailer_not_configured'), 503);
         }
-        $to           = $request->input('to_email');
-        $from         = [$request->input('from_email'), $request->input('from_name')];
+
+        $to = $request->input('to_email');
+        $from = [$request->input('from_email'), $request->input('from_name')];
         $pdf_template = $request->input('pdf_template');
-        $subject      = $request->input('subject');
-        $body         = $request->input('body');
+        $subject = $request->input('subject');
+        $body = $request->input('body');
+
         if (mb_strlen($body) != mb_strlen(strip_tags($body))) {
             $body = htmlspecialchars_decode($body, ENT_COMPAT);
         } else {
             $body = htmlspecialchars_decode(nl2br($body), ENT_COMPAT);
         }
-        $cc               = $request->input('cc');
-        $bcc              = $request->input('bcc');
-        $attachment_files = (new UploadsService())->getInvoiceUploads($invoice_id);
-        (new InvoicesService())->generateInvoiceNumberIfApplicable($invoice_id);
+
+        $cc = $request->input('cc');
+        $bcc = $request->input('bcc');
+        $attachment_files = $this->uploadService->getInvoiceUploads($invoice_id);
+
+        $this->invoiceService->generateInvoiceNumberIfApplicable($invoice_id);
+
         if (email_invoice($invoice_id, $pdf_template, $from, $to, $subject, $body, $cc, $bcc, $attachment_files)) {
-            (new InvoicesService())->markSent($invoice_id);
+            $this->invoiceService->markSent($invoice_id);
             Session::flash('alert_success', trans('email_successfully_sent'));
 
             return Redirect::to('invoices/view/' . $invoice_id);
@@ -167,41 +194,44 @@ class MailerController extends AdminController
     /**
      * Send a quote email with an optional PDF attachment and additional uploads.
      *
-     * Sends the specified quote to the recipient(s), optionally attaching a selected PDF template
-     * and any uploaded files. If the email is successfully sent the quote is marked as sent.
-     *
-     * @param Request $request  the HTTP request containing email fields (`to_email`, `from_email`, `from_name`, `pdf_template`, `subject`, `body`, `cc`, `bcc`) and optional cancel action
-     * @param string  $quote_id the identifier of the quote to send
+     * @param Request $request
+     * @param string $quote_id
      *
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     *                                                                                      Redirects to the quote view when cancelled or after a successful send;
-     *                                                                                      redirects back to the mailer quote page if sending fails;
-     *                                                                                      aborts with a 503 response rendering the `mailer.not_configured` view when the mailer is not configured.
+     *
+     * @legacy-function sendQuote
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function sendQuote(Request $request, string $quote_id)
     {
         if ($request->has('btn_cancel')) {
             return Redirect::to('quotes/view/' . $quote_id);
         }
-        if ( ! $this->mailer_configured) {
-            return abort(response()->view('mailer.not_configured'), 503);
+
+        if (!$this->mailer_configured) {
+            return abort(response()->view('core::mailer_not_configured'), 503);
         }
-        $to           = $request->input('to_email');
-        $from         = [$request->input('from_email'), $request->input('from_name')];
+
+        $to = $request->input('to_email');
+        $from = [$request->input('from_email'), $request->input('from_name')];
         $pdf_template = $request->input('pdf_template');
-        $subject      = $request->input('subject');
-        $body         = $request->input('body');
+        $subject = $request->input('subject');
+        $body = $request->input('body');
+
         if (mb_strlen($body) != mb_strlen(strip_tags($body))) {
             $body = htmlspecialchars_decode($body, ENT_COMPAT);
         } else {
             $body = htmlspecialchars_decode(nl2br($body), ENT_COMPAT);
         }
-        $cc               = $request->input('cc');
-        $bcc              = $request->input('bcc');
-        $attachment_files = (new UploadsService())->getQuoteUploads($quote_id);
-        (new QuotesService())->generateQuoteNumberIfApplicable($quote_id);
+
+        $cc = $request->input('cc');
+        $bcc = $request->input('bcc');
+        $attachment_files = $this->uploadService->getQuoteUploads($quote_id);
+
+        $this->quoteService->generateQuoteNumberIfApplicable($quote_id);
+
         if (email_quote($quote_id, $pdf_template, $from, $to, $subject, $body, $cc, $bcc, $attachment_files)) {
-            (new QuotesService())->markSent($quote_id);
+            $this->quoteService->markSent($quote_id);
             Session::flash('alert_success', trans('email_successfully_sent'));
 
             return Redirect::to('quotes/view/' . $quote_id);
