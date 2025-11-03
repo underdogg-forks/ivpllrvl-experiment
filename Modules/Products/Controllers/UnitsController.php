@@ -7,9 +7,11 @@ use Modules\Products\Models\Unit;
 use Modules\Products\Services\UnitService;
 
 /**
- * UnitsController.
+ * UnitsController
  *
  * Handles product unit management (e.g., hours, items, kg, etc.)
+ *
+ * @legacy-file application/modules/units/controllers/Units.php
  */
 class UnitsController
 {
@@ -26,10 +28,13 @@ class UnitsController
      * @param int $page Page number for pagination
      *
      * @return \Illuminate\View\View
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/units/controllers/Units.php
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $units = Unit::ordered()
+        $units = Unit::query()->ordered()
             ->paginate(15, ['*'], 'page', $page);
 
         return view('products::units_index', [
@@ -41,6 +46,9 @@ class UnitsController
      * Show the form for creating a new unit.
      *
      * @return \Illuminate\View\View
+     *
+     * @legacy-function form
+     * @legacy-file application/modules/units/controllers/Units.php
      */
     public function create(): \Illuminate\View\View
     {
@@ -54,6 +62,9 @@ class UnitsController
      * @param UnitRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function form (save action)
+     * @legacy-file application/modules/units/controllers/Units.php
      */
     public function store(UnitRequest $request): \Illuminate\Http\RedirectResponse
     {
@@ -69,6 +80,9 @@ class UnitsController
      * @param Unit $unit
      *
      * @return \Illuminate\View\View
+     *
+     * @legacy-function form (with ID)
+     * @legacy-file application/modules/units/controllers/Units.php
      */
     public function edit(Unit $unit): \Illuminate\View\View
     {
@@ -82,6 +96,9 @@ class UnitsController
      * @param Unit        $unit
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function form (update action)
+     * @legacy-file application/modules/units/controllers/Units.php
      */
     public function update(UnitRequest $request, Unit $unit): \Illuminate\Http\RedirectResponse
     {
@@ -97,6 +114,9 @@ class UnitsController
      * @param Unit $unit
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     * @legacy-file application/modules/units/controllers/Units.php
      */
     public function destroy(Unit $unit): \Illuminate\Http\RedirectResponse
     {
