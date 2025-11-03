@@ -2,31 +2,88 @@
 
 namespace Modules\Crm\Controllers;
 
-#[AllowDynamicProperties]
-class ClientsController extends AdminController
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Modules\Crm\Services\ClientService;
+use Modules\Crm\Services\ClientNoteService;
+use Modules\Invoices\Services\InvoiceService;
+use Modules\Quotes\Services\QuoteService;
+use Modules\Payments\Services\PaymentService;
+use Modules\Core\Services\CustomFieldService;
+
+/**
+ * ClientsController
+ *
+ * Handles client management including CRUD operations, viewing, and eInvoicing integration
+ *
+ * @legacy-file application/modules/clients/controllers/Clients.php
+ */
+class ClientsController
 {
     private const CLIENT_TITLE = 'client_title';
 
-    /**
-     * Clients constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
+    protected ClientService $clientService;
+    protected ClientNoteService $clientNoteService;
+    protected InvoiceService $invoiceService;
+    protected QuoteService $quoteService;
+    protected PaymentService $paymentService;
+    protected CustomFieldService $customFieldService;
 
-        $this->load->model('mdl_clients');
+    /**
+     * Initialize the ClientsController with dependency injection.
+     *
+     * @param ClientService $clientService
+     * @param ClientNoteService $clientNoteService
+     * @param InvoiceService $invoiceService
+     * @param QuoteService $quoteService
+     * @param PaymentService $paymentService
+     * @param CustomFieldService $customFieldService
+     */
+    public function __construct(
+        ClientService $clientService,
+        ClientNoteService $clientNoteService,
+        InvoiceService $invoiceService,
+        QuoteService $quoteService,
+        PaymentService $paymentService,
+        CustomFieldService $customFieldService
+    ) {
+        $this->clientService = $clientService;
+        $this->clientNoteService = $clientNoteService;
+        $this->invoiceService = $invoiceService;
+        $this->quoteService = $quoteService;
+        $this->paymentService = $paymentService;
+        $this->customFieldService = $customFieldService;
     }
 
-    public function index(): void
+    /**
+     * Redirect to the default client status view (active clients).
+     *
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/clients/controllers/Clients.php
+     */
+    public function index(Request $request): void
     {
         // Display active clients by default
         redirect('clients/status/active');
     }
 
     /**
+     * Display clients filtered by status with pagination.
+     *
+     * @param Request $request
+     * @param string $status
      * @param int $page
+     *
+     * @return void
+     *
+     * @legacy-function status
+     * @legacy-file application/modules/clients/controllers/Clients.php
      */
-    public function status(string $status = 'active', $page = 0): void
+    public function status(Request $request, string $status = 'active', $page = 0): void
     {
         if (is_numeric(array_search($status, ['active', 'inactive'], true))) {
             $function = 'is_' . $status;
@@ -63,7 +120,18 @@ class ClientsController extends AdminController
         $this->layout->render();
     }
 
-    public function form($id = null): void
+    /**
+     * Handle the client form for creating or editing a client.
+     *
+     * @param Request $request
+     * @param int|null $id
+     *
+     * @return void
+     *
+     * @legacy-function form
+     * @legacy-file application/modules/clients/controllers/Clients.php
+     */
+    public function form(Request $request, $id = null): void
     {
         if ($this->input->post('btn_cancel')) {
             redirect('clients');
@@ -206,9 +274,19 @@ class ClientsController extends AdminController
     }
 
     /**
+     * Display detailed client information with related invoices, quotes, and payments.
+     *
+     * @param Request $request
      * @param int $client_id
+     * @param string $activeTab
+     * @param int $page
+     *
+     * @return void
+     *
+     * @legacy-function view
+     * @legacy-file application/modules/clients/controllers/Clients.php
      */
-    public function view($client_id, $activeTab = 'detail', $page = 0): void
+    public function view(Request $request, $client_id, $activeTab = 'detail', $page = 0): void
     {
         $client = $this->mdl_clients
             ->with_total()
@@ -317,14 +395,30 @@ class ClientsController extends AdminController
     }
 
     /**
+     * Delete a client by ID.
+     *
+     * @param Request $request
      * @param int $client_id
+     *
+     * @return void
+     *
+     * @legacy-function delete
+     * @legacy-file application/modules/clients/controllers/Clients.php
      */
-    public function delete($client_id): void
+    public function delete(Request $request, $client_id): void
     {
         $this->mdl_clients->delete($client_id);
         redirect('clients');
     }
 
+    /**
+     * Get client title choices for form selection.
+     *
+     * @return array
+     *
+     * @legacy-function get_client_title_choices
+     * @legacy-file application/modules/clients/controllers/Clients.php
+     */
     private function get_client_title_choices(): array
     {
         return array_map(
@@ -333,6 +427,17 @@ class ClientsController extends AdminController
         );
     }
 
+    /**
+     * Check and update client eInvoicing active status.
+     *
+     * @param object $client
+     * @param object $req_einvoicing
+     *
+     * @return object
+     *
+     * @legacy-function check_client_einvoice_active
+     * @legacy-file application/modules/clients/controllers/Clients.php
+     */
     private function check_client_einvoice_active($client, $req_einvoicing) {
         // Update active eInvoicing client
         $o = $client->client_einvoicing_active;
