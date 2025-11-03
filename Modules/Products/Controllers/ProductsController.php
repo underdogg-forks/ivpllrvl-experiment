@@ -2,32 +2,46 @@
 
 namespace Modules\Products\Controllers;
 
-use AllowDynamicProperties;
-use Illuminate\Http\Request;
-use Modules\Core\Controllers\AdminController;
-use Modules\Products\Services\ProductsService;
-use src\Services\FamiliesService;
-use src\Services\TaxRatesService;
-use src\Services\UnitsService;
+use Modules\Products\Models\Family;
+use Modules\Products\Models\Product;
+use Modules\Products\Models\TaxRate;
+use Modules\Products\Models\Unit;
+use Modules\Products\Services\ProductService;
 
-#[AllowDynamicProperties]
-class ProductsController extends AdminController
+/**
+ * ProductsController
+ *
+ * Manages product CRUD operations
+ *
+ * @legacy-file application/modules/products/controllers/Products.php
+ */
+class ProductsController
 {
+    protected ProductService $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display a paginated list of products.
      *
-     * The returned view is populated with the paginated products and settings
-     * controlling the filter UI (display flag, placeholder text, and filter method).
+     * @param int $page Page number for pagination
      *
-     * @return \Illuminate\Contracts\View\View the products index view with paginated products and filter configuration
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/products/controllers/Products.php
      */
-    public function index(Request $request, int $page = 0): \Illuminate\Contracts\View\View
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        $service = new ProductsService();
-        $service->paginate(route('products.index'), $page);
-        $products = $service->result();
+        $products = Product::query()
+            ->with(['family', 'unit', 'taxRate'])
+            ->orderBy('product_name')
+            ->paginate(15, ['*'], 'page', $page);
 
-        return view('products.index', [
+        return view('products::products_index', [
             'filter_display'     => true,
             'filter_placeholder' => trans('filter_products'),
             'filter_method'      => 'filter_products',
@@ -36,56 +50,74 @@ class ProductsController extends AdminController
     }
 
     /**
-     * Display and process the product creation/edit form.
+     * Display form for creating or editing a product.
      *
-     * Handles cancel redirects, validates submitted data and saves the product when valid,
-     * prepares the form for editing an existing product (or aborts with 404 if the product
-     * cannot be prepared), and provides families, units, and tax rates for the view.
+     * @param int|null $id Product ID (null for create)
      *
-     * @param \Illuminate\Http\Request $request the current HTTP request
-     * @param int|null                 $id      optional product ID for editing; null when creating a new product
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
-     * @return \Illuminate\Contracts\View\View the products form view populated with `families`, `units`, and `tax_rates`
+     * @legacy-function form
+     * @legacy-file application/modules/products/controllers/Products.php
      */
-    public function form(Request $request, $id = null): \Illuminate\Contracts\View\View
+    public function form(?int $id = null)
     {
-        if ($request->has('btn_cancel')) {
+        if (request()->post('btn_cancel')) {
             return redirect()->route('products.index');
         }
-        // Filter input if needed
-        // Validation
-        $service = new ProductsService();
-        if ($service->runValidation()) {
-            $db_array = $service->dbArray();
-            $service->save($id, $db_array);
 
-            return redirect()->route('products.index');
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate([
+                'product_name' => 'required|string|max:255',
+                'product_sku' => 'nullable|string|max:255',
+                'product_description' => 'nullable|string',
+                'product_price' => 'required|numeric|min:0',
+                'family_id' => 'nullable|integer|exists:ip_families,family_id',
+                'unit_id' => 'nullable|integer|exists:ip_units,unit_id',
+                'tax_rate_id' => 'nullable|integer|exists:ip_tax_rates,tax_rate_id',
+            ]);
+
+            if ($id) {
+                $this->productService->update($id, $validated);
+            } else {
+                $this->productService->create($validated);
+            }
+
+            return redirect()->route('products.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
-        if ($id && ! $request->has('btn_submit') && ! $service->prepForm($id)) {
+
+        $product = $id ? $this->productService->find($id) : new Product();
+        if ($id && !$product) {
             abort(404);
         }
-        $families  = (new FamiliesService())->getAll();
-        $units     = (new UnitsService())->getAll();
-        $tax_rates = (new TaxRatesService())->getAll();
 
-        return view('products.form', [
+        $families = Family::query()->orderBy('family_name')->get();
+        $units = Unit::query()->orderBy('unit_name')->get();
+        $taxRates = TaxRate::query()->orderBy('tax_rate_name')->get();
+
+        return view('products::products_form', [
+            'product'   => $product,
             'families'  => $families,
             'units'     => $units,
-            'tax_rates' => $tax_rates,
+            'tax_rates' => $taxRates,
         ]);
     }
 
     /**
-     * Delete the specified product and redirect to the products index.
+     * Delete a product.
      *
-     * @param int|string $id identifier of the product to delete
+     * @param int $id Product ID
      *
-     * @return \Illuminate\Http\RedirectResponse redirect response to the products index route
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     * @legacy-file application/modules/products/controllers/Products.php
      */
-    public function delete($id)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        (new ProductsService())->delete($id);
+        $this->productService->delete($id);
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }
