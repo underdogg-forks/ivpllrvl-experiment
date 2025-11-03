@@ -6,28 +6,21 @@ use Modules\Products\Models\Family;
 use Modules\Products\Services\FamilyService;
 
 /**
- * FamiliesController.
+ * FamiliesController
  *
  * Handles product family management (product categories/groups)
+ *
+ * @legacy-file application/modules/families/controllers/Families.php
  */
 class FamiliesController
 {
-    /**
-     * Family service instance.
-     *
-     * @var FamilyService
-     */
     protected FamilyService $familyService;
 
-    /**
-     * Constructor.
-     *
-     * @param FamilyService $familyService
-     */
     public function __construct(FamilyService $familyService)
     {
         $this->familyService = $familyService;
     }
+
     /**
      * Display a paginated list of product families.
      *
@@ -36,10 +29,7 @@ class FamiliesController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
-     *
      * @legacy-file application/modules/families/controllers/Families.php
-     *
-     * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -61,10 +51,7 @@ class FamiliesController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
-     *
      * @legacy-file application/modules/families/controllers/Families.php
-     *
-     * @legacy-line 47
      */
     public function form(?int $id = null)
     {
@@ -95,12 +82,12 @@ class FamiliesController
         // Load existing record for editing
         if ($id) {
             $family = $this->familyService->find($id);
-            if ( ! $family) {
+            if (!$family) {
                 abort(404);
             }
             $isUpdate = true;
         } else {
-            $family   = new Family();
+            $family = new Family();
             $isUpdate = false;
         }
 
@@ -118,10 +105,7 @@ class FamiliesController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
-     *
      * @legacy-file application/modules/families/controllers/Families.php
-     *
-     * @legacy-line 84
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

@@ -8,6 +8,7 @@
   - [New Architecture Components](#new-architecture-components)
 - [Migration Guidelines](#migration-guidelines)
 - [Code Style](#code-style)
+- [Approved Coding Standards](#approved-coding-standards)
 - [File Structure Overview](#file-structure-overview)
 - [Testing](#testing)
 - [Security Best Practices](#security-best-practices)
@@ -594,6 +595,147 @@ class InvoiceGroupsController                 // PascalCase, no underscores
 - `Invoice_groups` → `InvoiceGroupsController` (add Controller suffix, PascalCase)
 - `Tax_rates` → `TaxRatesController`
 - `Quote_tax_rate` → `QuoteTaxRate`
+
+## Approved Coding Standards
+
+This section defines the approved patterns for refactoring work across the codebase.
+
+### ✅ YES - Keep These Patterns
+
+1. **Tests: CoversClass Attributes**
+   - Every test class MUST have `#[CoversClass(ControllerClass::class)]` attribute
+   - Example: `#[CoversClass(QuotesController::class)]`
+
+2. **Tests: Data Providers**
+   - Use data providers for realistic test scenarios
+   - Use `#[DataProvider('methodName')]` attribute
+   - Provides better test coverage and edge case handling
+
+3. **Tests: Test Actual Data**
+   - Test actual data returned, not just HTTP status codes
+   - Verify data integrity and business logic
+   - Example:
+   ```php
+   // ✅ GOOD - Tests actual data
+   $quotes = $response->viewData('quotes');
+   $this->assertGreaterThan(0, $quotes->count());
+   
+   // ❌ BAD - Only tests status
+   $response->assertOk();
+   ```
+
+4. **PHPDoc: Complete Documentation**
+   - All controller and service methods need comprehensive PHPDoc blocks
+   - MUST include `@legacy-function` and `@legacy-file` tags
+   - Documents migration history and original code location
+   - Example:
+   ```php
+   /**
+    * Display a paginated list of quotes.
+    *
+    * @param int $page Page number for pagination
+    * @return \Illuminate\View\View
+    * @legacy-function index
+    * @legacy-file application/modules/quotes/controllers/Quotes.php
+    */
+   ```
+
+5. **Services: Move Database Queries to Services**
+   - Controllers should NOT contain direct database queries
+   - All database logic goes in Service classes
+   - Controllers only handle HTTP and orchestrate services
+   - Example:
+   ```php
+   // ✅ GOOD - Query in service
+   class QuoteService {
+       public function getByClient(int $clientId) {
+           return Quote::where('client_id', $clientId)->get();
+       }
+   }
+   
+   // ❌ BAD - Query in controller
+   class QuotesController {
+       public function index() {
+           $quotes = Quote::where('client_id', 1)->get();
+       }
+   }
+   ```
+
+6. **FormRequests: Use for Validation**
+   - Use FormRequest classes for validation when appropriate
+   - Shared by create and update operations
+   - Keeps validation logic separate from controllers
+   - Example: `Modules\Quotes\Http\Requests\QuoteRequest`
+
+### ❌ NO - Do NOT Use These Patterns
+
+1. **NO `declare(strict_types=1);`**
+   - Do NOT add strict types declaration to any files
+   - Not in controllers, services, models, or tests
+   - Reason: Maintains consistency with existing codebase
+
+2. **NO Property Promotion (with or without `readonly`)**
+   - Do NOT use PHP 8+ property promotion at all
+   - Do NOT use `readonly` keyword
+   - ALWAYS use traditional constructor pattern
+   - Reason: Maintains consistency across the codebase
+   - Example:
+   ```php
+   // ❌ BAD - Property promotion with readonly
+   public function __construct(
+       private readonly QuoteService $quoteService
+   ) {}
+   
+   // ❌ BAD - Property promotion without readonly
+   public function __construct(
+       private QuoteService $quoteService
+   ) {}
+   
+   // ✅ GOOD - Traditional constructor pattern
+   protected QuoteService $quoteService;
+   
+   public function __construct(QuoteService $quoteService)
+   {
+       $this->quoteService = $quoteService;
+   }
+   ```
+
+3. **NO RESTful Route Patterns**
+   - Keep existing routing patterns
+   - Do NOT split routes into RESTful format
+   - Maintain compatibility with current routing structure
+
+4. **NO Splitting `form()` Methods**
+   - Keep combined `form()` method for create/edit operations
+   - Do NOT split into separate `create()`, `store()`, `edit()`, `update()` methods
+   - Example:
+   ```php
+   // ✅ GOOD - Combined form() method
+   public function form(?int $id = null)
+   {
+       if (request()->isMethod('post')) {
+           // Handle save
+       }
+       // Display form
+   }
+   
+   // ❌ BAD - Separate REST methods
+   public function create() { }
+   public function store() { }
+   public function edit($id) { }
+   public function update($id) { }
+   ```
+
+### Controller Refactoring Priority
+
+When refactoring controllers, focus on:
+
+1. Adding comprehensive PHPDoc blocks with `@legacy-*` tags
+2. Moving database queries to services
+3. Adding FormRequest validation (where appropriate)
+4. Creating comprehensive tests with `#[CoversClass()]`
+5. Using data providers for realistic test data
+6. Testing actual data, not just HTTP status
 
 ## File Structure Overview
 

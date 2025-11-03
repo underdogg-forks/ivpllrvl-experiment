@@ -240,8 +240,6 @@ class {EntityName}Request extends FormRequest
 ```php
 <?php
 
-declare(strict_types=1);
-
 namespace Modules\{ModuleName}\Tests\Feature;
 
 use Modules\{ModuleName}\Controllers\{EntityName}Controller;
@@ -289,14 +287,15 @@ class {EntityName}ControllerTest extends FeatureTestCase
 
 ### Key Principles
 
-1. **CoversClass Attribute**: Every test class must have `#[CoversClass(ControllerClass::class)]`
-2. **Test Attribute**: Use `#[Test]` instead of `test` prefix
-3. **Group Attributes**: Organize with `#[Group('smoke')]`, `#[Group('crud')]`, etc.
-4. **AAA Pattern**: Arrange, Act, Assert comments in every test
-5. **Data Providers**: Use `#[DataProvider('methodName')]` for realistic test data
-6. **Test Data, Not Status**: Assert on actual data returned, not just HTTP 200
-7. **Authentication**: Split `actingAs()` from HTTP method calls on separate lines
-8. **Descriptive Names**: Test method names like `it_displays_list_of_tasks`
+1. **NO strict types**: Do NOT use `declare(strict_types=1);` in test files
+2. **CoversClass Attribute**: Every test class must have `#[CoversClass(ControllerClass::class)]`
+3. **Test Attribute**: Use `#[Test]` instead of `test` prefix
+4. **Group Attributes**: Organize with `#[Group('smoke')]`, `#[Group('crud')]`, etc.
+5. **AAA Pattern**: Arrange, Act, Assert comments in every test
+6. **Data Providers**: Use `#[DataProvider('methodName')]` for realistic test data
+7. **Test Data, Not Status**: Assert on actual data returned, not just HTTP 200
+8. **Authentication**: Split `actingAs()` from HTTP method calls on separate lines
+9. **Descriptive Names**: Test method names like `it_displays_list_of_tasks`
 
 ### Test Groups
 

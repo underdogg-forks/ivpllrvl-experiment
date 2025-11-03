@@ -15,51 +15,27 @@ use Modules\Quotes\Services\QuoteAmountService;
 use Modules\Quotes\Services\QuoteService;
 
 /**
- * QuotesController.
+ * QuotesController
  *
  * Handles quote management including creation, editing, viewing, PDF generation,
- * status filtering, and tax management.
+ * status filtering, and tax management
  *
- * Migrated from CodeIgniter HMVC to Laravel/Illuminate with PSR-4 compliance
+ * @legacy-file application/modules/quotes/controllers/Quotes.php
  */
 class QuotesController
 {
-    /**
-     * Quote service instance.
-     *
-     * @var QuoteService
-     */
     protected QuoteService $quoteService;
-
-    /**
-     * Quote amount service instance.
-     *
-     * @var QuoteAmountService
-     */
     protected QuoteAmountService $quoteAmountService;
-
-    /**
-     * User service instance.
-     *
-     * @var UserService
-     */
     protected UserService $userService;
 
-    /**
-     * Constructor.
-     *
-     * @param QuoteService       $quoteService
-     * @param QuoteAmountService $quoteAmountService
-     * @param UserService        $userService
-     */
     public function __construct(
         QuoteService $quoteService,
         QuoteAmountService $quoteAmountService,
         UserService $userService
     ) {
-        $this->quoteService       = $quoteService;
+        $this->quoteService = $quoteService;
         $this->quoteAmountService = $quoteAmountService;
-        $this->userService        = $userService;
+        $this->userService = $userService;
     }
 
     /**

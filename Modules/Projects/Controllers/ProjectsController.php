@@ -2,99 +2,137 @@
 
 namespace Modules\Projects\Controllers;
 
-use AllowDynamicProperties;
-use Modules\Core\Controllers\AdminController;
-use Modules\Projects\app\Services\TasksService;
-use Modules\Projects\Services\ProjectsService;
+use Modules\Projects\Models\Project;
+use Modules\Projects\Services\ProjectService;
+use Modules\Projects\Services\TaskService;
 
-#[AllowDynamicProperties]
-class ProjectsController extends AdminController
+/**
+ * ProjectsController
+ *
+ * Manages project CRUD operations and project task relationships
+ *
+ * @legacy-file application/modules/projects/controllers/Projects.php
+ */
+class ProjectsController
 {
-    /**
-     * Initialize the ProjectsController and perform the parent controller setup.
-     */
+    protected ProjectService $projectService;
+    protected TaskService $taskService;
+
     public function __construct(
-        private ProjectsService $projectsService,
-        private TasksService $tasksService
+        ProjectService $projectService,
+        TaskService $taskService
     ) {
-        parent::__construct();
+        $this->projectService = $projectService;
+        $this->taskService = $taskService;
     }
 
     /**
-     * @originalName index
+     * Display a paginated list of projects.
      *
-     * @param int $page the page number to display (zero-based)
+     * @param int $page Page number for pagination
      *
-     * @return string rendered view for the projects index populated with projects and filter settings
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/projects/controllers/Projects.php
      */
-    public function index($page = 0)
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        $this->projectsService->paginate(site_url('projects/index'), $page);
-        $projects = $this->projectsService->result();
+        $projects = Project::query()
+            ->orderBy('project_name')
+            ->paginate(15, ['*'], 'page', $page);
 
-        return view('projects.index', ['filter_display' => true, 'filter_placeholder' => trans('filter_projects'), 'filter_method' => 'filter_projects', 'projects' => $projects]);
+        return view('projects::projects_index', [
+            'filter_display'     => true,
+            'filter_placeholder' => trans('filter_projects'),
+            'filter_method'      => 'filter_projects',
+            'projects'           => $projects,
+        ]);
     }
 
     /**
-     * Display and process the project creation/edit form.
+     * Display form for creating or editing a project.
      *
-     * Processes form submission, validates and saves project data, and renders the project form populated with the project and active clients when not redirected.
+     * @param int|null $id Project ID (null for create)
      *
-     * @param int|null $id the project identifier to edit, or null to create a new project
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
-     * @return string The rendered HTML of the project form view.
-     *
-     * Note: this method may redirect to the projects list on cancel or after a successful save, and will trigger a 404 response if the provided `$id` cannot be prepared for editing.
+     * @legacy-function form
+     * @legacy-file application/modules/projects/controllers/Projects.php
      */
-    public function form($id = null)
+    public function form(?int $id = null)
     {
-        if (request()->input('btn_cancel')) {
-            redirect()->route('projects');
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('projects.index');
         }
-        $this->filterInput();
-        // <<<--- filters _POST array for nastiness
-        if ($this->projectsService->runValidation()) {
-            $this->projectsService->save($id);
-            redirect()->route('projects');
+
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate([
+                'project_name' => 'required|string|max:255',
+                'client_id' => 'nullable|integer|exists:ip_clients,client_id',
+                'project_description' => 'nullable|string',
+            ]);
+
+            if ($id) {
+                $this->projectService->update($id, $validated);
+            } else {
+                $this->projectService->create($validated);
+            }
+
+            return redirect()->route('projects.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
-        if ($id && ! request()->input('btn_submit') && ! (new ProjectsService())->prepForm($id)) {
-            show_404();
+
+        $project = $id ? $this->projectService->find($id) : new Project();
+        if ($id && !$project) {
+            abort(404);
         }
+
+        return view('projects::projects_form', ['project' => $project]);
     }
 
     /**
-     * Show a project's details with its tasks and available task statuses.
+     * Display a specific project with its tasks.
      *
-     * Triggers a 404 response if the specified project does not exist. If the cancel button is submitted, redirects to the projects list.
+     * @param int $projectId Project ID
      *
-     * @param int|string $project_id identifier of the project to display
+     * @return \Illuminate\View\View
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|\CodeIgniter\HTTP\ResponseInterface|string the rendered project view response or a redirect response when cancelled
+     * @legacy-function view
+     * @legacy-file application/modules/projects/controllers/Projects.php
      */
-    public function view($project_id)
+    public function view(int $projectId): \Illuminate\View\View
     {
-        if (request()->input('btn_cancel')) {
-            redirect()->route('projects');
-        }
-        $project = $this->projectsService->getById($project_id);
-        if ( ! $project) {
-            show_404();
+        $project = $this->projectService->find($projectId);
+        if (!$project) {
+            abort(404);
         }
 
-        return view('projects.view', ['project' => $project, 'tasks' => (new ProjectsService())->getTasks($project->project_id), 'task_statuses' => (new TasksService())->statuses()]);
+        $tasks = $this->projectService->getTasks($projectId);
+
+        return view('projects::projects_view', [
+            'project' => $project,
+            'tasks' => $tasks,
+            'task_statuses' => $this->taskService->getStatuses(),
+        ]);
     }
 
     /**
-     * Delete the specified project and disassociate it from related tasks, then redirect to the projects list.
+     * Delete a project.
      *
-     * Removes the project identified by `$id`, updates any tasks that referenced the project so they no longer do, and redirects the user to the projects index route.
+     * @param int $id Project ID
      *
-     * @param int|string $id the ID of the project to delete
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     * @legacy-file application/modules/projects/controllers/Projects.php
      */
-    public function delete($id)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $this->tasksService->updateOnProjectDelete($id);
-        $this->projectsService->delete($id);
-        redirect()->route('projects');
+        $this->taskService->updateOnProjectDelete($id);
+        $this->projectService->delete($id);
+
+        return redirect()->route('projects.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }

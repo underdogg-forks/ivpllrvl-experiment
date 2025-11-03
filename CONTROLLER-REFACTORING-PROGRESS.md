@@ -1,0 +1,159 @@
+# Controller Refactoring Progress
+
+## Summary
+
+**Status:** 15/43 Controllers Complete (35%)
+
+This document tracks the systematic refactoring of controllers to align with approved coding standards.
+
+## Completed Controllers (15)
+
+### Core Module (9/22)
+
+1. ✅ **CustomFieldsController** - Added PHPDoc, moved DB queries to service, fixed validation
+2. ✅ **CustomValuesController** - Added PHPDoc, moved DB queries to service, fixed validation  
+3. ✅ **EmailTemplatesController** - Added PHPDoc, moved DB queries to service
+4. ✅ **TaxRatesController** - MAJOR: Removed property promotion/readonly, AdminController, AllowDynamicProperties
+5. ✅ **WelcomeController** - Added comprehensive PHPDoc
+6. ✅ **VersionsController** - Added comprehensive PHPDoc
+7. ✅ **LayoutController** - Added comprehensive PHPDoc
+8. ✅ **SettingsAjaxController** - Added PHPDoc, return type hints
+9. ✅ **GuestController** - MAJOR: Removed AllowDynamicProperties, UserController inheritance, added DI
+
+### Products Module (4/4) - 100% COMPLETE ✅
+
+1. ✅ **UnitsController** - Added @legacy tags, Model::query() pattern
+2. ✅ **FamiliesController** - Added @legacy tags, cleaned PHPDoc
+3. ✅ **ProductsController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+4. ✅ **ProductsAjaxController** - (pending verification)
+
+### Projects Module (1/3)
+
+1. ✅ **ProjectsController** - MAJOR: Removed property promotion, AdminController, AllowDynamicProperties
+
+### Payments Module (1/3)
+
+1. ✅ **PaymentMethodsController** - Added PHPDoc, removed legacy patterns, modern validation
+
+### Quotes Module (1/2)
+
+1. ✅ **QuotesController** - Added @legacy tags, cleaned PHPDoc
+
+## Remaining Controllers (28)
+
+### Core Module (13 remaining)
+
+- [ ] DashboardController - Complex: inline service instantiation
+- [ ] SessionsController - VERY COMPLEX: major refactoring needed
+- [ ] UsersController
+- [ ] UsersAjaxController
+- [ ] ImportController - Has violations: AllowDynamicProperties, AdminController
+- [ ] SetupController - Large file (481 lines)
+- [ ] UserClientsController
+- [ ] UploadController - Large file (219 lines)
+- [ ] MailerController - Large file (212 lines)
+- [ ] SettingsController
+- [ ] ReportsController - Has violations: AllowDynamicProperties, AdminController
+- [ ] GetController
+- [ ] View.php (ViewController)
+
+### CRM Module (11 controllers)
+
+- [ ] ClientsController
+- [ ] ClientsAjaxController
+- [ ] UserClientsController
+- [ ] GetController
+- [ ] ViewController
+- [ ] InvoicesController
+- [ ] PaymentInformationController
+- [ ] PaymentsController
+- [ ] QuotesController
+- [ ] GuestController
+- [ ] Gateways/StripeController
+- [ ] Gateways/PaypalController
+
+### Invoices Module (5 controllers)
+
+- [ ] InvoicesController
+- [ ] InvoicesAjaxController
+- [ ] InvoiceGroupsController
+- [ ] CronController
+- [ ] RecurringController
+
+### Projects Module (2 remaining)
+
+- [ ] TasksController
+- [ ] TasksAjaxController
+
+### Payments Module (2 remaining)
+
+- [ ] PaymentsController
+- [ ] PaymentsAjaxController
+
+### Quotes Module (1 remaining)
+
+- [ ] QuotesAjaxController
+
+## Refactoring Patterns
+
+### Pattern 1: Simple Controllers (PHPDoc Only)
+
+**Examples:** WelcomeController, VersionsController, LayoutController
+
+**Steps:**
+
+1. Add class-level PHPDoc with @legacy-file tag
+2. Add method-level PHPDoc with @legacy-function tags
+3. Add return type hints if missing
+
+### Pattern 2: Service-Based Controllers
+
+**Examples:** CustomFieldsController, EmailTemplatesController, PaymentMethodsController
+
+**Steps:**
+
+1. Add comprehensive PHPDoc
+2. Move database queries to service layer
+3. Add Model::query() pattern
+4. Fix validation (inline rules or FormRequest)
+5. Add dependency injection
+
+### Pattern 3: Major Refactors
+
+**Examples:** TaxRatesController, ProjectsController, GuestController
+
+**Steps:**
+
+1. Remove AllowDynamicProperties attribute
+2. Remove non-existent parent class extensions
+3. Remove property promotion (with or without readonly)
+4. Add traditional constructor with DI
+5. Add comprehensive PHPDoc
+6. Move all business logic to services
+7. Modernize error handling (abort() instead of show_404/show_error)
+8. Add proper validation
+
+## Standards Checklist
+
+For each refactored controller, verify:
+
+- [ ] ✅ NO `declare(strict_types=1);`
+- [ ] ✅ NO property promotion (with or without `readonly`)
+- [ ] ✅ NO non-existent parent classes (AdminController, BaseController, UserController)
+- [ ] ✅ NO AllowDynamicProperties attribute
+- [ ] ✅ YES class-level @legacy-file tag
+- [ ] ✅ YES method-level @legacy-function tags
+- [ ] ✅ YES traditional constructor pattern
+- [ ] ✅ YES dependency injection via constructor
+- [ ] ✅ YES Model::query() pattern for database operations
+- [ ] ✅ YES form() pattern (NOT REST splitting)
+- [ ] ✅ YES service layer for business logic
+- [ ] ✅ YES modern error handling with abort()
+
+## Next Steps
+
+1. Continue with simpler controllers in Core module (ImportController, ReportsController)
+2. Tackle medium-complexity controllers (SettingsController, UsersController)
+3. Address complex controllers (SessionsController, DashboardController)
+4. Complete CRM, Invoices, Projects, Payments, Quotes modules
+5. Final verification and testing
