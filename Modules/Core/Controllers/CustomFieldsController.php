@@ -75,9 +75,13 @@ class CustomFieldsController
             return redirect()->route('custom_fields.index')->with('alert_success', trans('record_successfully_saved'));
         }
 
-        $customField = $id ? $this->customFieldService->find($id) : new CustomField();
-        if ($id && !$customField) {
-            abort(404);
+        if ($id) {
+            $customField = $this->customFieldService->find($id);
+            if (!$customField) {
+                abort(404);
+            }
+        } else {
+            $customField = new CustomField();
         }
 
         return view('core::custom_fields_form', ['custom_field' => $customField]);
