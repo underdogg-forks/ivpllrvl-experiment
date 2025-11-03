@@ -20,30 +20,9 @@ This document tracks the refactoring work needed to ensure code consistency acro
 - **NO** RESTful route patterns - Keep existing routing patterns
 - **NO** Splitting `form()` methods - Keep combined form() method for create/edit
 
-## Current State
-
-### Controllers Modified (Now Reverted)
-- ✅ TasksController - Reverted to original
-- ✅ UnitsController - Reverted to original
-- ✅ FamiliesController - Reverted to original
-
-### Documentation Updated
-- ✅ STANDARDIZATION-GUIDE.md - Updated with correct patterns
-- ✅ refactor-helper.php - Updated to check for correct patterns only
-
 ## Task List
 
-### Phase 1: Test Infrastructure ✅
-- [x] Create test base classes
-- [x] Establish test patterns with `#[CoversClass()]`
-- [x] Document test standards in guide
-
-### Phase 2: Documentation
-- [x] Update STANDARDIZATION-GUIDE.md with correct patterns
-- [x] Remove incorrect patterns from helper script
-- [x] Create task list (this document)
-
-### Phase 3: Controller Refactoring (50 Controllers)
+### Phase 1: Controller Refactoring (50 Controllers)
 
 Priority should be on:
 1. Adding comprehensive PHPDoc blocks with `@legacy-*` tags
@@ -72,21 +51,21 @@ Priority should be on:
 - [ ] ReportsController (PSR-4 fixed)
 - [ ] SettingsAjaxController
 - [ ] VersionsController
-- [ ] GetController
+- [ ] GetController (Guest, Moved to Core)
+- [ ] ViewController (Guest, Moved to Core)
+- [ ] InvoicesController (Guest, Moved to Core)
+- [ ] PaymentInformationController (Guest, Moved to Core)
+- [ ] GuestController (Guest, Moved to Core)
+- [ ] Gateways/StripeController (Guest, Moved to Core)
+- [ ] Gateways/PaypalController (Guest, Moved to Core)
+- [ ] QuotesController (Guest, Moved to Core)
+- [ ] GetController (Guest, Moved to Core)
+- [ ] PaymentsController (Guest, Moved to Core)
 
 #### CRM Module (10 controllers)
 - [ ] UserClientsController
 - [ ] ClientsController
-- [ ] PaymentsController
 - [ ] ClientsAjaxController (PSR-4 fixed)
-- [ ] ViewController
-- [ ] InvoicesController
-- [ ] PaymentInformationController
-- [ ] GuestController
-- [ ] Gateways/StripeController
-- [ ] Gateways/PaypalController
-- [ ] QuotesController
-- [ ] GetController
 
 #### Invoices Module (5 controllers)
 - [ ] InvoicesAjaxController
@@ -116,6 +95,14 @@ Priority should be on:
 - [ ] PaymentsController
 - [ ] PaymentMethodsController
 
+### Phase 2: Test Infrastructure ✅
+- [x] Create test base classes
+- [x] Establish test patterns with `#[CoversClass()]`
+- [x] Document test standards in guide
+
+### Phase 3: Documentation
+- [x] Update STANDARDIZATION-GUIDE.md with correct patterns
+
 ### Phase 4: Test Coverage
 
 For each controller, ensure:
@@ -138,26 +125,9 @@ Ensure all controllers:
 - [ ] All controllers delegate database queries to services
 - [ ] All test classes use `#[CoversClass()]` attribute
 - [ ] Tests use data providers for validation scenarios
-- [ ] 80%+ code coverage achieved
-- [ ] Zero inline validation (use FormRequests where appropriate)
+- [ ] 95%+ code coverage achieved
+- [ ] Minimal inline validation (use FormRequests where appropriate)
 - [ ] All use statements alphabetically sorted
-
-## Time Estimates
-
-- **PHPDoc addition**: ~30 minutes per controller
-- **Service extraction**: ~1-2 hours per controller
-- **Test creation**: ~2-3 hours per controller
-- **FormRequest creation**: ~30 minutes each
-
-**Total estimated**: 150-250 hours for complete refactoring
-
-## Reference Implementations
-
-Check these files for correct patterns:
-- `Modules/Projects/Controllers/TasksController.php` - Controller example
-- `Modules/Products/Controllers/FamiliesController.php` - form() method pattern
-- `Modules/Projects/Tests/Feature/TasksControllerTest.php` - Test example with `#[CoversClass()]`
-- `STANDARDIZATION-GUIDE.md` - Complete standards reference
 
 ## Notes
 
