@@ -109,7 +109,7 @@ This document tracks the systematic refactoring of controllers to align with app
 **Steps:**
 1. Remove AllowDynamicProperties attribute
 2. Remove non-existent parent class extensions
-3. Remove property promotion with readonly
+3. Remove property promotion (with or without readonly)
 4. Add traditional constructor with DI
 5. Add comprehensive PHPDoc
 6. Move all business logic to services
@@ -121,7 +121,7 @@ This document tracks the systematic refactoring of controllers to align with app
 For each refactored controller, verify:
 
 - [ ] ✅ NO `declare(strict_types=1);`
-- [ ] ✅ NO property promotion with `readonly`
+- [ ] ✅ NO property promotion (with or without `readonly`)
 - [ ] ✅ NO non-existent parent classes (AdminController, BaseController, UserController)
 - [ ] ✅ NO AllowDynamicProperties attribute
 - [ ] ✅ YES class-level @legacy-file tag

@@ -674,10 +674,11 @@ This section defines the approved patterns for refactoring work across the codeb
    - Not in controllers, services, models, or tests
    - Reason: Maintains consistency with existing codebase
 
-2. **NO Property Promotion with `readonly`**
-   - Use traditional constructor pattern
-   - Do NOT use PHP 8+ property promotion
+2. **NO Property Promotion (with or without `readonly`)**
+   - Do NOT use PHP 8+ property promotion at all
    - Do NOT use `readonly` keyword
+   - ALWAYS use traditional constructor pattern
+   - Reason: Maintains consistency across the codebase
    - Example:
    ```php
    // ❌ BAD - Property promotion with readonly
@@ -685,7 +686,12 @@ This section defines the approved patterns for refactoring work across the codeb
        private readonly QuoteService $quoteService
    ) {}
    
-   // ✅ GOOD - Traditional constructor
+   // ❌ BAD - Property promotion without readonly
+   public function __construct(
+       private QuoteService $quoteService
+   ) {}
+   
+   // ✅ GOOD - Traditional constructor pattern
    protected QuoteService $quoteService;
    
    public function __construct(QuoteService $quoteService)
