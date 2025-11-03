@@ -3,169 +3,229 @@
 namespace Modules\Core\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Modules\Core\Models\User;
+use Modules\Core\Services\UserService;
+use Modules\Core\Services\SettingsService;
+use Modules\Crm\Services\ClientService;
+use Modules\Crm\Services\UserClientService;
 
-use AllowDynamicProperties;
-use Modules\Users\Controllers\ClientsService;
-use Modules\Users\Controllers\SettingsService;
-use Modules\Users\Controllers\UserClientsService;
-use Modules\Users\Controllers\UsersService;
-
-#[AllowDynamicProperties]
-class UsersAjaxController extends AdminController
+/**
+ * UsersAjaxController
+ *
+ * Handles AJAX requests for user-related operations
+ *
+ * @legacy-file application/modules/users/controllers/Ajax.php
+ */
+class UsersAjaxController
 {
-    public $ajax_controller = true;
+    protected UserService $userService;
+    protected ClientService $clientService;
+    protected UserClientService $userClientService;
+    protected SettingsService $settingsService;
 
     /**
-     * Outputs matching active users of a given type as JSON objects for select lists.
+     * Initialize the UsersAjaxController with dependency injection.
      *
-     * Reads 'query' and 'permissive_search_users' from the request. If 'query' is empty,
-     * the method outputs an empty JSON array and exits early. Otherwise it outputs a JSON
-     * array of objects with `id` (user_id) and `text` (formatted user label) for active users
-     * of the specified type whose name, company, or invoicing contact matches the query.
-     * When 'permissive_search_users' is truthy, matching allows the query to appear in the middle of fields.
-     *
-     * @param int $type the user_type filter to apply (default: 1)
+     * @param UserService $userService
+     * @param ClientService $clientService
+     * @param UserClientService $userClientService
+     * @param SettingsService $settingsService
      */
-    public function nameQuery($type = 1)
+    public function __construct(
+        UserService $userService,
+        ClientService $clientService,
+        UserClientService $userClientService,
+        SettingsService $settingsService
+    ) {
+        $this->userService = $userService;
+        $this->clientService = $clientService;
+        $this->userClientService = $userClientService;
+        $this->settingsService = $settingsService;
+    }
+
+    /**
+     * Search for users by name query (AJAX endpoint).
+     *
+     * @param int $type User type filter (default: 1)
+     *
+     * @return void Outputs JSON response
+     *
+     * @legacy-function nameQuery
+     * @legacy-file application/modules/users/controllers/Ajax.php
+     */
+    public function nameQuery(int $type = 1): void
     {
-        // Load the model & helper
-// TODO: Laravel autoloads helpers - $this->load->helper('user');
         $response = [];
-        // GetController the post input
-        $query                 = request()->query('query');
+        $query = request()->query('query');
         $permissiveSearchUsers = request()->query('permissive_search_users');
+        
         if (empty($query)) {
+            header('Content-Type: application/json');
             echo json_encode($response);
             exit;
         }
+
         // Search for chars "in the middle" of users names
         $moreUsersQuery = $permissiveSearchUsers ? '%' : '';
-        // Search for users $type
-        $escapedQuery = DB::escape_str($query);
-        $escapedQuery = str_replace('%', '', $escapedQuery);
-        // Not searched: user_address_1 user_address_2 user_city user_state user_zip user_country user_invoicing_contact
-        $users = (new UsersService())->where('user_active', 1)->where('user_type', $type)->having("user_name LIKE '" . $moreUsersQuery . $escapedQuery . "%'")->or_having("user_company LIKE '" . $moreUsersQuery . $escapedQuery . "%'")->or_having("user_invoicing_contact LIKE '" . $moreUsersQuery . $escapedQuery . "%'")->orderBy('user_name')->get()->result();
+        $escapedQuery = str_replace('%', '', $query);
+
+        // Search for users by type
+        $users = User::query()
+            ->where('user_active', 1)
+            ->where('user_type', $type)
+            ->where(function ($q) use ($escapedQuery, $moreUsersQuery) {
+                $q->where('user_name', 'LIKE', $moreUsersQuery . $escapedQuery . '%')
+                  ->orWhere('user_company', 'LIKE', $moreUsersQuery . $escapedQuery . '%')
+                  ->orWhere('user_invoicing_contact', 'LIKE', $moreUsersQuery . $escapedQuery . '%');
+            })
+            ->orderBy('user_name')
+            ->get();
+
         foreach ($users as $user) {
             $response[] = ['id' => $user->user_id, 'text' => format_user($user)];
         }
-        // Return the results
+
+        header('Content-Type: application/json');
         echo json_encode($response);
     }
 
     /**
-     * Retrieve up to five active users ordered by creation date and format them for select lists.
+     * Get latest active users (AJAX endpoint).
      *
-     * Echoes a JSON-encoded array of items where each item contains:
-     * - `id`: the user's `user_id`
-     * - `text`: the HTML-escaped formatted user label
+     * @return void Outputs JSON response
      *
-     * The results are limited to five users and ordered by `user_date_created`.
+     * @legacy-function getLatest
+     * @legacy-file application/modules/users/controllers/Ajax.php
      */
-    public function getLatest()
+    public function getLatest(): void
     {
-        // Load the model & helper
         $response = [];
-        $users    = (new UsersService())->where('user_active', 1)->limit(5)->orderBy('user_date_created')->get()->result();
+        $users = User::query()
+            ->where('user_active', 1)
+            ->limit(5)
+            ->orderBy('user_date_created')
+            ->get();
+
         foreach ($users as $user) {
             $response[] = ['id' => $user->user_id, 'text' => htmlsc(format_user($user))];
         }
-        // Return the results
+
+        header('Content-Type: application/json');
         echo json_encode($response);
     }
 
     /**
-     * Save the user's permissive-user-search preference.
+     * Save user's permissive search preference (AJAX endpoint).
      *
-     * Validates that the 'permissive_search_users' request value is '0' or '1'; if valid, stores it under the 'enable_permissive_search_users' setting. If the value is invalid, no setting is changed.
+     * @return void
+     *
+     * @legacy-function savePreferencePermissiveSearchUsers
+     * @legacy-file application/modules/users/controllers/Ajax.php
      */
-    public function savePreferencePermissiveSearchUsers()
+    public function savePreferencePermissiveSearchUsers(): void
     {
         $permissiveSearchUsers = request()->query('permissive_search_users');
-        if ( ! preg_match('!^[0-1]{1}$!', $permissiveSearchUsers)) {
+        if (!preg_match('!^[0-1]{1}$!', $permissiveSearchUsers)) {
             exit;
         }
-        (new SettingsService())->save('enable_permissive_search_users', $permissiveSearchUsers);
+        $this->settingsService->save('enable_permissive_search_users', $permissiveSearchUsers);
     }
 
     /**
-     * Associate a client with an existing user or queue the client for a new user.
+     * Save user-client association (AJAX endpoint).
      *
-     * If the provided client ID corresponds to an existing client and a user ID is supplied,
-     * creates a user-client association if one does not already exist. If no user ID is supplied,
-     * stores the client ID in the session under 'user_clients' for association after user creation.
-     * If the client ID is not found, no action is taken.
+     * @return void
+     *
+     * @legacy-function saveUserClient
+     * @legacy-file application/modules/users/controllers/Ajax.php
      */
-    public function saveUserClient()
+    public function saveUserClient(): void
     {
-        $user_id   = request()->input('user_id');
+        $user_id = request()->input('user_id');
         $client_id = request()->input('client_id');
-        $client    = (new ClientsService())->getById($client_id);
+        $client = $this->clientService->find($client_id);
+        
         if ($client) {
             $client_id = $client->client_id;
-            // Is this a new user or an existing user?
-            if ( ! empty($user_id)) {
-                // Existing user - go ahead and save the entries
-                $user_client = (new UserClientsService())->where('ip_user_clients.user_id', $user_id)->where('ip_user_clients.client_id', $client_id)->get();
-                if ( ! $user_client->numRows()) {
-                    (new UserClientsService())->save(null, ['user_id' => $user_id, 'client_id' => $client_id]);
+            
+            if (!empty($user_id)) {
+                // Existing user - save the association
+                $existing = $this->userClientService->getByUserAndClient($user_id, $client_id);
+                if (!$existing) {
+                    $this->userClientService->create([
+                        'user_id' => $user_id,
+                        'client_id' => $client_id,
+                    ]);
                 }
             } else {
-                // New user - assign the entries to a session variable until user record is saved
-                $user_clients             = session('user_clients') ? session('user_clients') : [];
+                // New user - store in session until user is created
+                $user_clients = Session::get('user_clients', []);
                 $user_clients[$client_id] = $client_id;
-                session(['user_clients', $user_clients);
+                Session::put('user_clients', $user_clients);
             }
         }
     }
 
     /**
-     * Render the partial user-client table populated from either session-stored client IDs or the posted user's client associations.
+     * Load user-client table partial (AJAX endpoint).
      *
-     * When the session key `user_clients` exists, loads clients matching those IDs and passes them to the partial view with `id` set to null.
-     * Otherwise, loads client associations for the posted `user_id` and passes them to the partial view with `id` set to that `user_id`.
+     * @return \Illuminate\View\View
      *
-     * @originalName loadUserClientTable
-     *
-     * @originalFile AjaxController.php
+     * @legacy-function loadUserClientTable
+     * @legacy-file application/modules/users/controllers/Ajax.php
      */
-    public function loadUserClientTable()
+    public function loadUserClientTable(): \Illuminate\View\View
     {
-        $session_user_clients = session('user_clients');
+        $session_user_clients = Session::get('user_clients');
+        
         if ($session_user_clients) {
-            $data = ['id' => null, 'user_clients' => (new ClientsService())->where_in('ip_clients.client_id', $session_user_clients)->get()->result()];
-        } else {
-            $data = ['id' => request()->input('user_id'), 'user_clients' => (new UserClientsService())->where('ip_user_clients.user_id', request()->input('user_id'))->get()->result()];
+            $clients = $this->clientService->getByIds(array_values($session_user_clients));
+            return view('core::users_partial_user_client_table', [
+                'id' => null,
+                'user_clients' => $clients,
+            ]);
         }
-        $this->layout->loadView('users/partial_user_client_table', $data);
+        
+        $user_id = request()->input('user_id');
+        $user_clients = $this->userClientService->getByUserId($user_id);
+        
+        return view('core::users_partial_user_client_table', [
+            'id' => $user_id,
+            'user_clients' => $user_clients,
+        ]);
     }
 
     /**
-     * Render the modal for adding a client association to a user.
+     * Show modal for adding user-client association (AJAX endpoint).
      *
-     * Prepares a list of clients: if session 'user_clients' exists, returns clients not in that session list;
-     * otherwise returns clients not already assigned to the specified user. Renders the 'users/modal_user_client' view
-     * with keys 'user_id' and 'clients'.
+     * @param int|null $user_id User ID
      *
-     * @param int|null $user_id the user ID whose assigned clients should be excluded from the selection; if null, session 'user_clients' determines excluded clients
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function modalAddUserClient
+     * @legacy-file application/modules/users/controllers/Ajax.php
      */
-    public function modalAddUserClient($user_id = null)
+    public function modalAddUserClient(?int $user_id = null): \Illuminate\View\View
     {
-        if ($session_user_clients = session('user_clients')) {
-            $clients          = (new ClientsService())->where_not_in('ip_clients.client_id', $session_user_clients)->get()->result();
-            $assigned_clients = [];
+        $session_user_clients = Session::get('user_clients');
+        
+        if ($session_user_clients) {
+            $clients = $this->clientService->getNotInIds(array_values($session_user_clients));
         } else {
-            $assigned_clients_query = (new UserClientsService())->where('ip_user_clients.user_id', $user_id)->get()->result();
-            $assigned_clients       = [];
-            foreach ($assigned_clients_query as $assigned_client) {
-                $assigned_clients[] = (int) $assigned_client->client_id;
-            }
-            if ($assigned_clients === []) {
-                $clients = (new ClientsService())->get()->result();
+            $assigned_clients = $this->userClientService->getByUserId($user_id);
+            $assigned_client_ids = $assigned_clients->pluck('client_id')->toArray();
+            
+            if (empty($assigned_client_ids)) {
+                $clients = $this->clientService->getActiveClients();
             } else {
-                $clients = (new ClientsService())->where_not_in('ip_clients.client_id', $assigned_clients)->get()->result();
+                $clients = $this->clientService->getNotInIds($assigned_client_ids);
             }
         }
-        $data = ['user_id' => $user_id, 'clients' => $clients];
-        $this->layout->loadView('users/modal_user_client', $data);
+
+        return view('core::users_modal_user_client', [
+            'user_id' => $user_id,
+            'clients' => $clients,
+        ]);
     }
 }

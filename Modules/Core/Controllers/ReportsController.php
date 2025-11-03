@@ -2,32 +2,48 @@
 
 namespace Modules\Core\Controllers;
 
-use AllowDynamicProperties;
 use Illuminate\Http\Request;
-use Modules\Core\Controllers\AdminController;
-use Modules\Reports\Controllers\ReportsService;
+use Modules\Core\Services\ReportsService;
 
-#[AllowDynamicProperties]
-class ReportsController extends AdminController
+/**
+ * ReportsController
+ *
+ * Manages various report generation operations
+ *
+ * @legacy-file application/modules/reports/controllers/Reports.php
+ */
+class ReportsController
 {
+    protected ReportsService $reportsService;
+
     /**
-     * Initialize the ReportsController.
+     * Initialize the ReportsController with dependency injection.
+     *
+     * @param ReportsService $reportsService
      */
-    public function __construct()
+    public function __construct(ReportsService $reportsService)
     {
-        parent::__construct();
+        $this->reportsService = $reportsService;
     }
 
     /**
-     * @originalName salesByClient
+     * Display sales by client report.
      *
-     * @originalFile ReportsController.php
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-function salesByClient
+     * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function salesByClient(Request $request): \Illuminate\Contracts\View\View
     {
         if ($request->input('btn_submit')) {
-            $results = (new ReportsService())->salesByClient($request->input('from_date'), $request->input('to_date'));
-            $data    = [
+            $results = $this->reportsService->salesByClient(
+                $request->input('from_date'),
+                $request->input('to_date')
+            );
+            $data = [
                 'results'   => $results,
                 'from_date' => $request->input('from_date'),
                 'to_date'   => $request->input('to_date'),
@@ -37,19 +53,27 @@ class ReportsController extends AdminController
             // return response()->download(...);
         }
 
-        return view('reports.sales_by_client_index');
+        return view('core::reports_sales_by_client_index');
     }
 
     /**
-     * @originalName invoicesPerClient
+     * Display invoices per client report.
      *
-     * @originalFile ReportsController.php
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-function invoicesPerClient
+     * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function invoicesPerClient(Request $request): \Illuminate\Contracts\View\View
     {
         if ($request->input('btn_submit')) {
-            $results = (new ReportsService())->invoicesPerClient($request->input('from_date'), $request->input('to_date'));
-            $data    = [
+            $results = $this->reportsService->invoicesPerClient(
+                $request->input('from_date'),
+                $request->input('to_date')
+            );
+            $data = [
                 'results'   => $results,
                 'from_date' => $request->input('from_date'),
                 'to_date'   => $request->input('to_date'),
@@ -57,19 +81,27 @@ class ReportsController extends AdminController
             // TODO: Use Laravel PDF package to generate PDF from view
         }
 
-        return view('reports.invoices_per_client_index');
+        return view('core::reports_invoices_per_client_index');
     }
 
     /**
-     * @originalName paymentHistory
+     * Display payment history report.
      *
-     * @originalFile ReportsController.php
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-function paymentHistory
+     * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function paymentHistory(Request $request): \Illuminate\Contracts\View\View
     {
         if ($request->input('btn_submit')) {
-            $results = (new ReportsService())->paymentHistory($request->input('from_date'), $request->input('to_date'));
-            $data    = [
+            $results = $this->reportsService->paymentHistory(
+                $request->input('from_date'),
+                $request->input('to_date')
+            );
+            $data = [
                 'results'   => $results,
                 'from_date' => $request->input('from_date'),
                 'to_date'   => $request->input('to_date'),
@@ -77,39 +109,46 @@ class ReportsController extends AdminController
             // TODO: Use Laravel PDF package to generate PDF from view
         }
 
-        return view('reports.payment_history_index');
+        return view('core::reports_payment_history_index');
     }
 
     /**
-     * @originalName invoiceAging
+     * Display invoice aging report.
      *
-     * @originalFile ReportsController.php
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-function invoiceAging
+     * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function invoiceAging(Request $request): \Illuminate\Contracts\View\View
     {
         if ($request->input('btn_submit')) {
-            $results = (new ReportsService())->invoiceAging();
-            $data    = [
+            $results = $this->reportsService->invoiceAging();
+            $data = [
                 'results' => $results,
             ];
             // TODO: Use Laravel PDF package to generate PDF from view
         }
 
-        return view('reports.invoice_aging_index');
+        return view('core::reports_invoice_aging_index');
     }
 
     /**
-     * Display the Sales by Year report page and prepare report data when the form is submitted.
+     * Display sales by year report.
      *
-     * When the request includes 'btn_submit', prepares report data (results, from_date, to_date)
-     * from the request inputs for rendering or PDF generation.
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\View the view for the sales by year report
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-function salesByYear
+     * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function salesByYear(Request $request): \Illuminate\Contracts\View\View
     {
         if ($request->input('btn_submit')) {
-            $results = (new ReportsService())->salesByYear(
+            $results = $this->reportsService->salesByYear(
                 $request->input('from_date'),
                 $request->input('to_date'),
                 $request->input('minQuantity'),
@@ -124,6 +163,6 @@ class ReportsController extends AdminController
             // TODO: Use Laravel PDF package to generate PDF from view
         }
 
-        return view('reports.sales_by_year_index');
+        return view('core::reports_sales_by_year_index');
     }
 }

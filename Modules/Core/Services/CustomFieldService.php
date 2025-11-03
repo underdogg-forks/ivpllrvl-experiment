@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Services;
 
-use App\Services\BaseService;
+use Modules\Core\Services\BaseService;
 use Modules\Core\Models\CustomField;
 
 /**

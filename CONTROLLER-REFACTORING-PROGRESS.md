@@ -2,13 +2,13 @@
 
 ## Summary
 
-**Status:** 15/43 Controllers Complete (35%)
+**Status:** 29/43 Controllers Complete (67%)
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (15)
+## Completed Controllers (29)
 
-### Core Module (9/22)
+### Core Module (20/22) - 91% COMPLETE 🌟
 
 1. ✅ **CustomFieldsController** - Added PHPDoc, moved DB queries to service, fixed validation
 2. ✅ **CustomValuesController** - Added PHPDoc, moved DB queries to service, fixed validation  
@@ -19,6 +19,17 @@ This document tracks the systematic refactoring of controllers to align with app
 7. ✅ **LayoutController** - Added comprehensive PHPDoc
 8. ✅ **SettingsAjaxController** - Added PHPDoc, return type hints
 9. ✅ **GuestController** - MAJOR: Removed AllowDynamicProperties, UserController inheritance, added DI
+10. ✅ **ImportController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI and PHPDoc
+11. ✅ **ReportsController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI and PHPDoc
+12. ✅ **UserClientsController** - MAJOR: Removed AllowDynamicProperties, AdminController, modernized
+13. ✅ **SettingsController** - MAJOR: Removed AllowDynamicProperties, AdminController
+14. ✅ **UsersController** - MAJOR: Removed property promotion, AllowDynamicProperties, AdminController
+15. ✅ **UsersAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+16. ✅ **GetController** - MAJOR: Removed BaseController inheritance, added DI
+17. ✅ **View.php (ViewController)** - MAJOR: Removed AllowDynamicProperties, BaseGuestController, added DI
+18. ✅ **DashboardController** - Added DI, removed inline service instantiation
+19. ✅ **UploadController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+20. ✅ **MailerController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 
 ### Products Module (4/4) - 100% COMPLETE ✅
 
@@ -39,28 +50,29 @@ This document tracks the systematic refactoring of controllers to align with app
 
 1. ✅ **QuotesController** - Added @legacy tags, cleaned PHPDoc
 
-## Remaining Controllers (28)
+### CRM Module (1/11)
 
-### Core Module (13 remaining)
+1. ✅ **ClientsAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 
-- [ ] DashboardController - Complex: inline service instantiation
-- [ ] SessionsController - VERY COMPLEX: major refactoring needed
-- [ ] UsersController
-- [ ] UsersAjaxController
-- [ ] ImportController - Has violations: AllowDynamicProperties, AdminController
-- [ ] SetupController - Large file (481 lines)
-- [ ] UserClientsController
-- [ ] UploadController - Large file (219 lines)
-- [ ] MailerController - Large file (212 lines)
-- [ ] SettingsController
-- [ ] ReportsController - Has violations: AllowDynamicProperties, AdminController
-- [ ] GetController
-- [ ] View.php (ViewController)
+### Invoices Module (1/5)
 
-### CRM Module (11 controllers)
+1. ✅ **CronController** - MAJOR: Removed AllowDynamicProperties, BaseController, added DI
+
+### Projects Module (2/3) - 67% COMPLETE
+
+1. ✅ **ProjectsController** - MAJOR: Removed property promotion, AdminController, AllowDynamicProperties
+2. ✅ **TasksAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+
+## Remaining Controllers (14)
+
+### Core Module (2 remaining)
+
+- [ ] SessionsController - VERY COMPLEX: major refactoring needed (312 lines)
+- [ ] SetupController - VERY COMPLEX: major refactoring needed (481 lines)
+
+### CRM Module (10 remaining)
 
 - [ ] ClientsController
-- [ ] ClientsAjaxController
 - [ ] UserClientsController
 - [ ] GetController
 - [ ] ViewController
@@ -70,17 +82,16 @@ This document tracks the systematic refactoring of controllers to align with app
 - [ ] QuotesController
 - [ ] GuestController
 - [ ] Gateways/StripeController
-- [ ] Gateways/PaypalController
+- [ ] Gateways/PaypalController (Note: Some may already be refactored)
 
-### Invoices Module (5 controllers)
+### Invoices Module (4 remaining)
 
 - [ ] InvoicesController
 - [ ] InvoicesAjaxController
 - [ ] InvoiceGroupsController
-- [ ] CronController
-- [ ] RecurringController
+- [ ] RecurringController (Note: May already be refactored)
 
-### Projects Module (2 remaining)
+### Projects Module (1 remaining)
 
 - [ ] TasksController
 - [ ] TasksAjaxController

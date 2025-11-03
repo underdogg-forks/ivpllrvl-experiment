@@ -2,50 +2,75 @@
 
 namespace Modules\Projects\Controllers;
 
-use AllowDynamicProperties;
 use Illuminate\Http\Request;
-use Modules\Core\Controllers\AdminController;
-use Modules\Projects\Services\TasksService;
+use Modules\Projects\Services\TaskService;
+use Modules\Projects\Models\Task;
 
-#[AllowDynamicProperties]
-class TasksAjaxController extends AdminController
+/**
+ * TasksAjaxController
+ *
+ * Handles AJAX requests for task-related operations
+ *
+ * @legacy-file application/modules/tasks/controllers/Ajax.php
+ */
+class TasksAjaxController
 {
+    protected TaskService $taskService;
+
     /**
-     * Render the task lookups modal populated with default tax rate and invoice tasks.
+     * Initialize the TasksAjaxController with dependency injection.
      *
-     * Prepares view data containing the default item tax rate (0 when not set) and, if an
-     * invoice ID is provided, the tasks associated with that invoice.
-     *
-     * @param int|null $invoice_id the invoice ID to fetch tasks for, or null to omit tasks
-     *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory the rendered task lookups view
+     * @param TaskService $taskService
      */
-    public function modalTaskLookups($invoice_id = null)
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
+    /**
+     * Display modal for task lookups (AJAX endpoint).
+     *
+     * @param int|null $invoice_id Invoice ID to fetch tasks for
+     *
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-function modalTaskLookups
+     * @legacy-file application/modules/tasks/controllers/Ajax.php
+     */
+    public function modalTaskLookups(?int $invoice_id = null): \Illuminate\Contracts\View\View
     {
         $default_item_tax_rate = get_setting('default_item_tax_rate');
-        $data                  = ['default_item_tax_rate' => $default_item_tax_rate !== '' ?: 0, 'tasks' => []];
-        if ( ! empty($invoice_id)) {
-            $data['tasks'] = (new TasksService())->getTasksToInvoice($invoice_id);
+        $data = [
+            'default_item_tax_rate' => $default_item_tax_rate !== '' ? $default_item_tax_rate : 0,
+            'tasks' => [],
+        ];
+
+        if (!empty($invoice_id)) {
+            $data['tasks'] = $this->taskService->getTasksToInvoice($invoice_id);
         }
 
-        return view('tasks.modal_task_lookups', $data);
+        return view('projects::tasks_modal_task_lookups', $data);
     }
 
     /**
-     * Outputs the selected tasks as a JSON array with each task's price formatted for display.
+     * Process task selections (AJAX endpoint).
      *
-     * Reads `task_ids` from the request, retrieves matching tasks, formats each task's `task_price`,
-     * and writes the resulting task collection as JSON to the response.
+     * @param Request $request
      *
-     * @param Request $request request containing a `task_ids` array of task identifiers to retrieve
+     * @return void Outputs JSON response
+     *
+     * @legacy-function processTaskSelections
+     * @legacy-file application/modules/tasks/controllers/Ajax.php
      */
     public function processTaskSelections(Request $request): void
     {
         $taskIds = $request->input('task_ids', []);
-        $tasks   = (new TasksService())->query()->whereIn('task_id', $taskIds)->get();
+        $tasks = Task::query()->whereIn('task_id', $taskIds)->get();
+
         foreach ($tasks as $task) {
             $task->task_price = format_amount($task->task_price);
         }
+
+        header('Content-Type: application/json');
         echo json_encode($tasks);
     }
 }

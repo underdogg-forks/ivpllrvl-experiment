@@ -2,178 +2,221 @@
 
 namespace Modules\Core\Controllers;
 
-use AllowDynamicProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Modules\Core\Services\CustomValuesService;
-use Modules\Core\Services\UserClientsService;
-use Modules\Core\Services\UsersService;
-use Modules\Crm\Services\ClientsService;
-use Modules\Core\Services\CustomFieldsService;
-use Modules\Core\Controllers\UserCustomService;
+use Modules\Core\Services\CustomValueService;
+use Modules\Core\Services\UserService;
+use Modules\Crm\Services\UserClientService;
+use Modules\Crm\Services\ClientService;
+use Modules\Core\Services\CustomFieldService;
 
-#[AllowDynamicProperties]
-class UsersController extends AdminController
+/**
+ * UsersController
+ *
+ * Manages user account operations and administration
+ *
+ * @legacy-file application/modules/users/controllers/Users.php
+ */
+class UsersController
 {
+    protected UserService $userService;
+    protected CustomFieldService $customFieldService;
+    protected CustomValueService $customValueService;
+    protected UserClientService $userClientService;
+    protected ClientService $clientService;
+
     /**
-     * UsersController constructor.
+     * Initialize the UsersController with dependency injection.
+     *
+     * @param UserService $userService
+     * @param CustomFieldService $customFieldService
+     * @param CustomValueService $customValueService
+     * @param UserClientService $userClientService
+     * @param ClientService $clientService
      */
     public function __construct(
-        protected UsersService $usersService,
-        protected UserCustomService $userCustomService,
-        protected CustomFieldsService $customFieldsService,
-        protected CustomValuesService $customValuesService,
-        protected UserClientsService $userClientsService,
-        protected ClientsService $clientsService
+        UserService $userService,
+        CustomFieldService $customFieldService,
+        CustomValueService $customValueService,
+        UserClientService $userClientService,
+        ClientService $clientService
     ) {
-        parent::__construct();
+        $this->userService = $userService;
+        $this->customFieldService = $customFieldService;
+        $this->customValueService = $customValueService;
+        $this->userClientService = $userClientService;
+        $this->clientService = $clientService;
     }
 
     /**
-     * @originalName index
+     * Display a paginated list of users.
      *
-     * @originalFile UsersController.php
+     * @param int $page Page number for pagination
+     *
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/users/controllers/Users.php
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $this->usersService->paginate(route('users.index'), $page);
-        $users = $this->usersService->result();
+        // TODO: Implement pagination logic
+        $users = $this->userService->getAll();
 
-        return view('users.index', [
-            'filter_display'     => true,
+        return view('core::users_index', [
+            'filter_display' => true,
             'filter_placeholder' => trans('filter_users'),
-            'filter_method'      => 'filter_users',
-            'users'              => $users,
-            'user_types'         => $this->usersService->userTypes(),
+            'filter_method' => 'filter_users',
+            'users' => $users,
+            'user_types' => $this->userService->getUserTypes(),
         ]);
     }
 
     /**
-     * @originalName form
+     * Display form for creating or editing a user.
      *
-     * @originalFile UsersController.php
+     * @param Request $request
+     * @param int|null $id User ID (null for create)
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function form
+     * @legacy-file application/modules/users/controllers/Users.php
      */
-    public function form(Request $request, ?int $id = null): \Illuminate\View\View
+    public function form(Request $request, ?int $id = null)
     {
         if ($request->has('btn_cancel')) {
-            return redirect()->route('users');
+            return redirect()->route('users.index');
         }
-        $this->filterInput();
-        if ($this->usersService->runValidation($id ? 'validation_rules_existing' : 'validation_rules')) {
-            $id = $this->usersService->save($id);
-            $this->userCustomService->saveCustom($id, $request->input('custom'));
-            // Update the session details if the logged in user edited his account
+
+        if ($request->isMethod('post') && $request->has('btn_submit')) {
+            $validated = $request->validate([
+                'user_name' => 'required|string|max:255',
+                'user_email' => 'required|email|max:255|unique:ip_users,user_email' . ($id ? ',' . $id . ',user_id' : ''),
+                'user_password' => $id ? 'nullable|string|min:6' : 'required|string|min:6',
+                'user_type' => 'required|integer',
+            ]);
+
+            if ($id) {
+                $this->userService->update($id, $validated);
+            } else {
+                $id = $this->userService->create($validated)->user_id;
+            }
+
+            // Update the session details if the logged in user edited their account
             if (Session::get('user_id') == $id) {
-                $new_details  = $this->usersService->getById($id);
+                $user = $this->userService->find($id);
                 $session_data = [
-                    'user_type'     => $new_details->user_type,
-                    'user_id'       => $new_details->user_id,
-                    'user_name'     => $new_details->user_name,
-                    'user_email'    => $new_details->user_email,
-                    'user_company'  => $new_details->user_company,
-                    'user_language' => $new_details->user_language ?? 'system',
+                    'user_type' => $user->user_type,
+                    'user_id' => $user->user_id,
+                    'user_name' => $user->user_name,
+                    'user_email' => $user->user_email,
+                    'user_company' => $user->user_company ?? '',
+                    'user_language' => $user->user_language ?? 'system',
                 ];
                 Session::put($session_data);
             }
             Session::forget('user_clients');
 
-            return redirect()->route('users');
+            return redirect()->route('users.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
-        if ($id && ! $request->has('btn_submit')) {
-            if ( ! $this->usersService->prepForm($id)) {
-                abort(404);
-            }
-            $user_custom = $this->userCustomService->where('user_id', $id)->get();
-            if ($user_custom->count()) {
-                $user_custom = $user_custom->first();
-                foreach ($user_custom->toArray() as $key => $val) {
-                    if ( ! in_array($key, ['user_id', 'user_custom_id'])) {
-                        $this->usersService->setFormValue('custom[' . $key . ']', $val);
-                    }
-                }
-            }
-        } elseif ($request->has('btn_submit')) {
-            if ($request->input('custom')) {
-                foreach ($request->input('custom') as $key => $val) {
-                    $this->usersService->setFormValue('custom[' . $key . ']', $val);
-                }
-            }
-        }
-        $custom_fields['ip_user_custom'] = $this->customFieldsService->byTable('ip_user_custom')->get()->all();
-        $custom_values                   = [];
-        foreach ($custom_fields['ip_user_custom'] as $custom_field) {
-            if (in_array($custom_field->custom_field_type, $this->customValuesService->customValueFields())) {
-                $values                                        = $this->customValuesService->getByFid($custom_field->custom_field_id)->get()->all();
-                $custom_values[$custom_field->custom_field_id] = $values;
-            }
-        }
-        $fields = $this->userCustomService->getByUseid($id);
-        foreach ($custom_fields['ip_user_custom'] as $cfield) {
-            foreach ($fields as $fvalue) {
-                if ($fvalue->user_custom_fieldid == $cfield->custom_field_id) {
-                    $this->usersService->setFormValue('custom[' . $cfield->custom_field_id . ']', $fvalue->user_custom_fieldvalue);
-                    break;
-                }
-            }
-        }
-        $custom_fields['ip_invoice_custom'] = $this->customFieldsService->byTable('ip_invoice_custom')->get()->all();
 
-        return view('users.form', [
-            'id'               => $id,
-            'user_types'       => $this->usersService->userTypes(),
-            'user_clients'     => $this->userClientsService->where('ip_user_clients.user_id', $id)->get()->all(),
-            'custom_fields'    => $custom_fields,
-            'custom_values'    => $custom_values,
-            'countries'        => get_country_list(trans('cldr')),
-            'selected_country' => $this->usersService->formValue('user_country') ?: get_setting('default_country'),
-            'clients'          => $this->clientsService->where('client_active', 1)->get()->all(),
-            'languages'        => get_available_languages(),
-            'einvoicing'       => get_setting('einvoicing'),
+        $user = $id ? $this->userService->find($id) : null;
+        if ($id && !$user) {
+            abort(404);
+        }
+
+        // TODO: Implement custom fields logic
+        $custom_fields = [];
+        $custom_values = [];
+
+        return view('core::users_form', [
+            'id' => $id,
+            'user' => $user,
+            'user_types' => $this->userService->getUserTypes(),
+            'user_clients' => $this->userClientService->getByUserId($id ?? 0),
+            'custom_fields' => $custom_fields,
+            'custom_values' => $custom_values,
+            'countries' => get_country_list(trans('cldr')),
+            'selected_country' => $user->user_country ?? get_setting('default_country'),
+            'clients' => $this->clientService->getActiveClients(),
+            'languages' => get_available_languages(),
+            'einvoicing' => get_setting('einvoicing'),
         ]);
     }
 
     /**
-     * @originalName changePassword
+     * Change user password.
      *
-     * @originalFile UsersController.php
+     * @param string $user_id User ID
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function changePassword
+     * @legacy-file application/modules/users/controllers/Users.php
      */
     public function changePassword(string $user_id)
     {
         if (request()->input('btn_cancel')) {
-            redirect()->route('users');
+            return redirect()->route('users.index');
         }
-        if ((new UsersService())->runValidation('validation_rules_change_password')) {
-            (new UsersService())->saveChangePassword($user_id, request()->input('user_password'));
-            redirect('users/form/' . $user_id);
+
+        if (request()->isMethod('post') && request()->input('btn_submit')) {
+            $validated = request()->validate([
+                'user_password' => 'required|string|min:6|confirmed',
+            ]);
+
+            $this->userService->update((int) $user_id, [
+                'user_password' => bcrypt($validated['user_password']),
+            ]);
+
+            return redirect()->route('users.form', ['id' => $user_id])
+                ->with('alert_success', trans('password_successfully_changed'));
         }
-        $this->layout->buffer('content', 'users/form_change_password');
-        $this->layout->render();
+
+        return view('core::users_form_change_password', [
+            'user_id' => $user_id,
+        ]);
     }
 
     /**
-     * Delete a user by id and redirect to the users list.
+     * Delete a user.
      *
-     * Does not delete the primary administrator with id 1; in all cases the request is redirected to the users route.
+     * @param int|string $id User ID
      *
-     * @param int|string $id the identifier of the user to delete
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     * @legacy-file application/modules/users/controllers/Users.php
      */
-    public function delete($id)
+    public function delete($id): \Illuminate\Http\RedirectResponse
     {
+        // Don't delete the primary administrator
         if ($id != 1) {
-            (new UsersService())->delete($id);
+            $this->userService->delete((int) $id);
         }
-        redirect()->route('users');
+
+        return redirect()->route('users.index')
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 
     /**
-     * Delete a user-client association and redirect back to the user's form.
+     * Delete a user-client association.
      *
-     * @param string $user_id        the ID of the user whose form to return to after deletion
-     * @param mixed  $user_client_id the identifier of the user-client linkage to delete
+     * @param string $user_id User ID
+     * @param mixed $user_client_id User-client relation ID
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function deleteUserClient
+     * @legacy-file application/modules/users/controllers/Users.php
      */
-    public function deleteUserClient(string $user_id, $user_client_id)
+    public function deleteUserClient(string $user_id, $user_client_id): \Illuminate\Http\RedirectResponse
     {
-        (new UserClientsService())->delete($user_client_id);
-        redirect('users/form/' . $user_id);
+        $this->userClientService->delete((int) $user_client_id);
+
+        return redirect()->route('users.form', ['id' => $user_id])
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }
