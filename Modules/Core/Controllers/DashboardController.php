@@ -2,27 +2,80 @@
 
 namespace Modules\Core\Controllers;
 
+use Modules\Invoices\Services\InvoiceAmountService;
+use Modules\Invoices\Services\InvoiceService;
+use Modules\Quotes\Services\QuoteAmountService;
+use Modules\Quotes\Services\QuoteService;
+use Modules\Projects\Services\ProjectService;
+use Modules\Projects\Services\TaskService;
+
+/**
+ * DashboardController
+ *
+ * Handles the admin dashboard display
+ *
+ * @legacy-file application/modules/dashboard/controllers/Dashboard.php
+ */
 class DashboardController
 {
+    protected InvoiceAmountService $invoiceAmountService;
+    protected QuoteAmountService $quoteAmountService;
+    protected InvoiceService $invoiceService;
+    protected QuoteService $quoteService;
+    protected ProjectService $projectService;
+    protected TaskService $taskService;
+
     /**
-     * @legacy-file application/modules/dashboard/controllers/Dashboard.php
-     * Prepares data required by the admin dashboard and renders the dashboard view.
+     * Initialize the DashboardController with dependency injection.
      *
-     * The view data includes:
-     * - `invoice_status_totals`, `quote_status_totals` — aggregated amounts by status for the configured overview periods.
-     * - `invoice_status_period`, `quote_status_period` — overview period identifiers with `-` replaced by `_`.
-     * - `invoices`, `quotes` — latest 10 invoices and quotes.
-     * - `invoice_statuses`, `quote_statuses` — available invoice and quote statuses.
-     * - `overdue_invoices` — invoices marked as overdue.
-     * - `projects`, `tasks`, `task_statuses` — latest projects, latest tasks, and task statuses.
-     *
-     * @return string the rendered dashboard view content
+     * @param InvoiceAmountService $invoiceAmountService
+     * @param QuoteAmountService $quoteAmountService
+     * @param InvoiceService $invoiceService
+     * @param QuoteService $quoteService
+     * @param ProjectService $projectService
+     * @param TaskService $taskService
      */
-    public function index()
+    public function __construct(
+        InvoiceAmountService $invoiceAmountService,
+        QuoteAmountService $quoteAmountService,
+        InvoiceService $invoiceService,
+        QuoteService $quoteService,
+        ProjectService $projectService,
+        TaskService $taskService
+    ) {
+        $this->invoiceAmountService = $invoiceAmountService;
+        $this->quoteAmountService = $quoteAmountService;
+        $this->invoiceService = $invoiceService;
+        $this->quoteService = $quoteService;
+        $this->projectService = $projectService;
+        $this->taskService = $taskService;
+    }
+    /**
+     * Display the admin dashboard.
+     *
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/dashboard/controllers/Dashboard.php
+     */
+    public function index(): \Illuminate\View\View
     {
-        $quote_overview_period   = get_setting('quote_overview_period');
+        $quote_overview_period = get_setting('quote_overview_period');
         $invoice_overview_period = get_setting('invoice_overview_period');
 
-        return view('dashboard.index', ['invoice_status_totals' => (new InvoiceAmountsService())->getStatusTotals($invoice_overview_period), 'quote_status_totals' => (new QuoteAmountsService())->getStatusTotals($quote_overview_period), 'invoice_status_period' => str_replace('-', '_', $invoice_overview_period), 'quote_status_period' => str_replace('-', '_', $quote_overview_period), 'invoices' => (new InvoicesService())->limit(10)->get()->result(), 'quotes' => (new QuotesService())->limit(10)->get()->result(), 'invoice_statuses' => (new InvoicesService())->statuses(), 'quote_statuses' => (new QuotesService())->statuses(), 'overdue_invoices' => (new InvoicesService())->isOverdue()->get()->result(), 'projects' => (new ProjectsService())->getLatest()->get()->result(), 'tasks' => (new TasksService())->getLatest()->get()->result(), 'task_statuses' => (new TasksService())->statuses()]);
+        return view('core::dashboard_index', [
+            'invoice_status_totals' => $this->invoiceAmountService->getStatusTotals($invoice_overview_period),
+            'quote_status_totals' => $this->quoteAmountService->getStatusTotals($quote_overview_period),
+            'invoice_status_period' => str_replace('-', '_', $invoice_overview_period),
+            'quote_status_period' => str_replace('-', '_', $quote_overview_period),
+            'invoices' => $this->invoiceService->getLatest(10),
+            'quotes' => $this->quoteService->getLatest(10),
+            'invoice_statuses' => $this->invoiceService->getStatuses(),
+            'quote_statuses' => $this->quoteService->getStatuses(),
+            'overdue_invoices' => $this->invoiceService->getOverdueInvoices(),
+            'projects' => $this->projectService->getLatest(),
+            'tasks' => $this->taskService->getLatest(),
+            'task_statuses' => $this->taskService->getStatuses(),
+        ]);
     }
 }
