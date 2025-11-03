@@ -2,13 +2,13 @@
 
 ## Summary
 
-**Status:** 29/43 Controllers Complete (67%)
+**Status:** 32/43 Controllers Complete (74%) - FINAL 3 COMPLEX CONTROLLERS COMPLETE! 🎉
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (29)
+## Completed Controllers (32)
 
-### Core Module (20/22) - 91% COMPLETE 🌟
+### Core Module (22/22) - 100% COMPLETE ✅🎉
 
 1. ✅ **CustomFieldsController** - Added PHPDoc, moved DB queries to service, fixed validation
 2. ✅ **CustomValuesController** - Added PHPDoc, moved DB queries to service, fixed validation  
@@ -30,6 +30,8 @@ This document tracks the systematic refactoring of controllers to align with app
 18. ✅ **DashboardController** - Added DI, removed inline service instantiation
 19. ✅ **UploadController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 20. ✅ **MailerController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+21. ✅ **SessionsController** - MAJOR: Removed AllowDynamicProperties, BaseController, added DI with SessionsService and UsersService (312 lines)
+22. ✅ **SetupController** - MAJOR: Removed AllowDynamicProperties, BaseController, added DI with SetupService, UsersService, and VersionsService (481 lines)
 
 ### Products Module (4/4) - 100% COMPLETE ✅
 
@@ -50,9 +52,10 @@ This document tracks the systematic refactoring of controllers to align with app
 
 1. ✅ **QuotesController** - Added @legacy tags, cleaned PHPDoc
 
-### CRM Module (1/11)
+### CRM Module (2/11)
 
 1. ✅ **ClientsAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+2. ✅ **ClientsController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI with 6 services (12KB, very complex)
 
 ### Invoices Module (1/5)
 
@@ -63,16 +66,13 @@ This document tracks the systematic refactoring of controllers to align with app
 1. ✅ **ProjectsController** - MAJOR: Removed property promotion, AdminController, AllowDynamicProperties
 2. ✅ **TasksAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 
-## Remaining Controllers (14)
+## Remaining Controllers (11)
 
-### Core Module (2 remaining)
+### Core Module (0 remaining) - 100% COMPLETE! ✅🎉
 
-- [ ] SessionsController - VERY COMPLEX: major refactoring needed (312 lines)
-- [ ] SetupController - VERY COMPLEX: major refactoring needed (481 lines)
+All Core module controllers have been refactored!
 
-### CRM Module (10 remaining)
-
-- [ ] ClientsController
+### CRM Module (9 remaining)
 - [ ] UserClientsController
 - [ ] GetController
 - [ ] ViewController
