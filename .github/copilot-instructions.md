@@ -313,18 +313,16 @@ class QuotesController
 **NEVER in Controllers:**
 - ❌ `Model::query()->method()` - Use Eloquent directly or service methods
 - ❌ `Model::staticMethod()` - Move to service
-- ❌ Inline validation with `$request->validate([...])` - Use FormRequest
 - ❌ Complex business logic - Move to service
 - ❌ Direct database queries - Use Eloquent or service
-- ❌ Single `form()` method for both create and edit - Separate into create/store/edit/update
 
 **ALWAYS in Controllers:**
-- ✅ Separate methods: create(), store(), edit(), update(), destroy()
-- ✅ FormRequest injection for validation
-- ✅ Route model binding when applicable
+- ✅ Use `form(?int $id)` method pattern for create/edit operations
+- ✅ FormRequest injection for validation (when appropriate)
 - ✅ Service injection via constructor
-- ✅ Use `$request->validated()` from FormRequest
+- ✅ Use `$request->validated()` from FormRequest (when using FormRequest)
 - ✅ Delegate all business logic to services
+- ✅ Add comprehensive PHPDoc with `@legacy-*` tags
 
 **Service Dependencies:**
 
@@ -580,7 +578,6 @@ class InvoiceGroupsController                 // PascalCase, no underscores
 - Use 4 spaces for indentation
 - Opening braces on same line for classes, methods
 - Declare visibility for all properties and methods
-- Use `declare(strict_types=1);` for new files
 - One blank line after namespace declaration
 
 ### Naming Conventions (PSR-4/PSR-12 STRICT)

@@ -9,7 +9,6 @@ This document defines the unified coding standards for the InvoicePlane refactor
 3. [FormRequest Standards](#formrequest-standards)
 4. [Test Standards](#test-standards)
 5. [PHPDoc Standards](#phpdoc-standards)
-6. [Route Standards](#route-standards)
 
 ## Controller Standards
 
@@ -20,12 +19,8 @@ Every controller must follow this structure:
 ```php
 <?php
 
-declare(strict_types=1);
-
 namespace Modules\{ModuleName}\Controllers;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use Modules\{ModuleName}\Http\Requests\{EntityName}Request;
 use Modules\{ModuleName}\Models\{EntityName};
 use Modules\{ModuleName}\Services\{EntityName}Service;
@@ -39,12 +34,11 @@ use Modules\{ModuleName}\Services\{EntityName}Service;
  */
 class {EntityName}Controller
 {
-    /**
-     * @param {EntityName}Service ${entityName}Service Service for {entity} business logic
-     */
-    public function __construct(
-        private readonly {EntityName}Service ${entityName}Service
-    ) {
+    protected {EntityName}Service ${entityName}Service;
+
+    public function __construct({EntityName}Service ${entityName}Service)
+    {
+        $this->{entityName}Service = ${entityName}Service;
     }
 
     // Methods follow...
@@ -53,29 +47,69 @@ class {EntityName}Controller
 
 ### Key Principles
 
-1. **Declare Strict Types**: Every file starts with `declare(strict_types=1);`
-2. **Use Property Promotion**: Constructor parameters with visibility modifiers
-3. **Readonly Properties**: Use `readonly` for dependency-injected services
-4. **Type Hints**: Every method parameter and return value must have type hints
+1. **NO strict types declaration**: Do NOT use `declare(strict_types=1);`
+2. **Standard Constructor**: Use traditional constructor pattern, NOT property promotion
+3. **NO readonly**: Do NOT use `readonly` keyword
+4. **Type Hints**: Use type hints where helpful, but don't overdo it
 5. **NO Database Queries**: All database logic goes in services
 6. **Early Returns**: Use early returns for guard clauses
-7. **FormRequest Validation**: NEVER inline validation - always use FormRequest classes
+7. **FormRequest Validation**: Use FormRequest classes for validation when appropriate
 
-### Standard CRUD Methods
+### Standard Controller Method Pattern: form()
 
-Every resource controller should have these methods:
+Controllers should use the **`form()` method pattern** for create/edit operations, NOT separate REST methods:
 
-- `index(int $page = 0): View` - List resources with pagination
-- `create(): View` - Show create form
-- `store(EntityRequest $request): RedirectResponse` - Store new resource
-- `show(Entity $entity): View` - Display single resource (route model binding)
-- `edit(Entity $entity): View` - Show edit form (route model binding)
-- `update(EntityRequest $request, Entity $entity): RedirectResponse` - Update resource
-- `destroy(Entity $entity): RedirectResponse` - Delete resource
+```php
+/**
+ * Display form for creating or editing an entity.
+ *
+ * @param int|null $id Entity ID (null for create)
+ *
+ * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+ */
+public function form(?int $id = null)
+{
+    // Handle cancel button
+    if (request()->post('btn_cancel')) {
+        return redirect()->route('entities.index');
+    }
 
-### Example: TasksController
+    // Handle form submission
+    if (request()->isMethod('post') && request()->post('btn_submit')) {
+        $validated = request()->validate([
+            // validation rules
+        ]);
 
-See `Modules/Projects/Controllers/TasksController.php` for a complete reference implementation.
+        if ($id) {
+            $this->entityService->update($id, $validated);
+        } else {
+            $this->entityService->create($validated);
+        }
+
+        return redirect()->route('entities.index')
+            ->with('alert_success', trans('record_successfully_saved'));
+    }
+
+    // Load existing record for editing or create new
+    if ($id) {
+        $entity = $this->entityService->find($id);
+        if (!$entity) {
+            abort(404);
+        }
+    } else {
+        $entity = new Entity();
+    }
+
+    return view('entities_form', compact('entity'));
+}
+```
+
+### Example Controllers
+
+See these controllers for reference implementations:
+- `Modules/Projects/Controllers/TasksController.php`
+- `Modules/Products/Controllers/UnitsController.php`
+- `Modules/Products/Controllers/FamiliesController.php`
 
 ## Service Standards
 
@@ -83,8 +117,6 @@ See `Modules/Projects/Controllers/TasksController.php` for a complete reference 
 
 ```php
 <?php
-
-declare(strict_types=1);
 
 namespace Modules\{ModuleName}\Services;
 
@@ -116,11 +148,11 @@ class {EntityName}Service extends BaseService
 
 ### Key Principles
 
-1. **Extend BaseService**: All services extend `Modules\Core\Services\BaseService`
-2. **Declare Model Class**: Implement `getModelClass()` method
-3. **Business Logic Only**: Services contain business logic, NOT validation
-4. **Use BaseService Methods**: Leverage inherited CRUD methods
-5. **Type Hints**: All methods must have complete type hints
+1. **NO strict types**: Do NOT use `declare(strict_types=1);`
+2. **Extend BaseService**: All services extend `Modules\Core\Services\BaseService`
+3. **Declare Model Class**: Implement `getModelClass()` method
+4. **Business Logic Only**: Services contain business logic, NOT validation
+5. **Use BaseService Methods**: Leverage inherited CRUD methods
 6. **PHPDoc**: Document all public methods with legacy references
 
 ### Standard Service Methods
@@ -140,8 +172,6 @@ Additional business logic methods as needed.
 
 ```php
 <?php
-
-declare(strict_types=1);
 
 namespace Modules\{ModuleName}\Http\Requests;
 
@@ -325,7 +355,7 @@ public function it_validates_task_creation(string $taskName, int $status, bool $
  *
  * @param int $page Page number for pagination (default: 0)
  *
- * @return View
+ * @return \Illuminate\View\View
  *
  * @legacy-function index
  * @legacy-file application/modules/{legacy_module}/controllers/{LegacyController}.php
@@ -362,62 +392,39 @@ public function it_validates_task_creation(string $taskName, int $status, bool $
 7. **@legacy-line**: Line number in legacy file (optional)
 8. **@throws**: If method can throw exceptions (optional)
 
-## Route Standards
-
-### Route File Organization
-
-Each module should have route files in `Modules/{Module}/Routes/web/`:
-
-```php
-<?php
-
-use Illuminate\Support\Facades\Route;
-use Modules\{Module}\Controllers\{EntityName}Controller;
-
-Route::middleware(['web', 'auth'])->group(function () {
-    // Resource routes
-    Route::get('{entities}', [{EntityName}Controller::class, 'index'])->name('{entities}.index');
-    Route::get('{entities}/create', [{EntityName}Controller::class, 'create'])->name('{entities}.create');
-    Route::post('{entities}', [{EntityName}Controller::class, 'store'])->name('{entities}.store');
-    Route::get('{entities}/{{entity}}', [{EntityName}Controller::class, 'show'])->name('{entities}.show');
-    Route::get('{entities}/{{entity}}/edit', [{EntityName}Controller::class, 'edit'])->name('{entities}.edit');
-    Route::put('{entities}/{{entity}}', [{EntityName}Controller::class, 'update'])->name('{entities}.update');
-    Route::delete('{entities}/{{entity}}', [{EntityName}Controller::class, 'destroy'])->name('{entities}.destroy');
-});
-```
-
-### Public Routes
-
-Only these routes should be without `auth` middleware:
-- `/` - Welcome page
-- `/setup` - Installation setup
-- `/sessions/login` - Login page
-- `/sessions/passwordreset` - Password reset
-- `/guest/*` - Guest access routes (invoices, quotes with URL keys)
-
-### Route Naming
-
-- Use dot notation: `{entities}.index`, `{entities}.create`, etc.
-- Plural for resource routes: `tasks.index`, `projects.show`
-- Descriptive for custom routes: `invoices.mark-sent`, `quotes.convert-to-invoice`
-
 ## Migration Checklist
 
 When refactoring a controller, ensure:
 
-- [ ] Add `declare(strict_types=1);` at the top
-- [ ] Use constructor property promotion with `readonly`
 - [ ] Add complete PHPDoc blocks with `@legacy-*` tags
-- [ ] Move all validation to FormRequest classes
+- [ ] Move all validation to FormRequest classes (when appropriate)
 - [ ] Move all database queries to Service methods
-- [ ] Use route model binding where applicable
 - [ ] Add comprehensive tests with `#[CoversClass()]`
 - [ ] Use data providers for realistic test data
 - [ ] Test actual data, not just HTTP status codes
-- [ ] Add authentication middleware to routes
 - [ ] Follow early return pattern for guard clauses
 - [ ] Organize use statements alphabetically
 - [ ] Remove any `AllowDynamicProperties` attributes
+- [ ] Use the `form()` method pattern for create/edit operations
+
+## Reference Implementation
+
+The following files serve as reference implementations:
+
+1. **Controller**: `Modules/Projects/Controllers/TasksController.php`
+2. **Controller with form()**: `Modules/Products/Controllers/FamiliesController.php`
+3. **Service**: `Modules/Projects/Services/TaskService.php`
+4. **FormRequest**: `Modules/Projects/Http/Requests/TaskRequest.php`
+5. **Tests**: `Modules/Projects/Tests/Feature/TasksControllerTest.php`
+
+## Next Steps
+
+1. Use this guide as a reference for all refactoring work
+2. Refactor one controller at a time
+3. Create tests before refactoring (TDD approach)
+4. Run tests after each change
+5. Document all legacy references
+6. Update this guide as patterns evolve
 - [ ] Remove extends from legacy base controllers (AdminController, etc.)
 
 ## Reference Implementation

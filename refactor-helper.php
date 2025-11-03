@@ -32,32 +32,13 @@ echo "File: $controllerPath\n\n";
 $issues = [];
 $suggestions = [];
 
-// Check 1: declare(strict_types=1)
-if (!preg_match('/declare\(strict_types=1\);/', $content)) {
-    $issues[] = "Missing declare(strict_types=1)";
-    $suggestions[] = "Add 'declare(strict_types=1);' after the opening PHP tag";
-}
-
-// Check 2: Class-level PHPDoc
+// Check 1: Class-level PHPDoc
 if (!preg_match('/\/\*\*\s*\n\s*\*\s+\w+Controller/m', $content)) {
     $issues[] = "Missing or incomplete class-level PHPDoc";
     $suggestions[] = "Add comprehensive class-level PHPDoc with description and @legacy-file tag";
 }
 
-// Check 3: Constructor property promotion
-if (preg_match('/public function __construct\((.*?)\)/s', $content, $matches)) {
-    $constructorParams = $matches[1];
-    if (!preg_match('/private readonly/', $constructorParams) && 
-        !preg_match('/protected readonly/', $constructorParams)) {
-        $issues[] = "Constructor not using property promotion with readonly";
-        $suggestions[] = "Convert constructor to use property promotion: private readonly ServiceName \$serviceName";
-    }
-} else {
-    $issues[] = "Missing constructor";
-    $suggestions[] = "Add constructor with dependency injection";
-}
-
-// Check 4: Method documentation
+// Check 2: Method documentation
 preg_match_all('/public function (\w+)\s*\(/', $content, $methods);
 foreach ($methods[1] as $method) {
     // Look for PHPDoc before method
@@ -73,7 +54,7 @@ foreach ($methods[1] as $method) {
     }
 }
 
-// Check 5: Database queries in controller
+// Check 3: Database queries in controller
 if (preg_match('/DB::/', $content) || 
     preg_match('/->db->/', $content) ||
     preg_match('/\$this->load->/', $content)) {
@@ -81,39 +62,26 @@ if (preg_match('/DB::/', $content) ||
     $suggestions[] = "Move all database queries to service layer";
 }
 
-// Check 6: Inline validation
+// Check 4: Inline validation
 if (preg_match('/\$request->validate\(/', $content) || 
     preg_match('/\$this->validate\(/', $content)) {
     $issues[] = "Inline validation found";
-    $suggestions[] = "Create FormRequest class and use type-hinted parameter";
+    $suggestions[] = "Consider creating FormRequest class for validation";
 }
 
-// Check 7: AllowDynamicProperties
+// Check 5: AllowDynamicProperties
 if (preg_match('/#\[AllowDynamicProperties\]/', $content)) {
     $issues[] = "Using AllowDynamicProperties attribute";
     $suggestions[] = "Remove AllowDynamicProperties and declare all properties";
 }
 
-// Check 8: Extends legacy controllers
+// Check 6: Extends legacy controllers
 if (preg_match('/extends (AdminController|BaseController|CI_Controller)/', $content)) {
     $issues[] = "Extending legacy base controller";
     $suggestions[] = "Remove extends from legacy controllers and use dependency injection";
 }
 
-// Check 9: Return type hints
-preg_match_all('/public function \w+\([^)]*\)\s*(?::\s*(\S+))?\s*{/', $content, $returnTypes);
-$missingReturnTypes = 0;
-foreach ($returnTypes[1] as $returnType) {
-    if (empty($returnType) || $returnType === '{') {
-        $missingReturnTypes++;
-    }
-}
-if ($missingReturnTypes > 0) {
-    $issues[] = "$missingReturnTypes methods missing return type hints";
-    $suggestions[] = "Add return type hints to all methods (View, RedirectResponse, JsonResponse, etc.)";
-}
-
-// Check 10: Use statements organization
+// Check 7: Use statements organization
 $useStatements = [];
 preg_match_all('/^use (.+);$/m', $content, $useMatches);
 $useStatements = $useMatches[1];
