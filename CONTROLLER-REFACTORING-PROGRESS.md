@@ -2,13 +2,13 @@
 
 ## Summary
 
-**Status:** 26/43 Controllers Complete (60%)
+**Status:** 28/43 Controllers Complete (65%)
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (26)
+## Completed Controllers (28)
 
-### Core Module (17/22) - 77% COMPLETE
+### Core Module (19/22) - 86% COMPLETE ⭐
 
 1. ✅ **CustomFieldsController** - Added PHPDoc, moved DB queries to service, fixed validation
 2. ✅ **CustomValuesController** - Added PHPDoc, moved DB queries to service, fixed validation  
@@ -27,6 +27,8 @@ This document tracks the systematic refactoring of controllers to align with app
 15. ✅ **UsersAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 16. ✅ **GetController** - MAJOR: Removed BaseController inheritance, added DI
 17. ✅ **View.php (ViewController)** - MAJOR: Removed AllowDynamicProperties, BaseGuestController, added DI
+18. ✅ **DashboardController** - Added DI, removed inline service instantiation
+19. ✅ **UploadController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 
 ### Products Module (4/4) - 100% COMPLETE ✅
 
@@ -60,14 +62,12 @@ This document tracks the systematic refactoring of controllers to align with app
 1. ✅ **ProjectsController** - MAJOR: Removed property promotion, AdminController, AllowDynamicProperties
 2. ✅ **TasksAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 
-## Remaining Controllers (17)
+## Remaining Controllers (15)
 
-### Core Module (5 remaining)
+### Core Module (3 remaining)
 
-- [ ] DashboardController - Complex: inline service instantiation
 - [ ] SessionsController - VERY COMPLEX: major refactoring needed
 - [ ] SetupController - Large file (481 lines)
-- [ ] UploadController - Large file (219 lines)
 - [ ] MailerController - Large file (212 lines)
 
 ### CRM Module (10 remaining)
