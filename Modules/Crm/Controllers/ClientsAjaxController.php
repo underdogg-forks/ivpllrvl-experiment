@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Crm\app\Http\Controllers;
+namespace Modules\Crm\Controllers;
 
 use Illuminate\Support\Facades\DB;
 

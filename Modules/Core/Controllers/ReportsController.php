@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Models;
+namespace Modules\Core\Controllers;
 
 use AllowDynamicProperties;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Controllers\Controllers;
+namespace Modules\Core\Controllers;
 
 use AllowDynamicProperties;
 use Modules\Core\Support\MailerHelper;
