@@ -2,96 +2,144 @@
 
 namespace Modules\Core\Controllers;
 
-use AllowDynamicProperties;
 use Modules\Core\Models\User;
-use Modules\Core\Services\UserClientsService;
-use Modules\Core\Services\UsersService;
-use Modules\Crm\app\Services\ClientsService;
+use Modules\Core\Services\UserService;
+use Modules\Crm\Services\UserClientService;
+use Modules\Crm\Services\ClientService;
 
-#[AllowDynamicProperties]
-class UserClientsController extends AdminController
+/**
+ * UserClientsController
+ *
+ * Manages user-client relationship assignments
+ *
+ * @legacy-file application/modules/user_clients/controllers/User_clients.php
+ */
+class UserClientsController
 {
+    protected UserService $userService;
+    protected UserClientService $userClientService;
+    protected ClientService $clientService;
+
     /**
-     * Initialize the controller and perform the parent controller setup.
+     * Initialize the UserClientsController with dependency injection.
+     *
+     * @param UserService $userService
+     * @param UserClientService $userClientService
+     * @param ClientService $clientService
      */
-    public function __construct()
-    {
-        parent::__construct();
+    public function __construct(
+        UserService $userService,
+        UserClientService $userClientService,
+        ClientService $clientService
+    ) {
+        $this->userService = $userService;
+        $this->userClientService = $userClientService;
+        $this->clientService = $clientService;
     }
 
     /**
-     * @originalName index
+     * Redirect to users index.
      *
-     * @originalFile UserClientsController.php
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
-    public function index()
+    public function index(): \Illuminate\Http\RedirectResponse
     {
-        redirect()->route('users');
+        return redirect()->route('users.index');
     }
 
     /**
-     * @originalName user
+     * Display user's client assignments.
      *
-     * @originalFile UserClientsController.php
+     * @param int|null $id User ID
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function user
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
-    public function user($id = null)
+    public function user(?int $id = null)
     {
         if (request()->input('btn_cancel')) {
-            redirect()->route('users');
+            return redirect()->route('users.index');
         }
-        $user = (new UsersService())->getById($id);
+        
+        $user = $this->userService->find($id);
         if (empty($user)) {
-            redirect()->route('users');
+            return redirect()->route('users.index');
         }
-        $user_clients = (new UserClientsService())->assignedTo($id)->get()->result();
+        
+        $user_clients = $this->userClientService->getByUserId($id);
 
-        return view('user_clients.new', ['user' => $user, 'user_clients' => $user_clients]);
-        $this->layout->set('id', $id);
-        $this->layout->buffer('content', 'user_clients/field');
-        $this->layout->render();
+        return view('core::user_clients_field', [
+            'user' => $user,
+            'user_clients' => $user_clients,
+            'id' => $id,
+        ]);
     }
 
     /**
-     * @originalName create
+     * Create a new user-client assignment.
      *
-     * @originalFile UserClientsController.php
+     * @param int|null $user_id User ID
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function create
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
-    public function create($user_id = null)
+    public function create(?int $user_id = null)
     {
-        if ( ! $user_id) {
-            redirect()->route('custom_values');
-        } elseif (request()->input('btn_cancel')) {
-            redirect('user_clients/field/' . $user_id);
+        if (!$user_id) {
+            return redirect()->route('custom_values.index');
         }
-        if ((new UserClientsService())->runValidation()) {
+        
+        if (request()->input('btn_cancel')) {
+            return redirect()->route('user_clients.user', ['id' => $user_id]);
+        }
+        
+        if ($this->userClientService->validate()) {
             if (request()->input('user_all_clients')) {
                 $users_id = [$user_id];
-                (new UserClientsService())->setAllClientsUser($users_id);
+                $this->userClientService->setAllClientsUser($users_id);
                 $user_update = ['user_all_clients' => 1];
             } else {
                 $user_update = ['user_all_clients' => 0];
-                (new UserClientsService())->save();
+                $this->userClientService->save();
             }
-            User::where('user_id', $user_id)->update($user_update);
-            redirect('user_clients/user/' . $user_id);
+            
+            User::query()->where('user_id', $user_id)->update($user_update);
+            return redirect()->route('user_clients.user', ['id' => $user_id]);
         }
-        $user    = (new UsersService())->getById($user_id);
-        $clients = (new ClientsService())->getNotAssignedToUser($user_id);
-        $this->layout->set(['id' => $user_id, 'user' => $user, 'clients' => $clients]);
+        
+        $user = $this->userService->find($user_id);
+        $clients = $this->clientService->getNotAssignedToUser($user_id);
+        
+        return view('core::user_clients_create', [
+            'id' => $user_id,
+            'user' => $user,
+            'clients' => $clients,
+        ]);
     }
 
     /**
-     * Delete a user-client relation and redirect to that user's client list.
+     * Delete a user-client assignment.
      *
-     * Deletes the user-client mapping identified by the given relation ID and redirects to
-     * the 'user_clients/user/{user_id}' route for the associated user.
+     * @param int $user_client_id User-client relation ID
      *
-     * @param int $user_client_id the ID of the user-client relation to remove
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
-    public function delete($user_client_id)
+    public function delete(int $user_client_id): \Illuminate\Http\RedirectResponse
     {
-        $ref = (new UserClientsService())->getById($user_client_id);
-        (new UserClientsService())->delete($user_client_id);
-        redirect('user_clients/user/' . $ref->user_id);
+        $ref = $this->userClientService->find($user_client_id);
+        $this->userClientService->delete($user_client_id);
+        
+        return redirect()->route('user_clients.user', ['id' => $ref->user_id])
+            ->with('alert_success', trans('record_successfully_deleted'));
     }
 }

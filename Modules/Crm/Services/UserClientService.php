@@ -31,4 +31,60 @@ class UserClientService extends BaseService
     {
         return UserClient::with(['user', 'client'])->paginate(15, ['*'], 'page', $page);
     }
+
+    /**
+     * Get user clients by user ID.
+     *
+     * @param int $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function assignedTo
+     */
+    public function getByUserId(int $userId)
+    {
+        return UserClient::query()
+            ->where('user_id', $userId)
+            ->with('client')
+            ->get();
+    }
+
+    /**
+     * Validate user client assignment.
+     *
+     * @return bool
+     *
+     * @legacy-function runValidation
+     */
+    public function validate(): bool
+    {
+        // TODO: Implement validation logic
+        return true;
+    }
+
+    /**
+     * Set all clients for a user.
+     *
+     * @param array $userIds Array of user IDs
+     *
+     * @return void
+     *
+     * @legacy-function setAllClientsUser
+     */
+    public function setAllClientsUser(array $userIds): void
+    {
+        // TODO: Implement set all clients logic
+    }
+
+    /**
+     * Save user client assignment.
+     *
+     * @return void
+     *
+     * @legacy-function save
+     */
+    public function save(): void
+    {
+        // TODO: Implement save logic
+    }
 }

@@ -32,8 +32,30 @@ class ClientService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllOrderedByName(): Collection
+    public function getAllOrderedByName()
     {
-        return $this->query()->orderBy('client_name')->get();
+        return Client::query()->orderBy('client_name')->get();
+    }
+
+    /**
+     * Get clients not assigned to a specific user.
+     *
+     * @param int $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function getNotAssignedToUser
+     */
+    public function getNotAssignedToUser(int $userId)
+    {
+        // TODO: Implement logic to get clients not assigned to user
+        return Client::query()
+            ->whereNotIn('client_id', function ($query) use ($userId) {
+                $query->select('client_id')
+                    ->from('ip_user_clients')
+                    ->where('user_id', $userId);
+            })
+            ->orderBy('client_name')
+            ->get();
     }
 }
