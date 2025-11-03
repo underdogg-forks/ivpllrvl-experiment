@@ -2,11 +2,11 @@
 
 ## Summary
 
-**Status:** 24/43 Controllers Complete (56%)
+**Status:** 26/43 Controllers Complete (60%)
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (24)
+## Completed Controllers (26)
 
 ### Core Module (17/22) - 77% COMPLETE
 
@@ -51,7 +51,16 @@ This document tracks the systematic refactoring of controllers to align with app
 
 1. ✅ **ClientsAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
 
-## Remaining Controllers (19)
+### Invoices Module (1/5)
+
+1. ✅ **CronController** - MAJOR: Removed AllowDynamicProperties, BaseController, added DI
+
+### Projects Module (2/3) - 67% COMPLETE
+
+1. ✅ **ProjectsController** - MAJOR: Removed property promotion, AdminController, AllowDynamicProperties
+2. ✅ **TasksAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+
+## Remaining Controllers (17)
 
 ### Core Module (5 remaining)
 
@@ -75,15 +84,14 @@ This document tracks the systematic refactoring of controllers to align with app
 - [ ] Gateways/StripeController
 - [ ] Gateways/PaypalController (Note: Some may already be refactored)
 
-### Invoices Module (5 controllers)
+### Invoices Module (4 remaining)
 
 - [ ] InvoicesController
 - [ ] InvoicesAjaxController
 - [ ] InvoiceGroupsController
-- [ ] CronController
-- [ ] RecurringController
+- [ ] RecurringController (Note: May already be refactored)
 
-### Projects Module (2 remaining)
+### Projects Module (1 remaining)
 
 - [ ] TasksController
 - [ ] TasksAjaxController
