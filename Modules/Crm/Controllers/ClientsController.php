@@ -89,18 +89,17 @@ class ClientsController
      */
     public function status(Request $request, string $status = 'active', $page = 0)
     {
-        // Build query for clients
-        $query = Client::query();
-        
-        // Apply status filter
+        // Get clients using service based on status filter
         if ($status === 'active') {
-            $query->where('client_active', 1);
-        } elseif ($status === 'inactive') {
-            $query->where('client_active', 0);
+            $clients = $this->clientService->getActiveClients();
+        } else {
+            // For inactive or all, use model directly or add service methods
+            $query = Client::query();
+            if ($status === 'inactive') {
+                $query->where('client_active', 0);
+            }
+            $clients = $query->get();
         }
-        
-        // Get clients with pagination (simulated - adjust based on actual pagination needs)
-        $clients = $query->get();
 
         $req_einvoicing = get_setting('einvoicing');
         if ($req_einvoicing) {
@@ -241,7 +240,7 @@ class ClientsController
      */
     public function view(Request $request, $client_id, $activeTab = 'detail', $page = 0)
     {
-        $client = Client::findOrFail($client_id);
+        $client = $this->clientService->findOrFail($client_id);
 
         $req_einvoicing = get_setting('einvoicing');
         if ($req_einvoicing) {
@@ -349,8 +348,9 @@ class ClientsController
 
         // Update db if need
         if ($o != $client->client_einvoicing_active) {
-            Client::where('client_id', $client->client_id)
-                ->update(['client_einvoicing_active' => $client->client_einvoicing_active]);
+            $this->clientService->update($client->client_id, [
+                'client_einvoicing_active' => $client->client_einvoicing_active
+            ]);
         }
 
         return $client;
