@@ -108,9 +108,10 @@ class SetupController
         session()->forget('is_upgrade');
         // GetController all languages
         $languages = get_available_languages();
-        $this->layout->set('languages', $languages);
-        $this->layout->buffer('content', 'setup/lang');
-        $this->layout->render('setup');
+        
+        return view('core::setup_lang', [
+            'languages' => $languages,
+        ]);
     }
 
     /**
@@ -132,9 +133,11 @@ class SetupController
             session(['install_step', 'configure_database');
             redirect()->route('setup/configure_database');
         }
-        $this->layout->set(['basics' => $this->checkBasics(), 'writables' => $this->checkWritables(), 'errors' => $this->errors]);
-        $this->layout->buffer('content', 'setup/prerequisites');
-        $this->layout->render('setup');
+        return view('core::setup_prerequisites', [
+            'basics' => $this->checkBasics(),
+            'writables' => $this->checkWritables(),
+            'errors' => $this->errors,
+        ]);
     }
 
     /**
@@ -172,10 +175,11 @@ class SetupController
         }
         // Check if the set credentials are correct
         $check_database = $this->checkDatabase();
-        $this->layout->set('database', $check_database);
-        $this->layout->set('errors', $this->errors);
-        $this->layout->buffer('content', 'setup/configure_database');
-        $this->layout->render('setup');
+        
+        return view('core::setup_configure_database', [
+            'database' => $check_database,
+            'errors' => $this->errors,
+        ]);
     }
 
     /**
@@ -198,9 +202,11 @@ class SetupController
             redirect()->route('setup/upgrade_tables');
         }
         $this->loadCiDatabase();
-        $this->layout->set(['success' => $this->setupService->installTables(), 'errors' => $this->setupService->errors]);
-        $this->layout->buffer('content', 'setup/install_tables');
-        $this->layout->render('setup');
+        
+        return view('core::setup_install_tables', [
+            'success' => $this->setupService->installTables(),
+            'errors' => $this->setupService->errors,
+        ]);
     }
 
     /**
@@ -237,9 +243,11 @@ class SetupController
         if (env('ENCRYPTION_KEY') === null || env('ENCRYPTION_KEY') === '') {
             $this->setEncryptionKey();
         }
-        $this->layout->set(['success' => $this->setupService->upgradeTables(), 'errors' => $this->setupService->errors]);
-        $this->layout->buffer('content', 'setup/upgrade_tables');
-        $this->layout->render('setup');
+        
+        return view('core::setup_upgrade_tables', [
+            'success' => $this->setupService->upgradeTables(),
+            'errors' => $this->setupService->errors,
+        ]);
     }
 
     /**
@@ -270,9 +278,10 @@ class SetupController
             session(['install_step', 'calculation_info');
             redirect()->route('setup/calculation_info');
         }
-        $this->layout->set(['countries' => get_country_list(trans('cldr')), 'languages' => get_available_languages()]);
-        $this->layout->buffer('content', 'setup/create_user');
-        $this->layout->render('setup');
+        return view('core::setup_create_user', [
+            'countries' => get_country_list(trans('cldr')),
+            'languages' => get_available_languages(),
+        ]);
     }
 
     /**
@@ -303,9 +312,9 @@ class SetupController
             session(['install_step', 'complete');
             redirect()->route('setup/complete');
         }
-        $this->layout->set('calculation_check', $checkCalculation);
-        $this->layout->buffer('content', 'setup/calculation_info');
-        $this->layout->render('setup');
+        return view('core::setup_calculation_info', [
+            'calculation_check' => $checkCalculation,
+        ]);
     }
 
     /**
@@ -344,10 +353,12 @@ class SetupController
         // Then check if the first version entry is less than 30 minutes old
         // If yes we assume that the user ran the setup a few minutes ago
         $update = $data[0]->version_date_applied < time() - 1800;
-        $this->layout->set('update', $update);
-        $this->layout->buffer('content', 'setup/complete');
-        $this->layout->render('setup');
+        
         session()->flush();
+        
+        return view('core::setup_complete', [
+            'update' => $update,
+        ]);
     }
 
     /**

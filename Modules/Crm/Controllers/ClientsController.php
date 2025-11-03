@@ -106,18 +106,13 @@ class ClientsController
             unset($client);
         }
 
-        $this->layout->set(
-            [
-                'records'            => $clients,
-                'filter_display'     => true,
-                'filter_placeholder' => trans('filter_clients'),
-                'filter_method'      => 'filter_clients',
-                'einvoicing'         => get_setting('einvoicing'),
-            ]
-        );
-
-        $this->layout->buffer('content', 'clients/index');
-        $this->layout->render();
+        return view('crm::clients_index', [
+            'records'            => $clients,
+            'filter_display'     => true,
+            'filter_placeholder' => trans('filter_clients'),
+            'filter_method'      => 'filter_clients',
+            'einvoicing'         => get_setting('einvoicing'),
+        ]);
     }
 
     /**
@@ -255,22 +250,17 @@ class ClientsController
 
         $this->load->helper(['custom_values', 'e-invoice']); // e-invoice - since 1.6.3
 
-        $this->layout->set(
-            [
-                'client_id'            => $id,
-                'custom_fields'        => $custom_fields,
-                'custom_values'        => $custom_values,
-                'countries'            => get_country_list(trans('cldr')),
-                'selected_country'     => $this->mdl_clients->form_value('client_country') ?: get_setting('default_country'),
-                'languages'            => get_available_languages(),
-                'client_title_choices' => $this->get_client_title_choices(),
-                'xml_templates'        => get_xml_template_files(), // eInvoicing
-                'req_einvoicing'       => $req_einvoicing,
-            ]
-        );
-
-        $this->layout->buffer('content', 'clients/form');
-        $this->layout->render();
+        return view('crm::clients_form', [
+            'client_id'            => $id,
+            'custom_fields'        => $custom_fields,
+            'custom_values'        => $custom_values,
+            'countries'            => get_country_list(trans('cldr')),
+            'selected_country'     => $this->mdl_clients->form_value('client_country') ?: get_setting('default_country'),
+            'languages'            => get_available_languages(),
+            'client_title_choices' => $this->get_client_title_choices(),
+            'xml_templates'        => get_xml_template_files(), // eInvoicing
+            'req_einvoicing'       => $req_einvoicing,
+        ]);
     }
 
     /**
@@ -351,47 +341,18 @@ class ClientsController
         $custom_fields = $this->mdl_client_custom->get_by_client($client_id)->result();
         $this->mdl_client_custom->prep_form($client_id);
 
-        $this->layout->set(
-            [
-                'client'           => $client,
-                'client_notes'     => $this->mdl_client_notes->where('client_id', $client_id)->get()->result(),
-                'invoices'         => $this->mdl_invoices->result(),
-                'quotes'           => $this->mdl_quotes->result(),
-                'payments'         => $this->mdl_payments->result(),
-                'custom_fields'    => $custom_fields,
-                'quote_statuses'   => $this->mdl_quotes->statuses(),
-                'invoice_statuses' => $this->mdl_invoices->statuses(),
-                'activeTab'        => $activeTab,
-                'req_einvoicing'   => $req_einvoicing,
-            ]
-        );
-
-        $this->layout->buffer(
-            [
-                [
-                    'invoice_table',
-                    'invoices/partial_invoice_table',
-                ],
-                [
-                    'quote_table',
-                    'quotes/partial_quote_table',
-                ],
-                [
-                    'payment_table',
-                    'payments/partial_payments_table',
-                ],
-                [
-                    'partial_notes',
-                    'clients/partial_notes',
-                ],
-                [
-                    'content',
-                    'clients/view',
-                ],
-            ]
-        );
-
-        $this->layout->render();
+        return view('crm::clients_view', [
+            'client'           => $client,
+            'client_notes'     => $this->mdl_client_notes->where('client_id', $client_id)->get()->result(),
+            'invoices'         => $this->mdl_invoices->result(),
+            'quotes'           => $this->mdl_quotes->result(),
+            'payments'         => $this->mdl_payments->result(),
+            'custom_fields'    => $custom_fields,
+            'quote_statuses'   => $this->mdl_quotes->statuses(),
+            'invoice_statuses' => $this->mdl_invoices->statuses(),
+            'activeTab'        => $activeTab,
+            'req_einvoicing'   => $req_einvoicing,
+        ]);
     }
 
     /**
