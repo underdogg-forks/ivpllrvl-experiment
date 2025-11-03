@@ -2,11 +2,11 @@
 
 ## Summary
 
-**Status:** 23/43 Controllers Complete (53%)
+**Status:** 24/43 Controllers Complete (56%)
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (23)
+## Completed Controllers (24)
 
 ### Core Module (17/22) - 77% COMPLETE
 
@@ -47,7 +47,11 @@ This document tracks the systematic refactoring of controllers to align with app
 
 1. ✅ **QuotesController** - Added @legacy tags, cleaned PHPDoc
 
-## Remaining Controllers (20)
+### CRM Module (1/11)
+
+1. ✅ **ClientsAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+
+## Remaining Controllers (19)
 
 ### Core Module (5 remaining)
 
@@ -57,10 +61,9 @@ This document tracks the systematic refactoring of controllers to align with app
 - [ ] UploadController - Large file (219 lines)
 - [ ] MailerController - Large file (212 lines)
 
-### CRM Module (11 controllers)
+### CRM Module (10 remaining)
 
 - [ ] ClientsController
-- [ ] ClientsAjaxController
 - [ ] UserClientsController
 - [ ] GetController
 - [ ] ViewController
@@ -70,7 +73,7 @@ This document tracks the systematic refactoring of controllers to align with app
 - [ ] QuotesController
 - [ ] GuestController
 - [ ] Gateways/StripeController
-- [ ] Gateways/PaypalController
+- [ ] Gateways/PaypalController (Note: Some may already be refactored)
 
 ### Invoices Module (5 controllers)
 
