@@ -58,4 +58,38 @@ class ClientService extends BaseService
             ->orderBy('client_name')
             ->get();
     }
+
+    /**
+     * Get clients by IDs.
+     *
+     * @param array $ids Client IDs
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function getByIds
+     */
+    public function getByIds(array $ids)
+    {
+        return Client::query()
+            ->whereIn('client_id', $ids)
+            ->orderBy('client_name')
+            ->get();
+    }
+
+    /**
+     * Get clients not in given IDs.
+     *
+     * @param array $ids Client IDs to exclude
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function getNotInIds
+     */
+    public function getNotInIds(array $ids)
+    {
+        return Client::query()
+            ->whereNotIn('client_id', $ids)
+            ->orderBy('client_name')
+            ->get();
+    }
 }

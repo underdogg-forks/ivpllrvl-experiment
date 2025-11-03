@@ -50,6 +50,24 @@ class UserClientService extends BaseService
     }
 
     /**
+     * Get user client by user ID and client ID.
+     *
+     * @param int $userId
+     * @param int $clientId
+     *
+     * @return UserClient|null
+     *
+     * @legacy-function getByUserAndClient
+     */
+    public function getByUserAndClient(int $userId, int $clientId): ?UserClient
+    {
+        return UserClient::query()
+            ->where('user_id', $userId)
+            ->where('client_id', $clientId)
+            ->first();
+    }
+
+    /**
      * Validate user client assignment.
      *
      * @return bool
