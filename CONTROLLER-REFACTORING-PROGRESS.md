@@ -2,13 +2,13 @@
 
 ## Summary
 
-**Status:** 15/43 Controllers Complete (35%)
+**Status:** 20/43 Controllers Complete (47%)
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (15)
+## Completed Controllers (20)
 
-### Core Module (9/22)
+### Core Module (14/22) - 64% COMPLETE
 
 1. ✅ **CustomFieldsController** - Added PHPDoc, moved DB queries to service, fixed validation
 2. ✅ **CustomValuesController** - Added PHPDoc, moved DB queries to service, fixed validation  
@@ -19,6 +19,11 @@ This document tracks the systematic refactoring of controllers to align with app
 7. ✅ **LayoutController** - Added comprehensive PHPDoc
 8. ✅ **SettingsAjaxController** - Added PHPDoc, return type hints
 9. ✅ **GuestController** - MAJOR: Removed AllowDynamicProperties, UserController inheritance, added DI
+10. ✅ **ImportController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI and PHPDoc
+11. ✅ **ReportsController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI and PHPDoc
+12. ✅ **UserClientsController** - MAJOR: Removed AllowDynamicProperties, AdminController, modernized
+13. ✅ **SettingsController** - MAJOR: Removed AllowDynamicProperties, AdminController
+14. ✅ **UsersController** - MAJOR: Removed property promotion, AllowDynamicProperties, AdminController
 
 ### Products Module (4/4) - 100% COMPLETE ✅
 
@@ -39,23 +44,18 @@ This document tracks the systematic refactoring of controllers to align with app
 
 1. ✅ **QuotesController** - Added @legacy tags, cleaned PHPDoc
 
-## Remaining Controllers (28)
+## Remaining Controllers (23)
 
-### Core Module (13 remaining)
+### Core Module (8 remaining)
 
 - [ ] DashboardController - Complex: inline service instantiation
 - [ ] SessionsController - VERY COMPLEX: major refactoring needed
-- [ ] UsersController
 - [ ] UsersAjaxController
-- [ ] ImportController - Has violations: AllowDynamicProperties, AdminController
 - [ ] SetupController - Large file (481 lines)
-- [ ] UserClientsController
 - [ ] UploadController - Large file (219 lines)
 - [ ] MailerController - Large file (212 lines)
-- [ ] SettingsController
-- [ ] ReportsController - Has violations: AllowDynamicProperties, AdminController
-- [ ] GetController
-- [ ] View.php (ViewController)
+- [ ] GetController - Has violations: BaseController (non-existent)
+- [ ] View.php (ViewController) - Has violations: AllowDynamicProperties, BaseGuestController
 
 ### CRM Module (11 controllers)
 
