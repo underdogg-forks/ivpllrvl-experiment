@@ -2,13 +2,13 @@
 
 ## Summary
 
-**Status:** 20/43 Controllers Complete (47%)
+**Status:** 23/43 Controllers Complete (53%)
 
 This document tracks the systematic refactoring of controllers to align with approved coding standards.
 
-## Completed Controllers (20)
+## Completed Controllers (23)
 
-### Core Module (14/22) - 64% COMPLETE
+### Core Module (17/22) - 77% COMPLETE
 
 1. ✅ **CustomFieldsController** - Added PHPDoc, moved DB queries to service, fixed validation
 2. ✅ **CustomValuesController** - Added PHPDoc, moved DB queries to service, fixed validation  
@@ -24,6 +24,9 @@ This document tracks the systematic refactoring of controllers to align with app
 12. ✅ **UserClientsController** - MAJOR: Removed AllowDynamicProperties, AdminController, modernized
 13. ✅ **SettingsController** - MAJOR: Removed AllowDynamicProperties, AdminController
 14. ✅ **UsersController** - MAJOR: Removed property promotion, AllowDynamicProperties, AdminController
+15. ✅ **UsersAjaxController** - MAJOR: Removed AllowDynamicProperties, AdminController, added DI
+16. ✅ **GetController** - MAJOR: Removed BaseController inheritance, added DI
+17. ✅ **View.php (ViewController)** - MAJOR: Removed AllowDynamicProperties, BaseGuestController, added DI
 
 ### Products Module (4/4) - 100% COMPLETE ✅
 
@@ -44,18 +47,15 @@ This document tracks the systematic refactoring of controllers to align with app
 
 1. ✅ **QuotesController** - Added @legacy tags, cleaned PHPDoc
 
-## Remaining Controllers (23)
+## Remaining Controllers (20)
 
-### Core Module (8 remaining)
+### Core Module (5 remaining)
 
 - [ ] DashboardController - Complex: inline service instantiation
 - [ ] SessionsController - VERY COMPLEX: major refactoring needed
-- [ ] UsersAjaxController
 - [ ] SetupController - Large file (481 lines)
 - [ ] UploadController - Large file (219 lines)
 - [ ] MailerController - Large file (212 lines)
-- [ ] GetController - Has violations: BaseController (non-existent)
-- [ ] View.php (ViewController) - Has violations: AllowDynamicProperties, BaseGuestController
 
 ### CRM Module (11 controllers)
 
