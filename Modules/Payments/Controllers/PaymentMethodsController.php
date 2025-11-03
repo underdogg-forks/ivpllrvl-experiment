@@ -6,28 +6,21 @@ use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 
 /**
- * PaymentMethodsController.
+ * PaymentMethodsController
  *
  * Manages payment methods (Cash, Check, Credit Card, PayPal, etc.)
+ *
+ * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
  */
 class PaymentMethodsController
 {
-    /**
-     * PaymentMethod service instance.
-     *
-     * @var PaymentMethodService
-     */
     protected PaymentMethodService $paymentMethodService;
 
-    /**
-     * Constructor.
-     *
-     * @param PaymentMethodService $paymentMethodService
-     */
     public function __construct(PaymentMethodService $paymentMethodService)
     {
         $this->paymentMethodService = $paymentMethodService;
     }
+
     /**
      * Display a paginated list of payment methods.
      *
@@ -36,14 +29,13 @@ class PaymentMethodsController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
-     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
-     *
-     * @legacy-line 32
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $paymentMethods = $this->paymentMethodService->getAllPaginated(15, $page);
+        $paymentMethods = PaymentMethod::query()
+            ->orderBy('payment_method_name')
+            ->paginate(15, ['*'], 'page', $page);
 
         return view('payments::payment_methods_index', [
             'payment_methods' => $paymentMethods,
@@ -58,39 +50,37 @@ class PaymentMethodsController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
-     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
-     *
-     * @legacy-line 42
      */
-    public function form($id = null)
+    public function form(?int $id = null)
     {
-        if (request()->input('btn_cancel')) {
-            redirect()->route('payment_methods');
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('payment_methods.index');
         }
-        $this->filterInput();
-        // <<<--- filters _POST array for nastiness
-        if (request()->input('is_update') == 0 && request()->input('payment_method_name') != '') {
-            $check = DB::get_where('ip_payment_methods', ['payment_method_name' => request()->input('payment_method_name')])->result();
-            if ( ! empty($check)) {
-                session()->flash('alert_error', trans('payment_method_already_exists'));
-                redirect()->route('payment_methods/form');
+
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            $validated = request()->validate([
+                'payment_method_name' => 'required|string|max:255|unique:ip_payment_methods,payment_method_name' . ($id ? ',' . $id . ',payment_method_id' : ''),
+            ]);
+
+            if ($id) {
+                $this->paymentMethodService->update($id, $validated);
+            } else {
+                $this->paymentMethodService->create($validated);
             }
+
+            return redirect()->route('payment_methods.index')
+                ->with('alert_success', trans('record_successfully_saved'));
         }
-        if ((new PaymentMethodsService())->runValidation()) {
-            (new PaymentMethodsService())->save($id);
-            redirect()->route('payment_methods');
-        }
-        if ($id && ! request()->input('btn_submit')) {
-            if ( ! (new PaymentMethodsService())->prepForm($id)) {
-                show_404();
-            }
-            (new PaymentMethodsService())->setFormValue('is_update', true);
+
+        $paymentMethod = $id ? $this->paymentMethodService->find($id) : new PaymentMethod();
+        if ($id && !$paymentMethod) {
+            abort(404);
         }
 
         return view('payments::payment_methods_form', [
             'payment_method' => $paymentMethod,
-            'is_update'      => $isUpdate,
+            'is_update'      => (bool)$id,
         ]);
     }
 
@@ -102,10 +92,7 @@ class PaymentMethodsController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
-     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
-     *
-     * @legacy-line 78
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
