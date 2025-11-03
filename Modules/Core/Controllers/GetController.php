@@ -38,18 +38,20 @@ class GetController
     /**
      * Show files by URL key (AJAX endpoint).
      *
-     * @param string|null $url_key URL key
+     * @param string|null $urlKey URL key
      *
      * @return void Outputs JSON response
      *
      * @legacy-function showFiles
      * @legacy-file application/modules/guest/controllers/Get.php
      */
-    public function showFiles(?string $url_key = null): void
+    public function showFiles(?string $urlKey = null): void
     {
         header('Content-Type: application/json; charset=utf-8');
         
-        if ($url_key && !$result = $this->uploadService->getFiles($url_key)) {
+        $result = $this->uploadService->getFiles($urlKey);
+        
+        if (!$urlKey || !$result) {
             echo '{}';
             exit;
         }
@@ -72,24 +74,37 @@ class GetController
     {
         $filename = urldecode($filename);
         
-        if (!file_exists($this->targetPath . $filename)) {
+        // Prevent path traversal: use only the basename (filename without directory components)
+        $safeFilename = basename($filename);
+        
+        // Build candidate path and get canonical path
+        $candidatePath = $this->targetPath . $safeFilename;
+        $resolvedPath = realpath($candidatePath);
+        
+        // Verify resolved path exists and is within the allowed directory
+        if ($resolvedPath === false || strpos($resolvedPath, realpath($this->targetPath)) !== 0) {
             $ref = isset($_SERVER['HTTP_REFERER']) ? ', Referer:' . $_SERVER['HTTP_REFERER'] : '';
-            $this->respondMessage(404, 'upload_error_file_not_found', $this->targetPath . $filename . $ref);
+            $this->respondMessage(404, 'upload_error_file_not_found', $candidatePath . $ref);
         }
         
-        $path_parts = pathinfo($this->targetPath . $filename);
+        if (!file_exists($resolvedPath)) {
+            $ref = isset($_SERVER['HTTP_REFERER']) ? ', Referer:' . $_SERVER['HTTP_REFERER'] : '';
+            $this->respondMessage(404, 'upload_error_file_not_found', $resolvedPath . $ref);
+        }
+        
+        $path_parts = pathinfo($resolvedPath);
         $file_ext = mb_strtolower($path_parts['extension'] ?? '');
         $ctype = $this->content_types[$file_ext] ?? $this->ctype_default;
-        $file_size = filesize($this->targetPath . $filename);
+        $file_size = filesize($resolvedPath);
         
         header('Expires: -1');
         header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
         header('Pragma: no-cache');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
         header('Content-Type: ' . $ctype);
         header('Content-Length: ' . $file_size);
         
-        readfile($this->targetPath . $filename);
+        readfile($resolvedPath);
     }
 
     /**

@@ -79,6 +79,11 @@ class MailerController
         }
 
         $invoice = $this->invoiceService->getById($invoice_id);
+        
+        if (!$invoice) {
+            abort(404);
+        }
+        
         $email_template_id = select_email_invoice_template($invoice);
         $email_template = '{}';
 
@@ -119,6 +124,12 @@ class MailerController
             return;
         }
 
+        $quote = $this->quoteService->getById($quote_id);
+        
+        if (!$quote) {
+            abort(404);
+        }
+        
         $email_template_id = get_setting('email_quote_template');
         $email_template = '{}';
 
@@ -138,7 +149,7 @@ class MailerController
             'email_template' => $email_template,
             'custom_fields' => $custom_fields,
             'pdf_templates' => $this->templateService->getQuoteTemplates(),
-            'quote' => $this->quoteService->getById($quote_id),
+            'quote' => $quote,
         ]);
     }
 
