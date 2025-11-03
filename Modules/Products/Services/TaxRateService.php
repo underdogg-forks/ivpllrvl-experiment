@@ -2,7 +2,7 @@
 
 namespace Modules\Products\Services;
 
-use App\Services\BaseService;
+use Modules\Core\Services\BaseService;
 use Modules\Products\Models\TaxRate;
 
 /**

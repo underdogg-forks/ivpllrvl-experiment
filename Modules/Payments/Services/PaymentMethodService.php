@@ -2,7 +2,7 @@
 
 namespace Modules\Payments\Services;
 
-use App\Services\BaseService;
+use Modules\Core\Services\BaseService;
 use Modules\Payments\Models\PaymentMethod;
 
 /**

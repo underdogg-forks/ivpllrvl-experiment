@@ -2,7 +2,7 @@
 
 namespace Modules\Projects\Services;
 
-use App\Services\BaseService;
+use Modules\Core\Services\BaseService;
 use Modules\Projects\Models\Project;
 
 /**
