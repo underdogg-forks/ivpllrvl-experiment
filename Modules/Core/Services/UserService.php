@@ -75,4 +75,19 @@ class UserService extends BaseService
     {
         return User::all();
     }
+
+    /**
+     * Get user types.
+     *
+     * @return array
+     *
+     * @legacy-function userTypes
+     */
+    public function getUserTypes(): array
+    {
+        return [
+            1 => trans('administrator'),
+            2 => trans('guest_read_only'),
+        ];
+    }
 }
