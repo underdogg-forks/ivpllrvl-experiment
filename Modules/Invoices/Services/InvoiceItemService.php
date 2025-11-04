@@ -83,17 +83,6 @@ class InvoiceItemService
         return Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
     }
 
-    /**
-     * Get invoice items by invoice ID (alias for consistency).
-     *
-     * @param int $invoiceId
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getByInvoiceId(int $invoiceId)
-    {
-        return $this->getItemsByInvoiceId($invoiceId);
-    }
 
     /**
      * Find an item by invoice ID and item ID.
