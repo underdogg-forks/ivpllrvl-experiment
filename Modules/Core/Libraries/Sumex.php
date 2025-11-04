@@ -246,7 +246,7 @@ class Sumex
         }
 
         // Internal like eInvoice - Since v1.6.3
-        
+
         // Override system language with client language
         set_language($this->invoice->client_language);
 
@@ -257,7 +257,7 @@ class Sumex
         $payment_method = false;
         if ($this->invoice->payment_method != 0) {
             $paymentMethodService = app(\Modules\Payments\Services\PaymentMethodService::class);
-            $payment_method = $paymentMethodService->findByMethodId($this->invoice->payment_method);
+            $payment_method       = $paymentMethodService->findByMethodId($this->invoice->payment_method);
         }
 
         // Determine if discounts should be displayed
@@ -293,7 +293,7 @@ class Sumex
         ]];
 
         $invoiceTaxRateService = app(\Modules\Invoices\Services\InvoiceTaxRateService::class);
-        $data = [
+        $data                  = [
             'invoice'             => $this->invoice,
             'invoice_tax_rates'   => $invoiceTaxRateService->getByInvoiceId($this->invoice->invoice_id),
             'items'               => $this->items,
@@ -321,44 +321,6 @@ class Sumex
         return file_get_contents($retval);
     }
 
-    /**
-     * Get custom field values for a given table and ID.
-     * Helper method to retrieve custom field values from database.
-     *
-     * @param string $table Custom field table name
-     * @param int $id Record ID
-     * @return array Array of custom field values
-     */
-    protected function getCustomFieldValues(string $table, int $id): array
-    {
-        $modelClass = match($table) {
-            'ip_invoice_custom' => \Modules\Core\Models\InvoiceCustom::class,
-            'ip_quote_custom' => \Modules\Core\Models\QuoteCustom::class,
-            'ip_client_custom' => \Modules\Core\Models\ClientCustom::class,
-            'ip_user_custom' => \Modules\Core\Models\UserCustom::class,
-            'ip_payment_custom' => \Modules\Core\Models\PaymentCustom::class,
-            default => null,
-        };
-        
-        if (!$modelClass) {
-            return [];
-        }
-        
-        // Get the ID field name from the table
-        $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
-        
-        // Get all custom field records for this ID
-        $records = $modelClass::query()->where($idField, $id)->get();
-        
-        // Convert to array format
-        $values = [];
-        foreach ($records as $record) {
-            $values[] = $record->toArray();
-        }
-        
-        return $values;
-    }
-
     public function xml(): string|false
     {
         $this->doc               = new DOMDocument('1.0', 'UTF-8');
@@ -371,6 +333,45 @@ class Sumex
         $this->doc->appendChild($this->root);
 
         return $this->doc->saveXML();
+    }
+
+    /**
+     * Get custom field values for a given table and ID.
+     * Helper method to retrieve custom field values from database.
+     *
+     * @param string $table Custom field table name
+     * @param int    $id    Record ID
+     *
+     * @return array Array of custom field values
+     */
+    protected function getCustomFieldValues(string $table, int $id): array
+    {
+        $modelClass = match($table) {
+            'ip_invoice_custom' => \Modules\Core\Models\InvoiceCustom::class,
+            'ip_quote_custom'   => \Modules\Core\Models\QuoteCustom::class,
+            'ip_client_custom'  => \Modules\Core\Models\ClientCustom::class,
+            'ip_user_custom'    => \Modules\Core\Models\UserCustom::class,
+            'ip_payment_custom' => \Modules\Core\Models\PaymentCustom::class,
+            default             => null,
+        };
+
+        if ( ! $modelClass) {
+            return [];
+        }
+
+        // Get the ID field name from the table
+        $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
+
+        // Get all custom field records for this ID
+        $records = $modelClass::query()->where($idField, $id)->get();
+
+        // Convert to array format
+        $values = [];
+        foreach ($records as $record) {
+            $values[] = $record->toArray();
+        }
+
+        return $values;
     }
 
     protected function xmlRoot()

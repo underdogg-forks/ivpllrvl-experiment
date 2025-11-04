@@ -2,15 +2,13 @@
 
 namespace Modules\Payments\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
+use Modules\Invoices\Services\InvoiceService;
 use Modules\Payments\Models\Payment;
-use Modules\Payments\Models\PaymentLog;
-use Modules\Payments\Models\PaymentMethod;
-use Modules\Payments\Services\PaymentService;
 use Modules\Payments\Services\PaymentLogService;
 use Modules\Payments\Services\PaymentMethodService;
-use Modules\Invoices\Services\InvoiceService;
+use Modules\Payments\Services\PaymentService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
  * PaymentsController.
  *
@@ -23,8 +21,8 @@ class PaymentsController
         protected PaymentLogService $paymentLogService,
         protected PaymentMethodService $paymentMethodService,
         protected InvoiceService $invoiceService
-    ) {
-    }
+    ) {}
+
     /**
      * Display a paginated list of payments.
      *
@@ -41,6 +39,7 @@ class PaymentsController
     public function index(int $page = 0): \Illuminate\View\View
     {
         $payments = $this->paymentService->getAllWithRelations(['invoice', 'paymentMethod'], null, 15);
+
         return view('payments::index', [
             'filter_display'     => true,
             'filter_placeholder' => TranslationHelper::trans('filter_payments'),

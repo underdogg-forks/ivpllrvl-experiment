@@ -2,22 +2,22 @@
 
 namespace Modules\Payments\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * PaymentMethodsController
+ * PaymentMethodsController.
  *
  * Manages payment methods (Cash, Check, Credit Card, PayPal, etc.)
  *
  * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
  */
 class PaymentMethodsController
-{    public function __construct(
+{
+    public function __construct(
         protected PaymentMethodService $paymentMethodService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of payment methods.
@@ -27,6 +27,7 @@ class PaymentMethodsController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -48,6 +49,7 @@ class PaymentMethodsController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
      */
     public function form(?int $id = null)
@@ -72,13 +74,13 @@ class PaymentMethodsController
         }
 
         $paymentMethod = $id ? $this->paymentMethodService->find($id) : new PaymentMethod();
-        if ($id && !$paymentMethod) {
+        if ($id && ! $paymentMethod) {
             abort(404);
         }
 
         return view('payments::payment_methods_form', [
             'payment_method' => $paymentMethod,
-            'is_update'      => (bool)$id,
+            'is_update'      => (bool) $id,
         ]);
     }
 
@@ -90,6 +92,7 @@ class PaymentMethodsController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

@@ -6,22 +6,22 @@ use Illuminate\Http\Request;
 use Modules\Core\Services\ReportsService;
 
 /**
- * ReportsController
+ * ReportsController.
  *
  * Manages various report generation operations
  *
  * @legacy-file application/modules/reports/controllers/Reports.php
  */
 class ReportsController
-{    /**
+{
+    /**
      * Initialize the ReportsController with dependency injection.
      *
      * @param ReportsService $reportsService
      */
     public function __construct(
         protected ReportsService $reportsService
-    ) {
-    }
+    ) {}
 
     /**
      * Display sales by client report.
@@ -31,6 +31,7 @@ class ReportsController
      * @return \Illuminate\Contracts\View\View
      *
      * @legacy-function salesByClient
+     *
      * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function salesByClient(Request $request): \Illuminate\Contracts\View\View
@@ -61,6 +62,7 @@ class ReportsController
      * @return \Illuminate\Contracts\View\View
      *
      * @legacy-function invoicesPerClient
+     *
      * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function invoicesPerClient(Request $request): \Illuminate\Contracts\View\View
@@ -89,6 +91,7 @@ class ReportsController
      * @return \Illuminate\Contracts\View\View
      *
      * @legacy-function paymentHistory
+     *
      * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function paymentHistory(Request $request): \Illuminate\Contracts\View\View
@@ -117,13 +120,14 @@ class ReportsController
      * @return \Illuminate\Contracts\View\View
      *
      * @legacy-function invoiceAging
+     *
      * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function invoiceAging(Request $request): \Illuminate\Contracts\View\View
     {
         if ($request->input('btn_submit')) {
             $results = $this->reportsService->invoiceAging();
-            $data = [
+            $data    = [
                 'results' => $results,
             ];
             // TODO: Use Laravel PDF package to generate PDF from view
@@ -140,6 +144,7 @@ class ReportsController
      * @return \Illuminate\Contracts\View\View
      *
      * @legacy-function salesByYear
+     *
      * @legacy-file application/modules/reports/controllers/Reports.php
      */
     public function salesByYear(Request $request): \Illuminate\Contracts\View\View

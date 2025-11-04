@@ -8,13 +8,11 @@ use Modules\Core\Services\UserService;
 use Modules\Crm\Models\Client;
 use Modules\Crm\Services\ClientService;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoicesRecurring;
 use Modules\Invoices\Models\Item;
-use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceItemService;
 use Modules\Invoices\Services\InvoiceService;
-use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Invoices\Services\InvoicesRecurringService;
+use Modules\Invoices\Services\InvoiceTaxRateService;
 
 /**
  * AJAX controller for invoice operations.
@@ -25,14 +23,15 @@ use Modules\Invoices\Services\InvoicesRecurringService;
  * @legacy-file application/modules/invoices/controllers/Ajax.php
  */
 class InvoicesAjaxController
-{    public function __construct(
+{
+    public function __construct(
         protected InvoiceService $invoiceService,
         protected InvoiceItemService $invoiceItemService,
         protected UserService $userService,
         protected ClientService $clientService,
         protected InvoicesRecurringService $invoicesRecurringService
-    ) {
-    }
+    ) {}
+
     /**
      * Save invoice with items, tax rates, and custom fields.
      *

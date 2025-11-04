@@ -25,8 +25,7 @@ class InvoicesController
      */
     public function __construct(
         protected InvoiceService $invoiceService
-    ) {
-    }
+    ) {}
 
     public function index()
     {

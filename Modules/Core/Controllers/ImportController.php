@@ -3,17 +3,18 @@
 namespace Modules\Core\Controllers;
 
 use Modules\Core\Services\ImportService;
-
 use Modules\Core\Support\TranslationHelper;
+
 /**
- * ImportController
+ * ImportController.
  *
  * Manages data import operations from CSV files
  *
  * @legacy-file application/modules/import/controllers/Import.php
  */
 class ImportController
-{    private array $allowed_files = ['clients.csv', 'invoices.csv', 'invoice_items.csv', 'payments.csv'];
+{
+    private array $allowed_files = ['clients.csv', 'invoices.csv', 'invoice_items.csv', 'payments.csv'];
 
     /**
      * Initialize the ImportController with dependency injection.
@@ -22,8 +23,7 @@ class ImportController
      */
     public function __construct(
         protected ImportService $importService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of import records.
@@ -33,13 +33,14 @@ class ImportController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/import/controllers/Import.php
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
         $this->importService->paginate(route('import.index'), $page);
         $imports = $this->importService->result();
-        
+
         return view('core::import_index', [
             'imports' => $imports,
         ]);
@@ -51,34 +52,35 @@ class ImportController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/import/controllers/Import.php
      */
     public function form()
     {
-        if (!request()->input('btn_submit')) {
+        if ( ! request()->input('btn_submit')) {
             $files = directory_map('./uploads/import');
             foreach ($files as $key => $file) {
-                if (!is_numeric(array_search($file, $this->allowed_files, true))) {
+                if ( ! is_numeric(array_search($file, $this->allowed_files, true))) {
                     unset($files[$key]);
                 }
             }
-            
+
             return view('core::import_form', [
                 'files' => $files,
             ]);
         }
-        
+
         // Process import submission
         $import_id = $this->importService->startImport();
-        
+
         if (request()->input('files')) {
             $files = $this->allowed_files;
             foreach ($files as $key => $file) {
-                if (!is_numeric(array_search($file, request()->input('files'), true))) {
+                if ( ! is_numeric(array_search($file, request()->input('files'), true))) {
                     unset($files[$key]);
                 }
             }
-            
+
             foreach ($files as $file) {
                 switch ($file) {
                     case 'clients.csv':
@@ -100,7 +102,7 @@ class ImportController
                 }
             }
         }
-        
+
         return redirect()->route('import.index');
     }
 
@@ -112,12 +114,13 @@ class ImportController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/import/controllers/Import.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
         $this->importService->delete($id);
-        
+
         return redirect()->route('import.index')
             ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }

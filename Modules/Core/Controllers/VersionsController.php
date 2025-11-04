@@ -3,7 +3,7 @@
 namespace Modules\Core\Controllers;
 
 /**
- * VersionsController
+ * VersionsController.
  *
  * Displays version information and update notifications
  *
@@ -17,6 +17,7 @@ class VersionsController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/settings/controllers/Versions.php
      */
     public function index(): \Illuminate\View\View

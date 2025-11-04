@@ -20,8 +20,7 @@ class UserClientsController
      */
     public function __construct(
         protected UserClientService $userClientService
-    ) {
-    }
+    ) {}
 
     /** @legacy-file application/modules/user_clients/controllers/User_clients.php */
     public function index(int $page = 0): \Illuminate\View\View
@@ -57,7 +56,7 @@ class UserClientsController
     }
 
     public function delete(int $id): \Illuminate\Http\RedirectResponse
-        {
+    {
         $this->userClientService->delete($id);
 
         return redirect()->route('user_clients.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));

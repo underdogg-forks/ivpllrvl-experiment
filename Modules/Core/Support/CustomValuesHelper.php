@@ -10,8 +10,8 @@ namespace Modules\Core\Support;
 class CustomValuesHelper
 {
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      *
      * @return bool|DateTime|string
@@ -26,8 +26,8 @@ class CustomValuesHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      *
      * @return string
@@ -42,8 +42,8 @@ class CustomValuesHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      *
      * @return string
@@ -60,8 +60,8 @@ class CustomValuesHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      */
     public static function format_multiplechoice($txt): string
@@ -70,10 +70,10 @@ class CustomValuesHelper
             return '';
         }
 
-        $valueIds    = explode(',', $txt);
+        $valueIds           = explode(',', $txt);
         $customValueService = app(\Modules\Core\Services\CustomValueService::class);
-        $values      = $customValueService->getByIds($valueIds);
-        $values_text = [];
+        $values             = $customValueService->getByIds($valueIds);
+        $values_text        = [];
 
         foreach ($values as $value) {
             $values_text[] = $value->custom_values_value;
@@ -83,8 +83,8 @@ class CustomValuesHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      *
      * @return string
@@ -106,8 +106,8 @@ class CustomValuesHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      *
      * @return string|null
@@ -122,8 +122,8 @@ class CustomValuesHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param $txt
      *
      * @return string
@@ -138,6 +138,7 @@ class CustomValuesHelper
      *
      *
      * @origin Modules/Core/Helpers/custom_values_helper.php
+     *
      * @param        $module
      * @param        $custom_field
      * @param        $cv

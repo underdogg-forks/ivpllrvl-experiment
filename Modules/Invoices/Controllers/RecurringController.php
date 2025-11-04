@@ -2,10 +2,10 @@
 
 namespace Modules\Invoices\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Models\InvoicesRecurring;
 use Modules\Invoices\Services\InvoicesRecurringService;
 
-use Modules\Core\Support\TranslationHelper;
 class RecurringController
 {
     /**
@@ -20,8 +20,8 @@ class RecurringController
      */
     public function __construct(
         protected InvoicesRecurringService $invoicesRecurringService
-    ) {
-    }
+    ) {}
+
     /**
      * Display list of recurring invoices with filter.
      *

@@ -6,36 +6,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Models\EmailTemplate;
-use Modules\Core\Models\TaxRate;
-use Modules\Core\Services\EmailTemplateService;
 use Modules\Core\Services\CustomFieldService;
+use Modules\Core\Services\EmailTemplateService;
 use Modules\Core\Services\SettingsService;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Models\Template;
 use Modules\Invoices\Services\InvoiceGroupService;
-use Modules\Invoices\Services\TemplateService;
-use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 use Modules\Products\Services\TaxRateService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * SettingsController
+ * SettingsController.
  *
  * Manages application settings and configuration
  *
  * @legacy-file application/modules/settings/controllers/Settings.php
  */
 class SettingsController
-{    /**
+{
+    /**
      * Initialize the SettingsController with dependency injection.
      *
-     * @param InvoiceGroupService $invoiceGroupService
-     * @param TaxRateService $taxRateService
+     * @param InvoiceGroupService  $invoiceGroupService
+     * @param TaxRateService       $taxRateService
      * @param EmailTemplateService $emailTemplateService
      * @param PaymentMethodService $paymentMethodService
-     * @param CustomFieldService $customFieldService
-     * @param SettingsService $settingsService
+     * @param CustomFieldService   $customFieldService
+     * @param SettingsService      $settingsService
      */
     public function __construct(
         protected InvoiceGroupService $invoiceGroupService,
@@ -44,8 +42,7 @@ class SettingsController
         protected PaymentMethodService $paymentMethodService,
         protected CustomFieldService $customFieldService,
         protected SettingsService $settingsService
-    ) {
-    }
+    ) {}
 
     /**
      * Display and process settings form.
@@ -55,12 +52,13 @@ class SettingsController
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/settings/controllers/Settings.php
      */
     public function index(Request $request): \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\View\View
     {
         // Load payment gateways and number formats from config
-        $gateways = config('payment_gateways');
+        $gateways       = config('payment_gateways');
         $number_formats = config('number_formats');
 
         if ($request->isMethod('post') && $request->input('settings')) {
@@ -68,7 +66,7 @@ class SettingsController
             // Save settings
             foreach ($settings as $key => $value) {
                 $passwordKey = $key . '_field_is_password';
-                $amountKey = $key . '_field_is_amount';
+                $amountKey   = $key . '_field_is_amount';
                 if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
                     continue;
                 }
@@ -89,13 +87,13 @@ class SettingsController
             }
             // Handle invoice logo upload
             if ($request->hasFile('invoice_logo')) {
-                $file = $request->file('invoice_logo');
+                $file     = $request->file('invoice_logo');
                 $filename = $file->store('uploads', 'public');
                 $this->settingsService->save('invoice_logo', basename($filename));
             }
             // Handle login logo upload
             if ($request->hasFile('login_logo')) {
-                $file = $request->file('login_logo');
+                $file     = $request->file('login_logo');
                 $filename = $file->store('uploads', 'public');
                 $this->settingsService->save('login_logo', basename($filename));
             }
@@ -104,22 +102,22 @@ class SettingsController
             return redirect()->route('settings.index');
         }
         // Load required resources using Eloquent
-        $invoice_groups = InvoiceGroup::query()->get();
-        $tax_rates = $this->taxRateService->getAll();
+        $invoice_groups  = InvoiceGroup::query()->get();
+        $tax_rates       = $this->taxRateService->getAll();
         $email_templates = EmailTemplate::query()->get();
         $payment_methods = $this->paymentMethodService->getAllOrdered();
-        $templates = Template::query()->get();
-        $custom_fields = \Modules\CustomFields\Models\CustomField::query()->get();
+        $templates       = Template::query()->get();
+        $custom_fields   = \Modules\CustomFields\Models\CustomField::query()->get();
 
         return view('core::settings_index', [
-            'gateways' => $gateways,
-            'number_formats' => $number_formats,
-            'invoice_groups' => $invoice_groups,
-            'tax_rates' => $tax_rates,
+            'gateways'        => $gateways,
+            'number_formats'  => $number_formats,
+            'invoice_groups'  => $invoice_groups,
+            'tax_rates'       => $tax_rates,
             'email_templates' => $email_templates,
             'payment_methods' => $payment_methods,
-            'templates' => $templates,
-            'custom_fields' => $custom_fields,
+            'templates'       => $templates,
+            'custom_fields'   => $custom_fields,
         ]);
     }
 
@@ -127,11 +125,12 @@ class SettingsController
      * Remove a logo (invoice or login).
      *
      * @param Request $request
-     * @param string $type Logo type (invoice or login)
+     * @param string  $type    Logo type (invoice or login)
      *
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function removeLogo
+     *
      * @legacy-file application/modules/settings/controllers/Settings.php
      */
     public function removeLogo(Request $request, string $type): \Illuminate\Http\RedirectResponse

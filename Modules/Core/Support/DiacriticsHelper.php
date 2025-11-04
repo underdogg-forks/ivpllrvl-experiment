@@ -10,8 +10,8 @@ namespace Modules\Core\Support;
 class DiacriticsHelper
 {
     /**
-     *
      * @origin Modules/Core/Helpers/diacritics_helper.php
+     *
      * @param string $str
      */
     public static function diacritics_seems_utf8($str): bool
@@ -59,6 +59,7 @@ class DiacriticsHelper
      *
      *
      * @origin Modules/Core/Helpers/diacritics_helper.php
+     *
      * @param string $string Text that might have accent characters
      *
      * @return string filtered string with replaced "nice" characters
@@ -195,8 +196,8 @@ class DiacriticsHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/diacritics_helper.php
+     *
      * @param string $text
      */
     public static function diacritics_remove_diacritics($text): string

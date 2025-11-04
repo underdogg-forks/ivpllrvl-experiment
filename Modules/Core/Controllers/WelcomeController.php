@@ -3,7 +3,7 @@
 namespace Modules\Core\Controllers;
 
 /**
- * WelcomeController
+ * WelcomeController.
  *
  * Handles the welcome/landing page display
  *
@@ -17,6 +17,7 @@ class WelcomeController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/welcome/controllers/Welcome.php
      */
     public function index(): \Illuminate\View\View

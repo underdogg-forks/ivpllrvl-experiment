@@ -14,6 +14,7 @@ class TemplateHelper
      *
      *
      * @origin Modules/Core/Helpers/template_helper.php
+     *
      * @param $object
      * @param $body
      * @param $model_id
@@ -87,27 +88,27 @@ class TemplateHelper
 
                             if ($cf) {
                                 // Get the values for the custom field
-                                $cf_table = $cf->custom_field_table;
+                                $cf_table  = $cf->custom_field_table;
                                 $cf_column = $cf->custom_field_column;
-                                
+
                                 // Determine which model to use based on table name
                                 $modelClass = match($cf_table) {
                                     'ip_invoice_custom' => \Modules\Invoices\Models\InvoiceCustom::class,
-                                    'ip_quote_custom' => \Modules\Quotes\Models\QuoteCustom::class,
-                                    'ip_client_custom' => \Modules\Crm\Models\ClientCustom::class,
-                                    'ip_user_custom' => \Modules\Core\Models\UserCustom::class,
+                                    'ip_quote_custom'   => \Modules\Quotes\Models\QuoteCustom::class,
+                                    'ip_client_custom'  => \Modules\Crm\Models\ClientCustom::class,
+                                    'ip_user_custom'    => \Modules\Core\Models\UserCustom::class,
                                     'ip_payment_custom' => \Modules\Payments\Models\PaymentCustom::class,
-                                    default => null,
+                                    default             => null,
                                 };
-                                
+
                                 if ($modelClass) {
                                     // Get the ID field name from the table
                                     $idField = str_replace('_custom', '_id', str_replace('ip_', '', $cf_table));
-                                    $record = $modelClass::query()->where($idField, $object->{$idField})->first();
+                                    $record  = $modelClass::query()->where($idField, $object->{$idField})->first();
                                     $replace = $record ? $record->{$cf_column} : '';
-                                    
+
                                     if ($cf->custom_field_type == 'SINGLE-CHOICE' && $replace) {
-                                        $el = \Modules\Core\Models\CustomValue::find($replace);
+                                        $el      = \Modules\Core\Models\CustomValue::find($replace);
                                         $replace = $el ? $el->custom_values_value : '';
                                     }
                                 } else {
@@ -133,6 +134,7 @@ class TemplateHelper
      *
      *
      * @origin Modules/Core/Helpers/template_helper.php
+     *
      * @param $invoice->invoice_status_id
      *
      * @return string
@@ -157,6 +159,7 @@ class TemplateHelper
      *
      *
      * @origin Modules/Core/Helpers/template_helper.php
+     *
      * @param $invoice
      *
      * @return mixed
@@ -184,6 +187,7 @@ class TemplateHelper
      *
      *
      * @origin Modules/Core/Helpers/template_helper.php
+     *
      * @param $invoice
      *
      * @return mixed

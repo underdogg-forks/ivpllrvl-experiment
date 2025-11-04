@@ -2,9 +2,9 @@
 
 namespace Modules\Crm\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Quotes\Services\QuoteService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
  * QuotesController (Guest).
  *
@@ -26,8 +26,7 @@ class QuotesController
      */
     public function __construct(
         protected QuoteService $quoteService
-    ) {
-    }
+    ) {}
 
     public function index()
     {
