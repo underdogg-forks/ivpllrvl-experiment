@@ -22,7 +22,7 @@ class ProjectService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllOrdered()
+    public function getAllOrdered(): \Illuminate\Database\Eloquent\Collection
     {
         return Project::query()->orderBy('project_name')->get();
     }
