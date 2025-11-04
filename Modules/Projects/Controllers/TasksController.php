@@ -16,7 +16,7 @@ class TasksController
 
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $tasks = Task::query()->with(['project', 'taxRate'])->orderBy('task_name')->paginate(15, ['*'], 'page', $page);
+        $tasks = $this->taskService->getAllWithRelations(['project', 'taxRate'], 15);
 
         return view('projects::tasks_index', [
             'filter_display'     => true,
