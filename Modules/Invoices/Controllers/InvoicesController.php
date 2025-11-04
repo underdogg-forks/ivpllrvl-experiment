@@ -177,7 +177,6 @@ class InvoicesController
             ['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments']);
 
         // Get custom fields and values
-        $fields       = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();
         $customFields = $this->customFieldService->getByTable('ip_invoice_custom');
         $customValues = [];
 

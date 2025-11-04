@@ -46,7 +46,7 @@ class QuoteAmountService
         $decimalPlaces = (int) SettingsHelper::getSetting('tax_rate_decimal_places');
 
         // Get all item IDs for this quote
-        $itemIds = QuoteItem::query()->where('quote_id', $quoteId)->pluck('item_id');
+        $itemIds = $this->getQuoteItemIds($quoteId);
 
         // Get the basic totals from quote item amounts using Eloquent
         $quoteAmounts = QuoteItemAmount::query()->whereIn('item_id', $itemIds)
@@ -130,7 +130,7 @@ class QuoteAmountService
     public function getGlobalDiscount(int $quoteId): float
     {
         // Get all item IDs for this quote
-        $itemIds = QuoteItem::query()->where('quote_id', $quoteId)->pluck('item_id');
+        $itemIds = $this->getQuoteItemIds($quoteId);
 
         // Calculate global discount using Eloquent
         $result = QuoteItemAmount::query()->whereIn('item_id', $itemIds)
@@ -327,5 +327,17 @@ class QuoteAmountService
         }
 
         return $return;
+    }
+
+    /**
+     * Get quote item IDs for a given quote.
+     *
+     * @param int $quoteId Quote ID
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    private function getQuoteItemIds(int $quoteId): \Illuminate\Support\Collection
+    {
+        return QuoteItem::query()->where('quote_id', $quoteId)->pluck('item_id');
     }
 }
