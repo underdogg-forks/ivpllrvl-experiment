@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Services\BaseService;
 use Modules\Core\Models\CustomValue;
 
 /**
@@ -12,14 +11,6 @@ use Modules\Core\Models\CustomValue;
  */
 class CustomValueService extends BaseService
 {
-    /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return CustomValue::class;
-    }
-
     /**
      * Get validation rules for custom values.
      *
@@ -56,5 +47,13 @@ class CustomValueService extends BaseService
     public function getByIds(array $ids)
     {
         return CustomValue::query()->whereIn('custom_values_id', $ids)->get();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return CustomValue::class;
     }
 }

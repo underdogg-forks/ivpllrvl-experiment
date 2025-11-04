@@ -2,19 +2,15 @@
 
 namespace Modules\Invoices\Tests\Unit;
 
-use DateInterval;
-use DateTime;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Models\Setting;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
-use Modules\Invoices\Models\InvoiceGroup;
-use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
 use Modules\Invoices\Services\InvoiceService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(InvoiceService::class)]
 class InvoiceServiceTest extends AbstractServiceTestCase
@@ -131,7 +127,7 @@ class InvoiceServiceTest extends AbstractServiceTestCase
         $urlKey = $this->service->generateUrlKey();
 
         $this->assertIsString($urlKey);
-        $this->assertEquals(32, strlen($urlKey)); // 16 bytes = 32 hex chars
+        $this->assertEquals(32, mb_strlen($urlKey)); // 16 bytes = 32 hex chars
         $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $urlKey);
     }
 
@@ -431,6 +427,7 @@ class InvoiceServiceTest extends AbstractServiceTestCase
 
         $this->assertEquals(0, $result);
     }
+
     #[Group('relationships')]
     #[Test]
     public function it_filters_invoices_by_status(): void
@@ -438,19 +435,19 @@ class InvoiceServiceTest extends AbstractServiceTestCase
         /** Arrange */
         $client = \Modules\Crm\Models\Client::factory()->create();
         Invoice::factory()->create([
-            'client_id' => $client->client_id,
+            'client_id'         => $client->client_id,
             'invoice_status_id' => 1, // Draft
         ]);
         Invoice::factory()->create([
-            'client_id' => $client->client_id,
+            'client_id'         => $client->client_id,
             'invoice_status_id' => 4, // Paid
         ]);
 
         /** Act */
         $draftResult = $this->service->getAllWithRelations(['client'], 'draft');
-        $paidResult = $this->service->getAllWithRelations(['client'], 'paid');
+        $paidResult  = $this->service->getAllWithRelations(['client'], 'paid');
 
-        /** Assert */
+        /* Assert */
         $this->assertGreaterThanOrEqual(1, $draftResult->total());
         $this->assertGreaterThanOrEqual(1, $paidResult->total());
     }
@@ -460,8 +457,8 @@ class InvoiceServiceTest extends AbstractServiceTestCase
     public function it_gets_invoices_by_client_id(): void
     {
         /** Arrange */
-        $client1 = \Modules\Crm\Models\Client::factory()->create();
-        $client2 = \Modules\Crm\Models\Client::factory()->create();
+        $client1  = \Modules\Crm\Models\Client::factory()->create();
+        $client2  = \Modules\Crm\Models\Client::factory()->create();
         $invoice1 = Invoice::factory()->create(['client_id' => $client1->client_id]);
         $invoice2 = Invoice::factory()->create(['client_id' => $client1->client_id]);
         $invoice3 = Invoice::factory()->create(['client_id' => $client2->client_id]);
@@ -469,7 +466,7 @@ class InvoiceServiceTest extends AbstractServiceTestCase
         /** Act */
         $result = $this->service->getByClientId($client1->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertCount(2, $result);
         $this->assertTrue($result->contains('invoice_id', $invoice1->invoice_id));
         $this->assertTrue($result->contains('invoice_id', $invoice2->invoice_id));

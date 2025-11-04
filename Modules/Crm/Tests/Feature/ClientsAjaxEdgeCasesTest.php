@@ -2,12 +2,11 @@
 
 namespace Modules\Crm\Tests\Feature;
 
-use Modules\Crm\Controllers\AjaxController as CrmAjaxController;
-use Modules\Crm\Models\Client;
 use Modules\Core\Models\User;
+use Modules\Crm\Controllers\AjaxController as CrmAjaxController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -30,15 +29,15 @@ class ClientsAjaxEdgeCasesTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => 'invalid']));
 
-        /** Assert */
+        /* Assert */
         // Should either return 404 or handle gracefully
         $this->assertTrue(
-            $response->isNotFound() || 
-            $response->getStatusCode() >= 400
+            $response->isNotFound()
+            || $response->getStatusCode() >= 400
         );
     }
 
@@ -52,11 +51,11 @@ class ClientsAjaxEdgeCasesTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => -1]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -70,11 +69,11 @@ class ClientsAjaxEdgeCasesTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => 0]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 }

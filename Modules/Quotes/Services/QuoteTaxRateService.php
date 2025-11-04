@@ -24,8 +24,7 @@ class QuoteTaxRateService
      */
     public function __construct(
         protected QuoteAmountService $quoteAmountService
-    ) {
-    }
+    ) {}
 
     /**
      * Get validation rules for quote tax rates.
@@ -76,7 +75,7 @@ class QuoteTaxRateService
     public function saveTaxRate(array $data): ?QuoteTaxRate
     {
         // Only applicable in legacy calculation mode
-        if (! config_item('legacy_calculation')) {
+        if ( ! config_item('legacy_calculation')) {
             return null;
         }
 

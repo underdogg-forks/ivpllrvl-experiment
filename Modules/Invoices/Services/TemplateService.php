@@ -24,7 +24,7 @@ class TemplateService
 
     private function getTemplatesFromPath(string $path): array
     {
-        if (! is_dir($path)) {
+        if ( ! is_dir($path)) {
             return [];
         }
 

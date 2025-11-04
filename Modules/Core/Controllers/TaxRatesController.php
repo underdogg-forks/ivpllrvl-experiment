@@ -2,23 +2,22 @@
 
 namespace Modules\Core\Controllers;
 
-use Illuminate\Http\Request;
 use Modules\Core\Services\TaxRatesService;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Models\TaxRate;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * TaxRatesController
+ * TaxRatesController.
  *
  * Manages tax rate CRUD operations
  *
  * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
  */
 class TaxRatesController
-{    public function __construct(
+{
+    public function __construct(
         protected TaxRatesService $taxRatesService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of tax rates.
@@ -28,6 +27,7 @@ class TaxRatesController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -47,6 +47,7 @@ class TaxRatesController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
      */
     public function form(?int $id = null)
@@ -57,7 +58,7 @@ class TaxRatesController
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate([
-                'tax_rate_name' => 'required|string|max:255',
+                'tax_rate_name'    => 'required|string|max:255',
                 'tax_rate_percent' => 'required|numeric|min:0|max:100',
             ]);
 
@@ -74,7 +75,7 @@ class TaxRatesController
         }
 
         $taxRate = $id ? $this->taxRatesService->find($id) : new TaxRate();
-        if ($id && !$taxRate) {
+        if ($id && ! $taxRate) {
             abort(404);
         }
 
@@ -89,6 +90,7 @@ class TaxRatesController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

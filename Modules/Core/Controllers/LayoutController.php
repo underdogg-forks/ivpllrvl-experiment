@@ -3,7 +3,7 @@
 namespace Modules\Core\Controllers;
 
 /**
- * LayoutController
+ * LayoutController.
  *
  * Handles layout configuration display
  *
@@ -17,6 +17,7 @@ class LayoutController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/layout/controllers/Layout.php
      */
     public function index(): \Illuminate\View\View

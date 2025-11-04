@@ -7,11 +7,6 @@ use Modules\Invoices\Models\InvoiceTaxRate;
 
 class InvoiceTaxRateService extends BaseService
 {
-    protected function getModelClass(): string
-    {
-        return InvoiceTaxRate::class;
-    }
-
     public function getValidationRules(): array
     {
         return [
@@ -41,7 +36,7 @@ class InvoiceTaxRateService extends BaseService
 
     public function saveTaxRate(array $data): ?InvoiceTaxRate
     {
-        if (! config_item('legacy_calculation')) {
+        if ( ! config_item('legacy_calculation')) {
             return null;
         }
 
@@ -53,7 +48,7 @@ class InvoiceTaxRateService extends BaseService
         }
 
         if (isset($data['invoice_id'])) {
-            $service = app(InvoiceAmountService::class);
+            $service        = app(InvoiceAmountService::class);
             $globalDiscount = [
                 'item' => $service->getGlobalDiscount($data['invoice_id']),
             ];
@@ -61,5 +56,10 @@ class InvoiceTaxRateService extends BaseService
         }
 
         return $taxRate;
+    }
+
+    protected function getModelClass(): string
+    {
+        return InvoiceTaxRate::class;
     }
 }

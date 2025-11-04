@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Services\BaseService;
 use Modules\Core\Models\EmailTemplate;
 
 /**

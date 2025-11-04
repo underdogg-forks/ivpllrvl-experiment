@@ -2,6 +2,8 @@
 
 namespace Modules\Crm\Services;
 
+use Exception;
+use InvalidArgumentException;
 use Modules\Core\Services\BaseService;
 use Modules\Crm\Models\ClientNote;
 
@@ -12,14 +14,6 @@ use Modules\Crm\Models\ClientNote;
  */
 class ClientNoteService extends BaseService
 {
-    /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return ClientNote::class;
-    }
-
     /**
      * Get client notes by client ID.
      *
@@ -44,41 +38,41 @@ class ClientNoteService extends BaseService
      *
      * @return bool Returns true if validation passes
      *
-     * @throws \InvalidArgumentException When validation fails
+     * @throws InvalidArgumentException When validation fails
      *
      * @legacy-function validate
      */
     public function validate(array $data): bool
     {
         $errors = [];
-        
+
         // Validate client_id exists and is an integer
-        if (empty($data['client_id']) || !is_numeric($data['client_id'])) {
+        if (empty($data['client_id']) || ! is_numeric($data['client_id'])) {
             $errors[] = 'Client ID is required and must be a valid integer';
         }
-        
+
         // Validate note text is present
-        if (empty($data['client_note']) || trim($data['client_note']) === '') {
+        if (empty($data['client_note']) || mb_trim($data['client_note']) === '') {
             $errors[] = 'Note text is required';
         }
-        
+
         // Validate note text length (assuming max 65535 for TEXT field)
-        if (!empty($data['client_note']) && strlen($data['client_note']) > 65535) {
+        if ( ! empty($data['client_note']) && mb_strlen($data['client_note']) > 65535) {
             $errors[] = 'Note text exceeds maximum length of 65535 characters';
         }
-        
+
         // Validate date format if provided
-        if (!empty($data['client_note_date'])) {
+        if ( ! empty($data['client_note_date'])) {
             $timestamp = strtotime($data['client_note_date']);
             if ($timestamp === false) {
                 $errors[] = 'Invalid date format for client_note_date';
             }
         }
-        
-        if (!empty($errors)) {
-            throw new \InvalidArgumentException('Validation failed: ' . implode(', ', $errors));
+
+        if ( ! empty($errors)) {
+            throw new InvalidArgumentException('Validation failed: ' . implode(', ', $errors));
         }
-        
+
         return true;
     }
 
@@ -89,7 +83,7 @@ class ClientNoteService extends BaseService
      *
      * @return ClientNote The saved client note
      *
-     * @throws \Exception When save operation fails
+     * @throws Exception When save operation fails
      *
      * @legacy-function save
      */
@@ -97,20 +91,28 @@ class ClientNoteService extends BaseService
     {
         // Validate input
         $this->validate($data);
-        
+
         try {
             // If client_note_id is present, update existing note
-            if (!empty($data['client_note_id'])) {
+            if ( ! empty($data['client_note_id'])) {
                 $note = $this->findOrFail($data['client_note_id']);
                 $note->update($data);
             } else {
                 // Create new note
                 $note = $this->create($data);
             }
-            
+
             return $note;
-        } catch (\Exception $e) {
-            throw new \Exception('Failed to save client note: ' . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception('Failed to save client note: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return ClientNote::class;
     }
 }

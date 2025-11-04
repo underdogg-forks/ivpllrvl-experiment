@@ -13,11 +13,10 @@ use Modules\Quotes\Models\QuoteItemAmount;
  */
 class QuoteItemService
 {
-        public function __construct(
+    public function __construct(
         protected QuoteAmountService $quoteAmountService,
         protected QuoteItemAmountService $quoteItemAmountService
-    ) {
-    }
+    ) {}
 
     /**
      * Get validation rules for quote items.
@@ -90,7 +89,7 @@ class QuoteItemService
         // Get the item to find quote_id
         $item = QuoteItem::find($itemId);
 
-        if (! $item) {
+        if ( ! $item) {
             return false;
         }
 

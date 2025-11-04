@@ -7,8 +7,8 @@ use Modules\Core\Models\Setting;
 use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Services\InvoiceTaxRateService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(InvoiceTaxRateService::class)]
 class InvoiceTaxRateServiceTest extends AbstractServiceTestCase
@@ -68,11 +68,11 @@ class InvoiceTaxRateServiceTest extends AbstractServiceTestCase
         Setting::setValue('legacy_calculation', '1');
 
         $data = [
-            'invoice_id'                 => 1,
-            'tax_rate_id'                => 1,
-            'include_item_tax'           => 0,
-            'invoice_tax_rate_percent'   => 10.0,
-            'invoice_tax_rate_amount'    => 0.0,
+            'invoice_id'               => 1,
+            'tax_rate_id'              => 1,
+            'include_item_tax'         => 0,
+            'invoice_tax_rate_percent' => 10.0,
+            'invoice_tax_rate_amount'  => 0.0,
         ];
 
         $result = $this->service->saveTaxRate($data);

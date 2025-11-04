@@ -14,18 +14,10 @@ use Modules\Core\Models\Setting;
 class SettingsService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): ?string
-    {
-        return Setting::class;
-    }
-
-    /**
      * Get a setting value by key.
      *
-     * @param string $key Setting key
-     * @param mixed $default Default value if not found
+     * @param string $key     Setting key
+     * @param mixed  $default Default value if not found
      *
      * @return mixed Setting value
      *
@@ -34,15 +26,15 @@ class SettingsService extends BaseService
     public function get(string $key, $default = null)
     {
         $setting = Setting::query()->where('setting_key', $key)->first();
-        
+
         return $setting ? $setting->setting_value : $default;
     }
 
     /**
      * Save a setting value.
      *
-     * @param string $key Setting key
-     * @param mixed $value Setting value
+     * @param string $key   Setting key
+     * @param mixed  $value Setting value
      *
      * @return void
      *
@@ -68,5 +60,13 @@ class SettingsService extends BaseService
         return Setting::query()
             ->pluck('setting_value', 'setting_key')
             ->toArray();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): ?string
+    {
+        return Setting::class;
     }
 }

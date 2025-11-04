@@ -5,8 +5,8 @@ namespace Modules\Crm\Tests\Feature;
 use Modules\Core\Models\User;
 use Modules\Crm\Controllers\PaymentInformationController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -30,7 +30,7 @@ class PaymentInformationControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('payment_information.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_payment_info');
     }
@@ -47,7 +47,7 @@ class PaymentInformationControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('payment_information.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
     }
 
@@ -60,11 +60,11 @@ class PaymentInformationControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('payment_information.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_payment_info');
     }

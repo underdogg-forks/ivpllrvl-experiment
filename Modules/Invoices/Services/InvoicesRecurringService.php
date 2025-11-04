@@ -7,11 +7,6 @@ use Modules\Invoices\Models\InvoicesRecurring;
 
 class InvoicesRecurringService extends BaseService
 {
-    protected function getModelClass(): string
-    {
-        return InvoicesRecurring::class;
-    }
-
     public function getValidationRules(): array
     {
         return [
@@ -32,7 +27,7 @@ class InvoicesRecurringService extends BaseService
      * Get all recurring invoices with relationships.
      *
      * @param array $relations Relations to eager load
-     * @param int $perPage Number of items per page
+     * @param int   $perPage   Number of items per page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -41,5 +36,10 @@ class InvoicesRecurringService extends BaseService
         return InvoicesRecurring::query()->with($relations)
             ->orderBy('recur_start_date', 'desc')
             ->paginate($perPage);
+    }
+
+    protected function getModelClass(): string
+    {
+        return InvoicesRecurring::class;
     }
 }

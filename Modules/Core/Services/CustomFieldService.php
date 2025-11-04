@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Services\BaseService;
 use Modules\Core\Models\CustomField;
 
 /**
@@ -12,14 +11,6 @@ use Modules\Core\Models\CustomField;
  */
 class CustomFieldService extends BaseService
 {
-    /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return CustomField::class;
-    }
-
     /**
      * Get custom tables list.
      *
@@ -44,11 +35,11 @@ class CustomFieldService extends BaseService
     public function getCustomTypes(): array
     {
         return [
-            'text'         => trans('text_input'),
-            'textarea'     => trans('textarea'),
-            'checkbox'     => trans('checkbox'),
-            'date'         => trans('date'),
-            'select'       => trans('dropdown'),
+            'text'     => trans('text_input'),
+            'textarea' => trans('textarea'),
+            'checkbox' => trans('checkbox'),
+            'date'     => trans('date'),
+            'select'   => trans('dropdown'),
         ];
     }
 
@@ -109,5 +100,13 @@ class CustomFieldService extends BaseService
     public function existsForTable(string $tableName): bool
     {
         return CustomField::query()->where('custom_field_table', $tableName)->exists();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return CustomField::class;
     }
 }

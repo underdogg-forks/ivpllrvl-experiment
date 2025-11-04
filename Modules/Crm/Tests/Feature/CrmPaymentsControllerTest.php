@@ -2,11 +2,11 @@
 
 namespace Modules\Crm\Tests\Feature;
 
-use Modules\Crm\Controllers\PaymentsController as GuestPaymentsController;
 use Modules\Core\Models\User;
+use Modules\Crm\Controllers\PaymentsController as GuestPaymentsController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -30,7 +30,7 @@ class CrmPaymentsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.payments'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_payments');
     }
@@ -47,7 +47,7 @@ class CrmPaymentsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.payments'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
     }
 
@@ -68,18 +68,18 @@ class CrmPaymentsControllerTest extends FeatureTestCase
          *     "payment_method": "paypal",
          *     "amount": "100.00",
          *     "payment_status": "completed"
-         * }
+         * }.
          */
         $payload = [
             'invoice_url_key' => 'abc123def456',
-            'payment_method' => 'paypal',
-            'amount' => '100.00',
-            'payment_status' => 'completed',
+            'payment_method'  => 'paypal',
+            'amount'          => '100.00',
+            'payment_status'  => 'completed',
         ];
 
         $response = $this->post(route('guest.payments.submit'), $payload);
 
-        /** Assert */
+        /* Assert */
         // Note: Current stub implementation ignores payload and always succeeds
         // Future implementation should validate these fields
         $response->assertRedirect();
@@ -102,17 +102,17 @@ class CrmPaymentsControllerTest extends FeatureTestCase
          *     "invoice_url_key": "xyz789ghi012",
          *     "payment_method": "stripe",
          *     "amount": "250.50"
-         * }
+         * }.
          */
         $payload = [
             'invoice_url_key' => 'xyz789ghi012',
-            'payment_method' => 'stripe',
-            'amount' => '250.50',
+            'payment_method'  => 'stripe',
+            'amount'          => '250.50',
         ];
 
         $response = $this->post(route('guest.payments.submit'), $payload);
 
-        /** Assert */
+        /* Assert */
         // Note: Current stub implementation ignores payload and always succeeds
         // Future implementation should validate invoice_url_key exists, amount is positive, etc.
         $response->assertRedirect();
@@ -128,11 +128,11 @@ class CrmPaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('guest.payments'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_payments');
     }

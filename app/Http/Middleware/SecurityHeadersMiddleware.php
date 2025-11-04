@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * SecurityHeadersMiddleware
+ * SecurityHeadersMiddleware.
  *
  * Adds security headers to all HTTP responses to protect against common web vulnerabilities.
  *
@@ -24,7 +24,7 @@ class SecurityHeadersMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -71,7 +71,7 @@ class SecurityHeadersMiddleware
         $response->headers->set('Permissions-Policy', $permissionsPolicy);
 
         // Force HTTPS in production (only if not in local development)
-        if (!app()->environment('local')) {
+        if ( ! app()->environment('local')) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 

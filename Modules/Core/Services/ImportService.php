@@ -14,18 +14,10 @@ use Modules\Core\Models\Import;
 class ImportService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return Import::class;
-    }
-
-    /**
      * Paginate import records.
      *
-     * @param string $url Base URL for pagination
-     * @param int $page Page number
+     * @param string $url  Base URL for pagination
+     * @param int    $page Page number
      *
      * @return void
      *
@@ -68,7 +60,7 @@ class ImportService extends BaseService
     /**
      * Import data from CSV file.
      *
-     * @param string $file CSV filename
+     * @param string $file  CSV filename
      * @param string $table Target table name
      *
      * @return array Array of imported IDs
@@ -123,10 +115,10 @@ class ImportService extends BaseService
     /**
      * Record import details.
      *
-     * @param int $importId Import ID
-     * @param string $table Table name
-     * @param string $type Import type
-     * @param array $ids Array of imported record IDs
+     * @param int    $importId Import ID
+     * @param string $table    Table name
+     * @param string $type     Import type
+     * @param array  $ids      Array of imported record IDs
      *
      * @return void
      *
@@ -135,5 +127,13 @@ class ImportService extends BaseService
     public function recordImportDetails(int $importId, string $table, string $type, array $ids): void
     {
         // TODO: Implement import details recording
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return Import::class;
     }
 }

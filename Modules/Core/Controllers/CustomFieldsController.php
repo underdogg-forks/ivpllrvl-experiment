@@ -4,20 +4,20 @@ namespace Modules\Core\Controllers;
 
 use Modules\Core\Models\CustomField;
 use Modules\Core\Services\CustomFieldService;
-
 use Modules\Core\Support\TranslationHelper;
+
 /**
- * CustomFieldsController
+ * CustomFieldsController.
  *
  * Manages custom field CRUD operations for various entities (clients, invoices, quotes, etc.)
  *
  * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
  */
 class CustomFieldsController
-{    public function __construct(
+{
+    public function __construct(
         protected CustomFieldService $customFieldService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of custom fields.
@@ -27,6 +27,7 @@ class CustomFieldsController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -47,6 +48,7 @@ class CustomFieldsController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
      */
     public function form(?int $id = null)
@@ -57,11 +59,11 @@ class CustomFieldsController
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate([
-                'custom_field_table' => 'required|string',
-                'custom_field_label' => 'required|string|max:255',
+                'custom_field_table'  => 'required|string',
+                'custom_field_label'  => 'required|string|max:255',
                 'custom_field_column' => 'required|string|max:255',
-                'custom_field_type' => 'required|string',
-                'custom_field_order' => 'nullable|integer',
+                'custom_field_type'   => 'required|string',
+                'custom_field_order'  => 'nullable|integer',
             ]);
 
             if ($id) {
@@ -75,7 +77,7 @@ class CustomFieldsController
 
         if ($id) {
             $customField = $this->customFieldService->find($id);
-            if (!$customField) {
+            if ( ! $customField) {
                 abort(404);
             }
         } else {
@@ -93,6 +95,7 @@ class CustomFieldsController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

@@ -67,7 +67,7 @@ class InvoiceService
         ];
     }
 
-        public function calculateDateDue(string $invoiceDateCreated): string
+    public function calculateDateDue(string $invoiceDateCreated): string
     {
         $dueAfter = SettingsHelper::getSetting('invoices_due_after');
         $dueDate  = new DateTime($invoiceDateCreated);
@@ -88,7 +88,7 @@ class InvoiceService
         return bin2hex(random_bytes(16));
     }
 
-        public function getByUrlKey(string $urlKey): Invoice
+    public function getByUrlKey(string $urlKey): Invoice
     {
         return Invoice::query()->where('invoice_url_key', $urlKey)->firstOrFail();
     }
@@ -130,7 +130,7 @@ class InvoiceService
             ->where('invoice_id', $invoiceId)
             ->first();
 
-                if (!$invoice || $invoice->invoice_status_id !== 2) {
+        if ( ! $invoice || $invoice->invoice_status_id !== 2) {
             return false;
         }
 
@@ -144,7 +144,7 @@ class InvoiceService
             ->where('invoice_id', $invoiceId)
             ->first();
 
-                if (!$invoice || $invoice->invoice_status_id !== 1) {
+        if ( ! $invoice || $invoice->invoice_status_id !== 1) {
             return false;
         }
 
@@ -152,13 +152,13 @@ class InvoiceService
             ->update(['invoice_status_id' => 2]) > 0;
     }
 
-        public function generateInvoiceNumberIfApplicable(int $invoiceId): void
+    public function generateInvoiceNumberIfApplicable(int $invoiceId): void
     {
         $invoice = Invoice::findOrFail($invoiceId);
 
         $generateForDraft = SettingsHelper::getSetting('generate_invoice_number_for_draft');
-        
-        if ($invoice->invoice_status_id !== 1 || !empty($invoice->invoice_number) || $generateForDraft != 0) {
+
+        if ($invoice->invoice_status_id !== 1 || ! empty($invoice->invoice_number) || $generateForDraft != 0) {
             return;
         }
 
@@ -181,7 +181,7 @@ class InvoiceService
 
     public function getDaysOverdue(Invoice $invoice): int
     {
-        if (! $this->isOverdue($invoice)) {
+        if ( ! $this->isOverdue($invoice)) {
             return 0;
         }
 
@@ -189,7 +189,7 @@ class InvoiceService
         $now     = new DateTime();
 
         return $now->diff($dueDate)->days;
-        }
+    }
 
     public function getOpenInvoices()
     {
@@ -227,7 +227,7 @@ class InvoiceService
     /**
      * Find an invoice with its relationships.
      *
-     * @param int $id Invoice ID
+     * @param int   $id        Invoice ID
      * @param array $relations Relations to eager load
      *
      * @return Invoice|null
@@ -240,7 +240,7 @@ class InvoiceService
     /**
      * Find an invoice with its relationships or fail.
      *
-     * @param int $id Invoice ID
+     * @param int   $id        Invoice ID
      * @param array $relations Relations to eager load
      *
      * @return Invoice
@@ -253,9 +253,9 @@ class InvoiceService
     /**
      * Get all invoices with relationships, ordered and filtered.
      *
-     * @param array $relations Relations to eager load
-     * @param string|null $status Status filter
-     * @param int $perPage Number of items per page
+     * @param array       $relations Relations to eager load
+     * @param string|null $status    Status filter
+     * @param int         $perPage   Number of items per page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -268,13 +268,13 @@ class InvoiceService
 
         // Apply status filter using scopes
         match ($status) {
-            'draft' => $query->draft(),
-            'sent' => $query->sent(),
-            'viewed' => $query->viewed(),
-            'paid' => $query->paid(),
-            'unpaid' => $query->unpaid(),
+            'draft'   => $query->draft(),
+            'sent'    => $query->sent(),
+            'viewed'  => $query->viewed(),
+            'paid'    => $query->paid(),
+            'unpaid'  => $query->unpaid(),
             'overdue' => $query->overdue(),
-            default => null
+            default   => null
         };
 
         return $query->orderBy('invoice_date_created', 'desc')->paginate($perPage);
@@ -292,4 +292,3 @@ class InvoiceService
         return Invoice::query()->where('client_id', $clientId)->get();
     }
 }
-

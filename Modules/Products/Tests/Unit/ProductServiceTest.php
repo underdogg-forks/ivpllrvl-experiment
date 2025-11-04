@@ -4,8 +4,8 @@ namespace Modules\Products\Tests\Unit;
 
 use Modules\Products\Services\ProductService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\AbstractServiceTestCase;
 
 #[CoversClass(ProductService::class)]

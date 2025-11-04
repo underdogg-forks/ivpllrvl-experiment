@@ -5,22 +5,22 @@ namespace Modules\Core\Controllers;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Services\CustomValueService;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Custom\Models\CustomValue;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * CustomValuesController
+ * CustomValuesController.
  *
  * Manages custom value CRUD operations for custom fields
  *
  * @legacy-file application/modules/custom_values/controllers/Custom_values.php
  */
 class CustomValuesController
-{    public function __construct(
+{
+    public function __construct(
         protected CustomValueService $customValueService,
         protected CustomFieldService $customFieldService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of custom values.
@@ -30,6 +30,7 @@ class CustomValuesController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -50,6 +51,7 @@ class CustomValuesController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      */
     public function form(?int $id = null)
@@ -60,7 +62,7 @@ class CustomValuesController
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate([
-                'custom_field_id' => 'required|integer|exists:ip_custom_fields,custom_field_id',
+                'custom_field_id'    => 'required|integer|exists:ip_custom_fields,custom_field_id',
                 'custom_value_value' => 'required|string|max:255',
             ]);
 
@@ -74,7 +76,7 @@ class CustomValuesController
         }
 
         $customValue = $id ? $this->customValueService->find($id) : new CustomValue();
-        if ($id && !$customValue) {
+        if ($id && ! $customValue) {
             abort(404);
         }
 
@@ -91,6 +93,7 @@ class CustomValuesController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

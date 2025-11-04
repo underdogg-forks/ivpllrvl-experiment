@@ -6,8 +6,9 @@ use Modules\Projects\Models\Project;
 use Modules\Projects\Models\Task;
 use Modules\Projects\Services\TaskService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+use ReflectionClass;
 use Tests\TestCase;
 
 /**
@@ -34,12 +35,12 @@ class TaskServiceTest extends TestCase
     public function it_returns_correct_model_class(): void
     {
         /** Arrange & Act */
-        $reflection = new \ReflectionClass($this->service);
-        $method = $reflection->getMethod('getModelClass');
+        $reflection = new ReflectionClass($this->service);
+        $method     = $reflection->getMethod('getModelClass');
         $method->setAccessible(true);
         $modelClass = $method->invoke($this->service);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(Task::class, $modelClass);
     }
 
@@ -52,16 +53,16 @@ class TaskServiceTest extends TestCase
     {
         /** Arrange */
         $project = Project::factory()->create();
-        $data = [
-            'project_id' => $project->project_id,
-            'task_name'  => 'Test Task',
+        $data    = [
+            'project_id'  => $project->project_id,
+            'task_name'   => 'Test Task',
             'task_status' => 1,
         ];
 
         /** Act */
         $task = $this->service->create($data);
 
-        /** Assert */
+        /* Assert */
         $this->assertInstanceOf(Task::class, $task);
         $this->assertEquals('Test Task', $task->task_name);
         $this->assertEquals($project->project_id, $task->project_id);
@@ -86,7 +87,7 @@ class TaskServiceTest extends TestCase
         /** Act */
         $task = $this->service->create($data);
 
-        /** Assert */
+        /* Assert */
         $this->assertInstanceOf(Task::class, $task);
         $this->assertEquals('Standalone Task', $task->task_name);
         $this->assertNull($task->project_id);
@@ -111,7 +112,7 @@ class TaskServiceTest extends TestCase
         /** Act */
         $result = $this->service->update($task->task_id, $updateData);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($result);
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'   => $task->task_id,
@@ -131,7 +132,7 @@ class TaskServiceTest extends TestCase
         /** Act */
         $found = $this->service->find($task->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertInstanceOf(Task::class, $found);
         $this->assertEquals($task->task_id, $found->task_id);
     }
@@ -142,10 +143,10 @@ class TaskServiceTest extends TestCase
     #[Test]
     public function it_throws_exception_when_task_not_found(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
-        /** Act */
+        /* Act */
         $this->service->findOrFail(999999);
     }
 
@@ -162,7 +163,7 @@ class TaskServiceTest extends TestCase
         /** Act */
         $result = $this->service->delete($task->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($result);
         $this->assertDatabaseMissing('ip_tasks', [
             'task_id' => $task->task_id,
@@ -176,16 +177,16 @@ class TaskServiceTest extends TestCase
         /** Arrange */
         $project = Project::factory()->create();
         $taxRate = \Modules\Products\Models\TaxRate::factory()->create();
-        
+
         Task::factory()->count(3)->create([
-            'project_id' => $project->project_id,
+            'project_id'       => $project->project_id,
             'task_tax_rate_id' => $taxRate->tax_rate_id,
         ]);
 
         /** Act */
         $result = $this->service->getAllWithRelations();
 
-        /** Assert */
+        /* Assert */
         $this->assertGreaterThanOrEqual(3, $result->total());
         $this->assertTrue($result->first()->relationLoaded('project'));
         $this->assertTrue($result->first()->relationLoaded('taxRate'));
@@ -195,7 +196,7 @@ class TaskServiceTest extends TestCase
     #[Test]
     public function it_orders_tasks_by_name(): void
     {
-        /** Arrange */
+        /* Arrange */
         Task::factory()->create(['task_name' => 'Zebra Task']);
         Task::factory()->create(['task_name' => 'Alpha Task']);
         Task::factory()->create(['task_name' => 'Beta Task']);
@@ -214,13 +215,13 @@ class TaskServiceTest extends TestCase
     #[Test]
     public function it_respects_custom_per_page_parameter(): void
     {
-        /** Arrange */
+        /* Arrange */
         Task::factory()->count(10)->create();
 
         /** Act */
         $result = $this->service->getAllWithRelations(['project'], 5);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(5, $result->perPage());
     }
 }
