@@ -120,4 +120,153 @@ class QuoteServiceTest extends AbstractServiceTestCase
         $this->assertEquals('2024-01-31', $expectedDueDate);
         $this->assertEquals(30, $expiresAfter);
     }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_finds_quote_with_relations(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $user = \Modules\Core\Models\User::factory()->create();
+        $quote = Quote::factory()->create([
+            'client_id' => $client->client_id,
+            'user_id' => $user->user_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->findWithRelations($quote->quote_id);
+
+        /** Assert */
+        $this->assertNotNull($result);
+        $this->assertEquals($quote->quote_id, $result->quote_id);
+        $this->assertTrue($result->relationLoaded('client'));
+        $this->assertTrue($result->relationLoaded('user'));
+        $this->assertNotNull($result->client);
+        $this->assertNotNull($result->user);
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_finds_quote_with_custom_relations(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $quote = Quote::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->findWithRelations($quote->quote_id, ['client']);
+
+        /** Assert */
+        $this->assertNotNull($result);
+        $this->assertTrue($result->relationLoaded('client'));
+        $this->assertFalse($result->relationLoaded('user'));
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_returns_null_when_quote_not_found(): void
+    {
+        /** Act */
+        $result = $this->service->findWithRelations(99999);
+
+        /** Assert */
+        $this->assertNull($result);
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_finds_quote_or_fails(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $quote = Quote::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->findWithRelationsOrFail($quote->quote_id);
+
+        /** Assert */
+        $this->assertNotNull($result);
+        $this->assertEquals($quote->quote_id, $result->quote_id);
+        $this->assertTrue($result->relationLoaded('client'));
+        $this->assertTrue($result->relationLoaded('user'));
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_throws_exception_when_quote_not_found(): void
+    {
+        /** Assert */
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+
+        /** Act */
+        $this->service->findWithRelationsOrFail(99999);
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_gets_all_quotes_with_relations_paginated(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $user = \Modules\Core\Models\User::factory()->create();
+        
+        Quote::factory()->count(3)->create([
+            'client_id' => $client->client_id,
+            'user_id' => $user->user_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->getAllWithRelations();
+
+        /** Assert */
+        $this->assertGreaterThanOrEqual(3, $result->total());
+        $this->assertTrue($result->first()->relationLoaded('client'));
+        $this->assertTrue($result->first()->relationLoaded('user'));
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_filters_quotes_by_status(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $draftQuote = Quote::factory()->create([
+            'client_id' => $client->client_id,
+            'quote_status_id' => 1, // Draft
+        ]);
+        $sentQuote = Quote::factory()->create([
+            'client_id' => $client->client_id,
+            'quote_status_id' => 2, // Sent
+        ]);
+
+        /** Act */
+        $draftResult = $this->service->getAllWithRelations(['client'], 'draft');
+        $sentResult = $this->service->getAllWithRelations(['client'], 'sent');
+
+        /** Assert */
+        $this->assertGreaterThanOrEqual(1, $draftResult->total());
+        $this->assertGreaterThanOrEqual(1, $sentResult->total());
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_respects_custom_per_page_parameter(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        Quote::factory()->count(10)->create([
+            'client_id' => $client->client_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->getAllWithRelations(['client'], null, 5);
+
+        /** Assert */
+        $this->assertEquals(5, $result->perPage());
+    }
 }
+

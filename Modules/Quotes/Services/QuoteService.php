@@ -416,4 +416,75 @@ class QuoteService
         Quote::query()->where('quote_id', $quoteId)
             ->update(['quote_number' => $quoteNumber]);
     }
+
+    /**
+     * Find a quote with its relationships.
+     *
+     * @param int $id Quote ID
+     * @param array $relations Relations to eager load
+     *
+     * @return Quote|null
+     */
+    public function findWithRelations(int $id, array $relations = ['client', 'user']): ?Quote
+    {
+        return Quote::query()->with($relations)->find($id);
+    }
+
+    /**
+     * Find a quote with its relationships or fail.
+     *
+     * @param int $id Quote ID
+     * @param array $relations Relations to eager load
+     *
+     * @return Quote
+     */
+    public function findWithRelationsOrFail(int $id, array $relations = ['client', 'user']): Quote
+    {
+        return Quote::query()->with($relations)->findOrFail($id);
+    }
+
+    /**
+     * Get all quotes with relationships, ordered and filtered.
+     *
+     * @param array $relations Relations to eager load
+     * @param string|null $status Status filter
+     * @param int $perPage Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(
+        array $relations = ['client', 'user'],
+        ?string $status = null,
+        int $perPage = 15
+    ) {
+        $query = Quote::query()->with($relations);
+
+        // Apply status filter using scopes
+        switch ($status) {
+            case 'draft':
+                $query->draft();
+                break;
+            case 'sent':
+                $query->sent();
+                break;
+            case 'viewed':
+                $query->viewed();
+                break;
+            case 'approved':
+                $query->approved();
+                break;
+            case 'rejected':
+                $query->rejected();
+                break;
+            case 'canceled':
+                $query->canceled();
+                break;
+            case 'all':
+            default:
+                // No filter for 'all'
+                break;
+        }
+
+        return $query->paginate($perPage);
+    }
 }

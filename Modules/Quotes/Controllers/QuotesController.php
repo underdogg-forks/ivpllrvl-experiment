@@ -65,36 +65,7 @@ class QuotesController
      */
     public function status(string $status = 'all', int $page = 0)
     {
-        $query = Quote::query()->with(['client', 'user']);
-
-        // Apply status filter
-        switch ($status) {
-            case 'draft':
-                $query->draft();
-                break;
-            case 'sent':
-                $query->sent();
-                break;
-            case 'viewed':
-                $query->viewed();
-                break;
-            case 'approved':
-                $query->approved();
-                break;
-            case 'rejected':
-                $query->rejected();
-                break;
-            case 'canceled':
-                $query->canceled();
-                break;
-            case 'all':
-            default:
-                // No filter for 'all'
-                break;
-        }
-
-        // Paginate results
-        $quotes = $query->paginate(15);
+        $quotes = $this->quoteService->getAllWithRelations(['client', 'user'], $status, 15);
 
         return view('quotes::index', [
             'quotes'             => $quotes,
@@ -123,7 +94,7 @@ class QuotesController
      */
     public function view(int $quote_id)
     {
-        $quote = Quote::query()->with([
+        $quote = $this->quoteService->findWithRelations($quote_id, [
             'client',
             'user',
             'invoiceGroup',
@@ -131,7 +102,7 @@ class QuotesController
             'items.unit',
             'taxRates.taxRate',
             'amounts',
-        ])->find($quote_id);
+        ]);
 
         if ( ! $quote) {
             abort(404, 'Quote not found');
