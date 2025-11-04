@@ -62,4 +62,36 @@ class PaymentServiceTest extends AbstractServiceTestCase
         // Most recent should be first
         $this->assertEquals($payment2->payment_id, $payments[0]->payment_id);
     }
+
+    #[Group('queries')]
+    #[Test]
+    public function it_gets_payments_by_client_id(): void
+    {
+        /** Arrange */
+        $client1 = \Modules\Crm\Models\Client::factory()->create();
+        $client2 = \Modules\Crm\Models\Client::factory()->create();
+        $invoice1 = \Modules\Invoices\Models\Invoice::factory()->create(['client_id' => $client1->client_id]);
+        $invoice2 = \Modules\Invoices\Models\Invoice::factory()->create(['client_id' => $client2->client_id]);
+        $payment1 = Payment::factory()->create([
+            'invoice_id' => $invoice1->invoice_id,
+            'client_id' => $client1->client_id,
+        ]);
+        $payment2 = Payment::factory()->create([
+            'invoice_id' => $invoice1->invoice_id,
+            'client_id' => $client1->client_id,
+        ]);
+        $payment3 = Payment::factory()->create([
+            'invoice_id' => $invoice2->invoice_id,
+            'client_id' => $client2->client_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->getByClientId($client1->client_id);
+
+        /** Assert */
+        $this->assertCount(2, $result);
+        $this->assertTrue($result->contains('payment_id', $payment1->payment_id));
+        $this->assertTrue($result->contains('payment_id', $payment2->payment_id));
+        $this->assertFalse($result->contains('payment_id', $payment3->payment_id));
+    }
 }

@@ -256,13 +256,11 @@ class ClientsController
             session([$key => $sessionData]);
         }
 
-        // Get related data - use service method when available
+        // Get related data - use service methods
         $client_notes = $this->clientNoteService->getByClientId($client_id);
-        
-        // For invoices, quotes, payments - use Eloquent directly until service methods are added
-        $invoices = Invoice::query()->where('client_id', $client_id)->get();
-        $quotes = Quote::query()->where('client_id', $client_id)->get();
-        $payments = Payment::query()->where('client_id', $client_id)->get();
+        $invoices = $this->invoiceService->getByClientId($client_id);
+        $quotes = $this->quoteService->getByClientId($client_id);
+        $payments = $this->paymentService->getByClientId($client_id);
         
         // Get custom fields
         $custom_fields = $this->customFieldService->byTable('ip_client_custom')->get();

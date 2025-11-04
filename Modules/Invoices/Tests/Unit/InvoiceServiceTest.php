@@ -454,3 +454,25 @@ class InvoiceServiceTest extends AbstractServiceTestCase
         $this->assertGreaterThanOrEqual(1, $draftResult->total());
         $this->assertGreaterThanOrEqual(1, $paidResult->total());
     }
+
+    #[Group('queries')]
+    #[Test]
+    public function it_gets_invoices_by_client_id(): void
+    {
+        /** Arrange */
+        $client1 = \Modules\Crm\Models\Client::factory()->create();
+        $client2 = \Modules\Crm\Models\Client::factory()->create();
+        $invoice1 = Invoice::factory()->create(['client_id' => $client1->client_id]);
+        $invoice2 = Invoice::factory()->create(['client_id' => $client1->client_id]);
+        $invoice3 = Invoice::factory()->create(['client_id' => $client2->client_id]);
+
+        /** Act */
+        $result = $this->service->getByClientId($client1->client_id);
+
+        /** Assert */
+        $this->assertCount(2, $result);
+        $this->assertTrue($result->contains('invoice_id', $invoice1->invoice_id));
+        $this->assertTrue($result->contains('invoice_id', $invoice2->invoice_id));
+        $this->assertFalse($result->contains('invoice_id', $invoice3->invoice_id));
+    }
+}

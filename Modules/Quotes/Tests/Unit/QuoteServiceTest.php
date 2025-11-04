@@ -276,5 +276,26 @@ class QuoteServiceTest extends AbstractServiceTestCase
         /** Assert */
         $this->assertEquals(5, $result->perPage());
     }
+
+    #[Group('queries')]
+    #[Test]
+    public function it_gets_quotes_by_client_id(): void
+    {
+        /** Arrange */
+        $client1 = \Modules\Crm\Models\Client::factory()->create();
+        $client2 = \Modules\Crm\Models\Client::factory()->create();
+        $quote1 = Quote::factory()->create(['client_id' => $client1->client_id]);
+        $quote2 = Quote::factory()->create(['client_id' => $client1->client_id]);
+        $quote3 = Quote::factory()->create(['client_id' => $client2->client_id]);
+
+        /** Act */
+        $result = $this->service->getByClientId($client1->client_id);
+
+        /** Assert */
+        $this->assertCount(2, $result);
+        $this->assertTrue($result->contains('quote_id', $quote1->quote_id));
+        $this->assertTrue($result->contains('quote_id', $quote2->quote_id));
+        $this->assertFalse($result->contains('quote_id', $quote3->quote_id));
+    }
 }
 

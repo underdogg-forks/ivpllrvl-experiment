@@ -47,4 +47,16 @@ class PaymentService extends BaseService
             ->orderBy('payment_date', 'desc')
             ->paginate($perPage);
     }
+
+    /**
+     * Get all payments for a specific client.
+     *
+     * @param int $clientId Client ID
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByClientId(int $clientId): \Illuminate\Database\Eloquent\Collection
+    {
+        return Payment::query()->where('client_id', $clientId)->get();
+    }
 }
