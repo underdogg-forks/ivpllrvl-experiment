@@ -14,7 +14,9 @@ use Modules\Products\Services\UnitService;
  * @legacy-file application/modules/units/controllers/Units.php
  */
 class UnitsController
-{    public function __construct(
+class UnitsController
+{
+    public function __construct(
         protected UnitService $unitService
     ) {
     }
