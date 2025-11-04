@@ -73,7 +73,7 @@ class UserService extends BaseService
      */
     public function getAll()
     {
-        return User::query()->all();
+        return User::query()->get();
     }
 
     /**
