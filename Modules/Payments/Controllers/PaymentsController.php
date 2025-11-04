@@ -6,6 +6,7 @@ use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentLog;
 use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentService;
+use Modules\Payments\Services\PaymentLogService;
 use Modules\Payments\Services\PaymentMethodService;
 use Modules\Invoices\Services\InvoiceService;
 
@@ -17,8 +18,9 @@ use Modules\Core\Support\TranslationHelper;
  */
 class PaymentsController
 {
-        public function __construct(
+    public function __construct(
         protected PaymentService $paymentService,
+        protected PaymentLogService $paymentLogService,
         protected PaymentMethodService $paymentMethodService,
         protected InvoiceService $invoiceService
     ) {
@@ -38,9 +40,7 @@ class PaymentsController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $payments = Payment::query()->with(['invoice', 'paymentMethod'])
-            ->orderBy('payment_date', 'desc')
-            ->paginate(15, ['*'], 'page', $page);
+        $payments = $this->paymentService->getAllWithRelations(['invoice', 'paymentMethod'], 15);
 
         return view('payments::index', [
             'filter_display'     => true,
@@ -103,7 +103,7 @@ class PaymentsController
 
         // Load payment for editing
         if ($id) {
-            $payment = Payment::query()->with(['invoice', 'paymentMethod'])->find($id);
+            $payment = $this->paymentService->findWithRelations($id, ['invoice', 'paymentMethod']);
             if ( ! $payment) {
                 abort(404);
             }
@@ -146,9 +146,7 @@ class PaymentsController
      */
     public function onlineLogs(int $page = 0): \Illuminate\View\View
     {
-        $paymentLogs = PaymentLog::query()->with('invoice')
-            ->orderBy('payment_log_date', 'desc')
-            ->paginate(15, ['*'], 'page', $page);
+        $paymentLogs = $this->paymentLogService->getAllWithRelations(['invoice'], 15);
 
         return view('payments::online_logs', [
             'filter_display'     => true,
