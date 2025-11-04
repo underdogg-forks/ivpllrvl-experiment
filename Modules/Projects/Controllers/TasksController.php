@@ -6,6 +6,7 @@ use Modules\Projects\Http\Requests\TaskRequest;
 use Modules\Projects\Models\Project;
 use Modules\Projects\Models\Task;
 use Modules\Projects\Services\TaskService;
+use Modules\Products\Models\TaxRate;
 
 use Modules\Core\Support\TranslationHelper;
 class TasksController
@@ -31,7 +32,7 @@ class TasksController
     {
         $task     = new Task();
         $projects = Project::query()->orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Models\TaxRate::query()->orderBy('tax_rate_name')->get();
+        $taxRates = TaxRate::query()->orderBy('tax_rate_name')->get();
 
         return view('projects::tasks_form', [
             'task'          => $task,
@@ -50,7 +51,7 @@ class TasksController
     public function edit(Task $task): \Illuminate\View\View
     {
         $projects = Project::query()->orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Models\TaxRate::query()->orderBy('tax_rate_name')->get();
+        $taxRates = TaxRate::query()->orderBy('tax_rate_name')->get();
 
         return view('projects::tasks_form', [
             'task'          => $task,

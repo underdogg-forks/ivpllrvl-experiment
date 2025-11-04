@@ -128,13 +128,13 @@ class QuotesController
             ->get();
 
         // Get tax rates
-        $taxRates      = TaxRate::query()->all();
+        $taxRates      = TaxRate::all();
         $quoteTaxRates = QuoteTaxRate::query()->where('quote_id', $quote_id)
             ->with('taxRate')
             ->get();
 
         // Get units
-        $units = Unit::query()->all();
+        $units = Unit::all();
 
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = $this->userService->hasMultipleActiveAdmins();

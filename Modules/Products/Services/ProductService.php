@@ -29,7 +29,7 @@ class ProductService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByIds(array $productIds)
+    public function getByIds(array $productIds): \Illuminate\Database\Eloquent\Collection
     {
         return Product::query()->whereIn('product_id', $productIds)->get();
     }

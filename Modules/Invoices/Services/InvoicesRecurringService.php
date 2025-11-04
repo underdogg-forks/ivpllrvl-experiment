@@ -36,7 +36,7 @@ class InvoicesRecurringService extends BaseService
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getAllWithRelations(array $relations = ['invoice', 'client'], int $perPage = 15)
+    public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15)
     {
         return InvoicesRecurring::query()->with($relations)
             ->orderBy('recur_start_date', 'desc')

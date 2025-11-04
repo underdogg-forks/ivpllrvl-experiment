@@ -267,30 +267,15 @@ class InvoiceService
         $query = Invoice::query()->with($relations);
 
         // Apply status filter using scopes
-        switch ($status) {
-            case 'draft':
-                $query->draft();
-                break;
-            case 'sent':
-                $query->sent();
-                break;
-            case 'viewed':
-                $query->viewed();
-                break;
-            case 'paid':
-                $query->paid();
-                break;
-            case 'unpaid':
-                $query->unpaid();
-                break;
-            case 'overdue':
-                $query->overdue();
-                break;
-            case 'all':
-            default:
-                // No filter for 'all'
-                break;
-        }
+        match ($status) {
+            'draft' => $query->draft(),
+            'sent' => $query->sent(),
+            'viewed' => $query->viewed(),
+            'paid' => $query->paid(),
+            'unpaid' => $query->unpaid(),
+            'overdue' => $query->overdue(),
+            default => null
+        };
 
         return $query->orderBy('invoice_date_created', 'desc')->paginate($perPage);
     }

@@ -47,7 +47,7 @@ class PaymentLogServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        $log1 = PaymentLog::factory()->create([
+        PaymentLog::factory()->create([
             'invoice_id' => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(3),
         ]);
@@ -55,7 +55,7 @@ class PaymentLogServiceTest extends AbstractServiceTestCase
             'invoice_id' => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(1),
         ]);
-        $log3 = PaymentLog::factory()->create([
+        PaymentLog::factory()->create([
             'invoice_id' => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(2),
         ]);

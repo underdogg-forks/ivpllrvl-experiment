@@ -460,30 +460,15 @@ class QuoteService
         $query = Quote::query()->with($relations);
 
         // Apply status filter using scopes
-        switch ($status) {
-            case 'draft':
-                $query->draft();
-                break;
-            case 'sent':
-                $query->sent();
-                break;
-            case 'viewed':
-                $query->viewed();
-                break;
-            case 'approved':
-                $query->approved();
-                break;
-            case 'rejected':
-                $query->rejected();
-                break;
-            case 'canceled':
-                $query->canceled();
-                break;
-            case 'all':
-            default:
-                // No filter for 'all'
-                break;
-        }
+        match ($status) {
+            'draft' => $query->draft(),
+            'sent' => $query->sent(),
+            'viewed' => $query->viewed(),
+            'approved' => $query->approved(),
+            'rejected' => $query->rejected(),
+            'canceled' => $query->canceled(),
+            default => null
+        };
 
         return $query->orderBy('quote_date_created', 'desc')->paginate($perPage);
     }

@@ -250,6 +250,14 @@ class QuoteServiceTest extends AbstractServiceTestCase
         /** Assert */
         $this->assertGreaterThanOrEqual(1, $draftResult->total());
         $this->assertGreaterThanOrEqual(1, $sentResult->total());
+        
+        // Verify all drafts have status_id = 1
+        $draftStatuses = $draftResult->pluck('quote_status_id')->unique()->all();
+        $this->assertEquals([1], $draftStatuses);
+        
+        // Verify all sent have status_id = 2
+        $sentStatuses = $sentResult->pluck('quote_status_id')->unique()->all();
+        $this->assertEquals([2], $sentStatuses);
     }
 
     #[Group('relationships')]

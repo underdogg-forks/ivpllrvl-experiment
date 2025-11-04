@@ -44,7 +44,7 @@ class InvoiceGroupService extends BaseService
      */
     public function getAll()
     {
-        return InvoiceGroup::query()->all();
+        return InvoiceGroup::all();
     }
 
     private function setNextInvoiceNumber(InvoiceGroup $invoiceGroup): void

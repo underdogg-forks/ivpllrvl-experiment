@@ -202,6 +202,10 @@ class MailerHelper
 
         $db_quote = \Modules\Quotes\Models\Quote::query()->where('quote_id', $quote_id)->first();
 
+        if ($db_quote === null) {
+            throw new \RuntimeException("Quote with ID {$quote_id} not found");
+        }
+
         $message = parse_template($db_quote, $body);
         $subject = parse_template($db_quote, $subject);
         $cc = parse_template($db_quote, $cc);
