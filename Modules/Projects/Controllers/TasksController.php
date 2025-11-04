@@ -2,22 +2,20 @@
 
 namespace Modules\Projects\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
+use Modules\Products\Services\TaxRateService;
 use Modules\Projects\Http\Requests\TaskRequest;
-use Modules\Projects\Models\Project;
 use Modules\Projects\Models\Task;
 use Modules\Projects\Services\ProjectService;
 use Modules\Projects\Services\TaskService;
-use Modules\Products\Models\TaxRate;
-use Modules\Products\Services\TaxRateService;
 
-use Modules\Core\Support\TranslationHelper;
 class TasksController
-{    public function __construct(
+{
+    public function __construct(
         protected TaskService $taskService,
         protected ProjectService $projectService,
         protected TaxRateService $taxRateService
-    ) {
-    }
+    ) {}
 
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -37,7 +35,7 @@ class TasksController
         // Handle POST request (create/update)
         if (request()->isMethod('post')) {
             $request = app(TaskRequest::class);
-            
+
             if ($id) {
                 // Update existing task
                 $this->taskService->update($id, $request->validated());
@@ -45,13 +43,13 @@ class TasksController
                 // Create new task
                 $this->taskService->create($request->validated());
             }
-            
+
             return redirect()->route('tasks.index')
                 ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
-        
+
         // Handle GET request (show form)
-        $task = $id ? Task::findOrFail($id) : new Task();
+        $task     = $id ? Task::findOrFail($id) : new Task();
         $projects = $this->projectService->getAllOrdered();
         $taxRates = $this->taxRateService->getAllOrdered();
 
@@ -66,6 +64,7 @@ class TasksController
     public function destroy(Task $task): \Illuminate\Http\RedirectResponse
     {
         $this->taskService->delete($task->task_id);
+
         return redirect()->route('tasks.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

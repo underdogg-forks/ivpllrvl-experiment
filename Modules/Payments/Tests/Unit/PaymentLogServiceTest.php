@@ -2,12 +2,12 @@
 
 namespace Modules\Payments\Tests\Unit;
 
+use Modules\Invoices\Models\Invoice;
 use Modules\Payments\Models\PaymentLog;
 use Modules\Payments\Services\PaymentLogService;
-use Modules\Invoices\Models\Invoice;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\AbstractServiceTestCase;
 
 #[CoversClass(PaymentLogService::class)]
@@ -27,16 +27,16 @@ class PaymentLogServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         PaymentLog::factory()->count(3)->create([
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'       => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(1),
         ]);
 
         /** Act */
         $result = $this->service->getAllWithRelations();
 
-        /** Assert */
+        /* Assert */
         $this->assertGreaterThanOrEqual(3, $result->total());
         $this->assertTrue($result->first()->relationLoaded('invoice'));
     }
@@ -48,15 +48,15 @@ class PaymentLogServiceTest extends AbstractServiceTestCase
         /** Arrange */
         $invoice = Invoice::factory()->create();
         PaymentLog::factory()->create([
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'       => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(3),
         ]);
         $log2 = PaymentLog::factory()->create([
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'       => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(1),
         ]);
         PaymentLog::factory()->create([
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'       => $invoice->invoice_id,
             'payment_log_date' => now()->subDays(2),
         ]);
 
@@ -83,7 +83,7 @@ class PaymentLogServiceTest extends AbstractServiceTestCase
         /** Act */
         $result = $this->service->getAllWithRelations(['invoice'], 5);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(5, $result->perPage());
     }
 
@@ -100,7 +100,7 @@ class PaymentLogServiceTest extends AbstractServiceTestCase
         /** Act */
         $result = $this->service->getAllWithRelations(['invoice']);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($result->first()->relationLoaded('invoice'));
         $this->assertNotNull($result->first()->invoice);
     }

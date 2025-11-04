@@ -8,7 +8,6 @@ use Modules\Core\Support\SettingsHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\Group;
 use Tests\Unit\UnitTestCase;
 
 #[CoversClass(SettingsHelper::class)]
@@ -17,17 +16,30 @@ class SettingsHelperTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         DB::table('ip_settings')->delete();
+    }
+
+    public static function checkSelectProvider(): array
+    {
+        return [
+            'equal strings'      => ['test', 'test', '==', false, 'selected="selected"'],
+            'unequal strings'    => ['test', 'other', '==', false, ''],
+            'not equal'          => ['test', 'other', '!=', false, 'selected="selected"'],
+            'equal with checked' => ['test', 'test', '==', true, 'checked="checked"'],
+            'numeric equal'      => [1, '1', '==', false, 'selected="selected"'],
+            'boolean true'       => [true, null, '==', false, 'selected="selected"'],
+            'boolean false'      => [false, null, '==', false, ''],
+        ];
     }
 
     #[Test]
     public function it_gets_setting_value(): void
     {
         Setting::setValue('test_key', 'test_value');
-        
+
         $result = SettingsHelper::getSetting('test_key');
-        
+
         $this->assertSame('test_value', $result);
     }
 
@@ -35,7 +47,7 @@ class SettingsHelperTest extends UnitTestCase
     public function it_returns_default_when_setting_not_found(): void
     {
         $result = SettingsHelper::getSetting('non_existent_key', 'default_value');
-        
+
         $this->assertSame('default_value', $result);
     }
 
@@ -43,9 +55,9 @@ class SettingsHelperTest extends UnitTestCase
     public function it_escapes_html_when_requested(): void
     {
         Setting::setValue('html_key', '<script>alert("xss")</script>');
-        
+
         $result = SettingsHelper::getSetting('html_key', '', true);
-        
+
         $this->assertStringContainsString('&lt;', $result);
         $this->assertStringContainsString('&gt;', $result);
     }
@@ -54,9 +66,9 @@ class SettingsHelperTest extends UnitTestCase
     public function it_does_not_escape_by_default(): void
     {
         Setting::setValue('html_key', '<b>bold</b>');
-        
+
         $result = SettingsHelper::getSetting('html_key');
-        
+
         $this->assertSame('<b>bold</b>', $result);
     }
 
@@ -67,9 +79,9 @@ class SettingsHelperTest extends UnitTestCase
         Setting::setValue('paypal_api_key', 'test_key');
         Setting::setValue('paypal_secret', 'test_secret');
         Setting::setValue('stripe_enabled', '1');
-        
+
         $result = SettingsHelper::getGatewaySettings('paypal');
-        
+
         $this->assertIsArray($result);
         $this->assertArrayHasKey('paypal_enabled', $result);
         $this->assertArrayHasKey('paypal_api_key', $result);
@@ -81,9 +93,9 @@ class SettingsHelperTest extends UnitTestCase
     public function it_returns_empty_array_for_gateway_with_no_settings(): void
     {
         Setting::setValue('other_setting', 'value');
-        
+
         $result = SettingsHelper::getGatewaySettings('nonexistent');
-        
+
         $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
@@ -94,7 +106,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect('test', 'test');
         $output = ob_get_clean();
-        
+
         $this->assertSame('selected="selected"', $output);
     }
 
@@ -104,7 +116,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect('test', 'other');
         $output = ob_get_clean();
-        
+
         $this->assertSame('', $output);
     }
 
@@ -114,7 +126,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect('test', 'other', '!=');
         $output = ob_get_clean();
-        
+
         $this->assertSame('selected="selected"', $output);
     }
 
@@ -124,7 +136,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect(true);
         $output = ob_get_clean();
-        
+
         $this->assertSame('selected="selected"', $output);
     }
 
@@ -134,7 +146,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect(false);
         $output = ob_get_clean();
-        
+
         $this->assertSame('', $output);
     }
 
@@ -144,7 +156,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect('test', 'test', '==', true);
         $output = ob_get_clean();
-        
+
         $this->assertSame('checked="checked"', $output);
     }
 
@@ -154,7 +166,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect('', null, 'e');
         $output = ob_get_clean();
-        
+
         $this->assertSame('selected="selected"', $output);
     }
 
@@ -164,7 +176,7 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect('value', null, 'e');
         $output = ob_get_clean();
-        
+
         $this->assertSame('', $output);
     }
 
@@ -175,28 +187,15 @@ class SettingsHelperTest extends UnitTestCase
         ob_start();
         SettingsHelper::checkSelect($value1, $value2, $operator, $checked);
         $output = ob_get_clean();
-        
-        $this->assertSame($expected, $output);
-    }
 
-    public static function checkSelectProvider(): array
-    {
-        return [
-            'equal strings' => ['test', 'test', '==', false, 'selected="selected"'],
-            'unequal strings' => ['test', 'other', '==', false, ''],
-            'not equal' => ['test', 'other', '!=', false, 'selected="selected"'],
-            'equal with checked' => ['test', 'test', '==', true, 'checked="checked"'],
-            'numeric equal' => [1, '1', '==', false, 'selected="selected"'],
-            'boolean true' => [true, null, '==', false, 'selected="selected"'],
-            'boolean false' => [false, null, '==', false, ''],
-        ];
+        $this->assertSame($expected, $output);
     }
 
     #[Test]
     public function it_returns_empty_string_as_default(): void
     {
         $result = SettingsHelper::getSetting('nonexistent');
-        
+
         $this->assertSame('', $result);
     }
 
@@ -204,9 +203,9 @@ class SettingsHelperTest extends UnitTestCase
     public function it_handles_numeric_settings(): void
     {
         Setting::setValue('numeric_key', '123');
-        
+
         $result = SettingsHelper::getSetting('numeric_key');
-        
+
         $this->assertSame('123', $result);
     }
 
@@ -214,9 +213,9 @@ class SettingsHelperTest extends UnitTestCase
     public function it_handles_null_setting_values(): void
     {
         Setting::setValue('null_key', null);
-        
+
         $result = SettingsHelper::getSetting('null_key', 'fallback');
-        
+
         $this->assertSame('fallback', $result);
     }
 }

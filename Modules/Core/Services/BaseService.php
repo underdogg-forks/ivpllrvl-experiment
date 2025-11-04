@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Services;
 
+use RuntimeException;
+
 /**
  * BaseService.
  *
@@ -9,16 +11,6 @@ namespace Modules\Core\Services;
  */
 abstract class BaseService
 {
-    /**
-     * Get the model class name that this service manages.
-     *
-     * @return string|null
-     */
-    protected function getModelClass(): ?string
-    {
-        return null;
-    }
-
     /**
      * Create a new model instance.
      *
@@ -29,9 +21,9 @@ abstract class BaseService
     public function create(array $data): mixed
     {
         $modelClass = $this->getModelClass();
-        
-        if (!$modelClass) {
-            throw new \RuntimeException('Model class not defined in service');
+
+        if ( ! $modelClass) {
+            throw new RuntimeException('Model class not defined in service');
         }
 
         return $modelClass::create($data);
@@ -48,9 +40,9 @@ abstract class BaseService
     public function update(int $id, array $data): mixed
     {
         $modelClass = $this->getModelClass();
-        
-        if (!$modelClass) {
-            throw new \RuntimeException('Model class not defined in service');
+
+        if ( ! $modelClass) {
+            throw new RuntimeException('Model class not defined in service');
         }
 
         $model = $modelClass::findOrFail($id);
@@ -69,9 +61,9 @@ abstract class BaseService
     public function delete(int $id): bool
     {
         $modelClass = $this->getModelClass();
-        
-        if (!$modelClass) {
-            throw new \RuntimeException('Model class not defined in service');
+
+        if ( ! $modelClass) {
+            throw new RuntimeException('Model class not defined in service');
         }
 
         $model = $modelClass::findOrFail($id);
@@ -89,9 +81,9 @@ abstract class BaseService
     public function find(int $id): mixed
     {
         $modelClass = $this->getModelClass();
-        
-        if (!$modelClass) {
-            throw new \RuntimeException('Model class not defined in service');
+
+        if ( ! $modelClass) {
+            throw new RuntimeException('Model class not defined in service');
         }
 
         return $modelClass::find($id);
@@ -107,11 +99,21 @@ abstract class BaseService
     public function findOrFail(int $id): mixed
     {
         $modelClass = $this->getModelClass();
-        
-        if (!$modelClass) {
-            throw new \RuntimeException('Model class not defined in service');
+
+        if ( ! $modelClass) {
+            throw new RuntimeException('Model class not defined in service');
         }
 
         return $modelClass::findOrFail($id);
+    }
+
+    /**
+     * Get the model class name that this service manages.
+     *
+     * @return string|null
+     */
+    protected function getModelClass(): ?string
+    {
+        return null;
     }
 }

@@ -41,7 +41,7 @@ class InvoiceItemService
     {
         $item = Item::find($itemId);
 
-        if (! $item) {
+        if ( ! $item) {
             return false;
         }
 
@@ -82,7 +82,6 @@ class InvoiceItemService
     {
         return Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
     }
-
 
     /**
      * Find an item by invoice ID and item ID.

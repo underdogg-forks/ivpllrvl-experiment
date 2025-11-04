@@ -1,6 +1,5 @@
 <?php
 
-
 echo "\nDatabase error: ",
 $heading,
 "\n\n",

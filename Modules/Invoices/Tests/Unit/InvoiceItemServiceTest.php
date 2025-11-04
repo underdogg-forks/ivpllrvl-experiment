@@ -5,13 +5,12 @@ namespace Modules\Invoices\Tests\Unit;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Models\Setting;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\Item;
 use Modules\Invoices\Models\ItemAmount;
 use Modules\Invoices\Services\InvoiceItemService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(InvoiceItemService::class)]
 class InvoiceItemServiceTest extends AbstractServiceTestCase

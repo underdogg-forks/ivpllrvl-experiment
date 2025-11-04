@@ -7,11 +7,6 @@ use Modules\Invoices\Models\InvoiceGroup;
 
 class InvoiceGroupService extends BaseService
 {
-    protected function getModelClass(): string
-    {
-        return InvoiceGroup::class;
-    }
-
     public function getValidationRules(): array
     {
         return [
@@ -45,6 +40,11 @@ class InvoiceGroupService extends BaseService
     public function getAll()
     {
         return InvoiceGroup::all();
+    }
+
+    protected function getModelClass(): string
+    {
+        return InvoiceGroup::class;
     }
 
     private function setNextInvoiceNumber(InvoiceGroup $invoiceGroup): void

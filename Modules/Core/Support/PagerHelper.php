@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Throwable;
 
 /**
  * PagerHelper.
@@ -47,7 +48,7 @@ class PagerHelper
         if ($model instanceof LengthAwarePaginator || $model instanceof Paginator) {
             try {
                 return $model->links()->toHtml();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 // If view factory isn't set up, return empty string
                 // This can happen in test/CLI contexts
                 return '';
@@ -60,7 +61,7 @@ class PagerHelper
                 $paginated = $model->paginate($perPage);
 
                 return $paginated->links()->toHtml();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 // If pagination or view rendering fails, return empty string
                 return '';
             }

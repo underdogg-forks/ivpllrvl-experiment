@@ -2,12 +2,12 @@
 
 namespace Modules\Crm\Tests\Feature;
 
+use Modules\Core\Models\User;
 use Modules\Crm\Controllers\AjaxController as CrmAjaxController;
 use Modules\Crm\Models\Client;
-use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -28,21 +28,21 @@ class ClientsAjaxDetailsTest extends FeatureTestCase
     public function it_returns_client_details_as_json(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $client = Client::factory()->create([
-            'client_name' => 'Test Client',
+            'client_name'  => 'Test Client',
             'client_email' => 'test@client.com',
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertJson([
-            'client_id' => $client->client_id,
-            'client_name' => 'Test Client',
+            'client_id'    => $client->client_id,
+            'client_name'  => 'Test Client',
             'client_email' => 'test@client.com',
         ]);
     }
@@ -57,11 +57,11 @@ class ClientsAjaxDetailsTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -78,7 +78,7 @@ class ClientsAjaxDetailsTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -90,22 +90,22 @@ class ClientsAjaxDetailsTest extends FeatureTestCase
     public function it_returns_all_client_fields(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $client = Client::factory()->create([
-            'client_name' => 'Complete Client',
-            'client_email' => 'complete@test.com',
-            'client_phone' => '123-456-7890',
+            'client_name'      => 'Complete Client',
+            'client_email'     => 'complete@test.com',
+            'client_phone'     => '123-456-7890',
             'client_address_1' => '123 Main St',
-            'client_city' => 'Test City',
-            'client_state' => 'TS',
-            'client_zip' => '12345',
+            'client_city'      => 'Test City',
+            'client_state'     => 'TS',
+            'client_zip'       => '12345',
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertJsonStructure([
             'client_id',
@@ -127,21 +127,21 @@ class ClientsAjaxDetailsTest extends FeatureTestCase
     public function it_returns_details_for_inactive_client(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user           = User::factory()->create();
         $inactiveClient = Client::factory()->create([
             'client_active' => 0,
-            'client_name' => 'Inactive Client',
+            'client_name'   => 'Inactive Client',
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => $inactiveClient->client_id]));
 
-        /** Assert */
+        /* Assert */
         // Should still return details even for inactive clients
         $response->assertOk();
         $response->assertJson([
-            'client_id' => $inactiveClient->client_id,
+            'client_id'     => $inactiveClient->client_id,
             'client_active' => 0,
         ]);
     }
@@ -154,19 +154,19 @@ class ClientsAjaxDetailsTest extends FeatureTestCase
     public function it_handles_null_fields_in_client_details(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $client = Client::factory()->create([
-            'client_name' => 'Minimal Client',
-            'client_email' => null,
-            'client_phone' => null,
+            'client_name'      => 'Minimal Client',
+            'client_email'     => null,
+            'client_phone'     => null,
             'client_address_1' => null,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('crm.ajax.get_client_details', ['clientId' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals('Minimal Client', $data['client_name']);

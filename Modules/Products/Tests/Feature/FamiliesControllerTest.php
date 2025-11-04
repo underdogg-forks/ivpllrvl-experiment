@@ -6,8 +6,8 @@ use Modules\Core\Models\User;
 use Modules\Products\Controllers\FamiliesController;
 use Modules\Products\Models\Family;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -29,11 +29,11 @@ class FamiliesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Family::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('families.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::families_index');
         $response->assertViewHas('families');
@@ -52,16 +52,16 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('families.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::families_form');
         $response->assertViewHas('family');
         $response->assertViewHas('is_update', false);
-        
+
         $family = $response->viewData('family');
         $this->assertInstanceOf(Family::class, $family);
         $this->assertFalse($family->exists);
@@ -75,19 +75,19 @@ class FamiliesControllerTest extends FeatureTestCase
     public function it_displays_edit_form_with_existing_family(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $family = Family::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('families.form', ['id' => $family->family_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::families_form');
         $response->assertViewHas('family');
         $response->assertViewHas('is_update', true);
-        
+
         $viewFamily = $response->viewData('family');
         $this->assertEquals($family->family_id, $viewFamily->family_id);
     }
@@ -101,26 +101,26 @@ class FamiliesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "family_name": "Electronics",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $familyData = [
             'family_name' => 'Electronics',
-            'btn_submit' => '1',
+            'btn_submit'  => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('families.form'), $familyData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_families', [
             'family_name' => 'Electronics',
         ]);
@@ -134,30 +134,30 @@ class FamiliesControllerTest extends FeatureTestCase
     public function it_updates_existing_family_with_valid_data(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $family = Family::factory()->create(['family_name' => 'Old Name']);
-        
+
         /**
          * {
          *     "family_name": "Updated Name",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $updateData = [
             'family_name' => 'Updated Name',
-            'btn_submit' => '1',
+            'btn_submit'  => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('families.form', ['id' => $family->family_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_families', [
-            'family_id' => $family->family_id,
+            'family_id'   => $family->family_id,
             'family_name' => 'Updated Name',
         ]);
     }
@@ -171,21 +171,21 @@ class FamiliesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "btn_cancel": "1"
-         * }
+         * }.
          */
         $cancelData = [
             'btn_cancel' => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('families.form'), $cancelData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
     }
 
@@ -197,23 +197,23 @@ class FamiliesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "family_name": "",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $invalidData = [
             'family_name' => '',
-            'btn_submit' => '1',
+            'btn_submit'  => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('families.form'), $invalidData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors('family_name');
     }
 
@@ -226,23 +226,23 @@ class FamiliesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         Family::factory()->create(['family_name' => 'Existing Family']);
-        
+
         /**
          * {
          *     "family_name": "Existing Family",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $duplicateData = [
             'family_name' => 'Existing Family',
-            'btn_submit' => '1',
+            'btn_submit'  => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('families.form'), $duplicateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors('family_name');
     }
 
@@ -254,29 +254,29 @@ class FamiliesControllerTest extends FeatureTestCase
     public function it_deletes_family(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user   = User::factory()->create();
         $family = Family::factory()->create();
-        
+
         /**
          * {
          *     "family_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'family_id' => $family->family_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('families.delete', ['id' => $family->family_id]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_families', [
             'family_id' => $family->family_id,
         ]);
@@ -291,24 +291,24 @@ class FamiliesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "family_id": 99999
-         * }
+         * }.
          */
         $deletePayload = [
             'family_id' => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('families.delete', ['id' => 99999]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 }

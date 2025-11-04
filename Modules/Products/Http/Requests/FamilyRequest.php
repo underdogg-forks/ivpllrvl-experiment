@@ -22,7 +22,7 @@ class FamilyRequest extends FormRequest
     public function rules(): array
     {
         $familyId = $this->route('family') ? $this->route('family')->family_id : null;
-        
+
         return [
             'family_name' => 'required|string|max:255|unique:ip_families,family_name' . ($familyId ? ',' . $familyId . ',family_id' : ''),
         ];

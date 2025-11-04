@@ -5,8 +5,8 @@ namespace Modules\Core\Tests\Feature;
 use Modules\Core\Controllers\AjaxController as CoreAjaxController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -27,17 +27,17 @@ class CoreAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('core.ajax.get_cron_key'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertJsonStructure(['key']);
-        
+
         $data = $response->json();
         $this->assertIsString($data['key']);
-        $this->assertEquals(16, strlen($data['key']));
+        $this->assertEquals(16, mb_strlen($data['key']));
     }
 
     /**
@@ -49,7 +49,7 @@ class CoreAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response1 = $this->get(route('core.ajax.get_cron_key'));
         $this->actingAs($user);
@@ -58,7 +58,7 @@ class CoreAjaxControllerTest extends FeatureTestCase
         /** Assert */
         $key1 = $response1->json('key');
         $key2 = $response2->json('key');
-        
+
         $this->assertNotEquals($key1, $key2);
     }
 
@@ -71,7 +71,7 @@ class CoreAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('core.ajax.get_cron_key'));
 

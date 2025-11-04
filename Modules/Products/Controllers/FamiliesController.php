@@ -2,22 +2,22 @@
 
 namespace Modules\Products\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Models\Family;
 use Modules\Products\Services\FamilyService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * FamiliesController
+ * FamiliesController.
  *
  * Handles product family management (product categories/groups)
  *
  * @legacy-file application/modules/families/controllers/Families.php
  */
 class FamiliesController
-{    public function __construct(
+{
+    public function __construct(
         protected FamilyService $familyService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of product families.
@@ -27,6 +27,7 @@ class FamiliesController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/families/controllers/Families.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -49,6 +50,7 @@ class FamiliesController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/families/controllers/Families.php
      */
     public function form(?int $id = null)
@@ -80,12 +82,12 @@ class FamiliesController
         // Load existing record for editing
         if ($id) {
             $family = $this->familyService->find($id);
-            if (!$family) {
+            if ( ! $family) {
                 abort(404);
             }
             $isUpdate = true;
         } else {
-            $family = new Family();
+            $family   = new Family();
             $isUpdate = false;
         }
 
@@ -103,6 +105,7 @@ class FamiliesController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/families/controllers/Families.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

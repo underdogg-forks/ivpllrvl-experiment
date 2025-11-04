@@ -17,36 +17,28 @@ class UploadService extends BaseService
      * MIME type mappings for common file extensions.
      */
     public array $content_types = [
-        'pdf' => 'application/pdf',
-        'exe' => 'application/octet-stream',
-        'zip' => 'application/zip',
-        'doc' => 'application/msword',
-        'xls' => 'application/vnd.ms-excel',
-        'ppt' => 'application/vnd.ms-powerpoint',
-        'gif' => 'image/gif',
-        'png' => 'image/png',
+        'pdf'  => 'application/pdf',
+        'exe'  => 'application/octet-stream',
+        'zip'  => 'application/zip',
+        'doc'  => 'application/msword',
+        'xls'  => 'application/vnd.ms-excel',
+        'ppt'  => 'application/vnd.ms-powerpoint',
+        'gif'  => 'image/gif',
+        'png'  => 'image/png',
         'jpeg' => 'image/jpeg',
-        'jpg' => 'image/jpeg',
-        'mp3' => 'audio/mpeg',
-        'wav' => 'audio/x-wav',
+        'jpg'  => 'image/jpeg',
+        'mp3'  => 'audio/mpeg',
+        'wav'  => 'audio/x-wav',
         'mpeg' => 'video/mpeg',
-        'mpg' => 'video/mpeg',
-        'mpe' => 'video/mpeg',
-        'mov' => 'video/quicktime',
-        'avi' => 'video/x-msvideo',
-        'txt' => 'text/plain',
-        'htm' => 'text/html',
+        'mpg'  => 'video/mpeg',
+        'mpe'  => 'video/mpeg',
+        'mov'  => 'video/quicktime',
+        'avi'  => 'video/x-msvideo',
+        'txt'  => 'text/plain',
+        'htm'  => 'text/html',
         'html' => 'text/html',
-        'php' => 'text/plain',
+        'php'  => 'text/plain',
     ];
-
-    /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): ?string
-    {
-        return Upload::class;
-    }
 
     /**
      * Get files by URL key.
@@ -79,5 +71,13 @@ class UploadService extends BaseService
         return Upload::query()->select('file_name_new', 'file_name_original')
             ->where('url_key', $urlKey)
             ->get();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): ?string
+    {
+        return Upload::class;
     }
 }

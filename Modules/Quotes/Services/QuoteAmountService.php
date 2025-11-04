@@ -2,7 +2,6 @@
 
 namespace Modules\Quotes\Services;
 
-use Illuminate\Support\Facades\DB as FacadeDB;
 use Modules\Core\Support\SettingsHelper;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
@@ -30,8 +29,7 @@ class QuoteAmountService
      */
     public function __construct(
         protected QuoteService $quoteService
-    ) {
-    }
+    ) {}
 
     /**
      * Calculate quote amounts including items, taxes, and discounts.
@@ -59,7 +57,7 @@ class QuoteAmountService
             ->first();
 
         // Handle case when no items exist
-        if (! $quoteAmounts || $quoteAmounts->quote_item_subtotal === null) {
+        if ( ! $quoteAmounts || $quoteAmounts->quote_item_subtotal === null) {
             $quoteAmounts = (object) [
                 'quote_item_subtotal'  => 0.0,
                 'quote_item_tax_total' => 0.0,
@@ -225,14 +223,14 @@ class QuoteAmountService
             case 'month':
                 $query->whereHas('quote', function ($q) {
                     $q->whereRaw('MONTH(quote_date_created) = MONTH(NOW())')
-                      ->whereRaw('YEAR(quote_date_created) = YEAR(NOW())');
+                        ->whereRaw('YEAR(quote_date_created) = YEAR(NOW())');
                 });
                 break;
 
             case 'last_month':
                 $query->whereHas('quote', function ($q) {
                     $q->whereRaw('MONTH(quote_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
-                      ->whereRaw('YEAR(quote_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
+                        ->whereRaw('YEAR(quote_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
                 });
                 break;
 
@@ -277,17 +275,17 @@ class QuoteAmountService
         switch ($period) {
             case 'last-month':
                 $query->whereRaw('MONTH(ip_quotes.quote_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
-                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
+                    ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'this-quarter':
                 $query->whereRaw('QUARTER(ip_quotes.quote_date_created) = QUARTER(NOW())')
-                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
+                    ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'last-quarter':
                 $query->whereRaw('QUARTER(ip_quotes.quote_date_created) = QUARTER(NOW() - INTERVAL 1 QUARTER)')
-                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
+                    ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
 
             case 'this-year':
@@ -300,7 +298,7 @@ class QuoteAmountService
 
             default: // 'this-month'
                 $query->whereRaw('MONTH(ip_quotes.quote_date_created) = MONTH(NOW())')
-                      ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
+                    ->whereRaw('YEAR(ip_quotes.quote_date_created) = YEAR(NOW())');
                 break;
         }
 

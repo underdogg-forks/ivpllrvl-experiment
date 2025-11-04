@@ -13,16 +13,6 @@ use Modules\Products\Models\Product;
 class ProductService extends BaseService
 {
     /**
-     * Get the model class name that this service manages.
-     *
-     * @return string
-     */
-    protected function getModelClass(): string
-    {
-        return Product::class;
-    }
-
-    /**
      * Get products by IDs.
      *
      * @param array $productIds
@@ -32,5 +22,15 @@ class ProductService extends BaseService
     public function getByIds(array $productIds): \Illuminate\Database\Eloquent\Collection
     {
         return Product::query()->whereIn('product_id', $productIds)->get();
+    }
+
+    /**
+     * Get the model class name that this service manages.
+     *
+     * @return string
+     */
+    protected function getModelClass(): string
+    {
+        return Product::class;
     }
 }

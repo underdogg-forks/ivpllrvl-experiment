@@ -365,7 +365,7 @@ class QuoteService
             ->where('quote_id', $quoteId)
             ->first();
 
-                if (!$quote || $quote->quote_status_id !== 2) {
+        if ( ! $quote || $quote->quote_status_id !== 2) {
             return false;
         }
 
@@ -386,7 +386,7 @@ class QuoteService
             ->where('quote_id', $quoteId)
             ->first();
 
-                if (!$quote || $quote->quote_status_id !== 1) {
+        if ( ! $quote || $quote->quote_status_id !== 1) {
             return false;
         }
 
@@ -417,8 +417,8 @@ class QuoteService
 
         // Generate new quote number if draft with no number and setting is off
         $generateForDraft = SettingsHelper::getSetting('generate_quote_number_for_draft');
-        
-        if ($quote->quote_status_id !== 1 || !empty($quote->quote_number) || $generateForDraft != 0) {
+
+        if ($quote->quote_status_id !== 1 || ! empty($quote->quote_number) || $generateForDraft != 0) {
             return;
         }
 
@@ -430,7 +430,7 @@ class QuoteService
     /**
      * Find a quote with its relationships.
      *
-     * @param int $id Quote ID
+     * @param int   $id        Quote ID
      * @param array $relations Relations to eager load
      *
      * @return Quote|null
@@ -443,7 +443,7 @@ class QuoteService
     /**
      * Find a quote with its relationships or fail.
      *
-     * @param int $id Quote ID
+     * @param int   $id        Quote ID
      * @param array $relations Relations to eager load
      *
      * @return Quote
@@ -456,9 +456,9 @@ class QuoteService
     /**
      * Get all quotes with relationships, ordered and filtered.
      *
-     * @param array $relations Relations to eager load
-     * @param string|null $status Status filter
-     * @param int $perPage Number of items per page
+     * @param array       $relations Relations to eager load
+     * @param string|null $status    Status filter
+     * @param int         $perPage   Number of items per page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -471,13 +471,13 @@ class QuoteService
 
         // Apply status filter using scopes
         match ($status) {
-            'draft' => $query->draft(),
-            'sent' => $query->sent(),
-            'viewed' => $query->viewed(),
+            'draft'    => $query->draft(),
+            'sent'     => $query->sent(),
+            'viewed'   => $query->viewed(),
             'approved' => $query->approved(),
             'rejected' => $query->rejected(),
             'canceled' => $query->canceled(),
-            default => null
+            default    => null
         };
 
         return $query->orderBy('quote_date_created', 'desc')->paginate($perPage);

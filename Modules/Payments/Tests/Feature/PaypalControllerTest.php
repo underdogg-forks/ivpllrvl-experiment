@@ -4,8 +4,8 @@ namespace Modules\Payments\Tests\Feature;
 
 use Modules\Crm\Controllers\Gateways\PaypalController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -37,21 +37,21 @@ class PaypalControllerTest extends FeatureTestCase
          *     "receiver_email": "merchant@example.com",
          *     "payer_email": "buyer@example.com",
          *     "custom": "invoice_123"
-         * }
+         * }.
          */
         $payload = [
-            'txn_id' => '1234567890ABCDEF',
+            'txn_id'         => '1234567890ABCDEF',
             'payment_status' => 'Completed',
-            'mc_gross' => '100.00',
-            'mc_currency' => 'USD',
+            'mc_gross'       => '100.00',
+            'mc_currency'    => 'USD',
             'receiver_email' => 'merchant@example.com',
-            'payer_email' => 'buyer@example.com',
-            'custom' => 'invoice_123',
+            'payer_email'    => 'buyer@example.com',
+            'custom'         => 'invoice_123',
         ];
 
         $response = $this->post(route('gateways.paypal.notify'), $payload);
 
-        /** Assert */
+        /* Assert */
         // Note: Current stub implementation returns OK without validation
         // Future implementation should verify IPN signature, validate txn_id, update payment status
         $response->assertOk();
@@ -75,18 +75,18 @@ class PaypalControllerTest extends FeatureTestCase
          *     "payment_status": "Pending",
          *     "mc_gross": "50.00",
          *     "mc_currency": "EUR"
-         * }
+         * }.
          */
         $payload = [
-            'txn_id' => '0987654321ZYXWVU',
+            'txn_id'         => '0987654321ZYXWVU',
             'payment_status' => 'Pending',
-            'mc_gross' => '50.00',
-            'mc_currency' => 'EUR',
+            'mc_gross'       => '50.00',
+            'mc_currency'    => 'EUR',
         ];
 
         $response = $this->post(route('gateways.paypal.notify'), $payload);
 
-        /** Assert */
+        /* Assert */
         // Note: Current stub implementation returns OK without validation
         // Future implementation should handle pending payments differently than completed
         $response->assertOk();

@@ -2,25 +2,25 @@
 
 namespace Modules\Products\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\ProductService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * ProductsController
+ * ProductsController.
  *
  * Manages product CRUD operations
  *
  * @legacy-file application/modules/products/controllers/Products.php
  */
 class ProductsController
-{    public function __construct(
+{
+    public function __construct(
         protected ProductService $productService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of products.
@@ -30,6 +30,7 @@ class ProductsController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/products/controllers/Products.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -55,6 +56,7 @@ class ProductsController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/products/controllers/Products.php
      */
     public function form(?int $id = null)
@@ -65,13 +67,13 @@ class ProductsController
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate([
-                'product_name' => 'required|string|max:255',
-                'product_sku' => 'nullable|string|max:255',
+                'product_name'        => 'required|string|max:255',
+                'product_sku'         => 'nullable|string|max:255',
                 'product_description' => 'nullable|string',
-                'product_price' => 'required|numeric|min:0',
-                'family_id' => 'nullable|integer|exists:ip_families,family_id',
-                'unit_id' => 'nullable|integer|exists:ip_units,unit_id',
-                'tax_rate_id' => 'nullable|integer|exists:ip_tax_rates,tax_rate_id',
+                'product_price'       => 'required|numeric|min:0',
+                'family_id'           => 'nullable|integer|exists:ip_families,family_id',
+                'unit_id'             => 'nullable|integer|exists:ip_units,unit_id',
+                'tax_rate_id'         => 'nullable|integer|exists:ip_tax_rates,tax_rate_id',
             ]);
 
             if ($id) {
@@ -85,12 +87,12 @@ class ProductsController
         }
 
         $product = $id ? $this->productService->find($id) : new Product();
-        if ($id && !$product) {
+        if ($id && ! $product) {
             abort(404);
         }
 
         $families = Family::query()->orderBy('family_name')->get();
-        $units = Unit::query()->orderBy('unit_name')->get();
+        $units    = Unit::query()->orderBy('unit_name')->get();
         $taxRates = TaxRate::query()->orderBy('tax_rate_name')->get();
 
         return view('products::products_form', [
@@ -109,6 +111,7 @@ class ProductsController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/products/controllers/Products.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

@@ -54,7 +54,7 @@ class QuoteItemAmountService
             }
 
             // Add to global discount tracking
-            if (! isset($globalDiscount['item'])) {
+            if ( ! isset($globalDiscount['item'])) {
                 $globalDiscount['item'] = 0.0;
             }
             $globalDiscount['item'] += $itemDiscount;

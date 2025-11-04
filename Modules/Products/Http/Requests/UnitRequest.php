@@ -22,7 +22,7 @@ class UnitRequest extends FormRequest
     public function rules(): array
     {
         $unitId = $this->route('unit') ? $this->route('unit')->unit_id : null;
-        
+
         return [
             'unit_name'      => 'required|string|max:255|unique:ip_units,unit_name' . ($unitId ? ',' . $unitId . ',unit_id' : ''),
             'unit_name_plrl' => 'required|string|max:255',

@@ -5,8 +5,8 @@ namespace Modules\Invoices\Tests\Feature;
 use Modules\Core\Models\User;
 use Modules\Invoices\Controllers\InvoiceGroupsController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -28,7 +28,7 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice_groups.index'));
 
@@ -46,9 +46,9 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create multiple invoice groups with different names */
+        /* Would create multiple invoice groups with different names */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice_groups.index'));
 
@@ -66,13 +66,13 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create 20 invoice groups */
+        /* Would create 20 invoice groups */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice_groups.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         /* Would verify pagination shows max 15 items */
         $this->assertTrue(true, 'Should paginate at 15 items per page');
@@ -88,7 +88,7 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice_groups.form'));
 
@@ -246,17 +246,17 @@ class InvoiceGroupsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         /** Would create invoice group */
         $testId = 1;
-        
+
         /**
          * {
          *     "invoice_group_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'invoice_group_id' => $testId,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('invoice_groups.delete', ['id' => $testId]),

@@ -8,8 +8,8 @@ use Modules\Payments\Controllers\PaymentsController;
 use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentMethod;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -31,11 +31,11 @@ class PaymentsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Payment::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('payments.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('payments::index');
         $response->assertViewHas('payments');
@@ -52,19 +52,19 @@ class PaymentsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         Payment::factory()->create(['payment_date' => '2024-01-01']);
         Payment::factory()->create(['payment_date' => '2024-01-02']);
         Payment::factory()->create(['payment_date' => '2024-01-03']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('payments.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $payments = $response->viewData('payments');
-        
+
         // Most recent should be first
         $this->assertGreaterThan(0, $payments->count());
     }
@@ -77,23 +77,23 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_loads_payments_with_relationships(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
-        $invoice = Invoice::factory()->create();
+        $user          = User::factory()->create();
+        $invoice       = Invoice::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
-        
+
         Payment::factory()->create([
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'        => $invoice->invoice_id,
             'payment_method_id' => $paymentMethod->payment_method_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('payments.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $payments = $response->viewData('payments');
-        
+
         // Verify relationships are loaded
         $this->assertGreaterThan(0, $payments->count());
     }
@@ -108,11 +108,11 @@ class PaymentsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('payments.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('payments::form');
         $response->assertViewHas('payment');
@@ -127,18 +127,18 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_displays_edit_form_with_existing_payment(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $payment = Payment::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('payments.form', ['id' => $payment->payment_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('payments::form');
         $response->assertViewHas('payment');
-        
+
         $viewPayment = $response->viewData('payment');
         $this->assertEquals($payment->payment_id, $viewPayment->payment_id);
     }
@@ -151,10 +151,10 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_creates_new_payment_with_valid_data(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
-        $invoice = Invoice::factory()->create();
+        $user          = User::factory()->create();
+        $invoice       = Invoice::factory()->create();
         $paymentMethod = PaymentMethod::factory()->create();
-        
+
         /**
          * {
          *     "invoice_id": 1,
@@ -162,26 +162,26 @@ class PaymentsControllerTest extends FeatureTestCase
          *     "payment_amount": "100.00",
          *     "payment_method_id": 1,
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $paymentData = [
-            'invoice_id' => $invoice->invoice_id,
-            'payment_date' => '2024-01-15',
-            'payment_amount' => '100.00',
+            'invoice_id'        => $invoice->invoice_id,
+            'payment_date'      => '2024-01-15',
+            'payment_amount'    => '100.00',
             'payment_method_id' => $paymentMethod->payment_method_id,
-            'btn_submit' => '1',
+            'btn_submit'        => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('payments.form'), $paymentData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('payments.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_payments', [
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'     => $invoice->invoice_id,
             'payment_amount' => '100.00',
         ]);
     }
@@ -194,34 +194,34 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_updates_existing_payment(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $payment = Payment::factory()->create(['payment_amount' => '50.00']);
-        
+
         /**
          * {
          *     "invoice_id": 1,
          *     "payment_date": "2024-01-15",
          *     "payment_amount": "75.00",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $updateData = [
-            'invoice_id' => $payment->invoice_id,
-            'payment_date' => $payment->payment_date,
+            'invoice_id'     => $payment->invoice_id,
+            'payment_date'   => $payment->payment_date,
             'payment_amount' => '75.00',
-            'btn_submit' => '1',
+            'btn_submit'     => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('payments.form', ['id' => $payment->payment_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('payments.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_payments', [
-            'payment_id' => $payment->payment_id,
+            'payment_id'     => $payment->payment_id,
             'payment_amount' => '75.00',
         ]);
     }
@@ -241,18 +241,18 @@ class PaymentsControllerTest extends FeatureTestCase
          *     "payment_date": "2024-01-15",
          *     "payment_amount": "100.00",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $missingInvoicePayload = [
-            'payment_date' => '2024-01-15',
+            'payment_date'   => '2024-01-15',
             'payment_amount' => '100.00',
-            'btn_submit' => '1',
+            'btn_submit'     => '1',
         ];
 
         $this->actingAs($user);
         $response = $this->post(route('payments.form'), $missingInvoicePayload);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors('invoice_id');
     }
 
@@ -263,7 +263,7 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_validates_required_payment_date(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
 
         /** Act */
@@ -272,18 +272,18 @@ class PaymentsControllerTest extends FeatureTestCase
          *     "invoice_id": 1,
          *     "payment_amount": "100.00",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $missingDatePayload = [
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'     => $invoice->invoice_id,
             'payment_amount' => '100.00',
-            'btn_submit' => '1',
+            'btn_submit'     => '1',
         ];
 
         $this->actingAs($user);
         $response = $this->post(route('payments.form'), $missingDatePayload);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors('payment_date');
     }
 
@@ -294,7 +294,7 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_validates_required_payment_amount(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
 
         /** Act */
@@ -303,18 +303,18 @@ class PaymentsControllerTest extends FeatureTestCase
          *     "invoice_id": 1,
          *     "payment_date": "2024-01-15",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $missingAmountPayload = [
-            'invoice_id' => $invoice->invoice_id,
+            'invoice_id'   => $invoice->invoice_id,
             'payment_date' => '2024-01-15',
-            'btn_submit' => '1',
+            'btn_submit'   => '1',
         ];
 
         $this->actingAs($user);
         $response = $this->post(route('payments.form'), $missingAmountPayload);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors('payment_amount');
     }
 
@@ -327,21 +327,21 @@ class PaymentsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "btn_cancel": "1"
-         * }
+         * }.
          */
         $cancelData = [
             'btn_cancel' => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('payments.form'), $cancelData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('payments.index'));
     }
 
@@ -353,29 +353,29 @@ class PaymentsControllerTest extends FeatureTestCase
     public function it_deletes_payment(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $payment = Payment::factory()->create();
-        
+
         /**
          * {
          *     "payment_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'payment_id' => $payment->payment_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('payments.delete', ['id' => $payment->payment_id]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('payments.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_payments', [
             'payment_id' => $payment->payment_id,
         ]);
@@ -390,24 +390,24 @@ class PaymentsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "payment_id": 99999
-         * }
+         * }.
          */
         $deletePayload = [
             'payment_id' => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('payments.delete', ['id' => 99999]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 }

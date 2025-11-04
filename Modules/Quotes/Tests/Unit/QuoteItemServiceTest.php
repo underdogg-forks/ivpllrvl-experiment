@@ -6,8 +6,8 @@ use Modules\Quotes\Services\QuoteAmountService;
 use Modules\Quotes\Services\QuoteItemAmountService;
 use Modules\Quotes\Services\QuoteItemService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\AbstractServiceTestCase;
 
 #[CoversClass(QuoteItemService::class)]
@@ -18,10 +18,10 @@ class QuoteItemServiceTest extends AbstractServiceTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $quoteService = $this->createMock(\Modules\Quotes\Services\QuoteService::class);
-        $quoteAmountService = new QuoteAmountService($quoteService);
+        $quoteService           = $this->createMock(\Modules\Quotes\Services\QuoteService::class);
+        $quoteAmountService     = new QuoteAmountService($quoteService);
         $quoteItemAmountService = new QuoteItemAmountService();
-        $this->service = new QuoteItemService($quoteAmountService, $quoteItemAmountService);
+        $this->service          = new QuoteItemService($quoteAmountService, $quoteItemAmountService);
     }
 
     #[Group('crud')]
@@ -42,30 +42,30 @@ class QuoteItemServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_saves_item(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->cleanupQuoteTables();
         $this->createClientFixture(['client_id' => 1]);
         $quote = $this->createQuoteFixture(['quote_id' => 100, 'client_id' => 1]);
-        
+
         $itemData = [
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Test Item',
+            'quote_id'         => $quote->quote_id,
+            'item_name'        => 'Test Item',
             'item_description' => 'Test Description',
-            'item_quantity' => 2,
-            'item_price' => 100.00,
+            'item_quantity'    => 2,
+            'item_price'       => 100.00,
         ];
 
         /** Act */
         $item = $this->service->saveItem($itemData);
 
-        /** Assert */
+        /* Assert */
         $this->assertNotNull($item);
         $this->assertEquals('Test Item', $item->item_name);
         $this->assertEquals('Test Description', $item->item_description);
         $this->assertEquals(2, $item->item_quantity);
         $this->assertEquals(100.00, $item->item_price);
         $this->assertDatabaseHas('ip_quote_items', [
-            'quote_id' => $quote->quote_id,
+            'quote_id'  => $quote->quote_id,
             'item_name' => 'Test Item',
         ]);
     }
@@ -74,22 +74,22 @@ class QuoteItemServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_deletes_item(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->cleanupQuoteTables();
         $this->createClientFixture(['client_id' => 1]);
         $quote = $this->createQuoteFixture(['quote_id' => 100, 'client_id' => 1]);
-        
+
         $item = \Modules\Quotes\Models\QuoteItem::create([
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Test Item',
+            'quote_id'      => $quote->quote_id,
+            'item_name'     => 'Test Item',
             'item_quantity' => 1,
-            'item_price' => 50.00,
+            'item_price'    => 50.00,
         ]);
 
         /** Act */
         $result = $this->service->deleteItem($item->item_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($result);
         $this->assertDatabaseMissing('ip_quote_items', [
             'item_id' => $item->item_id,
@@ -99,45 +99,45 @@ class QuoteItemServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_gets_items_subtotal(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->cleanupQuoteTables();
         $this->createClientFixture(['client_id' => 1]);
         $quote = $this->createQuoteFixture(['quote_id' => 100, 'client_id' => 1]);
-        
+
         // Create two items
         $item1 = \Modules\Quotes\Models\QuoteItem::create([
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Item 1',
+            'quote_id'      => $quote->quote_id,
+            'item_name'     => 'Item 1',
             'item_quantity' => 2,
-            'item_price' => 100.00,
+            'item_price'    => 100.00,
         ]);
         $item2 = \Modules\Quotes\Models\QuoteItem::create([
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Item 2',
+            'quote_id'      => $quote->quote_id,
+            'item_name'     => 'Item 2',
             'item_quantity' => 1,
-            'item_price' => 50.00,
+            'item_price'    => 50.00,
         ]);
-        
+
         // Create item amounts
         \Modules\Quotes\Models\QuoteItemAmount::create([
-            'item_id' => $item1->item_id,
-            'item_subtotal' => 200.00,
+            'item_id'        => $item1->item_id,
+            'item_subtotal'  => 200.00,
             'item_tax_total' => 0.00,
-            'item_discount' => 0.00,
-            'item_total' => 200.00,
+            'item_discount'  => 0.00,
+            'item_total'     => 200.00,
         ]);
         \Modules\Quotes\Models\QuoteItemAmount::create([
-            'item_id' => $item2->item_id,
-            'item_subtotal' => 50.00,
+            'item_id'        => $item2->item_id,
+            'item_subtotal'  => 50.00,
             'item_tax_total' => 0.00,
-            'item_discount' => 0.00,
-            'item_total' => 50.00,
+            'item_discount'  => 0.00,
+            'item_total'     => 50.00,
         ]);
 
         /** Act */
         $subtotal = $this->service->getItemsSubtotal($quote->quote_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(250.00, $subtotal);
     }
 }

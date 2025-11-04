@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Services\BaseService;
 use Modules\Core\Models\User;
 
 /**
@@ -12,14 +11,6 @@ use Modules\Core\Models\User;
  */
 class UserService extends BaseService
 {
-    /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return User::class;
-    }
-
     /**
      * Get validation rules for creating users (kept for backward compatibility).
      * Validation should be done via FormRequest in controllers.
@@ -108,5 +99,13 @@ class UserService extends BaseService
             1 => trans('administrator'),
             2 => trans('guest_read_only'),
         ];
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return User::class;
     }
 }

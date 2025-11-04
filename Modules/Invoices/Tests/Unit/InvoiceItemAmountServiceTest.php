@@ -9,8 +9,8 @@ use Modules\Invoices\Models\ItemAmount;
 use Modules\Invoices\Services\InvoiceItemAmountService;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(InvoiceItemAmountService::class)]
 class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
@@ -112,8 +112,8 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         ]);
 
         $globalDiscount = [
-            'amount'           => 50,
-            'items_subtotal'   => 200,
+            'amount'         => 50,
+            'items_subtotal' => 200,
         ];
 
         $this->service->calculate($item->item_id, $globalDiscount);

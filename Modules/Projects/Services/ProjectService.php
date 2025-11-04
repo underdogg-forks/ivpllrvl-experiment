@@ -12,11 +12,6 @@ use Modules\Projects\Models\Project;
  */
 class ProjectService extends BaseService
 {
-    protected function getModelClass(): string
-    {
-        return Project::class;
-    }
-
     /**
      * Get all projects ordered by name.
      *
@@ -25,5 +20,10 @@ class ProjectService extends BaseService
     public function getAllOrdered(): \Illuminate\Database\Eloquent\Collection
     {
         return Project::query()->orderBy('project_name')->get();
+    }
+
+    protected function getModelClass(): string
+    {
+        return Project::class;
     }
 }

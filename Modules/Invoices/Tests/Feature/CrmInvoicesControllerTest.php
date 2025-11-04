@@ -5,8 +5,8 @@ namespace Modules\Invoices\Tests\Feature;
 use Modules\Crm\Controllers\InvoicesController as GuestInvoicesController;
 use Modules\Invoices\Models\Invoice;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -30,7 +30,7 @@ class CrmInvoicesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.invoices'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_invoices');
     }
@@ -48,11 +48,11 @@ class CrmInvoicesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.invoices.view', ['urlKey' => 'test-key-123']));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_invoice_view');
         $response->assertViewHas('invoice');
-        
+
         $viewInvoice = $response->viewData('invoice');
         $this->assertEquals($invoice->invoice_id, $viewInvoice->invoice_id);
     }
@@ -70,7 +70,7 @@ class CrmInvoicesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.invoices.view', ['urlKey' => 'non-existent-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -86,7 +86,7 @@ class CrmInvoicesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.invoices.view', ['urlKey' => 'guest-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
     }
 }

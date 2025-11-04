@@ -4,13 +4,13 @@ namespace Modules\Core\Tests\Unit;
 
 use Modules\Invoices\Services\TemplateService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\AbstractServiceTestCase;
 
 /**
  * TemplateService Unit Tests.
- * 
+ *
  * NOTE: These tests verify the service's behavior with the actual filesystem.
  * The service uses the APPPATH constant which points to the application directory.
  * Tests verify graceful handling of missing directories and proper file filtering.
@@ -29,7 +29,7 @@ class TemplateServiceTest extends AbstractServiceTestCase
 
     /**
      * Test service returns empty array when invoice PDF templates directory doesn't exist.
-     * 
+     *
      * This tests graceful degradation - the service should return empty array
      * rather than throwing an exception when the template directory is missing.
      */
@@ -42,11 +42,11 @@ class TemplateServiceTest extends AbstractServiceTestCase
         // The old CodeIgniter template path (APPPATH/views/invoice_templates/pdf)
         // won't exist in the new Laravel structure, where templates are in
         // Modules/Core/Resources/views/invoice_templates/
-        
+
         /** Act */
         $result = $this->service->getInvoiceTemplates('pdf');
 
-        /** Assert */
+        /* Assert */
         // Service should gracefully handle missing directory by returning empty array
         $this->assertIsArray($result);
         $this->assertEmpty($result, 'Should return empty array when directory does not exist');
@@ -61,11 +61,11 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Test graceful handling of missing public template directory
-        
+
         /** Act */
         $result = $this->service->getInvoiceTemplates('public');
 
-        /** Assert */
+        /* Assert */
         $this->assertIsArray($result);
         $this->assertEmpty($result, 'Should return empty array when public directory does not exist');
     }
@@ -79,11 +79,11 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Test graceful handling of missing quote template directory
-        
+
         /** Act */
         $result = $this->service->getQuoteTemplates('pdf');
 
-        /** Assert */
+        /* Assert */
         $this->assertIsArray($result);
         $this->assertEmpty($result, 'Should return empty array when directory does not exist');
     }
@@ -97,11 +97,11 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Test graceful handling of missing public quote template directory
-        
+
         /** Act */
         $result = $this->service->getQuoteTemplates('public');
 
-        /** Assert */
+        /* Assert */
         $this->assertIsArray($result);
         $this->assertEmpty($result, 'Should return empty array when directory does not exist');
     }
@@ -114,12 +114,12 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Service should use 'pdf' as default when no type is specified
-        
+
         /** Act */
         $resultDefault = $this->service->getInvoiceTemplates();
         $resultPdf     = $this->service->getInvoiceTemplates('pdf');
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals($resultPdf, $resultDefault, 'Default should match PDF type results');
     }
 
@@ -131,18 +131,18 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Service should use 'pdf' as default when no type is specified
-        
+
         /** Act */
         $resultDefault = $this->service->getQuoteTemplates();
         $resultPdf     = $this->service->getQuoteTemplates('pdf');
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals($resultPdf, $resultDefault, 'Default should match PDF type results');
     }
 
     /**
      * Test service filters out dot directories ('.' and '..') from results.
-     * 
+     *
      * Note: This test verifies expected behavior even when directories don't exist.
      * When directory doesn't exist, scandir returns false and empty array is returned.
      */
@@ -151,12 +151,12 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Service should exclude '.' and '..' from directory listings using array_filter
-        
+
         /** Act */
         $invoiceTemplates = $this->service->getInvoiceTemplates();
         $quoteTemplates   = $this->service->getQuoteTemplates();
 
-        /** Assert */
+        /* Assert */
         // The service uses array_filter to remove '.' and '..'
         $this->assertNotContains('.', $invoiceTemplates, 'Should not contain current directory marker');
         $this->assertNotContains('..', $invoiceTemplates, 'Should not contain parent directory marker');
@@ -166,7 +166,7 @@ class TemplateServiceTest extends AbstractServiceTestCase
 
     /**
      * Test service removes file extensions from template names.
-     * 
+     *
      * Note: This test verifies the extension removal logic is applied,
      * even when working with empty arrays (when directories don't exist).
      */
@@ -175,12 +175,12 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Service should strip .php extensions using pathinfo(PATHINFO_FILENAME)
-        
+
         /** Act */
         $invoiceTemplates = $this->service->getInvoiceTemplates('pdf');
         $quoteTemplates   = $this->service->getQuoteTemplates('pdf');
 
-        /** Assert */
+        /* Assert */
         // All template names should have extensions removed
         // (if any templates exist in the configured directories)
         foreach ($invoiceTemplates as $template) {
@@ -203,12 +203,12 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Service should handle both 'pdf' and 'public' directory types
-        
+
         /** Act */
         $pdfTemplates    = $this->service->getInvoiceTemplates('pdf');
         $publicTemplates = $this->service->getInvoiceTemplates('public');
 
-        /** Assert */
+        /* Assert */
         $this->assertIsArray($pdfTemplates, 'PDF templates should return array');
         $this->assertIsArray($publicTemplates, 'Public templates should return array');
         // Both types should return arrays (empty or populated based on directory existence)
@@ -216,7 +216,7 @@ class TemplateServiceTest extends AbstractServiceTestCase
 
     /**
      * Test service returns numerically indexed array (not associative).
-     * 
+     *
      * The service uses array_values() to ensure numeric indexing after filtering.
      */
     #[Group('smoke')]
@@ -225,21 +225,21 @@ class TemplateServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         // Service uses array_values() to ensure numeric indexing
-        
+
         /** Act */
         $templates = $this->service->getInvoiceTemplates();
 
-        /** Assert */
+        /* Assert */
         // Should be numerically indexed (array_values is used in the service)
         $this->assertIsArray($templates, 'Should return an array');
-        
+
         // If array is not empty, verify it starts at index 0
         if (count($templates) > 0) {
             $this->assertArrayHasKey(0, $templates, 'Array should be numerically indexed starting at 0');
         }
-        
+
         // Verify all keys are sequential integers
-        $keys = array_keys($templates);
+        $keys         = array_keys($templates);
         $expectedKeys = range(0, count($templates) - 1);
         $this->assertEquals($expectedKeys, $keys, 'Array keys should be sequential integers starting from 0');
     }

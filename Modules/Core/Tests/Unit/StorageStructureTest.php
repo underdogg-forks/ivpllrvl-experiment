@@ -5,17 +5,17 @@ namespace Modules\Core\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test that storage directory structure matches Laravel requirements
+ * Test that storage directory structure matches Laravel requirements.
  */
 class StorageStructureTest extends TestCase
 {
     /**
-     * Test that required storage directories exist
+     * Test that required storage directories exist.
      */
     public function test_required_storage_directories_exist(): void
     {
         $basePath = dirname(__DIR__, 2);
-        
+
         $requiredDirectories = [
             'storage/app',
             'storage/app/public',
@@ -44,12 +44,12 @@ class StorageStructureTest extends TestCase
     }
 
     /**
-     * Test that storage directories are writable
+     * Test that storage directories are writable.
      */
     public function test_storage_directories_are_writable(): void
     {
         $basePath = dirname(__DIR__, 2);
-        
+
         $writableDirectories = [
             'storage/app',
             'storage/app/public',
@@ -76,12 +76,12 @@ class StorageStructureTest extends TestCase
     }
 
     /**
-     * Test that .gitignore files exist in storage directories
+     * Test that .gitignore files exist in storage directories.
      */
     public function test_gitignore_files_exist_in_storage_directories(): void
     {
         $basePath = dirname(__DIR__, 2);
-        
+
         $directoriesWithGitignore = [
             'storage/app',
             'storage/app/public',
@@ -108,12 +108,12 @@ class StorageStructureTest extends TestCase
     }
 
     /**
-     * Test that .gitignore files have correct content
+     * Test that .gitignore files have correct content.
      */
     public function test_gitignore_files_have_correct_content(): void
     {
         $basePath = dirname(__DIR__, 2);
-        
+
         // Test storage/app/.gitignore
         $appGitignore = file_get_contents($basePath . '/storage/app/.gitignore');
         $this->assertStringContainsString('*', $appGitignore);
@@ -129,7 +129,7 @@ class StorageStructureTest extends TestCase
 
         // Test other directories have standard .gitignore
         $standardGitignoreContent = "*\n!.gitignore\n";
-        $standardDirs = [
+        $standardDirs             = [
             'storage/app/public',
             'storage/app/uploads',
             'storage/app/uploads/archive',
@@ -145,7 +145,7 @@ class StorageStructureTest extends TestCase
 
         foreach ($standardDirs as $directory) {
             $gitignorePath = $basePath . '/' . $directory . '/.gitignore';
-            $content = file_get_contents($gitignorePath);
+            $content       = file_get_contents($gitignorePath);
             $this->assertEquals(
                 $standardGitignoreContent,
                 $content,
@@ -155,47 +155,47 @@ class StorageStructureTest extends TestCase
     }
 
     /**
-     * Test upload helper functions
+     * Test upload helper functions.
      */
     public function test_upload_helper_functions(): void
     {
         require_once __DIR__ . '/../../bootstrap/helpers.php';
 
         $basePath = dirname(__DIR__, 2);
-        
+
         // Test uploads_path()
         $this->assertEquals(
             $basePath . '/storage/app/uploads',
-            rtrim(uploads_path(), DIRECTORY_SEPARATOR)
+            mb_rtrim(uploads_path(), DIRECTORY_SEPARATOR)
         );
 
         // Test uploads_archive_path()
         $this->assertEquals(
             $basePath . '/storage/app/uploads/archive',
-            rtrim(uploads_archive_path(), DIRECTORY_SEPARATOR)
+            mb_rtrim(uploads_archive_path(), DIRECTORY_SEPARATOR)
         );
 
         // Test uploads_customer_files_path()
         $this->assertEquals(
             $basePath . '/storage/app/uploads/customer_files',
-            rtrim(uploads_customer_files_path(), DIRECTORY_SEPARATOR)
+            mb_rtrim(uploads_customer_files_path(), DIRECTORY_SEPARATOR)
         );
 
         // Test uploads_temp_path()
         $this->assertEquals(
             $basePath . '/storage/app/uploads/temp',
-            rtrim(uploads_temp_path(), DIRECTORY_SEPARATOR)
+            mb_rtrim(uploads_temp_path(), DIRECTORY_SEPARATOR)
         );
 
         // Test uploads_temp_mpdf_path()
         $this->assertEquals(
             $basePath . '/storage/app/uploads/temp/mpdf',
-            rtrim(uploads_temp_mpdf_path(), DIRECTORY_SEPARATOR)
+            mb_rtrim(uploads_temp_mpdf_path(), DIRECTORY_SEPARATOR)
         );
     }
 
     /**
-     * Test that UPLOADS constants point to storage location
+     * Test that UPLOADS constants point to storage location.
      */
     public function test_upload_constants_point_to_storage(): void
     {

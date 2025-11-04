@@ -6,8 +6,8 @@ use Modules\Projects\Controllers\TasksController;
 use Modules\Projects\Models\Project;
 use Modules\Projects\Models\Task;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -32,14 +32,14 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('tasks.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('projects::tasks_index');
         $response->assertViewHas('tasks');
         $response->assertViewHas('task_statuses');
 
         /** Verify task is in the list */
-        $tasks = $response->viewData('tasks');
+        $tasks   = $response->viewData('tasks');
         $taskIds = $tasks->pluck('task_id')->toArray();
         $this->assertContains($task->task_id, $taskIds);
     }
@@ -54,7 +54,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('tasks.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('projects::tasks_form');
         $response->assertViewHas('task');
@@ -82,7 +82,7 @@ class TasksControllerTest extends FeatureTestCase
          *     "task_name": "Test Task",
          *     "task_status": 1,
          *     "task_finish_date": "2025-12-31"
-         * }
+         * }.
          */
         $taskData = [
             'project_id'       => $project->project_id,
@@ -94,11 +94,11 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_success');
 
-        /** Verify task was created in database */
+        /* Verify task was created in database */
         $this->assertDatabaseHas('ip_tasks', [
             'project_id' => $project->project_id,
             'task_name'  => 'Test Task',
@@ -115,7 +115,7 @@ class TasksControllerTest extends FeatureTestCase
         /**
          * {
          *     "project_id": 999
-         * }
+         * }.
          */
         $taskData = [
             'project_id' => 999,
@@ -125,7 +125,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors(['task_name']);
     }
 
@@ -142,7 +142,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('tasks.form', ['id' => $task->task_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('projects::tasks_form');
         $response->assertViewHas('task');
@@ -170,7 +170,7 @@ class TasksControllerTest extends FeatureTestCase
          * {
          *     "task_name": "Updated Name",
          *     "task_status": 2
-         * }
+         * }.
          */
         $updateData = [
             'task_name'   => 'Updated Name',
@@ -180,11 +180,11 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_success');
 
-        /** Verify task was updated */
+        /* Verify task was updated */
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'   => $task->task_id,
             'task_name' => 'Updated Name',
@@ -204,11 +204,11 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->delete(route('tasks.destroy', ['task' => $task->task_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_success');
 
-        /** Verify task was deleted */
+        /* Verify task was deleted */
         $this->assertDatabaseMissing('ip_tasks', [
             'task_id' => $task->task_id,
         ]);
@@ -226,7 +226,7 @@ class TasksControllerTest extends FeatureTestCase
          * {
          *     "task_name": "Standalone Task",
          *     "task_status": 1
-         * }
+         * }.
          */
         $taskData = [
             'task_name'   => 'Standalone Task',
@@ -236,10 +236,10 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
 
-        /** Verify task was created without project */
+        /* Verify task was created without project */
         $this->assertDatabaseHas('ip_tasks', [
             'task_name'  => 'Standalone Task',
             'project_id' => null,
@@ -264,7 +264,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors(['task_name']);
     }
 
@@ -281,14 +281,14 @@ class TasksControllerTest extends FeatureTestCase
             'task_status' => 1,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
-        
-        /** Verify XSS is prevented - use database assertion instead of static model call */
+
+        /* Verify XSS is prevented - use database assertion instead of static model call */
         $this->assertDatabaseHas('ip_tasks', [
             'task_status' => 1,
         ]);
@@ -317,7 +317,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors(['task_status']);
     }
 
@@ -338,7 +338,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form'), $taskData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors(['project_id']);
     }
 
@@ -355,7 +355,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('tasks.form', ['id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -368,7 +368,7 @@ class TasksControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $task = Task::factory()->create();
-        
+
         $updateData = [
             'task_name'        => 'Updated Task',
             'task_finish_date' => 'invalid-date', // Invalid date format
@@ -377,7 +377,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors(['task_finish_date']);
     }
 
@@ -391,11 +391,11 @@ class TasksControllerTest extends FeatureTestCase
         /** Arrange */
         $project1 = Project::factory()->create();
         $project2 = Project::factory()->create();
-        
+
         $task = Task::factory()->create([
             'project_id' => $project1->project_id,
         ]);
-        
+
         $updateData = [
             'task_name'   => $task->task_name,
             'project_id'  => $project2->project_id,
@@ -405,10 +405,10 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
-        
-        /** Verify task is now assigned to project2 */
+
+        /* Verify task is now assigned to project2 */
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'    => $task->task_id,
             'project_id' => $project2->project_id,
@@ -424,10 +424,10 @@ class TasksControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $project = Project::factory()->create();
-        $task = Task::factory()->create([
+        $task    = Task::factory()->create([
             'project_id' => $project->project_id,
         ]);
-        
+
         $updateData = [
             'task_name'   => $task->task_name,
             'project_id'  => null, // Unassign from project
@@ -437,10 +437,10 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
-        
-        /** Verify task is no longer assigned to project */
+
+        /* Verify task is no longer assigned to project */
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'    => $task->task_id,
             'project_id' => null,
@@ -457,7 +457,7 @@ class TasksControllerTest extends FeatureTestCase
         /** Arrange */
         $project1 = Project::factory()->create();
         $project2 = Project::factory()->create();
-        
+
         $task1 = Task::factory()->create([
             'project_id' => $project1->project_id,
             'task_name'  => 'Project 1 Task',
@@ -470,12 +470,12 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('tasks.by-project', ['project' => $project1->project_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('tasks');
-        
+
         /** Verify only project1 tasks are shown */
-        $tasks = $response->viewData('tasks');
+        $tasks   = $response->viewData('tasks');
         $taskIds = $tasks->pluck('task_id')->toArray();
         $this->assertContains($task1->task_id, $taskIds);
         $this->assertNotContains($task2->task_id, $taskIds);
@@ -488,16 +488,16 @@ class TasksControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_empty_state_when_no_tasks_exist(): void
     {
-        /** Arrange */
+        /* Arrange */
         Task::query()->delete();
 
         /** Act */
         $response = $this->get(route('tasks.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('tasks');
-        
+
         /** Verify empty collection */
         $tasks = $response->viewData('tasks');
         $this->assertCount(0, $tasks);
@@ -516,11 +516,11 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->delete(route('tasks.destroy', ['task' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         // Should either return 404 or redirect with error
         $this->assertTrue(
-            $response->isNotFound() || 
-            ($response->isRedirect() && session()->has('alert_error'))
+            $response->isNotFound()
+            || ($response->isRedirect() && session()->has('alert_error'))
         );
     }
 
@@ -535,7 +535,7 @@ class TasksControllerTest extends FeatureTestCase
         $task = Task::factory()->create([
             'task_finish_date' => '2025-12-01',
         ]);
-        
+
         $updateData = [
             'task_name'        => $task->task_name,
             'task_finish_date' => '2025-12-31',
@@ -544,10 +544,10 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
-        
-        /** Verify finish date was updated */
+
+        /* Verify finish date was updated */
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'          => $task->task_id,
             'task_finish_date' => '2025-12-31',
@@ -565,7 +565,7 @@ class TasksControllerTest extends FeatureTestCase
         $task = Task::factory()->create([
             'task_status' => 1, // Not started
         ]);
-        
+
         $updateData = [
             'task_name'   => $task->task_name,
             'task_status' => 3, // Complete
@@ -574,10 +574,10 @@ class TasksControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
-        
-        /** Verify status was updated */
+
+        /* Verify status was updated */
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'     => $task->task_id,
             'task_status' => 3,
@@ -597,25 +597,25 @@ class TasksControllerTest extends FeatureTestCase
             'task_description' => 'Original description',
             'task_status'      => 1,
         ]);
-        
+
         $updateData = [
             'task_name' => 'Updated Name',
             // Not updating description or status
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('tasks.form', ['id' => $task->task_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
-        
-        /** Verify only name was updated - use database assertions */
+
+        /* Verify only name was updated - use database assertions */
         $this->assertDatabaseHas('ip_tasks', [
-            'task_id' => $task->task_id,
-            'task_name' => 'Updated Name',
+            'task_id'          => $task->task_id,
+            'task_name'        => 'Updated Name',
             'task_description' => 'Original description',
-            'task_status' => 1,
+            'task_status'      => 1,
         ]);
     }
 }

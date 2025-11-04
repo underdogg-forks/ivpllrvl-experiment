@@ -12,11 +12,6 @@ use Modules\Crm\Models\Client;
  */
 class ClientService extends BaseService
 {
-    protected function getModelClass(): string
-    {
-        return Client::class;
-    }
-
     /**
      * Get all active clients ordered by name.
      *
@@ -91,5 +86,10 @@ class ClientService extends BaseService
             ->whereNotIn('client_id', $ids)
             ->orderBy('client_name')
             ->get();
+    }
+
+    protected function getModelClass(): string
+    {
+        return Client::class;
     }
 }

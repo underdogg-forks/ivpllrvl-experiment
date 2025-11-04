@@ -12,8 +12,8 @@ use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -43,7 +43,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user  = User::factory()->create();
         $quote = Quote::factory()->create(['quote_status_id' => 1]);
-        
+
         /**
          * {
          *     "quote_id": 1,
@@ -51,7 +51,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
          *     "quote_date_created": "2024-01-01",
          *     "quote_date_expires": "2024-01-31",
          *     "items": "[{\"item_name\":\"Test Item\",\"item_quantity\":2,\"item_price\":100,\"item_order\":1}]"
-         * }
+         * }.
          */
         $payload = [
             'quote_id'           => $quote->quote_id,
@@ -68,11 +68,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             ]),
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.save'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
@@ -97,22 +97,22 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1
-         * }
+         * }.
          */
         $payload = [
             'quote_id' => $quote->quote_id,
             /* Missing required fields */
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.save'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(0, $data['success']);
@@ -137,7 +137,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1,
@@ -146,7 +146,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
          *     "quote_date_created": "2024-01-01",
          *     "quote_date_expires": "2024-01-31",
          *     "items": "[{\"item_name\":\"Test\",\"item_quantity\":1,\"item_price\":100}]"
-         * }
+         * }.
          */
         $payload = [
             'quote_id'               => $quote->quote_id,
@@ -159,15 +159,15 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             ]),
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.save'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        
+
         $quote->refresh();
         $this->assertEquals(10, $quote->quote_discount_percent);
         $this->assertEquals(0, $quote->quote_discount_amount);
@@ -189,14 +189,14 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1,
          *     "quote_date_created": "2024-01-01",
          *     "quote_date_expires": "2024-01-31",
          *     "items": "[{\"item_name\":\"Item\",\"item_quantity\":3,\"item_price\":50}]"
-         * }
+         * }.
          */
         $payload = [
             'quote_id'           => $quote->quote_id,
@@ -207,11 +207,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             ]),
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.save'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
@@ -235,13 +235,13 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $quote   = Quote::factory()->create();
         $taxRate = TaxRate::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1,
          *     "tax_rate_id": 1,
          *     "include_item_tax": 0
-         * }
+         * }.
          */
         $payload = [
             'quote_id'         => $quote->quote_id,
@@ -249,15 +249,15 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             'include_item_tax' => 0,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.save_tax_rate'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        
+
         $this->assertNotNull(QuoteTaxRate::query()->where('quote_id', $quote->quote_id)
             ->where('tax_rate_id', $taxRate->tax_rate_id)
             ->first());
@@ -279,22 +279,22 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
         $item  = QuoteItem::factory()->create(['quote_id' => $quote->quote_id]);
-        
+
         /**
          * {
          *     "item_id": 1
-         * }
+         * }.
          */
         $payload = ['item_id' => $item->item_id];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('quotes.ajax.delete_item', ['quoteId' => $quote->quote_id]),
             $payload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
@@ -314,22 +314,22 @@ class QuotesAjaxControllerTest extends FeatureTestCase
     public function it_returns_failure_when_deleting_item_from_non_existent_quote(): void
     {
         /** Arrange */
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         /**
          * {
          *     "item_id": 99999
-         * }
+         * }.
          */
         $payload = ['item_id' => 99999];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('quotes.ajax.delete_item', ['quoteId' => 99999]),
             $payload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(0, $data['success']);
@@ -350,11 +350,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             'item_name' => 'Test Item',
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.ajax.get_item', ['item_id' => $item->item_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals('Test Item', $data['item_name']);
@@ -370,11 +370,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.ajax.get_item', ['item_id' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEmpty($data);
@@ -401,7 +401,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $client = Client::factory()->create();
         $quote  = Quote::factory()->create();
         QuoteItem::factory()->count(3)->create(['quote_id' => $quote->quote_id]);
-        
+
         /**
          * {
          *     "quote_id": 1,
@@ -409,26 +409,26 @@ class QuotesAjaxControllerTest extends FeatureTestCase
          *     "user_id": 1,
          *     "quote_date_created": "2024-01-01",
          *     "quote_change_client": 0
-         * }
+         * }.
          */
         $payload = [
             'quote_id'            => $quote->quote_id,
             'client_id'           => $client->client_id,
             'user_id'             => $user->user_id,
-            'quote_date_created'     => '2024-01-01',
+            'quote_date_created'  => '2024-01-01',
             'quote_change_client' => 0,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.copy'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
         $this->assertArrayHasKey('quote_id', $data);
-        
+
         $newQuote = Quote::find($data['quote_id']);
         $this->assertNotNull($newQuote);
         $this->assertEquals(3, QuoteItem::query()->where('quote_id', $newQuote->quote_id)->count());
@@ -451,27 +451,27 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $newUser = User::factory()->create();
         $quote   = Quote::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1,
          *     "user_id": 1
-         * }
+         * }.
          */
         $payload = [
             'quote_id' => $quote->quote_id,
             'user_id'  => $newUser->user_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.change_user'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        
+
         $quote->refresh();
         $this->assertEquals($newUser->user_id, $quote->user_id);
     }
@@ -492,23 +492,23 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user  = User::factory()->create();
         $quote = Quote::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1,
          *     "user_id": 99999
-         * }
+         * }.
          */
         $payload = [
             'quote_id' => $quote->quote_id,
             'user_id'  => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.change_user'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(0, $data['success']);
@@ -531,27 +531,27 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $user      = User::factory()->create();
         $newClient = Client::factory()->create();
         $quote     = Quote::factory()->create();
-        
+
         /**
          * {
          *     "quote_id": 1,
          *     "client_id": 1
-         * }
+         * }.
          */
         $payload = [
             'quote_id'  => $quote->quote_id,
             'client_id' => $newClient->client_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.change_client'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        
+
         $quote->refresh();
         $this->assertEquals($newClient->client_id, $quote->client_id);
     }
@@ -573,13 +573,13 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user   = User::factory()->create();
         $client = Client::factory()->create();
-        
+
         /**
          * {
          *     "client_id": 1,
          *     "user_id": 1,
          *     "quote_date_created": "2024-01-01"
-         * }
+         * }.
          */
         $payload = [
             'client_id'          => $client->client_id,
@@ -587,16 +587,16 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             'quote_date_created' => '2024-01-01',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.create'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
         $this->assertArrayHasKey('quote_id', $data);
-        
+
         $quote = Quote::find($data['quote_id']);
         $this->assertNotNull($quote);
         $this->assertEquals($client->client_id, $quote->client_id);
@@ -624,7 +624,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $quote        = Quote::factory()->create(['client_id' => $client->client_id]);
         $invoiceGroup = InvoiceGroup::factory()->create();
         QuoteItem::factory()->count(2)->create(['quote_id' => $quote->quote_id]);
-        
+
         /**
          * {
          *     "quote_id": 1,
@@ -633,7 +633,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
          *     "invoice_date_created": "2024-01-01",
          *     "invoice_group_id": 1,
          *     "invoice_change_client": 0
-         * }
+         * }.
          */
         /**
          * {
@@ -643,7 +643,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
          *     "invoice_date_created": "2024-01-01",
          *     "invoice_group_id": 1,
          *     "invoice_change_client": 0
-         * }
+         * }.
          */
         $payload = [
             'quote_id'              => $quote->quote_id,
@@ -654,16 +654,16 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             'invoice_change_client' => 0,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.quote_to_invoice'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
         $this->assertArrayHasKey('invoice_id', $data);
-        
+
         $invoice = Invoice::find($data['invoice_id']);
         $this->assertNotNull($invoice);
         $this->assertEquals($client->client_id, $invoice->client_id);
@@ -690,7 +690,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $client       = Client::factory()->create();
         $quote        = Quote::factory()->create(['client_id' => $client->client_id, 'quote_status_id' => 1]);
         $invoiceGroup = InvoiceGroup::factory()->create();
-        
+
         $payload = [
             'quote_id'              => $quote->quote_id,
             'client_id'             => $client->client_id,
@@ -700,15 +700,15 @@ class QuotesAjaxControllerTest extends FeatureTestCase
             'invoice_change_client' => 0,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.ajax.quote_to_invoice'), $payload);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        
+
         $quote->refresh();
         $this->assertEquals(4, $quote->quote_status_id); // 4 = Approved
     }
@@ -726,11 +726,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         Client::factory()->count(3)->create();
         User::factory()->count(2)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.modal.copy', ['quote_id' => $quote->quote_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('quotes::modal_copy_quote');
         $response->assertViewHas('quote');
@@ -750,11 +750,11 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         Client::factory()->count(5)->create();
         User::factory()->count(2)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.modal.create'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('quotes::modal_create_quote');
         $response->assertViewHas('clients');

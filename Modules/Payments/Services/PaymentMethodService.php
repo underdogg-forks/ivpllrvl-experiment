@@ -13,14 +13,6 @@ use Modules\Payments\Models\PaymentMethod;
 class PaymentMethodService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return PaymentMethod::class;
-    }
-
-    /**
      * Get all payment methods ordered by name.
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -51,5 +43,13 @@ class PaymentMethodService extends BaseService
     public function findByMethodId(int $paymentMethodId): ?PaymentMethod
     {
         return PaymentMethod::query()->where('payment_method_id', $paymentMethodId)->first();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return PaymentMethod::class;
     }
 }

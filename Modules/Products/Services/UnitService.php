@@ -13,14 +13,6 @@ use Modules\Products\Models\Unit;
 class UnitService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return Unit::class;
-    }
-
-    /**
      * Get unit name with proper pluralization.
      *
      * @param int|null $unitId
@@ -30,13 +22,13 @@ class UnitService extends BaseService
      */
     public function getUnitName(?int $unitId, float $quantity = 1): string
     {
-        if (!$unitId) {
+        if ( ! $unitId) {
             return '';
         }
 
         $unit = Unit::find($unitId);
 
-        if (!$unit) {
+        if ( ! $unit) {
             return '';
         }
 
@@ -51,5 +43,13 @@ class UnitService extends BaseService
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
         return Unit::query()->get();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return Unit::class;
     }
 }

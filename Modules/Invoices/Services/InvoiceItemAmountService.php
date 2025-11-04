@@ -33,7 +33,7 @@ class InvoiceItemAmountService
                 $itemDiscount = round(($itemSubtotal * ($globalDiscount['percent'] / 100)), 2);
             }
 
-            if (! isset($globalDiscount['item'])) {
+            if ( ! isset($globalDiscount['item'])) {
                 $globalDiscount['item'] = 0.0;
             }
             $globalDiscount['item'] += $itemDiscount;

@@ -15,19 +15,10 @@ use Modules\Payments\Models\Payment;
 class ReportsService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     * Reports don't have a dedicated model, so return null.
-     */
-    protected function getModelClass(): ?string
-    {
-        return null;
-    }
-
-    /**
      * Generate sales by client report.
      *
      * @param string $fromDate Start date
-     * @param string $toDate End date
+     * @param string $toDate   End date
      *
      * @return array Report results
      *
@@ -47,7 +38,7 @@ class ReportsService extends BaseService
      * Generate invoices per client report.
      *
      * @param string $fromDate Start date
-     * @param string $toDate End date
+     * @param string $toDate   End date
      *
      * @return array Report results
      *
@@ -67,7 +58,7 @@ class ReportsService extends BaseService
      * Generate payment history report.
      *
      * @param string $fromDate Start date
-     * @param string $toDate End date
+     * @param string $toDate   End date
      *
      * @return array Report results
      *
@@ -103,10 +94,10 @@ class ReportsService extends BaseService
     /**
      * Generate sales by year report.
      *
-     * @param string $fromDate Start date
-     * @param string $toDate End date
-     * @param int|null $minQuantity Minimum quantity filter
-     * @param int|null $maxQuantity Maximum quantity filter
+     * @param string    $fromDate    Start date
+     * @param string    $toDate      End date
+     * @param int|null  $minQuantity Minimum quantity filter
+     * @param int|null  $maxQuantity Maximum quantity filter
      * @param bool|null $checkboxTax Include tax in calculations
      *
      * @return array Report results
@@ -126,5 +117,14 @@ class ReportsService extends BaseService
             ->with(['client', 'items']);
 
         return $query->get()->toArray();
+    }
+
+    /**
+     * Get the model class for this service.
+     * Reports don't have a dedicated model, so return null.
+     */
+    protected function getModelClass(): ?string
+    {
+        return null;
     }
 }

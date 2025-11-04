@@ -49,6 +49,7 @@ class InvoiceHelper
      *
      *
      * @origin Modules/Core/Helpers/invoice_helper.php
+     *
      * @param        $amount
      * @param string $rnumb
      *
@@ -93,6 +94,7 @@ class InvoiceHelper
      *
      *
      * @origin Modules/Core/Helpers/invoice_helper.php
+     *
      * @param string $in
      */
     public static function invoice_recMod10($in): int
@@ -113,6 +115,7 @@ class InvoiceHelper
      *
      *
      * @origin Modules/Core/Helpers/invoice_helper.php
+     *
      * @param number invoice-id
      */
     public static function invoice_qrcode($invoice_id): string
@@ -125,7 +128,7 @@ class InvoiceHelper
             $invoice = \Modules\Invoices\Models\Invoice::find($invoice_id);
 
             if ($invoice && (float) $invoice->invoice_balance) {
-                $qrcode = new \Modules\Core\Libraries\QrCode(['invoice' => $invoice]);
+                $qrcode          = new \Modules\Core\Libraries\QrCode(['invoice' => $invoice]);
                 $qrcode_data_uri = $qrcode->generate();
 
                 return '<img src="' . $qrcode_data_uri . '" alt="QR Code" id="invoice-qr-code">';

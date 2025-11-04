@@ -115,7 +115,7 @@ class InvoiceAmountService
 
         $invoiceAmount = InvoiceAmount::query()->where('invoice_id', $invoiceId)->first();
 
-        $invoiceTaxRates->each(function ($invoiceTaxRate) use ($invoiceAmount, $invoiceId) {
+        $invoiceTaxRates->each(function ($invoiceTaxRate) use ($invoiceAmount) {
             if ($invoiceTaxRate->include_item_tax) {
                 $invoiceTaxRateAmount = ($invoiceAmount->invoice_item_subtotal + $invoiceAmount->invoice_item_tax_total)
                     * ($invoiceTaxRate->invoice_tax_rate_percent / 100);
@@ -171,12 +171,12 @@ class InvoiceAmountService
     public function getStatusTotals(string $period = 'this-month'): array
     {
         $results = match ($period) {
-            'last-month'    => $this->statusTotalsForPeriod('MONTH(NOW() - INTERVAL 1 MONTH)', 'YEAR(NOW())'),
-            'this-quarter'  => $this->statusTotalsForPeriod('QUARTER(NOW())', 'YEAR(NOW())', 'QUARTER'),
-            'last-quarter'  => $this->statusTotalsForPeriod('QUARTER(NOW() - INTERVAL 1 QUARTER)', 'YEAR(NOW())', 'QUARTER'),
-            'this-year'     => $this->statusTotalsForPeriod(null, 'YEAR(NOW())'),
-            'last-year'     => $this->statusTotalsForPeriod(null, 'YEAR(NOW() - INTERVAL 1 YEAR)'),
-            default         => $this->statusTotalsForPeriod('MONTH(NOW())', 'YEAR(NOW())'),
+            'last-month'   => $this->statusTotalsForPeriod('MONTH(NOW() - INTERVAL 1 MONTH)', 'YEAR(NOW())'),
+            'this-quarter' => $this->statusTotalsForPeriod('QUARTER(NOW())', 'YEAR(NOW())', 'QUARTER'),
+            'last-quarter' => $this->statusTotalsForPeriod('QUARTER(NOW() - INTERVAL 1 QUARTER)', 'YEAR(NOW())', 'QUARTER'),
+            'this-year'    => $this->statusTotalsForPeriod(null, 'YEAR(NOW())'),
+            'last-year'    => $this->statusTotalsForPeriod(null, 'YEAR(NOW() - INTERVAL 1 YEAR)'),
+            default        => $this->statusTotalsForPeriod('MONTH(NOW())', 'YEAR(NOW())'),
         };
 
         $return   = [];
@@ -223,13 +223,13 @@ class InvoiceAmountService
             case 'month':
                 $query->whereHas('invoice', function ($q) {
                     $q->whereRaw('MONTH(invoice_date_created) = MONTH(NOW())')
-                      ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW())');
+                        ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW())');
                 });
                 break;
             case 'last_month':
                 $query->whereHas('invoice', function ($q) {
                     $q->whereRaw('MONTH(invoice_date_created) = MONTH(NOW() - INTERVAL 1 MONTH)')
-                      ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
+                        ->whereRaw('YEAR(invoice_date_created) = YEAR(NOW() - INTERVAL 1 MONTH)');
                 });
                 break;
             case 'year':

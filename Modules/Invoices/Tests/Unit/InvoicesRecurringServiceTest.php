@@ -4,8 +4,8 @@ namespace Modules\Invoices\Tests\Unit;
 
 use Modules\Invoices\Services\InvoicesRecurringService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(InvoicesRecurringService::class)]
 class InvoicesRecurringServiceTest extends AbstractServiceTestCase
@@ -108,20 +108,20 @@ class InvoicesRecurringServiceTest extends AbstractServiceTestCase
     public function it_gets_all_recurring_invoices_with_relations_paginated(): void
     {
         /** Arrange */
-        $client = \Modules\Crm\Models\Client::factory()->create();
+        $client  = \Modules\Crm\Models\Client::factory()->create();
         $invoice = \Modules\Invoices\Models\Invoice::factory()->create([
             'client_id' => $client->client_id,
         ]);
-        
+
         \Modules\Invoices\Models\InvoicesRecurring::factory()->count(3)->create([
             'invoice_id' => $invoice->invoice_id,
-            'client_id' => $client->client_id,
+            'client_id'  => $client->client_id,
         ]);
 
         /** Act */
         $result = $this->service->getAllWithRelations();
 
-        /** Assert */
+        /* Assert */
         $this->assertGreaterThanOrEqual(3, $result->total());
         $this->assertTrue($result->first()->relationLoaded('invoice'));
         $this->assertTrue($result->first()->relationLoaded('client'));
@@ -132,20 +132,20 @@ class InvoicesRecurringServiceTest extends AbstractServiceTestCase
     public function it_respects_custom_per_page_parameter(): void
     {
         /** Arrange */
-        $client = \Modules\Crm\Models\Client::factory()->create();
+        $client  = \Modules\Crm\Models\Client::factory()->create();
         $invoice = \Modules\Invoices\Models\Invoice::factory()->create([
             'client_id' => $client->client_id,
         ]);
-        
+
         \Modules\Invoices\Models\InvoicesRecurring::factory()->count(10)->create([
             'invoice_id' => $invoice->invoice_id,
-            'client_id' => $client->client_id,
+            'client_id'  => $client->client_id,
         ]);
 
         /** Act */
         $result = $this->service->getAllWithRelations(['invoice'], 5);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(5, $result->perPage());
     }
 }

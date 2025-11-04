@@ -47,13 +47,14 @@ class SettingsRequest extends FormRequest
 
         return $rules;
     }
-    
+
     /**
      * Get only allowed settings from validated data.
      */
     public function getAllowedSettings(): array
     {
         $allowedSettings = array_keys($this->rules());
+
         return $this->only($allowedSettings);
     }
 }

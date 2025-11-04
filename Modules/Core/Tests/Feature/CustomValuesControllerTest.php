@@ -7,8 +7,8 @@ use Modules\Core\Models\CustomField;
 use Modules\Core\Models\User;
 use Modules\Custom\Models\CustomValue;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -27,15 +27,15 @@ class CustomValuesControllerTest extends FeatureTestCase
     public function it_displays_paginated_list_of_custom_values(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
         CustomValue::factory()->count(5)->create(['custom_field_id' => $customField->custom_field_id]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_values.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::custom_values_index');
         $response->assertViewHas('custom_values');
@@ -49,18 +49,18 @@ class CustomValuesControllerTest extends FeatureTestCase
     public function it_loads_custom_values_with_custom_field_relationship(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
         CustomValue::factory()->create(['custom_field_id' => $customField->custom_field_id]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_values.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $customValues = $response->viewData('custom_values');
-        
+
         // Verify relationship is loaded
         $this->assertGreaterThan(0, $customValues->count());
     }
@@ -75,16 +75,16 @@ class CustomValuesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_values.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::custom_values_form');
         $response->assertViewHas('custom_value');
         $response->assertViewHas('custom_fields');
-        
+
         $customValue = $response->viewData('custom_value');
         $this->assertInstanceOf(CustomValue::class, $customValue);
         $this->assertFalse($customValue->exists);
@@ -98,20 +98,20 @@ class CustomValuesControllerTest extends FeatureTestCase
     public function it_displays_edit_form_with_existing_custom_value(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
         $customValue = CustomValue::factory()->create(['custom_field_id' => $customField->custom_field_id]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_values.form', ['id' => $customValue->custom_value_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::custom_values_form');
         $response->assertViewHas('custom_value');
         $response->assertViewHas('custom_fields');
-        
+
         $viewCustomValue = $response->viewData('custom_value');
         $this->assertEquals($customValue->custom_value_id, $viewCustomValue->custom_value_id);
     }
@@ -124,32 +124,32 @@ class CustomValuesControllerTest extends FeatureTestCase
     public function it_creates_new_custom_value_with_valid_data(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
-        
+
         /**
          * {
          *     "custom_field_id": 1,
          *     "custom_value_value": "Test Value",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $customValueData = [
-            'custom_field_id' => $customField->custom_field_id,
+            'custom_field_id'    => $customField->custom_field_id,
             'custom_value_value' => 'Test Value',
-            'btn_submit' => '1',
+            'btn_submit'         => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('custom_values.form'), $customValueData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_values.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_custom_values', [
-            'custom_field_id' => $customField->custom_field_id,
+            'custom_field_id'    => $customField->custom_field_id,
             'custom_value_value' => 'Test Value',
         ]);
     }
@@ -162,36 +162,36 @@ class CustomValuesControllerTest extends FeatureTestCase
     public function it_updates_existing_custom_value_with_valid_data(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
         $customValue = CustomValue::factory()->create([
-            'custom_field_id' => $customField->custom_field_id,
+            'custom_field_id'    => $customField->custom_field_id,
             'custom_value_value' => 'Old Value',
         ]);
-        
+
         /**
          * {
          *     "custom_field_id": 1,
          *     "custom_value_value": "Updated Value",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $updateData = [
-            'custom_field_id' => $customField->custom_field_id,
+            'custom_field_id'    => $customField->custom_field_id,
             'custom_value_value' => 'Updated Value',
-            'btn_submit' => '1',
+            'btn_submit'         => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('custom_values.form', ['id' => $customValue->custom_value_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_values.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_custom_values', [
-            'custom_value_id' => $customValue->custom_value_id,
+            'custom_value_id'    => $customValue->custom_value_id,
             'custom_value_value' => 'Updated Value',
         ]);
     }
@@ -205,21 +205,21 @@ class CustomValuesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "btn_cancel": "1"
-         * }
+         * }.
          */
         $cancelData = [
             'btn_cancel' => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('custom_values.form'), $cancelData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_values.index'));
     }
 
@@ -231,30 +231,30 @@ class CustomValuesControllerTest extends FeatureTestCase
     public function it_deletes_custom_value(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
         $customValue = CustomValue::factory()->create(['custom_field_id' => $customField->custom_field_id]);
-        
+
         /**
          * {
          *     "custom_value_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'custom_value_id' => $customValue->custom_value_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('custom_values.delete', ['id' => $customValue->custom_value_id]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_values.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_custom_values', [
             'custom_value_id' => $customValue->custom_value_id,
         ]);
@@ -269,24 +269,24 @@ class CustomValuesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "custom_value_id": 99999
-         * }
+         * }.
          */
         $deletePayload = [
             'custom_value_id' => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('custom_values.delete', ['id' => 99999]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -300,11 +300,11 @@ class CustomValuesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_values.form', ['id' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 }

@@ -59,7 +59,7 @@
 <?php
 // e-invoice alert when client or user empty required field
 if ($invoice->client_einvoicing_version != '' && $invoice->client_einvoicing_active == 0) {
-?>
+    ?>
                 <div class="alert alert-warning">
                     <table style="margin-left: auto; margin-right: auto;">
                         <tr>
@@ -70,7 +70,7 @@ if ($invoice->client_einvoicing_version != '' && $invoice->client_einvoicing_act
                 </div>
 <?php
 }
-?>
+            ?>
 
                 <div class="form-group">
                     <label for="to_email"><?php _trans('to_email'); ?></label>
@@ -86,14 +86,14 @@ if ($invoice->client_einvoicing_version != '' && $invoice->client_einvoicing_act
                         <option value=""><?php _trans('none'); ?></option>
 <?php
 foreach ($email_templates as $email_template) {
-?>
+    ?>
                         <option value="<?php echo $email_template->email_template_id; ?>"
                             <?php check_select($selected_email_template, $email_template->email_template_id); ?>>
                             <?php _htmlsc($email_template->email_template_title); ?>
                         </option>
 <?php
 }
-?>
+            ?>
                     </select>
                 </div>
 
@@ -131,14 +131,14 @@ foreach ($email_templates as $email_template) {
                         <option value=""><?php _trans('none'); ?></option>
 <?php
 foreach ($pdf_templates as $pdf_template) {
-?>
+    ?>
                         <option value="<?php echo $pdf_template; ?>"
                             <?php check_select($selected_pdf_template, $pdf_template); ?>>
                             <?php echo $pdf_template; ?>
                         </option>
 <?php
 }
-?>
+            ?>
                     </select>
                 </div>
 
@@ -239,4 +239,4 @@ foreach ($pdf_templates as $pdf_template) {
 </form>
 
 <?php
-_dropzone_script($invoice->invoice_url_key, $invoice->client_id);
+            _dropzone_script($invoice->invoice_url_key, $invoice->client_id);

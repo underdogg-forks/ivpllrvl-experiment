@@ -2,14 +2,13 @@
 <?php
 
 /**
- * Quick test script to verify PHP template system configuration
- * 
+ * Quick test script to verify PHP template system configuration.
+ *
  * This script manually tests that:
  * 1. PHP view engine is registered
  * 2. Views can be found and rendered
  * 3. PHP templates work correctly
  */
-
 echo "PHP Template System Test\n";
 echo "========================\n\n";
 
@@ -36,19 +35,19 @@ foreach ($files as $file) {
 echo "\n2. Checking AppServiceProvider configuration...\n";
 $appServiceProvider = file_get_contents(__DIR__ . '/app/Providers/AppServiceProvider.php');
 
-if (strpos($appServiceProvider, 'PhpEngine') !== false) {
+if (str_contains($appServiceProvider, 'PhpEngine')) {
     echo "   ✓ PhpEngine is referenced\n";
 } else {
     echo "   ✗ PhpEngine not found\n";
 }
 
-if (strpos($appServiceProvider, 'Register PHP engine FIRST') !== false) {
+if (str_contains($appServiceProvider, 'Register PHP engine FIRST')) {
     echo "   ✓ PHP engine is registered as primary\n";
 } else {
     echo "   ✗ PHP engine priority comment not found\n";
 }
 
-if (strpos($appServiceProvider, 'view.engine.resolver') !== false) {
+if (str_contains($appServiceProvider, 'view.engine.resolver')) {
     echo "   ✓ View engine resolver is configured\n";
 } else {
     echo "   ✗ View engine resolver not configured\n";
@@ -58,13 +57,13 @@ if (strpos($appServiceProvider, 'view.engine.resolver') !== false) {
 echo "\n3. Checking modules configuration...\n";
 $modulesConfig = file_get_contents(__DIR__ . '/config/modules.php');
 
-if (strpos($modulesConfig, 'index.blade.php') === false) {
+if ( ! str_contains($modulesConfig, 'index.blade.php')) {
     echo "   ✓ No .blade.php references in stubs\n";
 } else {
     echo "   ✗ Found .blade.php references (should be .php)\n";
 }
 
-if (strpos($modulesConfig, 'index.php') !== false) {
+if (str_contains($modulesConfig, 'index.php')) {
     echo "   ✓ Uses .php extension for views\n";
 } else {
     echo "   ✗ .php extension not found\n";
@@ -73,12 +72,12 @@ if (strpos($modulesConfig, 'index.php') !== false) {
 // Test 4: Check for blade files
 echo "\n4. Checking for unwanted .blade.php files...\n";
 $bladeFiles = [];
-$iterator = new RecursiveIteratorIterator(
+$iterator   = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator(__DIR__ . '/resources/views')
 );
 
 foreach ($iterator as $file) {
-    if ($file->isFile() && strpos($file->getFilename(), '.blade.php') !== false) {
+    if ($file->isFile() && str_contains($file->getFilename(), '.blade.php')) {
         $bladeFiles[] = $file->getPathname();
     }
 }
@@ -86,7 +85,7 @@ foreach ($iterator as $file) {
 if (empty($bladeFiles)) {
     echo "   ✓ No .blade.php files found in resources/views\n";
 } else {
-    echo "   ✗ Found " . count($bladeFiles) . " .blade.php files:\n";
+    echo '   ✗ Found ' . count($bladeFiles) . " .blade.php files:\n";
     foreach ($bladeFiles as $file) {
         echo "     - {$file}\n";
     }
@@ -103,12 +102,12 @@ foreach ($viewFiles as $file) {
     $path = __DIR__ . '/' . $file;
     if (file_exists($path)) {
         echo "   ✓ {$file} exists\n";
-        
+
         // Check if it's actually PHP (not Blade syntax)
         $content = file_get_contents($path);
-        if (strpos($content, '@extends') === false && 
-            strpos($content, '@section') === false && 
-            strpos($content, '{{') === false) {
+        if ( ! str_contains($content, '@extends')
+            && ! str_contains($content, '@section')
+            && ! str_contains($content, '{{')) {
             echo "     ✓ Uses plain PHP syntax\n";
         } else {
             echo "     ⚠ May contain Blade syntax\n";
