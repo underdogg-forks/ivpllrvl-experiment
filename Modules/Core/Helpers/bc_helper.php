@@ -453,14 +453,36 @@ if ( ! function_exists('check_mail_errors')) {
     }
 }
 
-// Note: email_invoice and email_quote are complex functions that still use
-// CodeIgniter dependencies. They are defined in mailer_helper.php and are
-// loaded automatically when needed through the function_exists check below.
-// They are not wrapped here to avoid conflicts.
-
-// Ensure mailer_helper functions are available when needed
 if ( ! function_exists('email_invoice')) {
-    require_once __DIR__ . '/mailer_helper.php';
+    function email_invoice(
+        string $invoice_id,
+        $invoice_template,
+        array $from,
+        $to,
+        $subject,
+        $body,
+        $cc = null,
+        $bcc = null,
+        $attachments = null
+    ): bool {
+        return MailerHelper::email_invoice($invoice_id, $invoice_template, $from, $to, $subject, $body, $cc, $bcc, $attachments);
+    }
+}
+
+if ( ! function_exists('email_quote')) {
+    function email_quote(
+        string $quote_id,
+        $quote_template,
+        array $from,
+        $to,
+        $subject,
+        $body,
+        $cc = null,
+        $bcc = null,
+        $attachments = null
+    ): bool {
+        return MailerHelper::email_quote($quote_id, $quote_template, $from, $to, $subject, $body, $cc, $bcc, $attachments);
+    }
 }
 
 // ============================================================================
