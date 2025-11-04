@@ -29,7 +29,6 @@ class TaskService extends BaseService
     {
         return $this->query()->where('invoice_id', $invoiceId)->update($data);
     }
-
     /**
      * Get all tasks with relationships, ordered and paginated.
      *
@@ -38,7 +37,7 @@ class TaskService extends BaseService
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getAllWithRelations(array $relations = ['project', 'taxRate'], int $perPage = 15)
+    public function getAllWithRelations(array $relations = ['project', 'taxRate'], int $perPage = 15): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Task::query()->with($relations)
             ->orderBy('task_name')
