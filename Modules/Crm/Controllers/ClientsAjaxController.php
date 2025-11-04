@@ -15,7 +15,11 @@ use Modules\Core\Services\SettingsService;
  * @legacy-file application/modules/clients/controllers/Ajax.php
  */
 class ClientsAjaxController
-{    /**
+    */
+    class ClientsAjaxController
+    {
+        /**
+         * Initialize the ClientsAjaxController with dependency injection.
      * Initialize the ClientsAjaxController with dependency injection.
      *
      * @param ClientService $clientService
