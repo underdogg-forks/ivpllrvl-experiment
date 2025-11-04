@@ -13,7 +13,11 @@ use Modules\Core\Services\EmailTemplateService;
  * @legacy-file application/modules/email_templates/controllers/Email_templates.php
  */
 class EmailTemplatesController
-{    public function __construct(
+*/
+class EmailTemplatesController
+{
+    public function __construct(
+        protected EmailTemplateService $emailTemplateService
         protected EmailTemplateService $emailTemplateService
     ) {
     }
