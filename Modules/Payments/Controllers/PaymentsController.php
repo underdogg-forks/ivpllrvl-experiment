@@ -40,8 +40,7 @@ class PaymentsController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $payments = $this->paymentService->getAllWithRelations(['invoice', 'paymentMethod'], 15);
-
+        $payments = $this->paymentService->getAllWithRelations(['invoice', 'paymentMethod'], null, 15);
         return view('payments::index', [
             'filter_display'     => true,
             'filter_placeholder' => TranslationHelper::trans('filter_payments'),
