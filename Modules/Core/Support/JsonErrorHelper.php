@@ -20,7 +20,9 @@ class JsonErrorHelper
         // json itself but is called from something which will.
         $return = [];
 
-        foreach (array_keys($_POST) as $key) {
+        // SECURITY FIX: Use Request facade instead of direct $_POST access
+        $postData = request()->all();
+        foreach (array_keys($postData) as $key) {
             if (form_error($key)) {
                 $return[$key] = form_error($key);
             }

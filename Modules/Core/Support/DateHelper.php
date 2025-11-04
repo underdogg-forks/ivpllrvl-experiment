@@ -79,8 +79,9 @@ class DateHelper
     public static function dateFromMysql($date, bool $ignorePostCheck = false)
     {
         if ($date) {
-            if ( ! $ignorePostCheck && isset($_POST['custom_date_format'])) {
-                $date_format = $_POST['custom_date_format'];
+            // SECURITY FIX: Use Request facade instead of direct $_POST access
+            if (!$ignorePostCheck && request()->has('custom_date_format')) {
+                $date_format = request()->input('custom_date_format');
             } else {
                 $date_format = self::dateFormatSetting();
             }
@@ -115,8 +116,9 @@ class DateHelper
     public static function dateToMysql($date)
     {
         if ($date) {
-            if (isset($_POST['custom_date_format'])) {
-                $date_format = $_POST['custom_date_format'];
+            // SECURITY FIX: Use Request facade instead of direct $_POST access
+            if (request()->has('custom_date_format')) {
+                $date_format = request()->input('custom_date_format');
             } else {
                 $date_format = self::dateFormatSetting();
             }
@@ -138,8 +140,9 @@ class DateHelper
      */
     public static function isDate($date): bool
     {
-        if (isset($_POST['custom_date_format'])) {
-            $date_format = $_POST['custom_date_format'];
+        // SECURITY FIX: Use Request facade instead of direct $_POST access
+        if (request()->has('custom_date_format')) {
+            $date_format = request()->input('custom_date_format');
         } else {
             $date_format = self::dateFormatSetting();
         }

@@ -167,7 +167,7 @@ class SessionsController
             //prevent brute force attacks by counting times a token is used
             $login_log_check = $this->loginLogCheck($token);
             if ( ! empty($login_log_check) && $login_log_check->log_count > 10) {
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             } else {
                 //the use of a token counts as a failure
                 $this->loginLogAddfailure($token);
@@ -194,17 +194,17 @@ class SessionsController
             $user_id      = request()->input('user_id', true);
             if (empty($user_id) || empty($new_password)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_no_password'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             // Check for the reset token
             $user = $this->usersService->getById($user_id);
             if (empty($user)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             if (empty($user->user_passwordreset_token) || request()->input('token') !== $user->user_passwordreset_token) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_wrong_auth_code'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             // Call the save_change_password() function from users model
             $this->usersService->saveChangePassword($user_id, $new_password);
@@ -227,12 +227,12 @@ class SessionsController
             }
             if (empty($email)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             //prevent brute force attacks by counting password resets
             $login_log_check = $this->loginLogCheck($email);
             if ( ! empty($login_log_check) && $login_log_check->log_count > 10) {
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             } else {
                 //a password recovery attempt counts as failed login
                 $this->loginLogAddfailure($email);
