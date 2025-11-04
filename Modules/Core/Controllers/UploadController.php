@@ -50,13 +50,13 @@ class UploadController
         /** @var UploadedFile|null $file */
         $file = $request->file('file');
         if (!$file) {
-            return response()->json(['message' => 'upload_error_no_file'], 400);
+            return response()->json(['message' => trans('upload_error_no_file')], 400);
         }
 
         // SECURITY FIX: Validate file size (10MB max)
         $maxFileSize = 10 * 1024 * 1024; // 10MB in bytes
         if ($file->getSize() > $maxFileSize) {
-            return response()->json(['message' => 'upload_error_file_too_large'], 413);
+            return response()->json(['message' => trans('upload_error_file_too_large')], 413);
         }
 
         // SECURITY FIX: Improved filename sanitization
@@ -67,7 +67,7 @@ class UploadController
         $allowedExtensions = array_keys($this->content_types);
         
         if (!in_array($extension, $allowedExtensions, true)) {
-            return response()->json(['message' => 'upload_error_unsupported_file_type', 'extension' => $extension], 415);
+            return response()->json(['message' => trans('upload_error_unsupported_file_type'), 'extension' => $extension], 415);
         }
 
         // SECURITY FIX: Validate url_key
@@ -78,7 +78,7 @@ class UploadController
         $filePath = $this->targetPath . $safeFilename;
 
         if (file_exists($filePath)) {
-            return response()->json(['message' => 'upload_error_duplicate_file', 'filename' => $filename], 409);
+            return response()->json(['message' => trans('upload_error_duplicate_file'), 'filename' => $filename], 409);
         }
 
         // SECURITY FIX: Validate MIME type AND extension
@@ -90,7 +90,7 @@ class UploadController
         // Save metadata
         $this->saveFileMetadata($customerId, $url_key, $filename);
 
-        return response()->json(['message' => 'upload_file_uploaded_successfully', 'filename' => $filename], 200);
+        return response()->json(['message' => trans('upload_file_uploaded_successfully'), 'filename' => $filename], 200);
     }
 
     /**
@@ -157,16 +157,16 @@ class UploadController
 
         // Verify path is within allowed directory
         if ($resolvedPath === false || strpos($resolvedPath, $allowedPath) !== 0) {
-            return response()->json(['message' => 'upload_error_file_delete', 'filename' => $safeFilename], 410);
+            return response()->json(['message' => trans('upload_error_file_delete'), 'filename' => $safeFilename], 410);
         }
 
         // Attempt to delete the file
         if (file_exists($resolvedPath) && unlink($resolvedPath)) {
             $this->uploadService->deleteFile($url_key, $filename);
-            return response()->json(['message' => 'upload_file_deleted_successfully', 'filename' => $safeFilename], 200);
+            return response()->json(['message' => trans('upload_file_deleted_successfully'), 'filename' => $safeFilename], 200);
         }
 
-        return response()->json(['message' => 'upload_error_file_delete', 'filename' => $safeFilename], 410);
+        return response()->json(['message' => trans('upload_error_file_delete'), 'filename' => $safeFilename], 410);
     }
 
     /**
