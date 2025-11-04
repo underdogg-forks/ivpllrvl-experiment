@@ -129,12 +129,12 @@ class InvoiceService
             ->where('invoice_id', $invoiceId)
             ->first();
 
-        if ($invoice && $invoice->invoice_status_id == 2) {
-            return Invoice::where('invoice_id', $invoiceId)
-                ->update(['invoice_status_id' => 3]) > 0;
+        if (!$invoice || $invoice->invoice_status_id !== 2) {
+            return false;
         }
 
-        return false;
+        return Invoice::where('invoice_id', $invoiceId)
+            ->update(['invoice_status_id' => 3]) > 0;
     }
 
     public function markSent(int $invoiceId): bool
@@ -143,12 +143,12 @@ class InvoiceService
             ->where('invoice_id', $invoiceId)
             ->first();
 
-        if ($invoice && $invoice->invoice_status_id == 1) {
-            return Invoice::where('invoice_id', $invoiceId)
-                ->update(['invoice_status_id' => 2]) > 0;
+        if (!$invoice || $invoice->invoice_status_id !== 1) {
+            return false;
         }
 
-        return false;
+        return Invoice::where('invoice_id', $invoiceId)
+            ->update(['invoice_status_id' => 2]) > 0;
     }
 
     public function generateInvoiceNumberIfApplicable(int $invoiceId): void
@@ -156,11 +156,14 @@ class InvoiceService
         $invoice = Invoice::findOrFail($invoiceId);
 
         $generateForDraft = get_setting('generate_invoice_number_for_draft');
-        if ($invoice->invoice_status_id == 1 && empty($invoice->invoice_number) && $generateForDraft == 0) {
-            $invoiceNumber = $this->generateInvoiceNumber($invoice->invoice_group_id);
-            Invoice::where('invoice_id', $invoiceId)
-                ->update(['invoice_number' => $invoiceNumber]);
+        
+        if ($invoice->invoice_status_id !== 1 || !empty($invoice->invoice_number) || $generateForDraft != 0) {
+            return;
         }
+
+        $invoiceNumber = $this->generateInvoiceNumber($invoice->invoice_group_id);
+        Invoice::where('invoice_id', $invoiceId)
+            ->update(['invoice_number' => $invoiceNumber]);
     }
 
     public function isOverdue(Invoice $invoice): bool
