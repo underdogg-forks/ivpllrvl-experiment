@@ -3,10 +3,8 @@
 namespace Modules\Core\Controllers;
 
 use Illuminate\Support\Facades\DB;
-
-use AllowDynamicProperties;
-use App\Http\Controllers\Controller as MXController;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Modules\Core\Services\SetupService;
 
 use const Modules\Setup\Controllers\APPPATH;
@@ -29,34 +27,44 @@ use Modules\Setup\Controllers\VersionsService;
 
 use function Modules\Setup\Controllers\write_file;
 
-#[AllowDynamicProperties]
-class SetupController extends BaseController
+/**
+ * SetupController
+ *
+ * Handles application installation and upgrade process
+ *
+ * @legacy-file application/modules/setup/controllers/Setup.php
+ */
+class SetupController
 {
     public $errors = 0;
 
+    protected SetupService $setupService;
+    protected UsersService $usersService;
+    protected VersionsService $versionsService;
+
     /**
-     * Enforces setup availability, loads required framework resources, and initializes localization.
+     * Initialize the SetupController with dependency injection.
      *
-     * Aborts with HTTP 403 if the DISABLE_SETUP environment flag is true. Loads the session library,
-     * necessary helpers and the layout module, ensures the session key `ip_lang` exists (defaults to
-     * `'en'`) and applies that language, then loads the `ip` language file.
+     * Enforces setup availability, loads required framework resources, and initializes localization.
+     * Aborts with HTTP 403 if the DISABLE_SETUP environment flag is true.
+     *
+     * @param SetupService $setupService
+     * @param UsersService $usersService
+     * @param VersionsService $versionsService
      */
-    public function __construct()
-    {
+    public function __construct(
+        SetupService $setupService,
+        UsersService $usersService,
+        VersionsService $versionsService
+    ) {
         if (env_bool('DISABLE_SETUP', false)) {
             show_error('The setup is disabled.', 403);
         }
-        parent::__construct();
-// TODO: Use Laravel services/facades - $this->load->library('session');
-// TODO: Laravel autoloads helpers - $this->load->helper('file');
-// TODO: Laravel autoloads helpers - $this->load->helper('directory');
-// TODO: Laravel autoloads helpers - $this->load->helper('url');
-// TODO: Laravel autoloads helpers - $this->load->helper('lang');
-// TODO: Laravel autoloads helpers - $this->load->helper('trans');
-// TODO: Laravel autoloads helpers - $this->load->helper('settings');
-// TODO: Laravel autoloads helpers - $this->load->helper('echo');
-        // For get_setting() in echo_helper
-// TODO: Modules handled differently in Laravel - $this->load->module('layout');
+        
+        $this->setupService = $setupService;
+        $this->usersService = $usersService;
+        $this->versionsService = $versionsService;
+
         if ( ! session('ip_lang')) {
             session(['ip_lang', 'en');
         } else {
@@ -66,9 +74,12 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName index
+     * Redirect to the language selection step.
      *
-     * @originalFile SetupController.php
+     * @return void
+     *
+     * @legacy-function index
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function index(): void
     {
@@ -76,11 +87,16 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName lang
+     * Handle the language selection step of the setup.
      *
-     * @originalFile SetupController.php
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function lang
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function language(): void
+    public function language(Request $request): void
     {
         if (request()->input('btn_continue')) {
             session(['ip_lang', request()->input('ip_lang'));
@@ -92,17 +108,23 @@ class SetupController extends BaseController
         session()->forget('is_upgrade');
         // GetController all languages
         $languages = get_available_languages();
-        $this->layout->set('languages', $languages);
-        $this->layout->buffer('content', 'setup/lang');
-        $this->layout->render('setup');
+        
+        return view('core::setup_lang', [
+            'languages' => $languages,
+        ]);
     }
 
     /**
-     * @originalName prerequisites
+     * Handle the prerequisites check step of the setup.
      *
-     * @originalFile SetupController.php
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function prerequisites
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function prerequisites(): void
+    public function prerequisites(Request $request): void
     {
         if (session('install_step') != 'prerequisites') {
             redirect()->route('setup/lang');
@@ -111,17 +133,24 @@ class SetupController extends BaseController
             session(['install_step', 'configure_database');
             redirect()->route('setup/configure_database');
         }
-        $this->layout->set(['basics' => $this->checkBasics(), 'writables' => $this->checkWritables(), 'errors' => $this->errors]);
-        $this->layout->buffer('content', 'setup/prerequisites');
-        $this->layout->render('setup');
+        return view('core::setup_prerequisites', [
+            'basics' => $this->checkBasics(),
+            'writables' => $this->checkWritables(),
+            'errors' => $this->errors,
+        ]);
     }
 
     /**
-     * @originalName configureDatabase
+     * Handle the database configuration step of the setup.
      *
-     * @originalFile SetupController.php
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function configureDatabase
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function configureDatabase(): void
+    public function configureDatabase(Request $request): void
     {
         if (session('install_step') != 'configure_database') {
             redirect()->route('setup/prerequisites');
@@ -146,18 +175,24 @@ class SetupController extends BaseController
         }
         // Check if the set credentials are correct
         $check_database = $this->checkDatabase();
-        $this->layout->set('database', $check_database);
-        $this->layout->set('errors', $this->errors);
-        $this->layout->buffer('content', 'setup/configure_database');
-        $this->layout->render('setup');
+        
+        return view('core::setup_configure_database', [
+            'database' => $check_database,
+            'errors' => $this->errors,
+        ]);
     }
 
     /**
-     * @originalName installTables
+     * Handle the database table installation step of the setup.
      *
-     * @originalFile SetupController.php
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function installTables
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function installTables(): void
+    public function installTables(Request $request): void
     {
         if (session('install_step') != 'install_tables') {
             redirect()->route('setup/prerequisites');
@@ -167,9 +202,11 @@ class SetupController extends BaseController
             redirect()->route('setup/upgrade_tables');
         }
         $this->loadCiDatabase();
-        $this->layout->set(['success' => (new SetupService())->installTables(), 'errors' => (new SetupService())->errors]);
-        $this->layout->buffer('content', 'setup/install_tables');
-        $this->layout->render('setup');
+        
+        return view('core::setup_install_tables', [
+            'success' => $this->setupService->installTables(),
+            'errors' => $this->setupService->errors,
+        ]);
     }
 
     /**
@@ -179,8 +216,15 @@ class SetupController extends BaseController
      * On form submission advances the install flow to either the create-user or calculation-info step and redirects.
      * Ensures the database is loaded and an encryption key exists, runs table upgrade operations via the setup service,
      * and renders the upgrade view with the operation results and any errors.
+     *
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function upgradeTables
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function upgradeTables(): void
+    public function upgradeTables(Request $request): void
     {
         if (session('install_step') != 'upgrade_tables') {
             redirect()->route('setup/prerequisites');
@@ -199,9 +243,11 @@ class SetupController extends BaseController
         if (env('ENCRYPTION_KEY') === null || env('ENCRYPTION_KEY') === '') {
             $this->setEncryptionKey();
         }
-        $this->layout->set(['success' => (new SetupService())->upgradeTables(), 'errors' => (new SetupService())->errors]);
-        $this->layout->buffer('content', 'setup/upgrade_tables');
-        $this->layout->render('setup');
+        
+        return view('core::setup_upgrade_tables', [
+            'success' => $this->setupService->upgradeTables(),
+            'errors' => $this->setupService->errors,
+        ]);
     }
 
     /**
@@ -210,32 +256,45 @@ class SetupController extends BaseController
      * Validates submitted user data; if validation succeeds, creates a user with `user_type` = 1,
      * advances the `install_step` session value to `calculation_info`, and redirects to the calculation info step.
      * If not submitted or validation fails, prepares country and language data for the layout and renders the user creation form.
+     *
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function createUser
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function createUser(): void
+    public function createUser(Request $request): void
     {
         if (session('install_step') != 'create_user') {
             redirect()->route('setup/prerequisites');
         }
         $this->loadCiDatabase();
 // TODO: Laravel autoloads helpers - $this->load->helper('country');
-        if ((new UsersService())->runValidation()) {
-            $db_array              = (new UsersService())->dbArray();
+        if ($this->usersService->runValidation()) {
+            $db_array              = $this->usersService->dbArray();
             $db_array['user_type'] = 1;
-            (new UsersService())->save(null, $db_array);
+            $this->usersService->save(null, $db_array);
             session(['install_step', 'calculation_info');
             redirect()->route('setup/calculation_info');
         }
-        $this->layout->set(['countries' => get_country_list(trans('cldr')), 'languages' => get_available_languages()]);
-        $this->layout->buffer('content', 'setup/create_user');
-        $this->layout->render('setup');
+        return view('core::setup_create_user', [
+            'countries' => get_country_list(trans('cldr')),
+            'languages' => get_available_languages(),
+        ]);
     }
 
     /**
-     * @originalName calculationInfo
+     * Handle the calculation info step of the setup.
      *
-     * @originalFile SetupController.php
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function calculationInfo
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function calculationInfo(): void
+    public function calculationInfo(Request $request): void
     {
         if (session('install_step') != 'calculation_info') {
             redirect()->route('setup/prerequisites');
@@ -253,17 +312,22 @@ class SetupController extends BaseController
             session(['install_step', 'complete');
             redirect()->route('setup/complete');
         }
-        $this->layout->set('calculation_check', $checkCalculation);
-        $this->layout->buffer('content', 'setup/calculation_info');
-        $this->layout->render('setup');
+        return view('core::setup_calculation_info', [
+            'calculation_check' => $checkCalculation,
+        ]);
     }
 
     /**
-     * @originalName complete
+     * Complete the setup process and render the completion page.
      *
-     * @originalFile SetupController.php
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @legacy-function complete
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function complete(): void
+    public function complete(Request $request): void
     {
         if (session('install_step') != 'complete') {
             redirect()->route('setup/prerequisites');
@@ -289,16 +353,21 @@ class SetupController extends BaseController
         // Then check if the first version entry is less than 30 minutes old
         // If yes we assume that the user ran the setup a few minutes ago
         $update = $data[0]->version_date_applied < time() - 1800;
-        $this->layout->set('update', $update);
-        $this->layout->buffer('content', 'setup/complete');
-        $this->layout->render('setup');
+        
         session()->flush();
+        
+        return view('core::setup_complete', [
+            'update' => $update,
+        ]);
     }
 
     /**
-     * @originalName checkBasics
+     * Check basic PHP requirements for the application.
      *
-     * @originalFile SetupController.php
+     * @return array
+     *
+     * @legacy-function checkBasics
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function checkBasics(): array
     {
@@ -321,9 +390,12 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName checkWritables
+     * Check writable permissions for required directories and files.
      *
-     * @originalFile SetupController.php
+     * @return array
+     *
+     * @legacy-function checkWritables
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function checkWritables(): array
     {
@@ -345,9 +417,12 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName loadCiDatabase
+     * Load the CodeIgniter database (placeholder for Laravel compatibility).
      *
-     * @originalFile SetupController.php
+     * @return void
+     *
+     * @legacy-function loadCiDatabase
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function loadCiDatabase()
     {
@@ -355,9 +430,18 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName writeDatabaseConfig
+     * Write database configuration to the ipconfig.php file.
      *
-     * @originalFile SetupController.php
+     * @param string $hostname
+     * @param string $username
+     * @param string $password
+     * @param string $database
+     * @param int $port
+     *
+     * @return void
+     *
+     * @legacy-function writeDatabaseConfig
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function writeDatabaseConfig(string $hostname, string $username, string $password, string $database, $port = 3306)
     {
@@ -371,9 +455,12 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName checkDatabase
+     * Check database connection with configured credentials.
      *
-     * @originalFile SetupController.php
+     * @return array
+     *
+     * @legacy-function checkDatabase
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function checkDatabase(): array
     {
@@ -406,9 +493,12 @@ class SetupController extends BaseController
     }
 
     /**
-     * @originalName setEncryptionKey
+     * Generate and set a new encryption key in the ipconfig.php file.
      *
-     * @originalFile SetupController.php
+     * @return void
+     *
+     * @legacy-function setEncryptionKey
+     * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function setEncryptionKey()
     {
@@ -447,7 +537,7 @@ class SetupController extends BaseController
     private function checkCalculationConfig(): array
     {
         $this->loadCiDatabase();
-        $current_version = (new VersionsService())->getCurrentVersion();
+        $current_version = $this->versionsService->getCurrentVersion();
         if (version_compare($current_version, '1.6.3', '>=')) {
             // Reload the ipconfig.php
             global $dotenv;
