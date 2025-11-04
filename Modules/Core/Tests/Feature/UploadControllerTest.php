@@ -406,6 +406,34 @@ class UploadControllerTest extends FeatureTestCase
         $this->assertLessThanOrEqual(204, strlen($data['filename']));
     }
 
+    /**
+     * Test file upload handles files without extension.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_files_without_extension(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        // Create file without extension
+        $file = \Illuminate\Http\UploadedFile::fake()->create('noextension', 100);
+
+        /** Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key' => 'test_key'
+        ]), [
+            'file' => $file,
+        ]);
+
+        /** Assert */
+        $response->assertOk();
+        $data = $response->json();
+        // Should add safe default extension 'bin'
+        $this->assertStringEndsWith('.bin', $data['filename']);
+    }
+
     // ==================== ROUTE: GET /upload/create-dir ====================
 
     /**

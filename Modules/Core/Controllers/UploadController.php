@@ -219,7 +219,7 @@ class UploadController
      *
      * @originalFile UploadController.php
      */
-        private function sanitizeFileName(string $filename): string
+    private function sanitizeFileName(string $filename): string
     {
         // SECURITY FIX: Improved sanitization
         // 1. Get the file extension first
@@ -245,10 +245,15 @@ class UploadController
         }
         
         // 7. Reconstruct filename with cleaned extension
+        // Strip any non-alphanumeric characters from extension
         $cleanExtension = preg_replace("/[^a-zA-Z0-9]/", '', $extension);
         
+        // 8. Handle empty extension - use 'bin' as safe default
+        if (empty($cleanExtension)) {
+            $cleanExtension = 'bin';
+        }
+        
         return $cleanBasename . '.' . $cleanExtension;
-    }\\p{N}\\s\\-_'’.]/u", '', mb_trim($filename));
     }
 
     /**
