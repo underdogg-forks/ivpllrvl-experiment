@@ -38,6 +38,18 @@ class QuoteItemService
     }
 
     /**
+     * Get quote items by quote ID.
+     *
+     * @param int $quoteId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByQuoteId(int $quoteId): \Illuminate\Database\Eloquent\Collection
+    {
+        return QuoteItem::query()->where('quote_id', $quoteId)->get();
+    }
+
+    /**
      * Save quote item and trigger calculations.
      *
      * @param array $data

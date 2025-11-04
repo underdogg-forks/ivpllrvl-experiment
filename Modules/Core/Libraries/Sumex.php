@@ -256,7 +256,8 @@ class Sumex
 
         $payment_method = false;
         if ($this->invoice->payment_method != 0) {
-            $payment_method = \Modules\Payments\Models\PaymentMethod::query()->where('payment_method_id', $this->invoice->payment_method)->first();
+            $paymentMethodService = app(\Modules\Payments\Services\PaymentMethodService::class);
+            $payment_method = $paymentMethodService->findByMethodId($this->invoice->payment_method);
         }
 
         // Determine if discounts should be displayed
@@ -291,9 +292,10 @@ class Sumex
             'AFRelationship' => 'Alternative',
         ]];
 
+        $invoiceTaxRateService = app(\Modules\Invoices\Services\InvoiceTaxRateService::class);
         $data = [
             'invoice'             => $this->invoice,
-            'invoice_tax_rates'   => \Modules\Invoices\Models\InvoiceTaxRate::query()->where('invoice_id', $this->invoice->invoice_id)->get(),
+            'invoice_tax_rates'   => $invoiceTaxRateService->getByInvoiceId($this->invoice->invoice_id),
             'items'               => $this->items,
             'payment_method'      => $payment_method,
             'output_type'         => 'pdf',

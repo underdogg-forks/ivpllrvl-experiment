@@ -42,6 +42,18 @@ class QuoteTaxRateService
     }
 
     /**
+     * Get quote tax rates by quote ID.
+     *
+     * @param int $quoteId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByQuoteId(int $quoteId): \Illuminate\Database\Eloquent\Collection
+    {
+        return QuoteTaxRate::query()->where('quote_id', $quoteId)->get();
+    }
+
+    /**
      * Save quote tax rate and trigger calculations.
      * Only applicable in legacy calculation mode.
      *

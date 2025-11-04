@@ -26,6 +26,19 @@ class InvoiceTaxRateService extends BaseService
         return InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->get();
     }
 
+    /**
+     * Get invoice tax rates by invoice ID.
+     * Alias for getTaxRatesByInvoiceId for consistency.
+     *
+     * @param int $invoiceId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByInvoiceId(int $invoiceId): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->getTaxRatesByInvoiceId($invoiceId);
+    }
+
     public function saveTaxRate(array $data): ?InvoiceTaxRate
     {
         if (! config_item('legacy_calculation')) {
