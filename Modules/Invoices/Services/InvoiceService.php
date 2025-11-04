@@ -4,6 +4,7 @@ namespace Modules\Invoices\Services;
 
 use DateInterval;
 use DateTime;
+use Modules\Core\Support\SettingsHelper;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\InvoiceGroup;
@@ -66,9 +67,9 @@ class InvoiceService
         ];
     }
 
-    public function calculateDateDue(string $invoiceDateCreated): string
+        public function calculateDateDue(string $invoiceDateCreated): string
     {
-        $dueAfter = get_setting('invoices_due_after');
+        $dueAfter = SettingsHelper::getSetting('invoices_due_after');
         $dueDate  = new DateTime($invoiceDateCreated);
         $dueDate->add(new DateInterval('P' . $dueAfter . 'D'));
 
@@ -87,14 +88,14 @@ class InvoiceService
         return bin2hex(random_bytes(16));
     }
 
-    public function getByUrlKey(string $urlKey): Invoice
+        public function getByUrlKey(string $urlKey): Invoice
     {
-        return Invoice::where('invoice_url_key', $urlKey)->firstOrFail();
+        return Invoice::query()->where('invoice_url_key', $urlKey)->firstOrFail();
     }
 
     public function urlKeyExists(string $urlKey): bool
     {
-        return Invoice::where('invoice_url_key', $urlKey)->exists();
+        return Invoice::query()->where('invoice_url_key', $urlKey)->exists();
     }
 
     public function getInvoiceGroupId(int $invoiceId): int
@@ -129,11 +130,11 @@ class InvoiceService
             ->where('invoice_id', $invoiceId)
             ->first();
 
-        if (!$invoice || $invoice->invoice_status_id !== 2) {
+                if (!$invoice || $invoice->invoice_status_id !== 2) {
             return false;
         }
 
-        return Invoice::where('invoice_id', $invoiceId)
+        return Invoice::query()->where('invoice_id', $invoiceId)
             ->update(['invoice_status_id' => 3]) > 0;
     }
 
@@ -143,26 +144,26 @@ class InvoiceService
             ->where('invoice_id', $invoiceId)
             ->first();
 
-        if (!$invoice || $invoice->invoice_status_id !== 1) {
+                if (!$invoice || $invoice->invoice_status_id !== 1) {
             return false;
         }
 
-        return Invoice::where('invoice_id', $invoiceId)
+        return Invoice::query()->where('invoice_id', $invoiceId)
             ->update(['invoice_status_id' => 2]) > 0;
     }
 
-    public function generateInvoiceNumberIfApplicable(int $invoiceId): void
+        public function generateInvoiceNumberIfApplicable(int $invoiceId): void
     {
         $invoice = Invoice::findOrFail($invoiceId);
 
-        $generateForDraft = get_setting('generate_invoice_number_for_draft');
+        $generateForDraft = SettingsHelper::getSetting('generate_invoice_number_for_draft');
         
         if ($invoice->invoice_status_id !== 1 || !empty($invoice->invoice_number) || $generateForDraft != 0) {
             return;
         }
 
         $invoiceNumber = $this->generateInvoiceNumber($invoice->invoice_group_id);
-        Invoice::where('invoice_id', $invoiceId)
+        Invoice::query()->where('invoice_id', $invoiceId)
             ->update(['invoice_number' => $invoiceNumber]);
     }
 
@@ -188,11 +189,11 @@ class InvoiceService
         $now     = new DateTime();
 
         return $now->diff($dueDate)->days;
-    }
+        }
 
     public function getOpenInvoices()
     {
-        return Invoice::where('invoice_balance', '>', 0)
+        return Invoice::query()->where('invoice_balance', '>', 0)
             ->with('client')
             ->orderBy('invoice_date_created', 'desc')
             ->get();
@@ -220,6 +221,6 @@ class InvoiceService
      */
     public function updateInvoice(int $invoiceId, array $data): int
     {
-        return Invoice::where('invoice_id', $invoiceId)->update($data);
+        return Invoice::query()->where('invoice_id', $invoiceId)->update($data);
     }
 }
