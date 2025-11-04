@@ -139,7 +139,7 @@ class QuotesController
         $quoteTaxRates = $this->quoteTaxRateService->getByQuoteId($quote_id);
 
         // Get units
-        $units = Unit::all();
+        $units = $this->unitService->getAll();
 
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = $this->userService->hasMultipleActiveAdmins();
