@@ -27,4 +27,19 @@ class InvoicesRecurringService extends BaseService
     {
         $this->update($recurringId, ['recur_status' => 0]);
     }
+
+    /**
+     * Get all recurring invoices with relationships.
+     *
+     * @param array $relations Relations to eager load
+     * @param int $perPage Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15)
+    {
+        return InvoicesRecurring::query()->with($relations)
+            ->orderBy('recur_start_date', 'desc')
+            ->paginate($perPage);
+    }
 }

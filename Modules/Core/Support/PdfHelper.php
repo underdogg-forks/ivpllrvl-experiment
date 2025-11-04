@@ -52,14 +52,19 @@ class PdfHelper
      */
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
-        $invoice = \Modules\Invoices\Models\Invoice::with(['client', 'user'])->find($invoice_id);
+        $invoiceService = app(\Modules\Invoices\Services\InvoiceService::class);
+        $paymentMethodService = app(\Modules\Payments\Services\PaymentMethodService::class);
+        $invoiceItemService = app(\Modules\Invoices\Services\InvoiceItemService::class);
+        $invoiceTaxRateService = app(\Modules\Invoices\Services\InvoiceTaxRateService::class);
+        
+        $invoice = $invoiceService->findWithRelations($invoice_id, ['client', 'user']);
         
         if (!$invoice) {
             return null;
         }
         
         // Get invoice with payments - TODO: move to service method
-        $invoice = \Modules\Invoices\Models\Invoice::with(['payments'])->find($invoice_id);
+        $invoice = $invoiceService->findWithRelations($invoice_id, ['payments']);
 
         set_language($invoice->client_language);
 
@@ -69,10 +74,10 @@ class PdfHelper
 
         $payment_method = null;
         if ((int) $invoice->payment_method !== 0) {
-            $payment_method = \Modules\Payments\Models\PaymentMethod::where('payment_method_id', $invoice->payment_method)->first();
+            $payment_method = $paymentMethodService->findByMethodId($invoice->payment_method);
         }
 
-        $items = \Modules\Invoices\Models\Item::where('invoice_id', $invoice_id)->get();
+        $items = $invoiceItemService->getByInvoiceId($invoice_id);
 
         $show_item_discounts = false;
         foreach ($items as $item) {
@@ -128,7 +133,7 @@ class PdfHelper
 
         $data = [
             'invoice'             => $invoice,
-            'invoice_tax_rates'   => \Modules\Invoices\Models\InvoiceTaxRate::where('invoice_id', $invoice_id)->get(),
+            'invoice_tax_rates'   => $invoiceTaxRateService->getByInvoiceId($invoice_id),
             'items'               => $items,
             'payment_method'      => $payment_method,
             'output_type'         => 'pdf',
@@ -187,7 +192,8 @@ class PdfHelper
             return null;
         }
 
-        $items = \Modules\Invoices\Models\Item::where('invoice_id', $invoice_id)->get();
+        $invoiceItemService = app(\Modules\Invoices\Services\InvoiceItemService::class);
+        $items = $invoiceItemService->getByInvoiceId($invoice_id);
 
         $sumex = new \Modules\Core\Libraries\Sumex([
             'invoice' => $invoice,
@@ -250,7 +256,11 @@ class PdfHelper
      */
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
-        $quote = \Modules\Quotes\Models\Quote::with(['client', 'user'])->find($quote_id);
+        $quoteService = app(\Modules\Quotes\Services\QuoteService::class);
+        $quoteItemService = app(\Modules\Quotes\Services\QuoteItemService::class);
+        $quoteTaxRateService = app(\Modules\Quotes\Services\QuoteTaxRateService::class);
+        
+        $quote = $quoteService->findWithRelations($quote_id, ['client', 'user']);
         
         if (!$quote) {
             return null;
@@ -262,7 +272,7 @@ class PdfHelper
             $quote_template = get_setting('pdf_quote_template');
         }
 
-        $items = \Modules\Quotes\Models\QuoteItem::where('quote_id', $quote_id)->get();
+        $items = $quoteItemService->getByQuoteId($quote_id);
 
         $show_item_discounts = false;
         foreach ($items as $item) {
@@ -284,7 +294,7 @@ class PdfHelper
 
         $data = [
             'quote'               => $quote,
-            'quote_tax_rates'     => \Modules\Quotes\Models\QuoteTaxRate::where('quote_id', $quote_id)->get(),
+            'quote_tax_rates'     => $quoteTaxRateService->getByQuoteId($quote_id),
             'items'               => $items,
             'output_type'         => 'pdf',
             'show_item_discounts' => $show_item_discounts,
@@ -329,7 +339,7 @@ class PdfHelper
         $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
         
         // Get all custom field records for this ID
-        $records = $modelClass::where($idField, $id)->get();
+        $records = $modelClass::query()->where($idField, $id)->get();
         
         // Convert to array format
         $values = [];

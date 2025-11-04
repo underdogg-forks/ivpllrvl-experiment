@@ -300,7 +300,7 @@ class QuotesAjaxController
         $quoteId  = (int) $request->input('quote_id');
         $clientId = (int) $request->input('client_id');
 
-        $quote  = Quote::with('client')->findOrFail($quoteId);
+        $quote  = $this->quoteService->findWithRelationsOrFail($quoteId, ['client']);
         $client = $this->clientService->find($clientId);
 
         $data = [
@@ -589,7 +589,7 @@ class QuotesAjaxController
 
         // Get the quote
         $quoteId = (int) $request->input('quote_id');
-        $quote   = Quote::with(['items', 'taxRates'])->findOrFail($quoteId);
+        $quote   = $this->quoteService->findWithRelationsOrFail($quoteId, ['items', 'taxRates']);
 
         // Create new invoice
         $invoiceData = array_merge($request->all(), [

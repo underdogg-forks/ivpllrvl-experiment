@@ -4,17 +4,23 @@ namespace Modules\Quotes\Controllers;
 
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
+use Modules\Core\Services\CustomFieldService;
+use Modules\Core\Services\CustomValueService;
 use Modules\Core\Services\UserService;
 use Modules\Core\Support\PdfHelper;
 use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\TaxRateService;
+use Modules\Products\Services\UnitService;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
 use Modules\Quotes\Services\QuoteAmountService;
+use Modules\Quotes\Services\QuoteItemService;
 use Modules\Quotes\Services\QuoteService;
+use Modules\Quotes\Services\QuoteTaxRateService;
 
 /**
  * QuotesController
@@ -29,7 +35,13 @@ class QuotesController
     public function __construct(
         protected QuoteService $quoteService,
         protected QuoteAmountService $quoteAmountService,
-        protected UserService $userService
+        protected UserService $userService,
+        protected CustomFieldService $customFieldService,
+        protected CustomValueService $customValueService,
+        protected TaxRateService $taxRateService,
+        protected UnitService $unitService,
+        protected QuoteItemService $quoteItemService,
+        protected QuoteTaxRateService $quoteTaxRateService
     ) {
     }
 
@@ -65,36 +77,7 @@ class QuotesController
      */
     public function status(string $status = 'all', int $page = 0)
     {
-        $query = Quote::with(['client', 'user']);
-
-        // Apply status filter
-        switch ($status) {
-            case 'draft':
-                $query->draft();
-                break;
-            case 'sent':
-                $query->sent();
-                break;
-            case 'viewed':
-                $query->viewed();
-                break;
-            case 'approved':
-                $query->approved();
-                break;
-            case 'rejected':
-                $query->rejected();
-                break;
-            case 'canceled':
-                $query->canceled();
-                break;
-            case 'all':
-            default:
-                // No filter for 'all'
-                break;
-        }
-
-        // Paginate results
-        $quotes = $query->paginate(15);
+        $quotes = $this->quoteService->getAllWithRelations(['client', 'user'], $status, 15);
 
         return view('quotes::index', [
             'quotes'             => $quotes,
@@ -123,7 +106,7 @@ class QuotesController
      */
     public function view(int $quote_id)
     {
-        $quote = Quote::with([
+        $quote = $this->quoteService->findWithRelations($quote_id, [
             'client',
             'user',
             'invoiceGroup',
@@ -131,39 +114,32 @@ class QuotesController
             'items.unit',
             'taxRates.taxRate',
             'amounts',
-        ])->find($quote_id);
+        ]);
 
         if ( ! $quote) {
             abort(404, 'Quote not found');
         }
 
         // Get custom fields for quotes
-        $customFields = CustomField::where('custom_field_table', 'ip_quote_custom')
-            ->orderBy('custom_field_order')
-            ->get();
+        $customFields = $this->customFieldService->getByTableOrdered('ip_quote_custom');
 
         // Get custom field values for select/dropdown fields
         $customValues = [];
         foreach ($customFields as $field) {
             if (in_array($field->custom_field_type, ['select', 'dropdown'])) {
-                $customValues[$field->custom_field_id] = CustomValue::where('custom_field_id', $field->custom_field_id)->get();
+                $customValues[$field->custom_field_id] = $this->customValueService->getByFieldId($field->custom_field_id);
             }
         }
 
         // Get all items for this quote
-        $items = QuoteItem::where('quote_id', $quote_id)
-            ->with(['product', 'unit'])
-            ->orderBy('item_order')
-            ->get();
+        $items = $this->quoteItemService->getByQuoteId($quote_id);
 
         // Get tax rates
-        $taxRates      = TaxRate::all();
-        $quoteTaxRates = QuoteTaxRate::where('quote_id', $quote_id)
-            ->with('taxRate')
-            ->get();
+        $taxRates      = $this->taxRateService->getAll();
+        $quoteTaxRates = $this->quoteTaxRateService->getByQuoteId($quote_id);
 
         // Get units
-        $units = Unit::all();
+        $units = $this->unitService->getAll();
 
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = $this->userService->hasMultipleActiveAdmins();
@@ -253,7 +229,7 @@ class QuotesController
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
     {
         // Delete the tax rate
-        QuoteTaxRate::where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
+        $this->quoteTaxRateService->delete($quote_tax_rate_id);
 
         // Get global discount for recalculation
         $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quote_id)];
@@ -280,7 +256,7 @@ class QuotesController
      */
     public function recalculateAllQuotes()
     {
-        $quoteIds = Quote::pluck('quote_id');
+        $quoteIds = $this->quoteService->getAllQuoteIds();
 
         foreach ($quoteIds as $quoteId) {
             $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quoteId)];

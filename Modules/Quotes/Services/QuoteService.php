@@ -142,10 +142,10 @@ class QuoteService
      */
     public function copyQuote(int $sourceId, int $targetId): void
     {
-        $sourceQuote = Quote::with(['items', 'taxRates'])->findOrFail($sourceId);
+        $sourceQuote = Quote::query()->with(['items', 'taxRates'])->findOrFail($sourceId);
 
         // Calculate global discount
-        $itemsSubtotal  = QuoteItem::where('quote_id', $sourceId)->sum('item_subtotal');
+        $itemsSubtotal  = QuoteItem::query()->where('quote_id', $sourceId)->sum('item_subtotal');
         $globalDiscount = [
             'amount'         => $sourceQuote->quote_discount_amount,
             'percent'        => $sourceQuote->quote_discount_percent,
@@ -187,7 +187,7 @@ class QuoteService
         }
 
         // Copy custom fields
-        $sourceCustom = QuoteCustom::where('quote_id', $sourceId)->first();
+        $sourceCustom = QuoteCustom::query()->where('quote_id', $sourceId)->first();
         if ($sourceCustom) {
             $customData = $sourceCustom->toArray();
             unset($customData['quote_custom_id']);
@@ -263,10 +263,10 @@ class QuoteService
         $deleted = $quote->delete();
 
         // Cleanup orphaned records
-        QuoteAmount::where('quote_id', $quoteId)->delete();
-        QuoteItem::where('quote_id', $quoteId)->delete();
-        QuoteTaxRate::where('quote_id', $quoteId)->delete();
-        QuoteCustom::where('quote_id', $quoteId)->delete();
+        QuoteAmount::query()->where('quote_id', $quoteId)->delete();
+        QuoteItem::query()->where('quote_id', $quoteId)->delete();
+        QuoteTaxRate::query()->where('quote_id', $quoteId)->delete();
+        QuoteCustom::query()->where('quote_id', $quoteId)->delete();
 
         return $deleted;
     }
@@ -361,7 +361,7 @@ class QuoteService
      */
     public function markViewed(int $quoteId): bool
     {
-        $quote = Quote::select('quote_status_id')
+        $quote = Quote::query()->select('quote_status_id')
             ->where('quote_id', $quoteId)
             ->first();
 
@@ -382,7 +382,7 @@ class QuoteService
      */
     public function markSent(int $quoteId): bool
     {
-        $quote = Quote::select('quote_status_id')
+        $quote = Quote::query()->select('quote_status_id')
             ->where('quote_id', $quoteId)
             ->first();
 
@@ -392,6 +392,16 @@ class QuoteService
 
         return Quote::query()->where('quote_id', $quoteId)
             ->update(['quote_status_id' => 2]) > 0;
+    }
+
+    /**
+     * Get all quote IDs.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllQuoteIds()
+    {
+        return Quote::query()->pluck('quote_id');
     }
 
     /**
@@ -415,5 +425,73 @@ class QuoteService
         $quoteNumber = $this->generateQuoteNumber($quote->invoice_group_id);
         Quote::query()->where('quote_id', $quoteId)
             ->update(['quote_number' => $quoteNumber]);
+    }
+
+    /**
+     * Find a quote with its relationships.
+     *
+     * @param int $id Quote ID
+     * @param array $relations Relations to eager load
+     *
+     * @return Quote|null
+     */
+    public function findWithRelations(int $id, array $relations = ['client', 'user']): ?Quote
+    {
+        return Quote::query()->with($relations)->find($id);
+    }
+
+    /**
+     * Find a quote with its relationships or fail.
+     *
+     * @param int $id Quote ID
+     * @param array $relations Relations to eager load
+     *
+     * @return Quote
+     */
+    public function findWithRelationsOrFail(int $id, array $relations = ['client', 'user']): Quote
+    {
+        return Quote::query()->with($relations)->findOrFail($id);
+    }
+
+    /**
+     * Get all quotes with relationships, ordered and filtered.
+     *
+     * @param array $relations Relations to eager load
+     * @param string|null $status Status filter
+     * @param int $perPage Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(
+        array $relations = ['client', 'user'],
+        ?string $status = null,
+        int $perPage = 15
+    ) {
+        $query = Quote::query()->with($relations);
+
+        // Apply status filter using scopes
+        match ($status) {
+            'draft' => $query->draft(),
+            'sent' => $query->sent(),
+            'viewed' => $query->viewed(),
+            'approved' => $query->approved(),
+            'rejected' => $query->rejected(),
+            'canceled' => $query->canceled(),
+            default => null
+        };
+
+        return $query->orderBy('quote_date_created', 'desc')->paginate($perPage);
+    }
+
+    /**
+     * Get all quotes for a specific client.
+     *
+     * @param int $clientId Client ID
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByClientId(int $clientId): \Illuminate\Database\Eloquent\Collection
+    {
+        return Quote::query()->where('client_id', $clientId)->get();
     }
 }

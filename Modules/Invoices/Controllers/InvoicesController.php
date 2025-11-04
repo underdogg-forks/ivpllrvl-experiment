@@ -18,10 +18,10 @@ use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
 use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceService;
-use Modules/Invoices\Services\InvoiceItemService;
+use Modules\Invoices\Services\InvoiceItemService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Payments\Models\PaymentMethod;
-use Modules/Payments\Services\PaymentMethodService;
+use Modules\Payments\Services\PaymentMethodService;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\TaxRateService;
@@ -84,20 +84,8 @@ class InvoicesController
      */
     public function status(string $status = 'all', int $page = 0): View
     {
-        // Build query based on status
-        $query = Invoice::with(['client', 'user']);
-
-        match ($status) {
-            'draft'   => $query->draft(),
-            'sent'    => $query->sent(),
-            'viewed'  => $query->viewed(),
-            'paid'    => $query->paid(),
-            'overdue' => $query->overdue(),
-            default   => $query
-        };
-
-        // Paginate results
-        $invoices = $query->paginate(15);
+        // Get paginated invoices with relationships from service
+        $invoices = $this->invoiceService->getAllWithRelations(['client', 'user'], $status, 15);
 
         $data = [
             'invoices'           => $invoices,
@@ -185,11 +173,10 @@ class InvoicesController
      */
     public function view(int $invoiceId): View
     {
-        $invoice = Invoice::with(['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments'])
-            ->findOrFail($invoiceId);
+        $invoice = $this->invoiceService->findWithRelationsOrFail($invoiceId, 
+            ['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments']);
 
         // Get custom fields and values
-        $fields       = InvoiceCustom::where('invoice_id', $invoiceId)->get();
         $customFields = $this->customFieldService->getByTable('ip_invoice_custom');
         $customValues = [];
 
@@ -440,7 +427,7 @@ class InvoicesController
      */
     public function recalculateAllInvoices(): RedirectResponse
     {
-        $invoiceIds = Invoice::select('invoice_id')->get();
+        $invoiceIds = Invoice::query()->select('invoice_id')->get();
 
         foreach ($invoiceIds as $invoice) {
             $invoiceAmountService = app(InvoiceAmountService::class);

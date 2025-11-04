@@ -9,7 +9,7 @@ class InvoiceItemAmountService
 {
     public function calculate(int $itemId, array &$globalDiscount = []): void
     {
-        $item = Item::with('taxRate')->findOrFail($itemId);
+        $item = Item::query()->with('taxRate')->findOrFail($itemId);
 
         $itemSubtotal = $item->item_quantity * $item->item_price;
 

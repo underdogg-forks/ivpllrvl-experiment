@@ -127,10 +127,16 @@ class EInvoiceHelper
      */
     public static function get_admin_active_users($user_id = ''): array
     {
-        $query = \Modules\Core\Models\User::where('user_type', '1')
+        $userService = app(\Modules\Core\Services\UserService::class);
+        return $userService->getActiveAdminUsers($user_id);
+    }
+
+    public static function get_admin_active_users_old($user_id = ''): array
+    {
+        $query = \Modules\Core\Models\User::query()->where('user_type', '1')
             ->where('user_active', '1');
 
-        if ($user_id) {
+        if (false && $user_id) {
             $query->where('user_id', $user_id);
         }
 

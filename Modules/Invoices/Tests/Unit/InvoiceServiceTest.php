@@ -431,4 +431,48 @@ class InvoiceServiceTest extends AbstractServiceTestCase
 
         $this->assertEquals(0, $result);
     }
+    #[Group('relationships')]
+    #[Test]
+    public function it_filters_invoices_by_status(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        Invoice::factory()->create([
+            'client_id' => $client->client_id,
+            'invoice_status_id' => 1, // Draft
+        ]);
+        Invoice::factory()->create([
+            'client_id' => $client->client_id,
+            'invoice_status_id' => 4, // Paid
+        ]);
+
+        /** Act */
+        $draftResult = $this->service->getAllWithRelations(['client'], 'draft');
+        $paidResult = $this->service->getAllWithRelations(['client'], 'paid');
+
+        /** Assert */
+        $this->assertGreaterThanOrEqual(1, $draftResult->total());
+        $this->assertGreaterThanOrEqual(1, $paidResult->total());
+    }
+
+    #[Group('queries')]
+    #[Test]
+    public function it_gets_invoices_by_client_id(): void
+    {
+        /** Arrange */
+        $client1 = \Modules\Crm\Models\Client::factory()->create();
+        $client2 = \Modules\Crm\Models\Client::factory()->create();
+        $invoice1 = Invoice::factory()->create(['client_id' => $client1->client_id]);
+        $invoice2 = Invoice::factory()->create(['client_id' => $client1->client_id]);
+        $invoice3 = Invoice::factory()->create(['client_id' => $client2->client_id]);
+
+        /** Act */
+        $result = $this->service->getByClientId($client1->client_id);
+
+        /** Assert */
+        $this->assertCount(2, $result);
+        $this->assertTrue($result->contains('invoice_id', $invoice1->invoice_id));
+        $this->assertTrue($result->contains('invoice_id', $invoice2->invoice_id));
+        $this->assertFalse($result->contains('invoice_id', $invoice3->invoice_id));
+    }
 }

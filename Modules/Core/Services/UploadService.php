@@ -66,4 +66,18 @@ class UploadService extends BaseService
 
         return $upload ? $upload->toArray() : null;
     }
+
+    /**
+     * Get file names by URL key for attachments.
+     *
+     * @param string $urlKey
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAttachmentsByUrlKey(string $urlKey)
+    {
+        return Upload::query()->select('file_name_new', 'file_name_original')
+            ->where('url_key', $urlKey)
+            ->get();
+    }
 }

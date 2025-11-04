@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Modules\Core\Models\Upload;
 use Modules\Core\Services\CustomFieldService;
+use Modules\Core\Services\UploadService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
 use Modules\Invoices\Services\InvoiceItemService;
@@ -31,6 +32,7 @@ class View
     protected InvoiceTaxRateService $invoiceTaxRateService;
     protected QuoteItemService $quoteItemService;
     protected QuoteTaxRateService $quoteTaxRateService;
+    protected UploadService $uploadService;
 
     /**
      * Initialize the View controller with dependency injection.
@@ -43,6 +45,7 @@ class View
      * @param InvoiceTaxRateService $invoiceTaxRateService
      * @param QuoteItemService $quoteItemService
      * @param QuoteTaxRateService $quoteTaxRateService
+     * @param UploadService $uploadService
      */
     public function __construct(
         InvoiceService $invoiceService,
@@ -52,7 +55,8 @@ class View
         InvoiceItemService $invoiceItemService,
         InvoiceTaxRateService $invoiceTaxRateService,
         QuoteItemService $quoteItemService,
-        QuoteTaxRateService $quoteTaxRateService
+        QuoteTaxRateService $quoteTaxRateService,
+        UploadService $uploadService
     ) {
         $this->invoiceService = $invoiceService;
         $this->quoteService = $quoteService;
@@ -62,6 +66,7 @@ class View
         $this->invoiceTaxRateService = $invoiceTaxRateService;
         $this->quoteItemService = $quoteItemService;
         $this->quoteTaxRateService = $quoteTaxRateService;
+        $this->uploadService = $uploadService;
     }
     /**
      * Display public invoice page.
@@ -309,9 +314,7 @@ class View
      */
     private function getAttachments(string $url_key): array
     {
-        $results = Upload::select('file_name_new', 'file_name_original')
-            ->where('url_key', $url_key)
-            ->get();
+        $results = $this->uploadService->getAttachmentsByUrlKey($url_key);
         $names   = [];
         foreach ($results as $row) {
             $names[] = [

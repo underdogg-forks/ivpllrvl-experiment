@@ -17,10 +17,10 @@ class InvoiceAmountService
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
 
         // Get all item IDs for this invoice
-        $itemIds = Item::where('invoice_id', $invoiceId)->pluck('item_id');
+        $itemIds = Item::query()->where('invoice_id', $invoiceId)->pluck('item_id');
 
         // Get the basic totals from invoice item amounts using Eloquent
-        $invoiceAmounts = ItemAmount::whereIn('item_id', $itemIds)
+        $invoiceAmounts = ItemAmount::query()->whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) AS invoice_item_subtotal,
                 SUM(item_tax_total) AS invoice_item_tax_total,
@@ -49,7 +49,7 @@ class InvoiceAmountService
         }
 
         // Get total paid using Payment model
-        $invoicePaid = Payment::where('invoice_id', $invoiceId)
+        $invoicePaid = Payment::query()->where('invoice_id', $invoiceId)
             ->sum('payment_amount');
         $invoicePaid = $invoicePaid ? (float) $invoicePaid : 0.0;
 
@@ -86,10 +86,10 @@ class InvoiceAmountService
     public function getGlobalDiscount(int $invoiceId): float
     {
         // Get all item IDs for this invoice
-        $itemIds = Item::where('invoice_id', $invoiceId)->pluck('item_id');
+        $itemIds = Item::query()->where('invoice_id', $invoiceId)->pluck('item_id');
 
         // Calculate global discount using Eloquent
-        $result = ItemAmount::whereIn('item_id', $itemIds)
+        $result = ItemAmount::query()->whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) - (SUM(item_total) - SUM(item_tax_total) + SUM(item_discount)) AS global_discount
             ')
@@ -103,17 +103,17 @@ class InvoiceAmountService
         $legacyCalculation = config_item('legacy_calculation');
 
         $invoiceTaxRates = $legacyCalculation
-            ? InvoiceTaxRate::where('invoice_id', $invoiceId)->get()
+            ? InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->get()
             : collect();
 
         if ($invoiceTaxRates->isEmpty()) {
-            InvoiceAmount::where('invoice_id', $invoiceId)
+            InvoiceAmount::query()->where('invoice_id', $invoiceId)
                 ->update(['invoice_tax_total' => '0.00']);
 
             return;
         }
 
-        $invoiceAmount = InvoiceAmount::where('invoice_id', $invoiceId)->first();
+        $invoiceAmount = InvoiceAmount::query()->where('invoice_id', $invoiceId)->first();
 
         $invoiceTaxRates->each(function ($invoiceTaxRate) use ($invoiceAmount, $invoiceId) {
             if ($invoiceTaxRate->include_item_tax) {
@@ -124,18 +124,18 @@ class InvoiceAmountService
                     * ($invoiceTaxRate->invoice_tax_rate_percent / 100);
             }
 
-            InvoiceTaxRate::where('invoice_tax_rate_id', $invoiceTaxRate->invoice_tax_rate_id)
+            InvoiceTaxRate::query()->where('invoice_tax_rate_id', $invoiceTaxRate->invoice_tax_rate_id)
                 ->update(['invoice_tax_rate_amount' => $invoiceTaxRateAmount]);
         });
 
         // Update invoice amount with total tax using Eloquent sum
-        $invoiceTaxTotal = InvoiceTaxRate::where('invoice_id', $invoiceId)
+        $invoiceTaxTotal = InvoiceTaxRate::query()->where('invoice_id', $invoiceId)
             ->sum('invoice_tax_rate_amount');
 
-        InvoiceAmount::where('invoice_id', $invoiceId)
+        InvoiceAmount::query()->where('invoice_id', $invoiceId)
             ->update(['invoice_tax_total' => $invoiceTaxTotal]);
 
-        $invoiceAmount = InvoiceAmount::where('invoice_id', $invoiceId)->first();
+        $invoiceAmount = InvoiceAmount::query()->where('invoice_id', $invoiceId)->first();
 
         $invoiceTotal = $invoiceAmount->invoice_item_subtotal
             + $invoiceAmount->invoice_item_tax_total
@@ -146,7 +146,7 @@ class InvoiceAmountService
         }
 
         $invoicePaid = $invoiceAmount->invoice_paid ?? 0;
-        InvoiceAmount::where('invoice_id', $invoiceId)
+        InvoiceAmount::query()->where('invoice_id', $invoiceId)
             ->update([
                 'invoice_total'   => $invoiceTotal,
                 'invoice_balance' => $invoiceTotal - $invoicePaid,

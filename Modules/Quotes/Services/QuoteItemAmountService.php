@@ -24,7 +24,7 @@ class QuoteItemAmountService
     public function calculate(int $itemId, array &$globalDiscount = []): void
     {
         // Get the item with tax rate
-        $item = QuoteItem::with('taxRate')->findOrFail($itemId);
+        $item = QuoteItem::query()->with('taxRate')->findOrFail($itemId);
 
         // Calculate item subtotal
         $itemSubtotal = $item->item_quantity * $item->item_price;

@@ -258,7 +258,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
         
-        $this->assertNotNull(QuoteTaxRate::where('quote_id', $quote->quote_id)
+        $this->assertNotNull(QuoteTaxRate::query()->where('quote_id', $quote->quote_id)
             ->where('tax_rate_id', $taxRate->tax_rate_id)
             ->first());
     }
@@ -431,7 +431,7 @@ class QuotesAjaxControllerTest extends FeatureTestCase
         
         $newQuote = Quote::find($data['quote_id']);
         $this->assertNotNull($newQuote);
-        $this->assertEquals(3, QuoteItem::where('quote_id', $newQuote->quote_id)->count());
+        $this->assertEquals(3, QuoteItem::query()->where('quote_id', $newQuote->quote_id)->count());
     }
 
     /**

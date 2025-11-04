@@ -50,6 +50,6 @@ class UnitService extends BaseService
      */
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
-        return Unit::all();
+        return Unit::query()->get();
     }
 }

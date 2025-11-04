@@ -43,6 +43,18 @@ class CustomValueService extends BaseService
      */
     public function getByFieldId(int $customFieldId)
     {
-        return CustomValue::where('custom_field_id', $customFieldId)->get();
+        return CustomValue::query()->where('custom_field_id', $customFieldId)->get();
+    }
+
+    /**
+     * Get custom values by multiple IDs.
+     *
+     * @param array $ids
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByIds(array $ids)
+    {
+        return CustomValue::query()->whereIn('custom_values_id', $ids)->get();
     }
 }

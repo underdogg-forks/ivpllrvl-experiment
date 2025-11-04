@@ -50,7 +50,7 @@ class QuoteItemAmountServiceTest extends AbstractServiceTestCase
         $this->service->calculate($item->item_id);
 
         /** Assert */
-        $itemAmount = \Modules\Quotes\Models\QuoteItemAmount::where('item_id', $item->item_id)->first();
+        $itemAmount = \Modules\Quotes\Models\QuoteItemAmount::query()->where('item_id', $item->item_id)->first();
         $this->assertNotNull($itemAmount);
         $this->assertEquals(200.00, $itemAmount->item_subtotal); // 2 * 100
         $this->assertEquals(10.00, $itemAmount->item_discount); // 5 * 2
@@ -92,7 +92,7 @@ class QuoteItemAmountServiceTest extends AbstractServiceTestCase
         $this->service->calculate($item->item_id, $globalDiscount);
 
         /** Assert */
-        $itemAmount = \Modules\Quotes\Models\QuoteItemAmount::where('item_id', $item->item_id)->first();
+        $itemAmount = \Modules\Quotes\Models\QuoteItemAmount::query()->where('item_id', $item->item_id)->first();
         $this->assertNotNull($itemAmount);
         $this->assertEquals(200.00, $itemAmount->item_subtotal); // 2 * 100
         // Global discount should be applied proportionally
@@ -125,7 +125,7 @@ class QuoteItemAmountServiceTest extends AbstractServiceTestCase
         $this->service->calculate($item->item_id, $globalDiscount);
 
         /** Assert */
-        $itemAmount = \Modules\Quotes\Models\QuoteItemAmount::where('item_id', $item->item_id)->first();
+        $itemAmount = \Modules\Quotes\Models\QuoteItemAmount::query()->where('item_id', $item->item_id)->first();
         $this->assertNotNull($itemAmount);
         $this->assertEquals(100.00, $itemAmount->item_subtotal);
         // This item should get 25.00 discount (50% of total discount since it's 50% of subtotal)
