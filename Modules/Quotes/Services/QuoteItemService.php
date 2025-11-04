@@ -13,32 +13,10 @@ use Modules\Quotes\Models\QuoteItemAmount;
  */
 class QuoteItemService
 {
-    /**
-     * QuoteAmountService instance.
-     *
-     * @var QuoteAmountService
-     */
-    protected QuoteAmountService $quoteAmountService;
-
-    /**
-     * QuoteItemAmountService instance.
-     *
-     * @var QuoteItemAmountService
-     */
-    protected QuoteItemAmountService $quoteItemAmountService;
-
-    /**
-     * Constructor.
-     *
-     * @param QuoteAmountService     $quoteAmountService
-     * @param QuoteItemAmountService $quoteItemAmountService
-     */
-    public function __construct(
-        QuoteAmountService $quoteAmountService,
-        QuoteItemAmountService $quoteItemAmountService
+        public function __construct(
+        protected QuoteAmountService $quoteAmountService,
+        protected QuoteItemAmountService $quoteItemAmountService
     ) {
-        $this->quoteAmountService     = $quoteAmountService;
-        $this->quoteItemAmountService = $quoteItemAmountService;
     }
 
     /**

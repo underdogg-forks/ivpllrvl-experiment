@@ -16,12 +16,9 @@ use Modules\Products\Services\ProductService;
  * @legacy-file application/modules/products/controllers/Products.php
  */
 class ProductsController
-{
-    protected ProductService $productService;
-
-    public function __construct(ProductService $productService)
-    {
-        $this->productService = $productService;
+{    public function __construct(
+        protected ProductService $productService
+    ) {
     }
 
     /**

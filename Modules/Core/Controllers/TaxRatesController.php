@@ -14,12 +14,9 @@ use Modules\Products\Models\TaxRate;
  * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
  */
 class TaxRatesController
-{
-    protected TaxRatesService $taxRatesService;
-
-    public function __construct(TaxRatesService $taxRatesService)
-    {
-        $this->taxRatesService = $taxRatesService;
+{    public function __construct(
+        protected TaxRatesService $taxRatesService
+    ) {
     }
 
     /**

@@ -18,16 +18,14 @@ class InvoiceGroupsController
      *
      * @var InvoiceGroupService
      */
-    protected InvoiceGroupService $invoiceGroupService;
-
     /**
      * Constructor.
      *
      * @param InvoiceGroupService $invoiceGroupService
      */
-    public function __construct(InvoiceGroupService $invoiceGroupService)
-    {
-        $this->invoiceGroupService = $invoiceGroupService;
+    public function __construct(
+        protected InvoiceGroupService $invoiceGroupService
+    ) {
     }
     /**
      * Display a paginated list of invoice groups

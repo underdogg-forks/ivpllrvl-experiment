@@ -13,12 +13,9 @@ use Modules\Core\Services\CustomFieldService;
  * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
  */
 class CustomFieldsController
-{
-    protected CustomFieldService $customFieldService;
-
-    public function __construct(CustomFieldService $customFieldService)
-    {
-        $this->customFieldService = $customFieldService;
+{    public function __construct(
+        protected CustomFieldService $customFieldService
+    ) {
     }
 
     /**

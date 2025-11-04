@@ -12,16 +12,14 @@ class RecurringController
      *
      * @var InvoicesRecurringService
      */
-    protected InvoicesRecurringService $invoicesRecurringService;
-
     /**
      * Constructor.
      *
      * @param InvoicesRecurringService $invoicesRecurringService
      */
-    public function __construct(InvoicesRecurringService $invoicesRecurringService)
-    {
-        $this->invoicesRecurringService = $invoicesRecurringService;
+    public function __construct(
+        protected InvoicesRecurringService $invoicesRecurringService
+    ) {
     }
     /**
      * Display list of recurring invoices with filter.

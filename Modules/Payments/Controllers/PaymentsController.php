@@ -16,42 +16,11 @@ use Modules\Invoices\Services\InvoiceService;
  */
 class PaymentsController
 {
-    /**
-     * Payment service instance.
-     *
-     * @var PaymentService
-     */
-    protected PaymentService $paymentService;
-
-    /**
-     * PaymentMethod service instance.
-     *
-     * @var PaymentMethodService
-     */
-    protected PaymentMethodService $paymentMethodService;
-
-    /**
-     * Invoice service instance.
-     *
-     * @var InvoiceService
-     */
-    protected InvoiceService $invoiceService;
-
-    /**
-     * Constructor.
-     *
-     * @param PaymentService       $paymentService
-     * @param PaymentMethodService $paymentMethodService
-     * @param InvoiceService       $invoiceService
-     */
-    public function __construct(
-        PaymentService $paymentService,
-        PaymentMethodService $paymentMethodService,
-        InvoiceService $invoiceService
+        public function __construct(
+        protected PaymentService $paymentService,
+        protected PaymentMethodService $paymentMethodService,
+        protected InvoiceService $invoiceService
     ) {
-        $this->paymentService       = $paymentService;
-        $this->paymentMethodService = $paymentMethodService;
-        $this->invoiceService       = $invoiceService;
     }
     /**
      * Display a paginated list of payments.

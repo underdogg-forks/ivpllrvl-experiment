@@ -24,18 +24,11 @@ use Modules\Quotes\Services\QuoteService;
  */
 class QuotesController
 {
-    protected QuoteService $quoteService;
-    protected QuoteAmountService $quoteAmountService;
-    protected UserService $userService;
-
     public function __construct(
-        QuoteService $quoteService,
-        QuoteAmountService $quoteAmountService,
-        UserService $userService
+        protected QuoteService $quoteService,
+        protected QuoteAmountService $quoteAmountService,
+        protected UserService $userService
     ) {
-        $this->quoteService = $quoteService;
-        $this->quoteAmountService = $quoteAmountService;
-        $this->userService = $userService;
     }
 
     /**

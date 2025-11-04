@@ -8,12 +8,9 @@ use Modules\Projects\Models\Task;
 use Modules\Projects\Services\TaskService;
 
 class TasksController
-{
-    protected TaskService $taskService;
-
-    public function __construct(TaskService $taskService)
-    {
-        $this->taskService = $taskService;
+{    public function __construct(
+        protected TaskService $taskService
+    ) {
     }
 
     public function index(int $page = 0): \Illuminate\View\View

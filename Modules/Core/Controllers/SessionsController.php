@@ -24,22 +24,16 @@ use Modules\Sessions\Controllers\UsersService;
  * @legacy-file application/modules/sessions/controllers/Sessions.php
  */
 class SessionsController
-{
-    protected SessionsService $sessionsService;
-    protected UsersService $usersService;
-
-    /**
+{    /**
      * Initialize the SessionsController with dependency injection.
      *
      * @param SessionsService $sessionsService
      * @param UsersService $usersService
      */
     public function __construct(
-        SessionsService $sessionsService,
-        UsersService $usersService
+        protected SessionsService $sessionsService,
+        protected UsersService $usersService
     ) {
-        $this->sessionsService = $sessionsService;
-        $this->usersService = $usersService;
     }
 
     /**

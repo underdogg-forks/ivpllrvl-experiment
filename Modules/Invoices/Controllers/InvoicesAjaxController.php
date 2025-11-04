@@ -25,25 +25,13 @@ use Modules\Invoices\Services\InvoicesRecurringService;
  * @legacy-file application/modules/invoices/controllers/Ajax.php
  */
 class InvoicesAjaxController
-{
-    protected InvoiceService $invoiceService;
-    protected InvoiceItemService $invoiceItemService;
-    protected UserService $userService;
-    protected ClientService $clientService;
-    protected InvoicesRecurringService $invoicesRecurringService;
-
-    public function __construct(
-        InvoiceService $invoiceService,
-        InvoiceItemService $invoiceItemService,
-        UserService $userService,
-        ClientService $clientService,
-        InvoicesRecurringService $invoicesRecurringService
+{    public function __construct(
+        protected InvoiceService $invoiceService,
+        protected InvoiceItemService $invoiceItemService,
+        protected UserService $userService,
+        protected ClientService $clientService,
+        protected InvoicesRecurringService $invoicesRecurringService
     ) {
-        $this->invoiceService = $invoiceService;
-        $this->invoiceItemService = $invoiceItemService;
-        $this->userService = $userService;
-        $this->clientService = $clientService;
-        $this->invoicesRecurringService = $invoicesRecurringService;
     }
     /**
      * Save invoice with items, tax rates, and custom fields.

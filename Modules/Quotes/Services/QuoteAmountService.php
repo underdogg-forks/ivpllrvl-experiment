@@ -22,16 +22,14 @@ class QuoteAmountService
      *
      * @var QuoteService
      */
-    protected QuoteService $quoteService;
-
     /**
      * Constructor.
      *
      * @param QuoteService $quoteService
      */
-    public function __construct(QuoteService $quoteService)
-    {
-        $this->quoteService = $quoteService;
+    public function __construct(
+        protected QuoteService $quoteService
+    ) {
     }
 
     /**

@@ -13,12 +13,9 @@ use Modules\Core\Services\EmailTemplateService;
  * @legacy-file application/modules/email_templates/controllers/Email_templates.php
  */
 class EmailTemplatesController
-{
-    protected EmailTemplateService $emailTemplateService;
-
-    public function __construct(EmailTemplateService $emailTemplateService)
-    {
-        $this->emailTemplateService = $emailTemplateService;
+{    public function __construct(
+        protected EmailTemplateService $emailTemplateService
+    ) {
     }
 
     /**

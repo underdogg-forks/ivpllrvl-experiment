@@ -13,12 +13,9 @@ use Modules\Products\Services\FamilyService;
  * @legacy-file application/modules/families/controllers/Families.php
  */
 class FamiliesController
-{
-    protected FamilyService $familyService;
-
-    public function __construct(FamilyService $familyService)
-    {
-        $this->familyService = $familyService;
+{    public function __construct(
+        protected FamilyService $familyService
+    ) {
     }
 
     /**

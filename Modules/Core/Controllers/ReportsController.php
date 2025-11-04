@@ -13,17 +13,14 @@ use Modules\Core\Services\ReportsService;
  * @legacy-file application/modules/reports/controllers/Reports.php
  */
 class ReportsController
-{
-    protected ReportsService $reportsService;
-
-    /**
+{    /**
      * Initialize the ReportsController with dependency injection.
      *
      * @param ReportsService $reportsService
      */
-    public function __construct(ReportsService $reportsService)
-    {
-        $this->reportsService = $reportsService;
+    public function __construct(
+        protected ReportsService $reportsService
+    ) {
     }
 
     /**

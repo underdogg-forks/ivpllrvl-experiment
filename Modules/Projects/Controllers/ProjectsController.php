@@ -14,16 +14,10 @@ use Modules\Projects\Services\TaskService;
  * @legacy-file application/modules/projects/controllers/Projects.php
  */
 class ProjectsController
-{
-    protected ProjectService $projectService;
-    protected TaskService $taskService;
-
-    public function __construct(
-        ProjectService $projectService,
-        TaskService $taskService
+{    public function __construct(
+        protected ProjectService $projectService,
+        protected TaskService $taskService
     ) {
-        $this->projectService = $projectService;
-        $this->taskService = $taskService;
     }
 
     /**

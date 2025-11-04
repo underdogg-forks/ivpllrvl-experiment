@@ -26,15 +26,7 @@ use Modules\Products\Services\TaxRateService;
  * @legacy-file application/modules/settings/controllers/Settings.php
  */
 class SettingsController
-{
-    protected InvoiceGroupService $invoiceGroupService;
-    protected TaxRateService $taxRateService;
-    protected EmailTemplateService $emailTemplateService;
-    protected PaymentMethodService $paymentMethodService;
-    protected CustomFieldService $customFieldService;
-    protected SettingsService $settingsService;
-
-    /**
+{    /**
      * Initialize the SettingsController with dependency injection.
      *
      * @param InvoiceGroupService $invoiceGroupService
@@ -45,19 +37,13 @@ class SettingsController
      * @param SettingsService $settingsService
      */
     public function __construct(
-        InvoiceGroupService $invoiceGroupService,
-        TaxRateService $taxRateService,
-        EmailTemplateService $emailTemplateService,
-        PaymentMethodService $paymentMethodService,
-        CustomFieldService $customFieldService,
-        SettingsService $settingsService
+        protected InvoiceGroupService $invoiceGroupService,
+        protected TaxRateService $taxRateService,
+        protected EmailTemplateService $emailTemplateService,
+        protected PaymentMethodService $paymentMethodService,
+        protected CustomFieldService $customFieldService,
+        protected SettingsService $settingsService
     ) {
-        $this->invoiceGroupService = $invoiceGroupService;
-        $this->taxRateService = $taxRateService;
-        $this->emailTemplateService = $emailTemplateService;
-        $this->paymentMethodService = $paymentMethodService;
-        $this->customFieldService = $customFieldService;
-        $this->settingsService = $settingsService;
     }
 
     /**

@@ -363,12 +363,12 @@ class QuoteService
             ->where('quote_id', $quoteId)
             ->first();
 
-        if ($quote && $quote->quote_status_id == 2) {
-            return Quote::where('quote_id', $quoteId)
-                ->update(['quote_status_id' => 3]) > 0;
+        if (!$quote || $quote->quote_status_id !== 2) {
+            return false;
         }
 
-        return false;
+        return Quote::where('quote_id', $quoteId)
+            ->update(['quote_status_id' => 3]) > 0;
     }
 
     /**
@@ -384,12 +384,12 @@ class QuoteService
             ->where('quote_id', $quoteId)
             ->first();
 
-        if ($quote && $quote->quote_status_id == 1) {
-            return Quote::where('quote_id', $quoteId)
-                ->update(['quote_status_id' => 2]) > 0;
+        if (!$quote || $quote->quote_status_id !== 1) {
+            return false;
         }
 
-        return false;
+        return Quote::where('quote_id', $quoteId)
+            ->update(['quote_status_id' => 2]) > 0;
     }
 
     /**
@@ -405,10 +405,13 @@ class QuoteService
 
         // Generate new quote number if draft with no number and setting is off
         $generateForDraft = get_setting('generate_quote_number_for_draft');
-        if ($quote->quote_status_id == 1 && empty($quote->quote_number) && $generateForDraft == 0) {
-            $quoteNumber = $this->generateQuoteNumber($quote->invoice_group_id);
-            Quote::where('quote_id', $quoteId)
-                ->update(['quote_number' => $quoteNumber]);
+        
+        if ($quote->quote_status_id !== 1 || !empty($quote->quote_number) || $generateForDraft != 0) {
+            return;
         }
+
+        $quoteNumber = $this->generateQuoteNumber($quote->invoice_group_id);
+        Quote::where('quote_id', $quoteId)
+            ->update(['quote_number' => $quoteNumber]);
     }
 }

@@ -12,16 +12,14 @@ class UserClientsController
      *
      * @var UserClientService
      */
-    protected UserClientService $userClientService;
-
     /**
      * Constructor.
      *
      * @param UserClientService $userClientService
      */
-    public function __construct(UserClientService $userClientService)
-    {
-        $this->userClientService = $userClientService;
+    public function __construct(
+        protected UserClientService $userClientService
+    ) {
     }
 
     /** @legacy-file application/modules/user_clients/controllers/User_clients.php */

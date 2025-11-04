@@ -17,16 +17,14 @@ class QuoteTaxRateService
      *
      * @var QuoteAmountService
      */
-    protected QuoteAmountService $quoteAmountService;
-
     /**
      * Constructor.
      *
      * @param QuoteAmountService $quoteAmountService
      */
-    public function __construct(QuoteAmountService $quoteAmountService)
-    {
-        $this->quoteAmountService = $quoteAmountService;
+    public function __construct(
+        protected QuoteAmountService $quoteAmountService
+    ) {
     }
 
     /**

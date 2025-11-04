@@ -18,14 +18,7 @@ use Modules\Core\Services\CustomFieldService;
  * @legacy-file application/modules/users/controllers/Users.php
  */
 class UsersController
-{
-    protected UserService $userService;
-    protected CustomFieldService $customFieldService;
-    protected CustomValueService $customValueService;
-    protected UserClientService $userClientService;
-    protected ClientService $clientService;
-
-    /**
+{    /**
      * Initialize the UsersController with dependency injection.
      *
      * @param UserService $userService
@@ -35,17 +28,12 @@ class UsersController
      * @param ClientService $clientService
      */
     public function __construct(
-        UserService $userService,
-        CustomFieldService $customFieldService,
-        CustomValueService $customValueService,
-        UserClientService $userClientService,
-        ClientService $clientService
+        protected UserService $userService,
+        protected CustomFieldService $customFieldService,
+        protected CustomValueService $customValueService,
+        protected UserClientService $userClientService,
+        protected ClientService $clientService
     ) {
-        $this->userService = $userService;
-        $this->customFieldService = $customFieldService;
-        $this->customValueService = $customValueService;
-        $this->userClientService = $userClientService;
-        $this->clientService = $clientService;
     }
 
     /**

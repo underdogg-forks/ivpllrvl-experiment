@@ -15,12 +15,7 @@ use Modules\Crm\Services\ClientService;
  * @legacy-file application/modules/user_clients/controllers/User_clients.php
  */
 class UserClientsController
-{
-    protected UserService $userService;
-    protected UserClientService $userClientService;
-    protected ClientService $clientService;
-
-    /**
+{    /**
      * Initialize the UserClientsController with dependency injection.
      *
      * @param UserService $userService
@@ -28,13 +23,10 @@ class UserClientsController
      * @param ClientService $clientService
      */
     public function __construct(
-        UserService $userService,
-        UserClientService $userClientService,
-        ClientService $clientService
+        protected UserService $userService,
+        protected UserClientService $userClientService,
+        protected ClientService $clientService
     ) {
-        $this->userService = $userService;
-        $this->userClientService = $userClientService;
-        $this->clientService = $clientService;
     }
 
     /**

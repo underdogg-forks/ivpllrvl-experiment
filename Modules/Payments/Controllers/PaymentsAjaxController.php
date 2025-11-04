@@ -15,32 +15,10 @@ use Modules\Payments\Services\PaymentMethodService;
  */
 class PaymentsAjaxController
 {
-    /**
-     * Payment service instance.
-     *
-     * @var PaymentService
-     */
-    protected PaymentService $paymentService;
-
-    /**
-     * Payment method service instance.
-     *
-     * @var PaymentMethodService
-     */
-    protected PaymentMethodService $paymentMethodService;
-
-    /**
-     * Constructor.
-     *
-     * @param PaymentService       $paymentService
-     * @param PaymentMethodService $paymentMethodService
-     */
-    public function __construct(
-        PaymentService $paymentService,
-        PaymentMethodService $paymentMethodService
+        public function __construct(
+        protected PaymentService $paymentService,
+        protected PaymentMethodService $paymentMethodService
     ) {
-        $this->paymentService       = $paymentService;
-        $this->paymentMethodService = $paymentMethodService;
     }
 
     /**

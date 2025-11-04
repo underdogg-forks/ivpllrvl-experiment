@@ -26,7 +26,7 @@ abstract class BaseService
      *
      * @return mixed
      */
-    public function create(array $data)
+    public function create(array $data): mixed
     {
         $modelClass = $this->getModelClass();
         
@@ -45,7 +45,7 @@ abstract class BaseService
      *
      * @return mixed
      */
-    public function update(int $id, array $data)
+    public function update(int $id, array $data): mixed
     {
         $modelClass = $this->getModelClass();
         
@@ -86,7 +86,7 @@ abstract class BaseService
      *
      * @return mixed
      */
-    public function find(int $id)
+    public function find(int $id): mixed
     {
         $modelClass = $this->getModelClass();
         
@@ -104,7 +104,7 @@ abstract class BaseService
      *
      * @return mixed
      */
-    public function findOrFail(int $id)
+    public function findOrFail(int $id): mixed
     {
         $modelClass = $this->getModelClass();
         

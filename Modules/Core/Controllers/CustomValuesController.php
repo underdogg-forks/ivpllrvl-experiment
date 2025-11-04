@@ -15,16 +15,10 @@ use Modules\Custom\Models\CustomValue;
  * @legacy-file application/modules/custom_values/controllers/Custom_values.php
  */
 class CustomValuesController
-{
-    protected CustomValueService $customValueService;
-    protected CustomFieldService $customFieldService;
-
-    public function __construct(
-        CustomValueService $customValueService,
-        CustomFieldService $customFieldService
+{    public function __construct(
+        protected CustomValueService $customValueService,
+        protected CustomFieldService $customFieldService
     ) {
-        $this->customValueService = $customValueService;
-        $this->customFieldService = $customFieldService;
     }
 
     /**

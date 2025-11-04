@@ -15,12 +15,7 @@ use Modules\Core\Services\SettingsService;
  * @legacy-file application/modules/clients/controllers/Ajax.php
  */
 class ClientsAjaxController
-{
-    protected ClientService $clientService;
-    protected ClientNoteService $clientNoteService;
-    protected SettingsService $settingsService;
-
-    /**
+{    /**
      * Initialize the ClientsAjaxController with dependency injection.
      *
      * @param ClientService $clientService
@@ -28,13 +23,10 @@ class ClientsAjaxController
      * @param SettingsService $settingsService
      */
     public function __construct(
-        ClientService $clientService,
-        ClientNoteService $clientNoteService,
-        SettingsService $settingsService
+        protected ClientService $clientService,
+        protected ClientNoteService $clientNoteService,
+        protected SettingsService $settingsService
     ) {
-        $this->clientService = $clientService;
-        $this->clientNoteService = $clientNoteService;
-        $this->settingsService = $settingsService;
     }
 
     /**

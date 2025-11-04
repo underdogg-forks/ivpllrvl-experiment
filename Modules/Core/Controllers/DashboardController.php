@@ -17,15 +17,7 @@ use Modules\Projects\Services\TaskService;
  * @legacy-file application/modules/dashboard/controllers/Dashboard.php
  */
 class DashboardController
-{
-    protected InvoiceAmountService $invoiceAmountService;
-    protected QuoteAmountService $quoteAmountService;
-    protected InvoiceService $invoiceService;
-    protected QuoteService $quoteService;
-    protected ProjectService $projectService;
-    protected TaskService $taskService;
-
-    /**
+{    /**
      * Initialize the DashboardController with dependency injection.
      *
      * @param InvoiceAmountService $invoiceAmountService
@@ -36,19 +28,13 @@ class DashboardController
      * @param TaskService $taskService
      */
     public function __construct(
-        InvoiceAmountService $invoiceAmountService,
-        QuoteAmountService $quoteAmountService,
-        InvoiceService $invoiceService,
-        QuoteService $quoteService,
-        ProjectService $projectService,
-        TaskService $taskService
+        protected InvoiceAmountService $invoiceAmountService,
+        protected QuoteAmountService $quoteAmountService,
+        protected InvoiceService $invoiceService,
+        protected QuoteService $quoteService,
+        protected ProjectService $projectService,
+        protected TaskService $taskService
     ) {
-        $this->invoiceAmountService = $invoiceAmountService;
-        $this->quoteAmountService = $quoteAmountService;
-        $this->invoiceService = $invoiceService;
-        $this->quoteService = $quoteService;
-        $this->projectService = $projectService;
-        $this->taskService = $taskService;
     }
     /**
      * Display the admin dashboard.

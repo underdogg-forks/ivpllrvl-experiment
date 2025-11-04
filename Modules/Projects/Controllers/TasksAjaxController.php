@@ -14,17 +14,14 @@ use Modules\Projects\Models\Task;
  * @legacy-file application/modules/tasks/controllers/Ajax.php
  */
 class TasksAjaxController
-{
-    protected TaskService $taskService;
-
-    /**
+{    /**
      * Initialize the TasksAjaxController with dependency injection.
      *
      * @param TaskService $taskService
      */
-    public function __construct(TaskService $taskService)
-    {
-        $this->taskService = $taskService;
+    public function __construct(
+        protected TaskService $taskService
+    ) {
     }
     /**
      * Display modal for task lookups (AJAX endpoint).

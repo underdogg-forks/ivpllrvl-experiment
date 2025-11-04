@@ -35,40 +35,20 @@ use Modules\Quotes\Services\QuoteTaxRateService;
  */
 class QuotesAjaxController
 {
-    protected QuoteService $quoteService;
-    protected QuoteAmountService $quoteAmountService;
-    protected QuoteItemService $quoteItemService;
-    protected QuoteTaxRateService $quoteTaxRateService;
-    protected UnitService $unitService;
-    protected InvoiceService $invoiceService;
-    protected UserService $userService;
-    protected ClientService $clientService;
-    protected InvoiceGroupService $invoiceGroupService;
-    protected TaxRateService $taxRateService;
-
     public function __construct(
-        QuoteService $quoteService,
-        QuoteAmountService $quoteAmountService,
-        QuoteItemService $quoteItemService,
-        QuoteTaxRateService $quoteTaxRateService,
-        UnitService $unitService,
-        InvoiceService $invoiceService,
-        UserService $userService,
-        ClientService $clientService,
-        InvoiceGroupService $invoiceGroupService,
-        TaxRateService $taxRateService
+        protected QuoteService $quoteService,
+        protected QuoteAmountService $quoteAmountService,
+        protected QuoteItemService $quoteItemService,
+        protected QuoteTaxRateService $quoteTaxRateService,
+        protected UnitService $unitService,
+        protected InvoiceService $invoiceService,
+        protected UserService $userService,
+        protected ClientService $clientService,
+        protected InvoiceGroupService $invoiceGroupService,
+        protected TaxRateService $taxRateService
     ) {
-        $this->quoteService = $quoteService;
-        $this->quoteAmountService = $quoteAmountService;
-        $this->quoteItemService = $quoteItemService;
-        $this->quoteTaxRateService = $quoteTaxRateService;
-        $this->unitService = $unitService;
-        $this->invoiceService = $invoiceService;
-        $this->userService = $userService;
-        $this->clientService = $clientService;
-        $this->invoiceGroupService = $invoiceGroupService;
-        $this->taxRateService = $taxRateService;
     }
+
     /**
      * Save quote with items, tax rates, and custom fields.
      *

@@ -17,13 +17,7 @@ use Modules\Invoices\Services\InvoicesRecurringService;
  * @legacy-file application/modules/invoices/controllers/Cron.php
  */
 class CronController
-{
-    protected InvoiceService $invoiceService;
-    protected InvoicesRecurringService $invoicesRecurringService;
-    protected EmailTemplateService $emailTemplateService;
-    protected UploadService $uploadService;
-
-    /**
+{    /**
      * Initialize the CronController with dependency injection.
      *
      * @param InvoiceService $invoiceService
@@ -32,15 +26,11 @@ class CronController
      * @param UploadService $uploadService
      */
     public function __construct(
-        InvoiceService $invoiceService,
-        InvoicesRecurringService $invoicesRecurringService,
-        EmailTemplateService $emailTemplateService,
-        UploadService $uploadService
+        protected InvoiceService $invoiceService,
+        protected InvoicesRecurringService $invoicesRecurringService,
+        protected EmailTemplateService $emailTemplateService,
+        protected UploadService $uploadService
     ) {
-        $this->invoiceService = $invoiceService;
-        $this->invoicesRecurringService = $invoicesRecurringService;
-        $this->emailTemplateService = $emailTemplateService;
-        $this->uploadService = $uploadService;
     }
     /**
      * Process recurring invoices via cron job.

@@ -12,19 +12,16 @@ use Modules\Core\Services\ImportService;
  * @legacy-file application/modules/import/controllers/Import.php
  */
 class ImportController
-{
-    protected ImportService $importService;
-    
-    private array $allowed_files = ['clients.csv', 'invoices.csv', 'invoice_items.csv', 'payments.csv'];
+{    private array $allowed_files = ['clients.csv', 'invoices.csv', 'invoice_items.csv', 'payments.csv'];
 
     /**
      * Initialize the ImportController with dependency injection.
      *
      * @param ImportService $importService
      */
-    public function __construct(ImportService $importService)
-    {
-        $this->importService = $importService;
+    public function __construct(
+        protected ImportService $importService
+    ) {
     }
 
     /**

@@ -25,14 +25,6 @@ use Modules\Core\Services\CustomFieldService;
 class ClientsController
 {
     private const CLIENT_TITLE = 'client_title';
-
-    protected ClientService $clientService;
-    protected ClientNoteService $clientNoteService;
-    protected InvoiceService $invoiceService;
-    protected QuoteService $quoteService;
-    protected PaymentService $paymentService;
-    protected CustomFieldService $customFieldService;
-
     /**
      * Initialize the ClientsController with dependency injection.
      *
@@ -44,19 +36,13 @@ class ClientsController
      * @param CustomFieldService $customFieldService
      */
     public function __construct(
-        ClientService $clientService,
-        ClientNoteService $clientNoteService,
-        InvoiceService $invoiceService,
-        QuoteService $quoteService,
-        PaymentService $paymentService,
-        CustomFieldService $customFieldService
+        protected ClientService $clientService,
+        protected ClientNoteService $clientNoteService,
+        protected InvoiceService $invoiceService,
+        protected QuoteService $quoteService,
+        protected PaymentService $paymentService,
+        protected CustomFieldService $customFieldService
     ) {
-        $this->clientService = $clientService;
-        $this->clientNoteService = $clientNoteService;
-        $this->invoiceService = $invoiceService;
-        $this->quoteService = $quoteService;
-        $this->paymentService = $paymentService;
-        $this->customFieldService = $customFieldService;
     }
 
     /**

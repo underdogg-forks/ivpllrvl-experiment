@@ -36,112 +36,18 @@ use Sumex;
  */
 class InvoicesController
 {
-    /**
-     * User service instance.
-     *
-     * @var UserService
-     */
-    protected UserService $userService;
-
-    /**
-     * Invoice service instance.
-     *
-     * @var InvoiceService
-     */
-    protected InvoiceService $invoiceService;
-
-    /**
-     * InvoiceItem service instance.
-     *
-     * @var InvoiceItemService
-     */
-    protected InvoiceItemService $invoiceItemService;
-
-    /**
-     * InvoiceTaxRate service instance.
-     *
-     * @var InvoiceTaxRateService
-     */
-    protected InvoiceTaxRateService $invoiceTaxRateService;
-
-    /**
-     * CustomField service instance.
-     *
-     * @var CustomFieldService
-     */
-    protected CustomFieldService $customFieldService;
-
-    /**
-     * CustomValue service instance.
-     *
-     * @var CustomValueService
-     */
-    protected CustomValueService $customValueService;
-
-    /**
-     * TaxRate service instance.
-     *
-     * @var TaxRateService
-     */
-    protected TaxRateService $taxRateService;
-
-    /**
-     * Unit service instance.
-     *
-     * @var UnitService
-     */
-    protected UnitService $unitService;
-
-    /**
-     * PaymentMethod service instance.
-     *
-     * @var PaymentMethodService
-     */
-    protected PaymentMethodService $paymentMethodService;
-
-    /**
-     * Task service instance.
-     *
-     * @var TaskService
-     */
-    protected TaskService $taskService;
-
-    /**
-     * Constructor.
-     *
-     * @param UserService            $userService
-     * @param InvoiceService         $invoiceService
-     * @param InvoiceItemService     $invoiceItemService
-     * @param InvoiceTaxRateService  $invoiceTaxRateService
-     * @param CustomFieldService     $customFieldService
-     * @param CustomValueService     $customValueService
-     * @param TaxRateService         $taxRateService
-     * @param UnitService            $unitService
-     * @param PaymentMethodService   $paymentMethodService
-     * @param TaskService            $taskService
-     */
-    public function __construct(
-        UserService $userService,
-        InvoiceService $invoiceService,
-        InvoiceItemService $invoiceItemService,
-        InvoiceTaxRateService $invoiceTaxRateService,
-        CustomFieldService $customFieldService,
-        CustomValueService $customValueService,
-        TaxRateService $taxRateService,
-        UnitService $unitService,
-        PaymentMethodService $paymentMethodService,
-        TaskService $taskService
+        public function __construct(
+        protected UserService $userService,
+        protected InvoiceService $invoiceService,
+        protected InvoiceItemService $invoiceItemService,
+        protected InvoiceTaxRateService $invoiceTaxRateService,
+        protected CustomFieldService $customFieldService,
+        protected CustomValueService $customValueService,
+        protected TaxRateService $taxRateService,
+        protected UnitService $unitService,
+        protected PaymentMethodService $paymentMethodService,
+        protected TaskService $taskService
     ) {
-        $this->userService           = $userService;
-        $this->invoiceService        = $invoiceService;
-        $this->invoiceItemService    = $invoiceItemService;
-        $this->invoiceTaxRateService = $invoiceTaxRateService;
-        $this->customFieldService    = $customFieldService;
-        $this->customValueService    = $customValueService;
-        $this->taxRateService        = $taxRateService;
-        $this->unitService           = $unitService;
-        $this->paymentMethodService  = $paymentMethodService;
-        $this->taskService           = $taskService;
     }
 
     /**

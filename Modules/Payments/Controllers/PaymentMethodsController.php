@@ -13,12 +13,9 @@ use Modules\Payments\Services\PaymentMethodService;
  * @legacy-file application/modules/payment_methods/controllers/Payment_methods.php
  */
 class PaymentMethodsController
-{
-    protected PaymentMethodService $paymentMethodService;
-
-    public function __construct(PaymentMethodService $paymentMethodService)
-    {
-        $this->paymentMethodService = $paymentMethodService;
+{    public function __construct(
+        protected PaymentMethodService $paymentMethodService
+    ) {
     }
 
     /**

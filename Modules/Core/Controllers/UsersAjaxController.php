@@ -18,13 +18,7 @@ use Modules\Crm\Services\UserClientService;
  * @legacy-file application/modules/users/controllers/Ajax.php
  */
 class UsersAjaxController
-{
-    protected UserService $userService;
-    protected ClientService $clientService;
-    protected UserClientService $userClientService;
-    protected SettingsService $settingsService;
-
-    /**
+{    /**
      * Initialize the UsersAjaxController with dependency injection.
      *
      * @param UserService $userService
@@ -33,15 +27,11 @@ class UsersAjaxController
      * @param SettingsService $settingsService
      */
     public function __construct(
-        UserService $userService,
-        ClientService $clientService,
-        UserClientService $userClientService,
-        SettingsService $settingsService
+        protected UserService $userService,
+        protected ClientService $clientService,
+        protected UserClientService $userClientService,
+        protected SettingsService $settingsService
     ) {
-        $this->userService = $userService;
-        $this->clientService = $clientService;
-        $this->userClientService = $userClientService;
-        $this->settingsService = $settingsService;
     }
 
     /**
