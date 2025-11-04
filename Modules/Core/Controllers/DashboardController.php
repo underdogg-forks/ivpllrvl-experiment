@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Controllers;
 
+use Modules\Core\Support\SettingsHelper;
 use Modules\Invoices\Services\InvoiceAmountService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Quotes\Services\QuoteAmountService;
@@ -46,8 +47,8 @@ class DashboardController
      */
     public function index(): \Illuminate\View\View
     {
-        $quote_overview_period = get_setting('quote_overview_period');
-        $invoice_overview_period = get_setting('invoice_overview_period');
+        $quote_overview_period = SettingsHelper::getSetting('quote_overview_period');
+        $invoice_overview_period = SettingsHelper::getSetting('invoice_overview_period');
 
         return view('core::dashboard_index', [
             'invoice_status_totals' => $this->invoiceAmountService->getStatusTotals($invoice_overview_period),

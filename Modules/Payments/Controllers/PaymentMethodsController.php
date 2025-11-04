@@ -5,6 +5,7 @@ namespace Modules\Payments\Controllers;
 use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * PaymentMethodsController
  *
@@ -67,7 +68,7 @@ class PaymentMethodsController
             }
 
             return redirect()->route('payment_methods.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $paymentMethod = $id ? $this->paymentMethodService->find($id) : new PaymentMethod();
@@ -96,6 +97,6 @@ class PaymentMethodsController
         $this->paymentMethodService->delete($id);
 
         return redirect()->route('payment_methods.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

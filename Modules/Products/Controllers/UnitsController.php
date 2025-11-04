@@ -6,6 +6,7 @@ use Modules\Products\Http\Requests\UnitRequest;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\UnitService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * UnitsController
  *
@@ -70,7 +71,7 @@ class UnitsController
         $this->unitService->create($request->validated());
 
         return redirect()->route('units.index')
-            ->with('alert_success', trans('record_successfully_saved'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
     }
 
     /**
@@ -104,7 +105,7 @@ class UnitsController
         $this->unitService->update($unit->unit_id, $request->validated());
 
         return redirect()->route('units.index')
-            ->with('alert_success', trans('record_successfully_saved'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
     }
 
     /**
@@ -122,6 +123,6 @@ class UnitsController
         $this->unitService->delete($unit->unit_id);
 
         return redirect()->route('units.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

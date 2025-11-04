@@ -3,6 +3,7 @@
 namespace Modules\Projects\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Core\Support\SettingsHelper;
 use Modules\Projects\Services\TaskService;
 use Modules\Projects\Models\Task;
 
@@ -13,8 +14,6 @@ use Modules\Projects\Models\Task;
  *
  * @legacy-file application/modules/tasks/controllers/Ajax.php
  */
-class TasksAjaxController
-*/
 class TasksAjaxController
 {
     /**
@@ -38,7 +37,7 @@ class TasksAjaxController
      */
     public function modalTaskLookups(?int $invoice_id = null): \Illuminate\Contracts\View\View
     {
-        $default_item_tax_rate = get_setting('default_item_tax_rate');
+        $default_item_tax_rate = SettingsHelper::getSetting('default_item_tax_rate');
         $data = [
             'default_item_tax_rate' => $default_item_tax_rate !== '' ? $default_item_tax_rate : 0,
             'tasks' => [],

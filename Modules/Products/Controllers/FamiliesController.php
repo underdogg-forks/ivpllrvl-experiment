@@ -5,6 +5,7 @@ namespace Modules\Products\Controllers;
 use Modules\Products\Models\Family;
 use Modules\Products\Services\FamilyService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * FamiliesController
  *
@@ -34,7 +35,7 @@ class FamiliesController
 
         return view('products::families_index', [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_families'),
+            'filter_placeholder' => TranslationHelper::trans('filter_families'),
             'filter_method'      => 'filter_families',
             'families'           => $families,
         ]);
@@ -73,7 +74,7 @@ class FamiliesController
             }
 
             return redirect()->route('families.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         // Load existing record for editing
@@ -109,6 +110,6 @@ class FamiliesController
         $this->familyService->delete($id);
 
         return redirect()->route('families.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

@@ -5,6 +5,7 @@ namespace Modules\Core\Controllers;
 use Modules\Core\Models\EmailTemplate;
 use Modules\Core\Services\EmailTemplateService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * EmailTemplatesController
  *
@@ -74,7 +75,7 @@ class EmailTemplatesController
                 $this->emailTemplateService->create($validated);
             }
 
-            return redirect()->route('email_templates.index')->with('alert_success', trans('record_successfully_saved'));
+            return redirect()->route('email_templates.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $template = $id ? $this->emailTemplateService->find($id) : new EmailTemplate();
@@ -99,6 +100,6 @@ class EmailTemplatesController
     {
         $this->emailTemplateService->delete($id);
 
-        return redirect()->route('email_templates.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('email_templates.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

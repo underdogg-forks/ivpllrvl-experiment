@@ -5,6 +5,7 @@ namespace Modules\Core\Controllers;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Services\CustomFieldService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * CustomFieldsController
  *
@@ -69,7 +70,7 @@ class CustomFieldsController
                 $this->customFieldService->create($validated);
             }
 
-            return redirect()->route('custom_fields.index')->with('alert_success', trans('record_successfully_saved'));
+            return redirect()->route('custom_fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         if ($id) {
@@ -98,6 +99,6 @@ class CustomFieldsController
     {
         $this->customFieldService->delete($id);
 
-        return redirect()->route('custom_fields.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('custom_fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

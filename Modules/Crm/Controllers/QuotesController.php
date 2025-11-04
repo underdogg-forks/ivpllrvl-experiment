@@ -4,6 +4,7 @@ namespace Modules\Crm\Controllers;
 
 use Modules\Quotes\Services\QuoteService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * QuotesController (Guest).
  *
@@ -48,6 +49,6 @@ class QuotesController
         $quote = $this->quoteService->getByUrlKey($urlKey);
         $quote->update(['quote_status_id' => 4]); // Approved
 
-        return redirect()->back()->with('alert_success', trans('quote_approved'));
+        return redirect()->back()->with('alert_success', TranslationHelper::trans('quote_approved'));
     }
 }

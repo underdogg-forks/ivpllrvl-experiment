@@ -18,6 +18,7 @@ use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 use Modules\Products\Services\TaxRateService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * SettingsController
  *
@@ -98,7 +99,7 @@ class SettingsController
                 $filename = $file->store('uploads', 'public');
                 $this->settingsService->save('login_logo', basename($filename));
             }
-            Session::flash('alert_success', trans('settings_successfully_saved'));
+            Session::flash('alert_success', TranslationHelper::trans('settings_successfully_saved'));
 
             return redirect()->route('settings.index');
         }
@@ -139,7 +140,7 @@ class SettingsController
         if ($logo) {
             Storage::disk('public')->delete('uploads/' . $logo);
             $this->settingsService->save($type . '_logo', '');
-            Session::flash('alert_success', trans($type . '_logo_removed'));
+            Session::flash('alert_success', TranslationHelper::trans($type . '_logo_removed'));
         }
 
         return redirect()->route('settings.index');

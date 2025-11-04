@@ -29,6 +29,8 @@ use Modules\Products\Services\UnitService;
 use Modules\Projects\Services\TaskService;
 use Sumex;
 
+use Modules\Core\Support\PdfHelper;
+use Modules\Core\Support\TranslationHelper;
 /**
  * InvoicesController.
  *
@@ -101,7 +103,7 @@ class InvoicesController
             'invoices'           => $invoices,
             'status'             => $status,
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_invoices'),
+            'filter_placeholder' => TranslationHelper::trans('filter_invoices'),
             'filter_method'      => 'filter_invoices',
             'invoice_statuses'   => app(InvoiceService::class)->getStatuses(),
         ];
@@ -126,7 +128,7 @@ class InvoicesController
 
         $data = [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_archives'),
+            'filter_placeholder' => TranslationHelper::trans('filter_archives'),
             'filter_method'      => 'filter_archives',
             'invoices_archive'   => $invoiceArray,
         ];
@@ -258,7 +260,7 @@ class InvoicesController
             // Delete the invoice
             $this->invoiceService->deleteInvoice($invoiceId);
         } else {
-            session()->flash('alert_error', trans('invoice_deletion_forbidden'));
+            session()->flash('alert_error', TranslationHelper::trans('invoice_deletion_forbidden'));
         }
 
         return redirect()->route('invoices.index');
@@ -288,7 +290,7 @@ class InvoicesController
         }
 
         // Generate PDF using helper
-        $pdfContent = generate_invoice_pdf($invoiceId, $stream, $invoiceTemplate, null);
+        $pdfContent = PdfHelper::generate_invoice_pdf($invoiceId, $stream, $invoiceTemplate, null);
 
         if ($stream) {
             return response($pdfContent)
@@ -337,7 +339,7 @@ class InvoicesController
             $generator = $xml_setting['generator'] ?? $generator;
         }
 
-        $filename = trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number);
+        $filename = TranslationHelper::trans('invoice') . '_' . str_replace(['\\', '/'], '_', $invoice->invoice_number);
         $xmlPath  = generate_xml_invoice_file($invoice, $items, $generator, $filename, $options);
 
         $content = file_get_contents($xmlPath);
@@ -446,7 +448,7 @@ class InvoicesController
             $invoiceAmountService->calculate($invoice->invoice_id, $globalDiscount);
         }
 
-        session()->flash('alert_success', trans('all_invoices_recalculated'));
+        session()->flash('alert_success', TranslationHelper::trans('all_invoices_recalculated'));
 
         return redirect()->route('invoices.index');
     }

@@ -4,6 +4,7 @@ namespace Modules\Core\Controllers;
 
 use Modules\Core\Services\ImportService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * ImportController
  *
@@ -118,6 +119,6 @@ class ImportController
         $this->importService->delete($id);
         
         return redirect()->route('import.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

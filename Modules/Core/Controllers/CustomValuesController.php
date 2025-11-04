@@ -7,6 +7,7 @@ use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Services\CustomValueService;
 use Modules\Custom\Models\CustomValue;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * CustomValuesController
  *
@@ -69,7 +70,7 @@ class CustomValuesController
                 $this->customValueService->create($validated);
             }
 
-            return redirect()->route('custom_values.index')->with('alert_success', trans('record_successfully_saved'));
+            return redirect()->route('custom_values.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $customValue = $id ? $this->customValueService->find($id) : new CustomValue();
@@ -96,6 +97,6 @@ class CustomValuesController
     {
         $this->customValueService->delete($id);
 
-        return redirect()->route('custom_values.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('custom_values.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

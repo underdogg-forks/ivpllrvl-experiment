@@ -9,6 +9,7 @@ use Modules\Core\Services\UploadService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoicesRecurringService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * CronController
  *
@@ -45,9 +46,9 @@ class CronController
     public function recur(?string $cron_key = null): void
     {
         // Check the provided cron key
-        if ($cron_key != get_setting('cron_key')) {
+        if ($cron_key != SettingsHelper::getSetting('cron_key')) {
             Log::error('[CronController] Wrong cron key provided! ' . $cron_key);
-            abort(500, trans('wrong_cron_key_provided'));
+            abort(500, TranslationHelper::trans('wrong_cron_key_provided'));
         }
 
         // Gather a list of recurring invoices to generate
@@ -80,7 +81,7 @@ class CronController
             $invoice = $this->invoiceService->find($source_id);
 
             // Automatic calculation mode
-            if (get_setting('einvoicing')) {
+            if (SettingsHelper::getSetting('einvoicing')) {
                 // Only for shift legacy_calculation mode
                 get_einvoice_usage($invoice, [], false);
             }
@@ -122,11 +123,11 @@ class CronController
             }
 
             // Email the new invoice if applicable
-            if (get_setting('automatic_email_on_recur') && MailerHelper::mailerConfigured()) {
+            if (SettingsHelper::getSetting('automatic_email_on_recur') && MailerHelper::mailerConfigured()) {
                 $new_invoice = $this->invoiceService->find($target_id);
 
                 // Set the email body, use default email template if available
-                $email_template_id = get_setting('email_invoice_template');
+                $email_template_id = SettingsHelper::getSetting('email_invoice_template');
                 if (!$email_template_id) {
                     Log::error('[CronController] No email template set in the system settings!');
                     continue;
@@ -152,7 +153,7 @@ class CronController
                 }
 
                 $from = empty($tpl->email_template_from_email) ? [$invoice->user_email, ''] : [$tpl->email_template_from_email, $tpl->email_template_from_name];
-                $subject = empty($tpl->email_template_subject) ? trans('invoice') . ' #' . $new_invoice->invoice_number : $tpl->email_template_subject;
+                $subject = empty($tpl->email_template_subject) ? TranslationHelper::trans('invoice') . ' #' . $new_invoice->invoice_number : $tpl->email_template_subject;
                 $pdf_template = $tpl->email_template_pdf_template;
                 $to = $invoice->client_email;
                 $cc = $tpl->email_template_cc;

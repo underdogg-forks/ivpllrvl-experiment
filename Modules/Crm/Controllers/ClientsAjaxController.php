@@ -7,6 +7,8 @@ use Modules\Crm\Services\ClientService;
 use Modules\Crm\Services\ClientNoteService;
 use Modules\Core\Services\SettingsService;
 
+use Modules\Core\Support\ClientHelper;
+use Modules\Core\Support\EchoHelper;
 /**
  * ClientsAjaxController
  *
@@ -67,7 +69,7 @@ class ClientsAjaxController
             ->get();
 
         foreach ($clients as $client) {
-            $response[] = ['id' => $client->client_id, 'text' => htmlsc(format_client($client, false))];
+            $response[] = ['id' => $client->client_id, 'text' => EchoHelper::htmlsc(ClientHelper::format_client($client, false))];
         }
 
         header('Content-Type: application/json');
@@ -92,7 +94,7 @@ class ClientsAjaxController
             ->get();
 
         foreach ($clients as $client) {
-            $response[] = ['id' => $client->client_id, 'text' => htmlsc(format_client($client, false))];
+            $response[] = ['id' => $client->client_id, 'text' => EchoHelper::htmlsc(ClientHelper::format_client($client, false))];
         }
 
         header('Content-Type: application/json');

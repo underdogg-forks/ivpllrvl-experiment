@@ -9,6 +9,7 @@ use Modules\Payments\Services\PaymentService;
 use Modules\Payments\Services\PaymentMethodService;
 use Modules\Invoices\Services\InvoiceService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * PaymentsController.
  *
@@ -43,7 +44,7 @@ class PaymentsController
 
         return view('payments::index', [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_payments'),
+            'filter_placeholder' => TranslationHelper::trans('filter_payments'),
             'filter_method'      => 'filter_payments',
             'payments'           => $payments,
         ]);
@@ -97,7 +98,7 @@ class PaymentsController
             // TODO: Save custom fields when Custom module is fully integrated
 
             return redirect()->route('payments.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         // Load payment for editing
@@ -151,7 +152,7 @@ class PaymentsController
 
         return view('payments::online_logs', [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_online_logs'),
+            'filter_placeholder' => TranslationHelper::trans('filter_online_logs'),
             'filter_method'      => 'filter_online_logs',
             'payment_logs'       => $paymentLogs,
         ]);
@@ -175,6 +176,6 @@ class PaymentsController
         $this->paymentService->delete($id);
 
         return redirect()->route('payments.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

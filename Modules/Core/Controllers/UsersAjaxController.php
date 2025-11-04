@@ -10,6 +10,8 @@ use Modules\Core\Services\SettingsService;
 use Modules\Crm\Services\ClientService;
 use Modules\Crm\Services\UserClientService;
 
+use Modules\Core\Support\EchoHelper;
+use Modules\Core\Support\UserHelper;
 /**
  * UsersAjaxController
  *
@@ -73,7 +75,7 @@ class UsersAjaxController
             ->get();
 
         foreach ($users as $user) {
-            $response[] = ['id' => $user->user_id, 'text' => format_user($user)];
+            $response[] = ['id' => $user->user_id, 'text' => UserHelper::format_user($user)];
         }
 
         header('Content-Type: application/json');
@@ -98,7 +100,7 @@ class UsersAjaxController
             ->get();
 
         foreach ($users as $user) {
-            $response[] = ['id' => $user->user_id, 'text' => htmlsc(format_user($user))];
+            $response[] = ['id' => $user->user_id, 'text' => EchoHelper::htmlsc(UserHelper::format_user($user))];
         }
 
         header('Content-Type: application/json');

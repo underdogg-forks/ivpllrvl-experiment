@@ -10,6 +10,8 @@ use Modules\Crm\Services\UserClientService;
 use Modules\Crm\Services\ClientService;
 use Modules\Core\Services\CustomFieldService;
 
+use Modules\Core\Support\CountryHelper;
+use Modules\Core\Support\TranslationHelper;
 /**
  * UsersController
  *
@@ -53,7 +55,7 @@ class UsersController
 
         return view('core::users_index', [
             'filter_display' => true,
-            'filter_placeholder' => trans('filter_users'),
+            'filter_placeholder' => TranslationHelper::trans('filter_users'),
             'filter_method' => 'filter_users',
             'users' => $users,
             'user_types' => $this->userService->getUserTypes(),
@@ -107,7 +109,7 @@ class UsersController
             Session::forget('user_clients');
 
             return redirect()->route('users.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $user = $id ? $this->userService->find($id) : null;
@@ -126,11 +128,11 @@ class UsersController
             'user_clients' => $this->userClientService->getByUserId($id ?? 0),
             'custom_fields' => $custom_fields,
             'custom_values' => $custom_values,
-            'countries' => get_country_list(trans('cldr')),
-            'selected_country' => $user->user_country ?? get_setting('default_country'),
+            'countries' => CountryHelper::get_country_list(TranslationHelper::trans('cldr')),
+            'selected_country' => $user->user_country ?? SettingsHelper::getSetting('default_country'),
             'clients' => $this->clientService->getActiveClients(),
             'languages' => get_available_languages(),
-            'einvoicing' => get_setting('einvoicing'),
+            'einvoicing' => SettingsHelper::getSetting('einvoicing'),
         ]);
     }
 
@@ -160,7 +162,7 @@ class UsersController
             ]);
 
             return redirect()->route('users.form', ['id' => $user_id])
-                ->with('alert_success', trans('password_successfully_changed'));
+                ->with('alert_success', TranslationHelper::trans('password_successfully_changed'));
         }
 
         return view('core::users_form_change_password', [
@@ -186,7 +188,7 @@ class UsersController
         }
 
         return redirect()->route('users.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 
     /**
@@ -205,6 +207,6 @@ class UsersController
         $this->userClientService->delete((int) $user_client_id);
 
         return redirect()->route('users.form', ['id' => $user_id])
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

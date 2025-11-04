@@ -7,6 +7,7 @@ use Modules\Core\Services\UserService;
 use Modules\Crm\Services\UserClientService;
 use Modules\Crm\Services\ClientService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * UserClientsController
  *
@@ -132,6 +133,6 @@ class UserClientsController
         $this->userClientService->delete($user_client_id);
         
         return redirect()->route('user_clients.user', ['id' => $ref->user_id])
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

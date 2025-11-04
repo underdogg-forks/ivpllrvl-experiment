@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Modules\Core\Services\TaxRatesService;
 use Modules\Products\Models\TaxRate;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * TaxRatesController
  *
@@ -69,7 +70,7 @@ class TaxRatesController
                 $this->taxRatesService->create($validated);
             }
 
-            return redirect()->route('tax_rates.index')->with('alert_success', trans('record_successfully_saved'));
+            return redirect()->route('tax_rates.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $taxRate = $id ? $this->taxRatesService->find($id) : new TaxRate();
@@ -94,6 +95,6 @@ class TaxRatesController
     {
         $this->taxRatesService->delete($id);
 
-        return redirect()->route('tax_rates.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('tax_rates.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

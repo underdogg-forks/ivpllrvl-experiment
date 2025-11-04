@@ -15,6 +15,8 @@ use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Services\QuoteService;
 use Modules\Core\Services\CustomFieldService;
 
+use Modules\Core\Support\CountryHelper;
+use Modules\Core\Support\TranslationHelper;
 /**
  * ClientsController
  *
@@ -87,7 +89,7 @@ class ClientsController
             $clients = $query->get();
         }
 
-        $req_einvoicing = get_setting('einvoicing');
+        $req_einvoicing = SettingsHelper::getSetting('einvoicing');
         if ($req_einvoicing) {
             foreach ($clients as &$client) {
                 // Get a check of filled Required (client and users) fields for eInvoicing
@@ -101,9 +103,9 @@ class ClientsController
         return view('crm::clients_index', [
             'records'            => $clients,
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_clients'),
+            'filter_placeholder' => TranslationHelper::trans('filter_clients'),
             'filter_method'      => 'filter_clients',
-            'einvoicing'         => get_setting('einvoicing'),
+            'einvoicing'         => SettingsHelper::getSetting('einvoicing'),
         ]);
     }
 
@@ -133,7 +135,7 @@ class ClientsController
                 ->first();
 
             if ($check) {
-                session()->flash('alert_error', trans('client_already_exists'));
+                session()->flash('alert_error', TranslationHelper::trans('client_already_exists'));
                 redirect('clients/form');
             } else {
                 $new_client = true;
@@ -184,7 +186,7 @@ class ClientsController
         // Load client for editing
         $client = $id ? $this->clientService->findOrFail($id) : new Client();
         
-        $req_einvoicing = get_setting('einvoicing');
+        $req_einvoicing = SettingsHelper::getSetting('einvoicing');
         if ($req_einvoicing && $id) {
             // Get a check of filled Required (client and users) fields for eInvoicing
             $req_einvoicing = get_req_fields_einvoice($client);
@@ -202,8 +204,8 @@ class ClientsController
             'client'               => $client,
             'custom_fields'        => $custom_fields,
             'custom_values'        => $custom_values,
-            'countries'            => get_country_list(trans('cldr')),
-            'selected_country'     => $client->client_country ?? get_setting('default_country'),
+            'countries'            => CountryHelper::get_country_list(TranslationHelper::trans('cldr')),
+            'selected_country'     => $client->client_country ?? SettingsHelper::getSetting('default_country'),
             'languages'            => get_available_languages(),
             'client_title_choices' => $this->get_client_title_choices(),
             'xml_templates'        => get_xml_template_files(), // eInvoicing
@@ -228,7 +230,7 @@ class ClientsController
     {
         $client = $this->clientService->findOrFail($client_id);
 
-        $req_einvoicing = get_setting('einvoicing');
+        $req_einvoicing = SettingsHelper::getSetting('einvoicing');
         if ($req_einvoicing) {
             // Get a check of filled Required (client and users) fields for eInvoicing
             $req_einvoicing = get_req_fields_einvoice($client);

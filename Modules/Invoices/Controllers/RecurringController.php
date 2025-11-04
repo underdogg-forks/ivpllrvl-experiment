@@ -5,6 +5,7 @@ namespace Modules\Invoices\Controllers;
 use Modules\Invoices\Models\InvoicesRecurring;
 use Modules\Invoices\Services\InvoicesRecurringService;
 
+use Modules\Core\Support\TranslationHelper;
 class RecurringController
 {
     /**
@@ -45,7 +46,7 @@ class RecurringController
             'recurring_invoices' => $recurringInvoices,
             'recur_frequencies'  => $recurFrequencies,
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_invoices_recuring'),
+            'filter_placeholder' => TranslationHelper::trans('filter_invoices_recuring'),
             'filter_method'      => 'filter_invoices_recuring',
         ]);
     }
@@ -68,7 +69,7 @@ class RecurringController
         $this->invoicesRecurringService->stopRecurring($invoiceRecurringId);
 
         return redirect()->route('invoices.recurring.index')
-            ->with('alert_success', trans('recurring_invoice_stopped'));
+            ->with('alert_success', TranslationHelper::trans('recurring_invoice_stopped'));
     }
 
     /**
@@ -89,6 +90,6 @@ class RecurringController
         $this->invoicesRecurringService->delete($invoiceRecurringId);
 
         return redirect()->route('invoices.recurring.index')
-            ->with('alert_success', trans('recurring_invoice_deleted'));
+            ->with('alert_success', TranslationHelper::trans('recurring_invoice_deleted'));
     }
 }
