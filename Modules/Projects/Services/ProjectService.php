@@ -16,4 +16,14 @@ class ProjectService extends BaseService
     {
         return Project::class;
     }
+
+    /**
+     * Get all projects ordered by name.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOrdered()
+    {
+        return Project::query()->orderBy('project_name')->get();
+    }
 }

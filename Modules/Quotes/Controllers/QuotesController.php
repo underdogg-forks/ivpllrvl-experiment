@@ -4,17 +4,23 @@ namespace Modules\Quotes\Controllers;
 
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
+use Modules\Core\Services\CustomFieldService;
+use Modules\Core\Services\CustomValueService;
 use Modules\Core\Services\UserService;
 use Modules\Core\Support\PdfHelper;
 use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
+use Modules\Products\Services\TaxRateService;
+use Modules\Products\Services\UnitService;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
 use Modules\Quotes\Services\QuoteAmountService;
+use Modules\Quotes\Services\QuoteItemService;
 use Modules\Quotes\Services\QuoteService;
+use Modules\Quotes\Services\QuoteTaxRateService;
 
 /**
  * QuotesController
@@ -29,7 +35,13 @@ class QuotesController
     public function __construct(
         protected QuoteService $quoteService,
         protected QuoteAmountService $quoteAmountService,
-        protected UserService $userService
+        protected UserService $userService,
+        protected CustomFieldService $customFieldService,
+        protected CustomValueService $customValueService,
+        protected TaxRateService $taxRateService,
+        protected UnitService $unitService,
+        protected QuoteItemService $quoteItemService,
+        protected QuoteTaxRateService $quoteTaxRateService
     ) {
     }
 
@@ -109,29 +121,22 @@ class QuotesController
         }
 
         // Get custom fields for quotes
-        $customFields = CustomField::query()->where('custom_field_table', 'ip_quote_custom')
-            ->orderBy('custom_field_order')
-            ->get();
+        $customFields = $this->customFieldService->getByTableOrdered('ip_quote_custom');
 
         // Get custom field values for select/dropdown fields
         $customValues = [];
         foreach ($customFields as $field) {
             if (in_array($field->custom_field_type, ['select', 'dropdown'])) {
-                $customValues[$field->custom_field_id] = CustomValue::query()->where('custom_field_id', $field->custom_field_id)->get();
+                $customValues[$field->custom_field_id] = $this->customValueService->getByFieldId($field->custom_field_id);
             }
         }
 
         // Get all items for this quote
-        $items = QuoteItem::query()->where('quote_id', $quote_id)
-            ->with(['product', 'unit'])
-            ->orderBy('item_order')
-            ->get();
+        $items = $this->quoteItemService->getByQuoteId($quote_id);
 
         // Get tax rates
-        $taxRates      = TaxRate::all();
-        $quoteTaxRates = QuoteTaxRate::query()->where('quote_id', $quote_id)
-            ->with('taxRate')
-            ->get();
+        $taxRates      = $this->taxRateService->getAll();
+        $quoteTaxRates = $this->quoteTaxRateService->getByQuoteId($quote_id);
 
         // Get units
         $units = Unit::all();
@@ -224,7 +229,7 @@ class QuotesController
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
     {
         // Delete the tax rate
-        QuoteTaxRate::query()->where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
+        $this->quoteTaxRateService->delete($quote_tax_rate_id);
 
         // Get global discount for recalculation
         $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quote_id)];
@@ -251,7 +256,7 @@ class QuotesController
      */
     public function recalculateAllQuotes()
     {
-        $quoteIds = Quote::query()->pluck('quote_id');
+        $quoteIds = $this->quoteService->getAllQuoteIds();
 
         foreach ($quoteIds as $quoteId) {
             $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quoteId)];

@@ -85,6 +85,21 @@ class CustomFieldService extends BaseService
     }
 
     /**
+     * Get custom fields by table name ordered by custom_field_order.
+     *
+     * @param string $tableName
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByTableOrdered(string $tableName): \Illuminate\Database\Eloquent\Collection
+    {
+        return CustomField::query()
+            ->where('custom_field_table', $tableName)
+            ->orderBy('custom_field_order')
+            ->get();
+    }
+
+    /**
      * Check if custom fields exist for a table.
      *
      * @param string $tableName

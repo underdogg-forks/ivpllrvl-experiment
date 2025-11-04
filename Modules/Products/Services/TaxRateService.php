@@ -29,4 +29,14 @@ class TaxRateService extends BaseService
     {
         return TaxRate::query()->get();
     }
+
+    /**
+     * Get all tax rates ordered by name.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOrdered()
+    {
+        return TaxRate::query()->orderBy('tax_rate_name')->get();
+    }
 }

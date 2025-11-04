@@ -395,6 +395,16 @@ class QuoteService
     }
 
     /**
+     * Get all quote IDs.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllQuoteIds()
+    {
+        return Quote::query()->pluck('quote_id');
+    }
+
+    /**
      * Generate quote number if applicable.
      *
      * @param int $quoteId
