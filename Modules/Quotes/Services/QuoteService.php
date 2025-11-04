@@ -485,6 +485,6 @@ class QuoteService
                 break;
         }
 
-        return $query->paginate($perPage);
+        return $query->orderBy('quote_date_created', 'desc')->paginate($perPage);
     }
 }
