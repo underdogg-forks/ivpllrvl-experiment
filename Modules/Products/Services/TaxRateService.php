@@ -27,6 +27,6 @@ class TaxRateService extends BaseService
      */
     public function getAll()
     {
-        return TaxRate::query()->all();
+        return TaxRate::query()->get();
     }
 }
