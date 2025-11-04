@@ -123,6 +123,10 @@ class MailerHelper
     ): bool {
         $db_invoice = \Modules\Invoices\Models\Invoice::query()->where('invoice_id', $invoice_id)->first();
 
+        if ($db_invoice === null) {
+            throw new \RuntimeException("Invoice with ID {$invoice_id} not found");
+        }
+
         if ($db_invoice->sumex_id == null) {
             $invoice = generate_invoice_pdf($invoice_id, false, $invoice_template);
         } else {
