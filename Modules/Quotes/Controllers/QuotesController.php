@@ -5,6 +5,8 @@ namespace Modules\Quotes\Controllers;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
 use Modules\Core\Services\UserService;
+use Modules\Core\Support\PdfHelper;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Quotes\Models\Quote;
@@ -98,7 +100,7 @@ class QuotesController
             'quotes'             => $quotes,
             'status'             => $status,
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_quotes'),
+            'filter_placeholder' => TranslationHelper::trans('filter_quotes'),
             'filter_method'      => 'filter_quotes',
             'quote_statuses'     => $this->quoteService->getStatuses(),
         ]);
@@ -231,8 +233,7 @@ class QuotesController
         }
 
         // Generate PDF using helper function
-        // TODO: Implement PDF generation helper
-        return generate_quote_pdf($quote_id, $stream, $quote_template);
+        return PdfHelper::generate_quote_pdf($quote_id, $stream, $quote_template);
     }
 
     /**

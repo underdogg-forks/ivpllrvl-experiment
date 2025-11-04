@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use Modules\Core\Models\QuoteCustom;
 use Modules\Core\Support\SettingsHelper;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 use Modules\Quotes\Models\Quote;
@@ -30,32 +31,32 @@ class QuoteService
     {
         return [
             '1' => [
-                'label' => trans('draft'),
+                'label' => TranslationHelper::trans('draft'),
                 'class' => 'draft',
                 'href'  => 'quotes/status/draft',
             ],
             '2' => [
-                'label' => trans('sent'),
+                'label' => TranslationHelper::trans('sent'),
                 'class' => 'sent',
                 'href'  => 'quotes/status/sent',
             ],
             '3' => [
-                'label' => trans('viewed'),
+                'label' => TranslationHelper::trans('viewed'),
                 'class' => 'viewed',
                 'href'  => 'quotes/status/viewed',
             ],
             '4' => [
-                'label' => trans('approved'),
+                'label' => TranslationHelper::trans('approved'),
                 'class' => 'approved',
                 'href'  => 'quotes/status/approved',
             ],
             '5' => [
-                'label' => trans('rejected'),
+                'label' => TranslationHelper::trans('rejected'),
                 'class' => 'rejected',
                 'href'  => 'quotes/status/rejected',
             ],
             '6' => [
-                'label' => trans('canceled'),
+                'label' => TranslationHelper::trans('canceled'),
                 'class' => 'canceled',
                 'href'  => 'quotes/status/canceled',
             ],

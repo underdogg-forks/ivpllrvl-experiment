@@ -3,6 +3,7 @@
 namespace Modules\Quotes\Services;
 
 use Illuminate\Support\Facades\DB as FacadeDB;
+use Modules\Core\Support\SettingsHelper;
 use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteAmount;
 use Modules\Quotes\Models\QuoteItem;
@@ -42,7 +43,7 @@ class QuoteAmountService
      */
     public function calculate(int $quoteId, array $globalDiscount = []): void
     {
-        $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
+        $decimalPlaces = (int) SettingsHelper::getSetting('tax_rate_decimal_places');
 
         // Get all item IDs for this quote
         $itemIds = QuoteItem::where('quote_id', $quoteId)->pluck('item_id');
