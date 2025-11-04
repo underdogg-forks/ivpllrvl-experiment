@@ -40,4 +40,16 @@ class PaymentMethodService extends BaseService
     {
         return PaymentMethod::query()->orderBy('payment_method_name')->get();
     }
+
+    /**
+     * Find payment method by ID.
+     *
+     * @param int $paymentMethodId
+     *
+     * @return PaymentMethod|null
+     */
+    public function findByMethodId(int $paymentMethodId): ?PaymentMethod
+    {
+        return PaymentMethod::query()->where('payment_method_id', $paymentMethodId)->first();
+    }
 }

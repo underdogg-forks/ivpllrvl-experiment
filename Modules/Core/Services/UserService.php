@@ -44,6 +44,25 @@ class UserService extends BaseService
      *
      * @return array
      */
+    /**
+     * Get active admin users, optionally filtered by user ID.
+     *
+     * @param string $userId Optional user ID to filter
+     *
+     * @return array
+     */
+    public function getActiveAdminUsers(string $userId = ''): array
+    {
+        $query = User::query()->where('user_type', '1')
+            ->where('user_active', '1');
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->get()->toArray();
+    }
+
     public function getValidationRulesExisting(int $userId): array
     {
         return [

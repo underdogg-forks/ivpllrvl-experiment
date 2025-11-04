@@ -70,8 +70,9 @@ class CustomValuesHelper
             return '';
         }
 
-        $values      = explode(',', $txt);
-        $values      = \Modules\Core\Models\CustomValue::query()->whereIn('custom_values_id', $values)->get();
+        $valueIds    = explode(',', $txt);
+        $customValueService = app(\Modules\Core\Services\CustomValueService::class);
+        $values      = $customValueService->getByIds($valueIds);
         $values_text = [];
 
         foreach ($values as $value) {
