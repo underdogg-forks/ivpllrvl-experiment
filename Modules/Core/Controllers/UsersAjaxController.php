@@ -10,6 +10,8 @@ use Modules\Core\Services\SettingsService;
 use Modules\Crm\Services\ClientService;
 use Modules\Crm\Services\UserClientService;
 
+use Modules\Core\Support\EchoHelper;
+use Modules\Core\Support\UserHelper;
 /**
  * UsersAjaxController
  *
@@ -18,13 +20,7 @@ use Modules\Crm\Services\UserClientService;
  * @legacy-file application/modules/users/controllers/Ajax.php
  */
 class UsersAjaxController
-{
-    protected UserService $userService;
-    protected ClientService $clientService;
-    protected UserClientService $userClientService;
-    protected SettingsService $settingsService;
-
-    /**
+{    /**
      * Initialize the UsersAjaxController with dependency injection.
      *
      * @param UserService $userService
@@ -33,15 +29,11 @@ class UsersAjaxController
      * @param SettingsService $settingsService
      */
     public function __construct(
-        UserService $userService,
-        ClientService $clientService,
-        UserClientService $userClientService,
-        SettingsService $settingsService
+        protected UserService $userService,
+        protected ClientService $clientService,
+        protected UserClientService $userClientService,
+        protected SettingsService $settingsService
     ) {
-        $this->userService = $userService;
-        $this->clientService = $clientService;
-        $this->userClientService = $userClientService;
-        $this->settingsService = $settingsService;
     }
 
     /**
@@ -83,7 +75,7 @@ class UsersAjaxController
             ->get();
 
         foreach ($users as $user) {
-            $response[] = ['id' => $user->user_id, 'text' => format_user($user)];
+            $response[] = ['id' => $user->user_id, 'text' => UserHelper::format_user($user)];
         }
 
         header('Content-Type: application/json');
@@ -108,7 +100,7 @@ class UsersAjaxController
             ->get();
 
         foreach ($users as $user) {
-            $response[] = ['id' => $user->user_id, 'text' => htmlsc(format_user($user))];
+            $response[] = ['id' => $user->user_id, 'text' => EchoHelper::htmlsc(UserHelper::format_user($user))];
         }
 
         header('Content-Type: application/json');

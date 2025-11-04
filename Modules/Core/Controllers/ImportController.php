@@ -4,6 +4,7 @@ namespace Modules\Core\Controllers;
 
 use Modules\Core\Services\ImportService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * ImportController
  *
@@ -12,19 +13,16 @@ use Modules\Core\Services\ImportService;
  * @legacy-file application/modules/import/controllers/Import.php
  */
 class ImportController
-{
-    protected ImportService $importService;
-    
-    private array $allowed_files = ['clients.csv', 'invoices.csv', 'invoice_items.csv', 'payments.csv'];
+{    private array $allowed_files = ['clients.csv', 'invoices.csv', 'invoice_items.csv', 'payments.csv'];
 
     /**
      * Initialize the ImportController with dependency injection.
      *
      * @param ImportService $importService
      */
-    public function __construct(ImportService $importService)
-    {
-        $this->importService = $importService;
+    public function __construct(
+        protected ImportService $importService
+    ) {
     }
 
     /**
@@ -121,6 +119,6 @@ class ImportController
         $this->importService->delete($id);
         
         return redirect()->route('import.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

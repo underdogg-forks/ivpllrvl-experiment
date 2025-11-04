@@ -6,6 +6,7 @@ use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 use Illuminate\Http\Request;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * InvoiceGroupsController
  * 
@@ -18,16 +19,14 @@ class InvoiceGroupsController
      *
      * @var InvoiceGroupService
      */
-    protected InvoiceGroupService $invoiceGroupService;
-
     /**
      * Constructor.
      *
      * @param InvoiceGroupService $invoiceGroupService
      */
-    public function __construct(InvoiceGroupService $invoiceGroupService)
-    {
-        $this->invoiceGroupService = $invoiceGroupService;
+    public function __construct(
+        protected InvoiceGroupService $invoiceGroupService
+    ) {
     }
     /**
      * Display a paginated list of invoice groups
@@ -81,7 +80,7 @@ class InvoiceGroupsController
             }
             
             return redirect()->route('invoice_groups.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         // Load existing record for editing
@@ -118,5 +117,5 @@ class InvoiceGroupsController
         $this->invoiceGroupService->delete($id);
         
         return redirect()->route('invoice_groups.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }

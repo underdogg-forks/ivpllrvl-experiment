@@ -16,6 +16,7 @@ use function Modules\Sessions\Controllers\site_url;
 
 use Modules\Sessions\Controllers\UsersService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * SessionsController
  *
@@ -24,22 +25,16 @@ use Modules\Sessions\Controllers\UsersService;
  * @legacy-file application/modules/sessions/controllers/Sessions.php
  */
 class SessionsController
-{
-    protected SessionsService $sessionsService;
-    protected UsersService $usersService;
-
-    /**
+{    /**
      * Initialize the SessionsController with dependency injection.
      *
      * @param SessionsService $sessionsService
      * @param UsersService $usersService
      */
     public function __construct(
-        SessionsService $sessionsService,
-        UsersService $usersService
+        protected SessionsService $sessionsService,
+        protected UsersService $usersService
     ) {
-        $this->sessionsService = $sessionsService;
-        $this->usersService = $usersService;
     }
 
     /**
@@ -71,18 +66,18 @@ class SessionsController
      */
     public function login(Request $request)
     {
-        $view_data = ['login_logo' => get_setting('login_logo')];
+        $view_data = ['login_logo' => SettingsHelper::getSetting('login_logo')];
         if (request()->input('btn_login')) {
             DB::where('user_email', request()->input('email'));
             $query = DB::get('ip_users');
             $user  = $query->row();
             // Check if the user exists
             if (empty($user)) {
-                session()->flash('alert_error', trans('loginalert_user_not_found'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
                 redirect()->route('sessions/login');
             } elseif ($user->user_active == 0) {
                 // Check if the user is marked as active (not implemented: Todo?)
-                session()->flash('alert_error', trans('loginalert_user_inactive'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_user_inactive'));
                 redirect()->route('sessions/login');
             } elseif ($this->authenticate(request()->input('email'), request()->input('password'))) {
                 if (session('user_type') == 1) {
@@ -91,7 +86,7 @@ class SessionsController
                     redirect()->route('guest');
                 }
             } else {
-                session()->flash('alert_error', trans('loginalert_credentials_incorrect'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_credentials_incorrect'));
                 redirect()->route('sessions/login');
             }
         }
@@ -182,7 +177,7 @@ class SessionsController
             $user = $user->row();
             if (empty($user)) {
                 // Redirect back to the login screen with an alert
-                session()->flash('alert_error', trans('wrong_passwordreset_token'));
+                session()->flash('alert_error', TranslationHelper::trans('wrong_passwordreset_token'));
                 redirect()->route('sessions/passwordreset');
             } else {
                 //if token is valid, delete the failure attempt from
@@ -198,17 +193,17 @@ class SessionsController
             $new_password = request()->input('new_password', true);
             $user_id      = request()->input('user_id', true);
             if (empty($user_id) || empty($new_password)) {
-                session()->flash('alert_error', trans('loginalert_no_password'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_no_password'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
             // Check for the reset token
             $user = $this->usersService->getById($user_id);
             if (empty($user)) {
-                session()->flash('alert_error', trans('loginalert_user_not_found'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
             if (empty($user->user_passwordreset_token) || request()->input('token') !== $user->user_passwordreset_token) {
-                session()->flash('alert_error', trans('loginalert_wrong_auth_code'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_wrong_auth_code'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
             // Call the save_change_password() function from users model
@@ -231,7 +226,7 @@ class SessionsController
                 redirect()->route('/');
             }
             if (empty($email)) {
-                session()->flash('alert_error', trans('loginalert_user_not_found'));
+                session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
             //prevent brute force attacks by counting password resets
@@ -261,14 +256,14 @@ class SessionsController
                 // Prepare some variables for the email
                 $email_resetlink = site_url('sessions/passwordreset/' . $token);
                 $email_message   = return view('emails/passwordreset', ['resetlink' => $email_resetlink], true);
-                $email_from      = get_setting('smtp_mail_from');
+                $email_from      = SettingsHelper::getSetting('smtp_mail_from');
                 if (empty($email_from)) {
                     $email_from = 'system@' . preg_replace('/^[\w]{2,6}:\/\/([\w\d\.\-]+).*$/', '$1', base_url());
                 }
                 // Mail the invoice with the pre-configured mailer if possible
                 if (MailerHelper::mailerConfigured()) {
 // TODO: Laravel autoloads helpers - $this->load->helper('mailer/phpmailer');
-                    if ( ! phpmail_send($email_from, $email, trans('password_reset'), $email_message)) {
+                    if ( ! phpmail_send($email_from, $email, TranslationHelper::trans('password_reset'), $email_message)) {
                         $email_failed = true;
                     }
                 } else {
@@ -279,7 +274,7 @@ class SessionsController
                     // Set the email params
                     $this->email->from($email_from);
                     $this->email->to($email);
-                    $this->email->subject(trans('password_reset'));
+                    $this->email->subject(TranslationHelper::trans('password_reset'));
                     $this->email->message($email_message);
                     // Send the reset email
                     if ( ! $this->email->send()) {
@@ -289,9 +284,9 @@ class SessionsController
                 }
                 // Redirect back to the login screen with an alert
                 if (isset($email_failed)) {
-                    session()->flash('alert_error', trans('password_reset_failed'));
+                    session()->flash('alert_error', TranslationHelper::trans('password_reset_failed'));
                 } else {
-                    session()->flash('alert_success', trans('email_successfully_sent'));
+                    session()->flash('alert_success', TranslationHelper::trans('email_successfully_sent'));
                 }
                 redirect()->route('sessions/login');
             }

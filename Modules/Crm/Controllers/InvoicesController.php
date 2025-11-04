@@ -18,16 +18,14 @@ class InvoicesController
      *
      * @var InvoiceService
      */
-    protected InvoiceService $invoiceService;
-
     /**
      * Constructor.
      *
      * @param InvoiceService $invoiceService
      */
-    public function __construct(InvoiceService $invoiceService)
-    {
-        $this->invoiceService = $invoiceService;
+    public function __construct(
+        protected InvoiceService $invoiceService
+    ) {
     }
 
     public function index()

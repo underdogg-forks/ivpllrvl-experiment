@@ -8,6 +8,7 @@ use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\ProductService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * ProductsController
  *
@@ -16,12 +17,9 @@ use Modules\Products\Services\ProductService;
  * @legacy-file application/modules/products/controllers/Products.php
  */
 class ProductsController
-{
-    protected ProductService $productService;
-
-    public function __construct(ProductService $productService)
-    {
-        $this->productService = $productService;
+{    public function __construct(
+        protected ProductService $productService
+    ) {
     }
 
     /**
@@ -43,7 +41,7 @@ class ProductsController
 
         return view('products::products_index', [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_products'),
+            'filter_placeholder' => TranslationHelper::trans('filter_products'),
             'filter_method'      => 'filter_products',
             'products'           => $products,
         ]);
@@ -83,7 +81,7 @@ class ProductsController
             }
 
             return redirect()->route('products.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $product = $id ? $this->productService->find($id) : new Product();
@@ -118,6 +116,6 @@ class ProductsController
         $this->productService->delete($id);
 
         return redirect()->route('products.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

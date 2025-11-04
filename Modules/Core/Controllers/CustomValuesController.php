@@ -7,6 +7,7 @@ use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Services\CustomValueService;
 use Modules\Custom\Models\CustomValue;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * CustomValuesController
  *
@@ -15,16 +16,10 @@ use Modules\Custom\Models\CustomValue;
  * @legacy-file application/modules/custom_values/controllers/Custom_values.php
  */
 class CustomValuesController
-{
-    protected CustomValueService $customValueService;
-    protected CustomFieldService $customFieldService;
-
-    public function __construct(
-        CustomValueService $customValueService,
-        CustomFieldService $customFieldService
+{    public function __construct(
+        protected CustomValueService $customValueService,
+        protected CustomFieldService $customFieldService
     ) {
-        $this->customValueService = $customValueService;
-        $this->customFieldService = $customFieldService;
     }
 
     /**
@@ -75,7 +70,7 @@ class CustomValuesController
                 $this->customValueService->create($validated);
             }
 
-            return redirect()->route('custom_values.index')->with('alert_success', trans('record_successfully_saved'));
+            return redirect()->route('custom_values.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $customValue = $id ? $this->customValueService->find($id) : new CustomValue();
@@ -102,6 +97,6 @@ class CustomValuesController
     {
         $this->customValueService->delete($id);
 
-        return redirect()->route('custom_values.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('custom_values.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

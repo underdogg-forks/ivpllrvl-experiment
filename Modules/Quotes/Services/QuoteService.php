@@ -5,6 +5,8 @@ namespace Modules\Quotes\Services;
 use DateInterval;
 use DateTime;
 use Modules\Core\Models\QuoteCustom;
+use Modules\Core\Support\SettingsHelper;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 use Modules\Quotes\Models\Quote;
@@ -29,32 +31,32 @@ class QuoteService
     {
         return [
             '1' => [
-                'label' => trans('draft'),
+                'label' => TranslationHelper::trans('draft'),
                 'class' => 'draft',
                 'href'  => 'quotes/status/draft',
             ],
             '2' => [
-                'label' => trans('sent'),
+                'label' => TranslationHelper::trans('sent'),
                 'class' => 'sent',
                 'href'  => 'quotes/status/sent',
             ],
             '3' => [
-                'label' => trans('viewed'),
+                'label' => TranslationHelper::trans('viewed'),
                 'class' => 'viewed',
                 'href'  => 'quotes/status/viewed',
             ],
             '4' => [
-                'label' => trans('approved'),
+                'label' => TranslationHelper::trans('approved'),
                 'class' => 'approved',
                 'href'  => 'quotes/status/approved',
             ],
             '5' => [
-                'label' => trans('rejected'),
+                'label' => TranslationHelper::trans('rejected'),
                 'class' => 'rejected',
                 'href'  => 'quotes/status/rejected',
             ],
             '6' => [
-                'label' => trans('canceled'),
+                'label' => TranslationHelper::trans('canceled'),
                 'class' => 'canceled',
                 'href'  => 'quotes/status/canceled',
             ],
@@ -117,12 +119,12 @@ class QuoteService
         ]);
 
         // Create default quote tax rate if applicable
-        $defaultTaxRate = get_setting('default_invoice_tax_rate');
+        $defaultTaxRate = SettingsHelper::getSetting('default_invoice_tax_rate');
         if ($defaultTaxRate) {
             QuoteTaxRate::create([
                 'quote_id'              => $quote->quote_id,
                 'tax_rate_id'           => $defaultTaxRate,
-                'include_item_tax'      => get_setting('default_include_item_tax'),
+                'include_item_tax'      => SettingsHelper::getSetting('default_include_item_tax'),
                 'quote_tax_rate_amount' => 0,
             ]);
         }
@@ -152,7 +154,7 @@ class QuoteService
         ];
 
         // Update target quote with discount
-        Quote::where('quote_id', $targetId)->update([
+        Quote::query()->where('quote_id', $targetId)->update([
             'quote_discount_percent' => $globalDiscount['percent'],
             'quote_discount_amount'  => $globalDiscount['amount'],
         ]);
@@ -203,7 +205,7 @@ class QuoteService
      */
     public function calculateDateDue(string $quoteDateCreated): string
     {
-        $expiresAfter = get_setting('quotes_expire_after');
+        $expiresAfter = SettingsHelper::getSetting('quotes_expire_after');
         $expiryDate   = new DateTime($quoteDateCreated);
         $expiryDate->add(new DateInterval('P' . $expiresAfter . 'D'));
 
@@ -278,7 +280,7 @@ class QuoteService
      */
     public function approveQuoteByKey(string $quoteUrlKey): int
     {
-        return Quote::whereIn('quote_status_id', [2, 3])
+        return Quote::query()->whereIn('quote_status_id', [2, 3])
             ->where('quote_url_key', $quoteUrlKey)
             ->update(['quote_status_id' => 4]);
     }
@@ -292,7 +294,7 @@ class QuoteService
      */
     public function getByUrlKey(string $urlKey): Quote
     {
-        return Quote::where('quote_url_key', $urlKey)->firstOrFail();
+        return Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
     }
 
     /**
@@ -304,7 +306,7 @@ class QuoteService
      */
     public function rejectQuoteByKey(string $quoteUrlKey): int
     {
-        return Quote::whereIn('quote_status_id', [2, 3])
+        return Quote::query()->whereIn('quote_status_id', [2, 3])
             ->where('quote_url_key', $quoteUrlKey)
             ->update(['quote_status_id' => 5]);
     }
@@ -319,7 +321,7 @@ class QuoteService
      */
     public function updateQuote(int $quoteId, array $data): int
     {
-        return Quote::where('quote_id', $quoteId)->update($data);
+        return Quote::query()->where('quote_id', $quoteId)->update($data);
     }
 
     /**
@@ -331,7 +333,7 @@ class QuoteService
      */
     public function approveQuoteById(int $quoteId): int
     {
-        return Quote::whereIn('quote_status_id', [2, 3])
+        return Quote::query()->whereIn('quote_status_id', [2, 3])
             ->where('quote_id', $quoteId)
             ->update(['quote_status_id' => 4]);
     }
@@ -345,7 +347,7 @@ class QuoteService
      */
     public function rejectQuoteById(int $quoteId): int
     {
-        return Quote::whereIn('quote_status_id', [2, 3])
+        return Quote::query()->whereIn('quote_status_id', [2, 3])
             ->where('quote_id', $quoteId)
             ->update(['quote_status_id' => 5]);
     }
@@ -363,12 +365,12 @@ class QuoteService
             ->where('quote_id', $quoteId)
             ->first();
 
-        if ($quote && $quote->quote_status_id == 2) {
-            return Quote::where('quote_id', $quoteId)
-                ->update(['quote_status_id' => 3]) > 0;
+                if (!$quote || $quote->quote_status_id !== 2) {
+            return false;
         }
 
-        return false;
+        return Quote::query()->where('quote_id', $quoteId)
+            ->update(['quote_status_id' => 3]) > 0;
     }
 
     /**
@@ -384,12 +386,12 @@ class QuoteService
             ->where('quote_id', $quoteId)
             ->first();
 
-        if ($quote && $quote->quote_status_id == 1) {
-            return Quote::where('quote_id', $quoteId)
-                ->update(['quote_status_id' => 2]) > 0;
+                if (!$quote || $quote->quote_status_id !== 1) {
+            return false;
         }
 
-        return false;
+        return Quote::query()->where('quote_id', $quoteId)
+            ->update(['quote_status_id' => 2]) > 0;
     }
 
     /**
@@ -404,11 +406,14 @@ class QuoteService
         $quote = Quote::findOrFail($quoteId);
 
         // Generate new quote number if draft with no number and setting is off
-        $generateForDraft = get_setting('generate_quote_number_for_draft');
-        if ($quote->quote_status_id == 1 && empty($quote->quote_number) && $generateForDraft == 0) {
-            $quoteNumber = $this->generateQuoteNumber($quote->invoice_group_id);
-            Quote::where('quote_id', $quoteId)
-                ->update(['quote_number' => $quoteNumber]);
+        $generateForDraft = SettingsHelper::getSetting('generate_quote_number_for_draft');
+        
+        if ($quote->quote_status_id !== 1 || !empty($quote->quote_number) || $generateForDraft != 0) {
+            return;
         }
+
+        $quoteNumber = $this->generateQuoteNumber($quote->invoice_group_id);
+        Quote::query()->where('quote_id', $quoteId)
+            ->update(['quote_number' => $quoteNumber]);
     }
 }

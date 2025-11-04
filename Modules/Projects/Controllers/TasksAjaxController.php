@@ -3,6 +3,7 @@
 namespace Modules\Projects\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Core\Support\SettingsHelper;
 use Modules\Projects\Services\TaskService;
 use Modules\Projects\Models\Task;
 
@@ -15,16 +16,14 @@ use Modules\Projects\Models\Task;
  */
 class TasksAjaxController
 {
-    protected TaskService $taskService;
-
     /**
      * Initialize the TasksAjaxController with dependency injection.
      *
      * @param TaskService $taskService
      */
-    public function __construct(TaskService $taskService)
-    {
-        $this->taskService = $taskService;
+    public function __construct(
+        protected TaskService $taskService
+    ) {
     }
     /**
      * Display modal for task lookups (AJAX endpoint).
@@ -38,7 +37,7 @@ class TasksAjaxController
      */
     public function modalTaskLookups(?int $invoice_id = null): \Illuminate\Contracts\View\View
     {
-        $default_item_tax_rate = get_setting('default_item_tax_rate');
+        $default_item_tax_rate = SettingsHelper::getSetting('default_item_tax_rate');
         $data = [
             'default_item_tax_rate' => $default_item_tax_rate !== '' ? $default_item_tax_rate : 0,
             'tasks' => [],

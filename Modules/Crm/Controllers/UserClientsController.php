@@ -2,6 +2,7 @@
 
 namespace Modules\Crm\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Crm\Models\UserClient;
 use Modules\Crm\Services\UserClientService;
 
@@ -12,16 +13,14 @@ class UserClientsController
      *
      * @var UserClientService
      */
-    protected UserClientService $userClientService;
-
     /**
      * Constructor.
      *
      * @param UserClientService $userClientService
      */
-    public function __construct(UserClientService $userClientService)
-    {
-        $this->userClientService = $userClientService;
+    public function __construct(
+        protected UserClientService $userClientService
+    ) {
     }
 
     /** @legacy-file application/modules/user_clients/controllers/User_clients.php */
@@ -49,7 +48,7 @@ class UserClientsController
                 $this->userClientService->create($validated);
             }
 
-            return redirect()->route('user_clients.index')->with('alert_success', trans('record_successfully_saved'));
+            return redirect()->route('user_clients.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $userClient = $id ? $this->userClientService->findOrFail($id) : new UserClient();
@@ -58,9 +57,9 @@ class UserClientsController
     }
 
     public function delete(int $id): \Illuminate\Http\RedirectResponse
-    {
+        {
         $this->userClientService->delete($id);
 
-        return redirect()->route('user_clients.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('user_clients.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

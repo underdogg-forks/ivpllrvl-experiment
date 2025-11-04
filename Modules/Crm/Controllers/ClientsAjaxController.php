@@ -7,6 +7,8 @@ use Modules\Crm\Services\ClientService;
 use Modules\Crm\Services\ClientNoteService;
 use Modules\Core\Services\SettingsService;
 
+use Modules\Core\Support\ClientHelper;
+use Modules\Core\Support\EchoHelper;
 /**
  * ClientsAjaxController
  *
@@ -15,12 +17,11 @@ use Modules\Core\Services\SettingsService;
  * @legacy-file application/modules/clients/controllers/Ajax.php
  */
 class ClientsAjaxController
-{
-    protected ClientService $clientService;
-    protected ClientNoteService $clientNoteService;
-    protected SettingsService $settingsService;
-
-    /**
+    */
+    class ClientsAjaxController
+    {
+        /**
+         * Initialize the ClientsAjaxController with dependency injection.
      * Initialize the ClientsAjaxController with dependency injection.
      *
      * @param ClientService $clientService
@@ -28,13 +29,10 @@ class ClientsAjaxController
      * @param SettingsService $settingsService
      */
     public function __construct(
-        ClientService $clientService,
-        ClientNoteService $clientNoteService,
-        SettingsService $settingsService
+        protected ClientService $clientService,
+        protected ClientNoteService $clientNoteService,
+        protected SettingsService $settingsService
     ) {
-        $this->clientService = $clientService;
-        $this->clientNoteService = $clientNoteService;
-        $this->settingsService = $settingsService;
     }
 
     /**
@@ -71,7 +69,7 @@ class ClientsAjaxController
             ->get();
 
         foreach ($clients as $client) {
-            $response[] = ['id' => $client->client_id, 'text' => htmlsc(format_client($client, false))];
+            $response[] = ['id' => $client->client_id, 'text' => EchoHelper::htmlsc(ClientHelper::format_client($client, false))];
         }
 
         header('Content-Type: application/json');
@@ -96,7 +94,7 @@ class ClientsAjaxController
             ->get();
 
         foreach ($clients as $client) {
-            $response[] = ['id' => $client->client_id, 'text' => htmlsc(format_client($client, false))];
+            $response[] = ['id' => $client->client_id, 'text' => EchoHelper::htmlsc(ClientHelper::format_client($client, false))];
         }
 
         header('Content-Type: application/json');

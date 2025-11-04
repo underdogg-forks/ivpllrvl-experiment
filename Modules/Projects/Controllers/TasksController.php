@@ -7,13 +7,11 @@ use Modules\Projects\Models\Project;
 use Modules\Projects\Models\Task;
 use Modules\Projects\Services\TaskService;
 
+use Modules\Core\Support\TranslationHelper;
 class TasksController
-{
-    protected TaskService $taskService;
-
-    public function __construct(TaskService $taskService)
-    {
-        $this->taskService = $taskService;
+{    public function __construct(
+        protected TaskService $taskService
+    ) {
     }
 
     public function index(int $page = 0): \Illuminate\View\View
@@ -22,7 +20,7 @@ class TasksController
 
         return view('projects::tasks_index', [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_tasks'),
+            'filter_placeholder' => TranslationHelper::trans('filter_tasks'),
             'filter_method'      => 'filter_tasks',
             'tasks'              => $tasks,
             'task_statuses'      => Task::STATUSES,
@@ -46,7 +44,7 @@ class TasksController
     public function store(TaskRequest $request): \Illuminate\Http\RedirectResponse
     {
         $this->taskService->create($request->validated());
-        return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
+        return redirect()->route('tasks.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
     }
 
     public function edit(Task $task): \Illuminate\View\View
@@ -65,12 +63,12 @@ class TasksController
     public function update(TaskRequest $request, Task $task): \Illuminate\Http\RedirectResponse
     {
         $this->taskService->update($task->task_id, $request->validated());
-        return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_saved'));
+        return redirect()->route('tasks.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
     }
 
     public function destroy(Task $task): \Illuminate\Http\RedirectResponse
     {
         $this->taskService->delete($task->task_id);
-        return redirect()->route('tasks.index')->with('alert_success', trans('record_successfully_deleted'));
+        return redirect()->route('tasks.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

@@ -6,6 +6,7 @@ use Modules\Projects\Models\Project;
 use Modules\Projects\Services\ProjectService;
 use Modules\Projects\Services\TaskService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * ProjectsController
  *
@@ -15,15 +16,10 @@ use Modules\Projects\Services\TaskService;
  */
 class ProjectsController
 {
-    protected ProjectService $projectService;
-    protected TaskService $taskService;
-
     public function __construct(
-        ProjectService $projectService,
-        TaskService $taskService
+        protected ProjectService $projectService,
+        protected TaskService $taskService
     ) {
-        $this->projectService = $projectService;
-        $this->taskService = $taskService;
     }
 
     /**
@@ -44,7 +40,7 @@ class ProjectsController
 
         return view('projects::projects_index', [
             'filter_display'     => true,
-            'filter_placeholder' => trans('filter_projects'),
+            'filter_placeholder' => TranslationHelper::trans('filter_projects'),
             'filter_method'      => 'filter_projects',
             'projects'           => $projects,
         ]);
@@ -80,7 +76,7 @@ class ProjectsController
             }
 
             return redirect()->route('projects.index')
-                ->with('alert_success', trans('record_successfully_saved'));
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         $project = $id ? $this->projectService->find($id) : new Project();
@@ -133,6 +129,6 @@ class ProjectsController
         $this->projectService->delete($id);
 
         return redirect()->route('projects.index')
-            ->with('alert_success', trans('record_successfully_deleted'));
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 }

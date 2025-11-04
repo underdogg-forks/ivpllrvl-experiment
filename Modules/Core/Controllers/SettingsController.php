@@ -18,6 +18,7 @@ use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 use Modules\Products\Services\TaxRateService;
 
+use Modules\Core\Support\TranslationHelper;
 /**
  * SettingsController
  *
@@ -26,15 +27,7 @@ use Modules\Products\Services\TaxRateService;
  * @legacy-file application/modules/settings/controllers/Settings.php
  */
 class SettingsController
-{
-    protected InvoiceGroupService $invoiceGroupService;
-    protected TaxRateService $taxRateService;
-    protected EmailTemplateService $emailTemplateService;
-    protected PaymentMethodService $paymentMethodService;
-    protected CustomFieldService $customFieldService;
-    protected SettingsService $settingsService;
-
-    /**
+{    /**
      * Initialize the SettingsController with dependency injection.
      *
      * @param InvoiceGroupService $invoiceGroupService
@@ -45,19 +38,13 @@ class SettingsController
      * @param SettingsService $settingsService
      */
     public function __construct(
-        InvoiceGroupService $invoiceGroupService,
-        TaxRateService $taxRateService,
-        EmailTemplateService $emailTemplateService,
-        PaymentMethodService $paymentMethodService,
-        CustomFieldService $customFieldService,
-        SettingsService $settingsService
+        protected InvoiceGroupService $invoiceGroupService,
+        protected TaxRateService $taxRateService,
+        protected EmailTemplateService $emailTemplateService,
+        protected PaymentMethodService $paymentMethodService,
+        protected CustomFieldService $customFieldService,
+        protected SettingsService $settingsService
     ) {
-        $this->invoiceGroupService = $invoiceGroupService;
-        $this->taxRateService = $taxRateService;
-        $this->emailTemplateService = $emailTemplateService;
-        $this->paymentMethodService = $paymentMethodService;
-        $this->customFieldService = $customFieldService;
-        $this->settingsService = $settingsService;
     }
 
     /**
@@ -112,7 +99,7 @@ class SettingsController
                 $filename = $file->store('uploads', 'public');
                 $this->settingsService->save('login_logo', basename($filename));
             }
-            Session::flash('alert_success', trans('settings_successfully_saved'));
+            Session::flash('alert_success', TranslationHelper::trans('settings_successfully_saved'));
 
             return redirect()->route('settings.index');
         }
@@ -153,7 +140,7 @@ class SettingsController
         if ($logo) {
             Storage::disk('public')->delete('uploads/' . $logo);
             $this->settingsService->save($type . '_logo', '');
-            Session::flash('alert_success', trans($type . '_logo_removed'));
+            Session::flash('alert_success', TranslationHelper::trans($type . '_logo_removed'));
         }
 
         return redirect()->route('settings.index');
