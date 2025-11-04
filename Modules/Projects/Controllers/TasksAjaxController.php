@@ -14,7 +14,10 @@ use Modules\Projects\Models\Task;
  * @legacy-file application/modules/tasks/controllers/Ajax.php
  */
 class TasksAjaxController
-{    /**
+*/
+class TasksAjaxController
+{
+    /**
      * Initialize the TasksAjaxController with dependency injection.
      *
      * @param TaskService $taskService
