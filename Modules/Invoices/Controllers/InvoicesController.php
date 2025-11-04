@@ -84,20 +84,8 @@ class InvoicesController
      */
     public function status(string $status = 'all', int $page = 0): View
     {
-        // Build query based on status
-        $query = Invoice::query()->with(['client', 'user']);
-
-        match ($status) {
-            'draft'   => $query->draft(),
-            'sent'    => $query->sent(),
-            'viewed'  => $query->viewed(),
-            'paid'    => $query->paid(),
-            'overdue' => $query->overdue(),
-            default   => $query
-        };
-
-        // Paginate results
-        $invoices = $query->paginate(15);
+        // Get paginated invoices with relationships from service
+        $invoices = $this->invoiceService->getAllWithRelations(['client', 'user'], $status, 15);
 
         $data = [
             'invoices'           => $invoices,
@@ -185,8 +173,8 @@ class InvoicesController
      */
     public function view(int $invoiceId): View
     {
-        $invoice = Invoice::query()->with(['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments'])
-            ->findOrFail($invoiceId);
+        $invoice = $this->invoiceService->findWithRelationsOrFail($invoiceId, 
+            ['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments']);
 
         // Get custom fields and values
         $fields       = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();

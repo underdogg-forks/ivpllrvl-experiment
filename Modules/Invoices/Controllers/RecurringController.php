@@ -37,8 +37,7 @@ class RecurringController
      */
     public function index(int $page = 0)
     {
-        $recurringInvoices = InvoicesRecurring::query()->with(['invoice', 'client'])
-            ->paginate(15, ['*'], 'page', $page);
+        $recurringInvoices = $this->invoicesRecurringService->getAllWithRelations(['invoice', 'client'], 15);
 
         $recurFrequencies = InvoicesRecurring::RECUR_FREQUENCIES;
 

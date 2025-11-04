@@ -223,4 +223,76 @@ class InvoiceService
     {
         return Invoice::query()->where('invoice_id', $invoiceId)->update($data);
     }
+
+    /**
+     * Find an invoice with its relationships.
+     *
+     * @param int $id Invoice ID
+     * @param array $relations Relations to eager load
+     *
+     * @return Invoice|null
+     */
+    public function findWithRelations(int $id, array $relations = ['client', 'user']): ?Invoice
+    {
+        return Invoice::query()->with($relations)->find($id);
+    }
+
+    /**
+     * Find an invoice with its relationships or fail.
+     *
+     * @param int $id Invoice ID
+     * @param array $relations Relations to eager load
+     *
+     * @return Invoice
+     */
+    public function findWithRelationsOrFail(int $id, array $relations = ['client', 'user']): Invoice
+    {
+        return Invoice::query()->with($relations)->findOrFail($id);
+    }
+
+    /**
+     * Get all invoices with relationships, ordered and filtered.
+     *
+     * @param array $relations Relations to eager load
+     * @param string|null $status Status filter
+     * @param int $perPage Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(
+        array $relations = ['client', 'user'],
+        ?string $status = null,
+        int $perPage = 15
+    ) {
+        $query = Invoice::query()->with($relations);
+
+        // Apply status filter using scopes
+        switch ($status) {
+            case 'draft':
+                $query->draft();
+                break;
+            case 'sent':
+                $query->sent();
+                break;
+            case 'viewed':
+                $query->viewed();
+                break;
+            case 'paid':
+                $query->paid();
+                break;
+            case 'unpaid':
+                $query->unpaid();
+                break;
+            case 'overdue':
+                $query->overdue();
+                break;
+            case 'all':
+            default:
+                // No filter for 'all'
+                break;
+        }
+
+        return $query->orderBy('invoice_date_created', 'desc')->paginate($perPage);
+    }
 }
+

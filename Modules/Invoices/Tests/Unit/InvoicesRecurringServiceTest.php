@@ -102,4 +102,50 @@ class InvoicesRecurringServiceTest extends AbstractServiceTestCase
             $this->assertArrayHasKey($key, $rules);
         }
     }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_gets_all_recurring_invoices_with_relations_paginated(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $invoice = \Modules\Invoices\Models\Invoice::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+        
+        \Modules\Invoices\Models\InvoicesRecurring::factory()->count(3)->create([
+            'invoice_id' => $invoice->invoice_id,
+            'client_id' => $client->client_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->getAllWithRelations();
+
+        /** Assert */
+        $this->assertGreaterThanOrEqual(3, $result->total());
+        $this->assertTrue($result->first()->relationLoaded('invoice'));
+        $this->assertTrue($result->first()->relationLoaded('client'));
+    }
+
+    #[Group('relationships')]
+    #[Test]
+    public function it_respects_custom_per_page_parameter(): void
+    {
+        /** Arrange */
+        $client = \Modules\Crm\Models\Client::factory()->create();
+        $invoice = \Modules\Invoices\Models\Invoice::factory()->create([
+            'client_id' => $client->client_id,
+        ]);
+        
+        \Modules\Invoices\Models\InvoicesRecurring::factory()->count(10)->create([
+            'invoice_id' => $invoice->invoice_id,
+            'client_id' => $client->client_id,
+        ]);
+
+        /** Act */
+        $result = $this->service->getAllWithRelations(['invoice'], 5);
+
+        /** Assert */
+        $this->assertEquals(5, $result->perPage());
+    }
 }
