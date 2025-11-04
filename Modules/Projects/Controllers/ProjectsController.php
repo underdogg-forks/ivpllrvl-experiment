@@ -14,7 +14,8 @@ use Modules\Projects\Services\TaskService;
  * @legacy-file application/modules/projects/controllers/Projects.php
  */
 class ProjectsController
-{    public function __construct(
+{
+    public function __construct(
         protected ProjectService $projectService,
         protected TaskService $taskService
     ) {
