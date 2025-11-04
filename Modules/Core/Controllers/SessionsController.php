@@ -2,40 +2,31 @@
 
 namespace Modules\Core\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use App\Helpers\MailerHelper;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use Modules\Sessions\Controllers\DateTime;
-
-use function Modules\Sessions\Controllers\phpmail_send;
-
-use Modules\Sessions\Controllers\SessionsService;
-
-use function Modules\Sessions\Controllers\site_url;
-
-use Modules\Sessions\Controllers\UsersService;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Support\SettingsHelper;
 use Modules\Core\Support\TranslationHelper;
+
 /**
- * SessionsController
+ * SessionsController.
  *
  * Handles user authentication, login, logout, and password reset functionality
  *
  * @legacy-file application/modules/sessions/controllers/Sessions.php
  */
 class SessionsController
-{    /**
+{
+    /**
      * Initialize the SessionsController with dependency injection.
      *
      * @param SessionsService $sessionsService
-     * @param UsersService $usersService
+     * @param UsersService    $usersService
      */
     public function __construct(
         protected SessionsService $sessionsService,
         protected UsersService $usersService
-    ) {
-    }
+    ) {}
 
     /**
      * Redirect to the login page.
@@ -43,6 +34,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function index()
@@ -62,6 +54,7 @@ class SessionsController
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View a redirect response after form processing or the login view when displaying the form
      *
      * @legacy-function login
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function login(Request $request)
@@ -107,6 +100,7 @@ class SessionsController
      * @return bool `true` if authentication succeeds and the failure log is reset, `false` otherwise
      *
      * @legacy-function authenticate
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function authenticate($email_address, $password): bool
@@ -132,6 +126,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function logout
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function logout()
@@ -148,12 +143,13 @@ class SessionsController
      * - If the new-password form is submitted: validate input and token, update the user's password, clear the reset token and login failures, and redirect to the login page.
      * - If the password-reset request form is submitted: validate the email, throttle abuse, generate and store a reset token, send the reset email, and redirect to the login page.
      *
-     * @param Request $request
-     * @param string|null $token the password reset token supplied via the URL, or null when not using a token
+     * @param Request     $request
+     * @param string|null $token   the password reset token supplied via the URL, or null when not using a token
      *
      * @return mixed a view response for rendering the appropriate password reset page or a redirect response after processing
      *
      * @legacy-function passwordreset
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function passwordreset(Request $request, $token = null)
@@ -167,7 +163,7 @@ class SessionsController
             //prevent brute force attacks by counting times a token is used
             $login_log_check = $this->loginLogCheck($token);
             if ( ! empty($login_log_check) && $login_log_check->log_count > 10) {
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             } else {
                 //the use of a token counts as a failure
                 $this->loginLogAddfailure($token);
@@ -194,17 +190,17 @@ class SessionsController
             $user_id      = request()->input('user_id', true);
             if (empty($user_id) || empty($new_password)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_no_password'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             // Check for the reset token
             $user = $this->usersService->getById($user_id);
             if (empty($user)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             if (empty($user->user_passwordreset_token) || request()->input('token') !== $user->user_passwordreset_token) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_wrong_auth_code'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             // Call the save_change_password() function from users model
             $this->usersService->saveChangePassword($user_id, $new_password);
@@ -227,12 +223,12 @@ class SessionsController
             }
             if (empty($email)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             }
             //prevent brute force attacks by counting password resets
             $login_log_check = $this->loginLogCheck($email);
             if ( ! empty($login_log_check) && $login_log_check->log_count > 10) {
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect()->back();
             } else {
                 //a password recovery attempt counts as failed login
                 $this->loginLogAddfailure($email);
@@ -246,7 +242,7 @@ class SessionsController
                     redirect()->route('/');
                 }
                 //use salt to prevent predictability of the reset token (CVE-2021-29023)
-// TODO: Use Laravel services/facades - $this->load->library('crypt');
+                // TODO: Use Laravel services/facades - $this->load->library('crypt');
                 $token = md5(time() . $email . $this->crypt->salt());
                 // Save the token to the database and set the user to inactive
                 $db_array = ['user_passwordreset_token' => $token];
@@ -255,19 +251,19 @@ class SessionsController
                 // Send the email with reset link
                 // Prepare some variables for the email
                 $email_resetlink = site_url('sessions/passwordreset/' . $token);
-                $email_message   = return view('emails/passwordreset', ['resetlink' => $email_resetlink], true);
+                $email_message   = view('emails/passwordreset', ['resetlink' => $email_resetlink], true);
                 $email_from      = SettingsHelper::getSetting('smtp_mail_from');
                 if (empty($email_from)) {
-                    $email_from = 'system@' . preg_replace('/^[\w]{2,6}:\/\/([\w\d\.\-]+).*$/', '$1', base_url());
+                    $email_from = 'system@' . preg_replace('/^[\w]{2,6}:\/\/([\w.\-]+).*$/', '$1', base_url());
                 }
                 // Mail the invoice with the pre-configured mailer if possible
                 if (MailerHelper::mailerConfigured()) {
-// TODO: Laravel autoloads helpers - $this->load->helper('mailer/phpmailer');
+                    // TODO: Laravel autoloads helpers - $this->load->helper('mailer/phpmailer');
                     if ( ! phpmail_send($email_from, $email, TranslationHelper::trans('password_reset'), $email_message)) {
                         $email_failed = true;
                     }
                 } else {
-// TODO: Use Laravel services/facades - $this->load->library('email');
+                    // TODO: Use Laravel services/facades - $this->load->library('email');
                     // Set email configuration
                     $config['mailtype'] = 'html';
                     $this->email->initialize($config);
@@ -303,6 +299,7 @@ class SessionsController
      * @return mixed login log record or null
      *
      * @legacy-function loginLogCheck
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogCheck($username)
@@ -332,6 +329,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function loginLogAddfailure
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogAddfailure($username)
@@ -353,6 +351,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function loginLogReset
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogReset($username)

@@ -69,9 +69,11 @@ class UploadControllerTest extends FeatureTestCase
 
         /* Assert */
         $response->assertOk();
-        $response->assertJson([
-            'message' => 'upload_file_uploaded_successfully',
-        ]);
+        $data = $response->json();
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('filename', $data);
+        // Message should be translated, not a translation key
+        $this->assertStringNotContainsString('upload_file_uploaded_successfully', $data['message']);
     }
 
     /**
@@ -115,9 +117,145 @@ class UploadControllerTest extends FeatureTestCase
 
         /* Assert */
         $response->assertStatus(400);
-        $response->assertJson([
-            'message' => 'upload_error_no_file',
+        $data = $response->json();
+        $this->assertArrayHasKey('message', $data);
+        // Message should be translated
+        $this->assertNotEquals('upload_error_no_file', $data['message']);
+    }
+
+    /**
+     * Test file upload enforces 10MB size limit.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_enforces_file_size_limit(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        // Create file larger than 10MB
+        $file = \Illuminate\Http\UploadedFile::fake()->create('large.pdf', 11000); // 11MB
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => 'test_key',
+        ]), [
+            'file' => $file,
         ]);
+
+        /* Assert */
+        $response->assertStatus(413); // Payload Too Large
+        $data = $response->json();
+        $this->assertArrayHasKey('message', $data);
+        // Message should be translated
+        $this->assertNotEquals('upload_error_file_too_large', $data['message']);
+    }
+
+    /**
+     * Test file upload rejects unsupported file types.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_rejects_unsupported_file_types(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $file = \Illuminate\Http\UploadedFile::fake()->create('malicious.php', 100);
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => 'test_key',
+        ]), [
+            'file' => $file,
+        ]);
+
+        /* Assert */
+        $response->assertStatus(415); // Unsupported Media Type
+        $data = $response->json();
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('extension', $data);
+        $this->assertEquals('php', $data['extension']);
+    }
+
+    /**
+     * Test file upload rejects HTML files (XSS risk).
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_rejects_html_files(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $file = \Illuminate\Http\UploadedFile::fake()->create('malicious.html', 100);
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => 'test_key',
+        ]), [
+            'file' => $file,
+        ]);
+
+        /* Assert */
+        $response->assertStatus(415); // Unsupported Media Type
+        $data = $response->json();
+        $this->assertArrayHasKey('extension', $data);
+        $this->assertEquals('html', $data['extension']);
+    }
+
+    /**
+     * Test file upload rejects executable files.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_rejects_executable_files(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $file = \Illuminate\Http\UploadedFile::fake()->create('malicious.exe', 100);
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => 'test_key',
+        ]), [
+            'file' => $file,
+        ]);
+
+        /* Assert */
+        $response->assertStatus(415); // Unsupported Media Type
+    }
+
+    /**
+     * Test file upload accepts allowed file types.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_accepts_allowed_file_types(): void
+    {
+        /** Arrange */
+        $user         = User::factory()->create();
+        $allowedTypes = ['pdf', 'jpg', 'png', 'docx', 'xlsx', 'csv'];
+
+        /* Act & Assert */
+        foreach ($allowedTypes as $type) {
+            $file = \Illuminate\Http\UploadedFile::fake()->create("document.{$type}", 100);
+
+            $this->actingAs($user);
+            $response = $this->post(route('upload.upload-file', [
+                'customerId' => 1,
+                'url_key'    => 'test_' . $type,
+            ]), [
+                'file' => $file,
+            ]);
+
+            $response->assertOk();
+        }
     }
 
     /**
@@ -153,9 +291,34 @@ class UploadControllerTest extends FeatureTestCase
         /* Assert */
         $response1->assertOk();
         $response2->assertStatus(409);
-        $response2->assertJson([
-            'message' => 'upload_error_duplicate_file',
+        $data = $response2->json();
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('filename', $data);
+    }
+
+    /**
+     * Test file upload sanitizes url_key parameter.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_sanitizes_url_key_parameter(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        $file = \Illuminate\Http\UploadedFile::fake()->create('document.pdf', 100);
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => '../../../malicious',
+        ]), [
+            'file' => $file,
         ]);
+
+        /* Assert */
+        // Should succeed but sanitize the url_key
+        $response->assertOk();
     }
 
     /**
@@ -212,6 +375,63 @@ class UploadControllerTest extends FeatureTestCase
         // Should sanitize dangerous characters
         $this->assertStringNotContainsString('<', $data['filename']);
         $this->assertStringNotContainsString('>', $data['filename']);
+    }
+
+    /**
+     * Test file upload limits filename length to 200 characters.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_limits_filename_length(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        // Create filename with >200 chars
+        $longName = str_repeat('a', 250);
+        $file     = \Illuminate\Http\UploadedFile::fake()->create($longName . '.pdf', 100);
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => 'test_key',
+        ]), [
+            'file' => $file,
+        ]);
+
+        /* Assert */
+        $response->assertOk();
+        $data = $response->json();
+        // Filename should be truncated (200 chars + .pdf extension)
+        $this->assertLessThanOrEqual(204, mb_strlen($data['filename']));
+    }
+
+    /**
+     * Test file upload handles files without extension.
+     */
+    #[Group('edge-cases')]
+    #[Test]
+    public function it_handles_files_without_extension(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+        // Create file without extension
+        $file = \Illuminate\Http\UploadedFile::fake()->create('noextension', 100);
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->post(route('upload.upload-file', [
+            'customerId' => 1,
+            'url_key'    => 'test_key',
+        ]), [
+            'file' => $file,
+        ]);
+
+        /* Assert */
+        $response->assertOk();
+        $data = $response->json();
+        // Should add safe default extension 'bin'
+        $this->assertStringEndsWith('.bin', $data['filename']);
     }
 
     // ==================== ROUTE: GET /upload/create-dir ====================
@@ -348,9 +568,10 @@ class UploadControllerTest extends FeatureTestCase
 
         /* Assert */
         $response->assertOk();
-        $response->assertJson([
-            'message' => 'upload_file_deleted_successfully',
-        ]);
+        $data = $response->json();
+        $this->assertArrayHasKey('message', $data);
+        // Message should be translated
+        $this->assertNotEquals('upload_file_deleted_successfully', $data['message']);
 
         // Cleanup - use file_exists to avoid errors
         if (file_exists($filePath)) {
@@ -402,9 +623,32 @@ class UploadControllerTest extends FeatureTestCase
 
         /* Assert */
         $response->assertStatus(410);
-        $response->assertJson([
-            'message' => 'upload_error_file_delete',
-        ]);
+        $data = $response->json();
+        $this->assertArrayHasKey('message', $data);
+        // Message should be translated
+        $this->assertNotEquals('upload_error_file_delete', $data['message']);
+    }
+
+    /**
+     * Test file deletion sanitizes url_key to prevent traversal.
+     */
+    #[Group('validation')]
+    #[Test]
+    public function it_sanitizes_url_key_in_delete(): void
+    {
+        /** Arrange */
+        $user = User::factory()->create();
+
+        /* Act */
+        $this->actingAs($user);
+        $response = $this->get(route('upload.delete-file', [
+            'url_key' => '../../malicious',
+            'name'    => 'test.txt',
+        ]));
+
+        /* Assert */
+        // Should fail due to path validation
+        $response->assertStatus(410);
     }
 
     /**

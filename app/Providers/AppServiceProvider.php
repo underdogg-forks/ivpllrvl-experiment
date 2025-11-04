@@ -19,8 +19,8 @@ class AppServiceProvider extends ServiceProvider
             $resolver = new \Illuminate\View\Engines\EngineResolver();
 
             // Register PHP engine FIRST (for plain PHP templates - primary engine)
-            $resolver->register('php', function () {
-                return new PhpEngine();
+            $resolver->register('php', function () use ($app) {
+                return new PhpEngine($app['files']);
             });
 
             // Register Blade engine as secondary (for potential future use)

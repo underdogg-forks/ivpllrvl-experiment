@@ -15,29 +15,23 @@ class UploadService extends BaseService
 {
     /**
      * MIME type mappings for common file extensions.
+     * SECURITY: Removed dangerous file types (php, html, htm).
      */
     public array $content_types = [
         'pdf'  => 'application/pdf',
-        'exe'  => 'application/octet-stream',
         'zip'  => 'application/zip',
         'doc'  => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'xls'  => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'ppt'  => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
         'gif'  => 'image/gif',
         'png'  => 'image/png',
         'jpeg' => 'image/jpeg',
         'jpg'  => 'image/jpeg',
-        'mp3'  => 'audio/mpeg',
-        'wav'  => 'audio/x-wav',
-        'mpeg' => 'video/mpeg',
-        'mpg'  => 'video/mpeg',
-        'mpe'  => 'video/mpeg',
-        'mov'  => 'video/quicktime',
-        'avi'  => 'video/x-msvideo',
         'txt'  => 'text/plain',
-        'htm'  => 'text/html',
-        'html' => 'text/html',
-        'php'  => 'text/plain',
+        'csv'  => 'text/csv',
     ];
 
     /**
@@ -71,6 +65,25 @@ class UploadService extends BaseService
         return Upload::query()->select('file_name_new', 'file_name_original')
             ->where('url_key', $urlKey)
             ->get();
+    }
+
+    /**
+     * Delete file metadata from database.
+     *
+     * @param string $urlKey
+     * @param string $filename
+     *
+     * @return bool
+     */
+    public function deleteFile(string $urlKey, string $filename): bool
+    {
+        $safeFilename     = basename($filename);
+        $expectedFilename = $urlKey . '_' . $safeFilename;
+
+        return Upload::query()
+            ->where('url_key', $urlKey)
+            ->where('file_name_new', $expectedFilename)
+            ->delete() > 0;
     }
 
     /**
