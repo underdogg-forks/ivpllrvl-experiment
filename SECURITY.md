@@ -47,10 +47,9 @@ When contributing to InvoicePlane:
 
 We appreciate responsible disclosure of security vulnerabilities. Please:
 
-1. **Email** security details to mail@invoiceplane.com
+1. **Email** security details to <mail@invoiceplane.com>
 2. **Wait** for acknowledgment before public disclosure
 3. **Allow** reasonable time for fixes to be implemented
 4. **Coordinate** public disclosure timeline with the team
-
 Thank you for helping keep InvoicePlane secure!
 
