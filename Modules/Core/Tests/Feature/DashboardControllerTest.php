@@ -8,8 +8,8 @@ use Modules\Crm\Models\Client;
 use Modules\Invoices\Models\Invoice;
 use Modules\Quotes\Models\Quote;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -29,17 +29,17 @@ class DashboardControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         // Create test data
         Client::factory()->count(5)->create();
         Invoice::factory()->count(10)->create();
         Quote::factory()->count(3)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('dashboard'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::dashboard');
         $response->assertViewHas('total_clients');
@@ -58,11 +58,11 @@ class DashboardControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Client::factory()->count(7)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('dashboard'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $totalClients = $response->viewData('total_clients');
         $this->assertEquals(7, $totalClients);
@@ -79,11 +79,11 @@ class DashboardControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Invoice::factory()->count(15)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('dashboard'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $totalInvoices = $response->viewData('total_invoices');
         $this->assertEquals(15, $totalInvoices);
@@ -100,11 +100,11 @@ class DashboardControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Quote::factory()->count(8)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('dashboard'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $totalQuotes = $response->viewData('total_quotes');
         $this->assertEquals(8, $totalQuotes);
@@ -120,11 +120,11 @@ class DashboardControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('dashboard'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $this->assertEquals(0, $response->viewData('total_clients'));
         $this->assertEquals(0, $response->viewData('total_invoices'));

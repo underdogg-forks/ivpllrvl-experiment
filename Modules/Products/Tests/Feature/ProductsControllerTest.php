@@ -5,8 +5,8 @@ namespace Modules\Products\Tests\Feature;
 use Modules\Core\Models\User;
 use Modules\Products\Controllers\ProductsController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -27,7 +27,7 @@ class ProductsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.index'));
 
@@ -49,9 +49,9 @@ class ProductsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create product with family, unit, and tax rate */
+        /* Would create product with family, unit, and tax rate */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.index'));
 
@@ -69,9 +69,9 @@ class ProductsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create products with different names */
+        /* Would create products with different names */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.index'));
 
@@ -91,11 +91,11 @@ class ProductsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('filter_placeholder');
         $response->assertViewHas('filter_method');
@@ -111,9 +111,9 @@ class ProductsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create 20 products */
+        /* Would create 20 products */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.index'));
 
@@ -133,7 +133,7 @@ class ProductsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.form'));
 
@@ -188,13 +188,13 @@ class ProductsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create multiple families */
+        /* Would create multiple families */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         /* Would verify families are ordered alphabetically */
         $this->assertTrue(true, 'Families should be ordered by name');
@@ -209,13 +209,13 @@ class ProductsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create multiple units */
+        /* Would create multiple units */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         /* Would verify units are ordered alphabetically */
         $this->assertTrue(true, 'Units should be ordered by name');
@@ -230,9 +230,9 @@ class ProductsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        /** Would create multiple tax rates */
+        /* Would create multiple tax rates */
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.form'));
 
@@ -367,17 +367,17 @@ class ProductsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         /** Would create product */
         $testId = 1;
-        
+
         /**
          * {
          *     "product_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'product_id' => $testId,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('products.delete', ['id' => $testId]),

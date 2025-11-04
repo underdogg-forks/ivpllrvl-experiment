@@ -5,8 +5,8 @@ namespace Modules\Core\Tests\Feature;
 use Modules\Core\Controllers\ImportController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -18,7 +18,7 @@ use Tests\Feature\FeatureTestCase;
 class ImportControllerTest extends FeatureTestCase
 {
     // ==================== ROUTE: GET /import (index) ====================
-    
+
     /**
      * Test index displays import page.
      */
@@ -29,11 +29,11 @@ class ImportControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::import_index');
     }
@@ -48,11 +48,11 @@ class ImportControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('imports');
     }
@@ -67,7 +67,7 @@ class ImportControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('import.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -81,11 +81,11 @@ class ImportControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.index', ['page' => 1]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::import_index');
     }
@@ -102,11 +102,11 @@ class ImportControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::import_import_index');
         $response->assertViewHas('files');
@@ -122,7 +122,7 @@ class ImportControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('import.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -135,31 +135,31 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         // Ensure upload directory exists
         $uploadDir = base_path('uploads/import');
-        if (!is_dir($uploadDir)) {
+        if ( ! is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        
+
         // Create allowed and disallowed files
         file_put_contents($uploadDir . '/clients.csv', 'test');
         file_put_contents($uploadDir . '/invoices.csv', 'test');
         file_put_contents($uploadDir . '/malicious.php', '<?php echo "bad"; ?>');
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $files = $response->viewData('files');
-        
+
         // Should only show allowed CSV files
         $this->assertContains('clients.csv', $files);
         $this->assertContains('invoices.csv', $files);
         $this->assertNotContains('malicious.php', $files);
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($uploadDir . '/clients.csv')) {
             unlink($uploadDir . '/clients.csv');
@@ -181,28 +181,28 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         $uploadDir = base_path('uploads/import');
-        if (!is_dir($uploadDir)) {
+        if ( ! is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        
+
         // Create a valid CSV file
         $csvContent = "client_name,client_email\nTest Client,test@example.com";
         file_put_contents($uploadDir . '/clients.csv', $csvContent);
-        
+
         $formData = [
             'btn_submit' => '1',
-            'files' => ['clients.csv'],
+            'files'      => ['clients.csv'],
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('import.form'), $formData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('import.index'));
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($uploadDir . '/clients.csv')) {
             unlink($uploadDir . '/clients.csv');
@@ -218,19 +218,19 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         $formData = [
             'btn_submit' => '1',
-            'files' => [],
+            'files'      => [],
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('import.form'), $formData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('import.index'));
-        
+
         // Verify no imports were created
         $importCount = \Modules\Core\Models\Import::query()->count();
         $this->assertEquals(0, $importCount, 'No imports should be created when files array is empty');
@@ -245,17 +245,17 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         $formData = [
             'btn_submit' => '1',
-            'files' => ['clients.csv', 'malicious.php', 'invoices.csv'],
+            'files'      => ['clients.csv', 'malicious.php', 'invoices.csv'],
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('import.form'), $formData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('import.index'));
         // Should only process clients.csv and invoices.csv, ignore malicious.php
     }
@@ -269,27 +269,27 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         $uploadDir = base_path('uploads/import');
-        if (!is_dir($uploadDir)) {
+        if ( ! is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        
+
         $csvContent = "item_name,item_quantity\nTest Item,5";
         file_put_contents($uploadDir . '/invoice_items.csv', $csvContent);
-        
+
         $formData = [
             'btn_submit' => '1',
-            'files' => ['invoice_items.csv'],
+            'files'      => ['invoice_items.csv'],
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('import.form'), $formData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('import.index'));
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($uploadDir . '/invoice_items.csv')) {
             unlink($uploadDir . '/invoice_items.csv');
@@ -305,27 +305,27 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         $uploadDir = base_path('uploads/import');
-        if (!is_dir($uploadDir)) {
+        if ( ! is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        
+
         $csvContent = "payment_amount,payment_date\n100.00,2025-01-01";
         file_put_contents($uploadDir . '/payments.csv', $csvContent);
-        
+
         $formData = [
             'btn_submit' => '1',
-            'files' => ['payments.csv'],
+            'files'      => ['payments.csv'],
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('import.form'), $formData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('import.index'));
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($uploadDir . '/payments.csv')) {
             unlink($uploadDir . '/payments.csv');
@@ -343,19 +343,19 @@ class ImportControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         // Create an import record
         $import = \Modules\Core\Models\Import::create([
             'import_date' => date('Y-m-d H:i:s'),
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.delete', ['id' => $import->import_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('import.index'));
-        
+
         // Verify import was deleted
         $this->assertDatabaseMissing('ip_imports', [
             'import_id' => $import->import_id,
@@ -372,7 +372,7 @@ class ImportControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('import.delete', ['id' => 1]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -384,14 +384,14 @@ class ImportControllerTest extends FeatureTestCase
     public function it_handles_deleting_nonexistent_import(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user          = User::factory()->create();
         $nonexistentId = 99999;
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.delete', ['id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         // Should redirect even if import doesn't exist
         $response->assertRedirect(route('import.index'));
     }
@@ -406,15 +406,15 @@ class ImportControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('import.delete', ['id' => 'invalid']));
 
-        /** Assert */
+        /* Assert */
         // Should handle gracefully
         $this->assertTrue(
-            $response->isRedirect() || 
-            $response->getStatusCode() >= 400
+            $response->isRedirect()
+            || $response->getStatusCode() >= 400
         );
     }
 }

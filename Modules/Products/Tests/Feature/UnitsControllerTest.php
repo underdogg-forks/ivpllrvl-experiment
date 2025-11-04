@@ -6,8 +6,8 @@ use Modules\Core\Models\User;
 use Modules\Products\Controllers\UnitsController;
 use Modules\Products\Models\Unit;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -29,11 +29,11 @@ class UnitsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Unit::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('units.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::units_index');
         $response->assertViewHas('units');
@@ -49,15 +49,15 @@ class UnitsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('units.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::units_form');
         $response->assertViewHas('unit');
-        
+
         $unit = $response->viewData('unit');
         $this->assertInstanceOf(Unit::class, $unit);
         $this->assertFalse($unit->exists);
@@ -72,28 +72,28 @@ class UnitsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "unit_name": "Kilogram",
          *     "unit_name_plrl": "Kilograms"
-         * }
+         * }.
          */
         $unitData = [
-            'unit_name' => 'Kilogram',
+            'unit_name'      => 'Kilogram',
             'unit_name_plrl' => 'Kilograms',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('units.form'), $unitData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_units', [
-            'unit_name' => 'Kilogram',
+            'unit_name'      => 'Kilogram',
             'unit_name_plrl' => 'Kilograms',
         ]);
     }
@@ -109,15 +109,15 @@ class UnitsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $unit = Unit::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('units.form', ['id' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::units_form');
         $response->assertViewHas('unit');
-        
+
         $viewUnit = $response->viewData('unit');
         $this->assertEquals($unit->unit_id, $viewUnit->unit_id);
     }
@@ -132,28 +132,28 @@ class UnitsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
         $unit = Unit::factory()->create(['unit_name' => 'Old Name']);
-        
+
         /**
          * {
          *     "unit_name": "Updated Name",
          *     "unit_name_plrl": "Updated Names"
-         * }
+         * }.
          */
         $updateData = [
-            'unit_name' => 'Updated Name',
+            'unit_name'      => 'Updated Name',
             'unit_name_plrl' => 'Updated Names',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('units.form', ['id' => $unit->unit_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_units', [
-            'unit_id' => $unit->unit_id,
+            'unit_id'   => $unit->unit_id,
             'unit_name' => 'Updated Name',
         ]);
     }
@@ -169,14 +169,14 @@ class UnitsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $unit = Unit::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->delete(route('units.destroy', $unit));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_units', [
             'unit_id' => $unit->unit_id,
         ]);
@@ -190,19 +190,19 @@ class UnitsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         Unit::factory()->create(['unit_name' => 'Zebra Unit']);
         Unit::factory()->create(['unit_name' => 'Alpha Unit']);
         Unit::factory()->create(['unit_name' => 'Beta Unit']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('units.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $units = $response->viewData('units');
-        
+
         // Verify ordering (depends on Unit's ordered() scope implementation)
         $this->assertCount(3, $units);
     }

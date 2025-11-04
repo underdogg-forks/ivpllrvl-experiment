@@ -5,8 +5,8 @@ namespace Modules\Core\Tests\Feature;
 use Modules\Core\Controllers\SetupController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -17,33 +17,8 @@ use Tests\Feature\FeatureTestCase;
 #[CoversClass(SetupController::class)]
 class SetupControllerTest extends FeatureTestCase
 {
-    /**
-     * Helper method to advance the setup workflow to a specific step.
-     * 
-     * This reduces code duplication by handling common workflow advancement logic:
-     * - Sets the session to the current step
-     * - POSTs continue data to the current route
-     * - Returns the response for assertion
-     * 
-     * @param string $currentStep The current step name (e.g., 'prerequisites')
-     * @param string $currentRoute The current route name (e.g., 'setup.prerequisites')
-     * @param array<string, mixed> $additionalData Additional form data beyond 'btn_continue'
-     * @return \Illuminate\Testing\TestResponse
-     */
-    private function advanceToStep(string $currentStep, string $currentRoute, array $additionalData = []): \Illuminate\Testing\TestResponse
-    {
-        // Set the session to the current step
-        session(['install_step' => $currentStep]);
-        
-        // Merge continue button with any additional data
-        $postData = array_merge(['btn_continue' => '1'], $additionalData);
-        
-        // POST to the route to advance
-        return $this->post(route($currentRoute), $postData);
-    }
-    
     // ==================== ROUTE: GET /setup (index) ====================
-    
+
     /**
      * Test index redirects to language selection.
      */
@@ -54,7 +29,7 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('setup.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.language'));
     }
 
@@ -71,7 +46,7 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('setup.index'));
 
-        /** Assert */
+        /* Assert */
         // Should redirect to language, not login
         $response->assertRedirect();
         $this->assertNotEquals(route('sessions.login'), $response->headers->get('Location'));
@@ -89,11 +64,11 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('setup.language'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.lang');
         $response->assertViewHas('languages');
-        
+
         // Verify languages data is not empty
         $languages = $response->viewData('languages');
         $this->assertNotEmpty($languages, 'Languages list should not be empty');
@@ -109,13 +84,13 @@ class SetupControllerTest extends FeatureTestCase
         /** Arrange */
         $languageData = [
             'btn_continue' => '1',
-            'ip_lang' => 'en',
+            'ip_lang'      => 'en',
         ];
 
         /** Act */
         $response = $this->post(route('setup.language'), $languageData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.prerequisites'));
         $this->assertEquals('en', session('ip_lang'));
         $this->assertEquals('prerequisites', session('install_step'));
@@ -128,14 +103,14 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_resets_session_cache_on_language_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'some_value']);
         session(['is_upgrade' => true]);
 
         /** Act */
         $response = $this->get(route('setup.language'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $this->assertNull(session('install_step'));
         $this->assertNull(session('is_upgrade'));
@@ -150,20 +125,20 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_prerequisites_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'prerequisites']);
 
         /** Act */
         $response = $this->get(route('setup.prerequisites'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.prerequisites');
         $response->assertViewHas('basics');
         $response->assertViewHas('writables');
-        
+
         // Verify prerequisites data contains expected information
-        $basics = $response->viewData('basics');
+        $basics    = $response->viewData('basics');
         $writables = $response->viewData('writables');
         $this->assertNotEmpty($basics, 'Basic requirements should be checked');
         $this->assertNotEmpty($writables, 'Writable paths should be checked');
@@ -176,13 +151,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_redirects_if_prerequisites_step_is_wrong(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'wrong_step']);
 
         /** Act */
         $response = $this->get(route('setup.prerequisites'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.language'));
     }
 
@@ -196,7 +171,7 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->advanceToStep('prerequisites', 'setup.prerequisites');
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.configure-database'));
         $this->assertEquals('configure_database', session('install_step'));
     }
@@ -210,17 +185,17 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_database_configuration_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'configure_database']);
 
         /** Act */
         $response = $this->get(route('setup.configure-database'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.configure_database');
         $response->assertViewHas('database');
-        
+
         // Verify database configuration data is present
         $database = $response->viewData('database');
         $this->assertIsArray($database, 'Database configuration should be an array');
@@ -233,13 +208,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_redirects_if_database_config_step_is_wrong(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'wrong_step']);
 
         /** Act */
         $response = $this->get(route('setup.configure-database'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.prerequisites'));
     }
 
@@ -250,20 +225,20 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_processes_database_credentials(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'configure_database']);
         $dbData = [
             'db_hostname' => 'localhost',
             'db_username' => 'testuser',
             'db_password' => 'testpass',
             'db_database' => 'testdb',
-            'db_port' => '3306',
+            'db_port'     => '3306',
         ];
 
         /** Act */
         $response = $this->post(route('setup.configure-database'), $dbData);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('database');
     }
@@ -277,13 +252,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_install_tables_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'install_tables']);
 
         /** Act */
         $response = $this->get(route('setup.install-tables'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.install_tables');
         $response->assertViewHas('success');
@@ -296,13 +271,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_redirects_if_install_tables_step_is_wrong(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'wrong_step']);
 
         /** Act */
         $response = $this->get(route('setup.install-tables'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.prerequisites'));
     }
 
@@ -316,7 +291,7 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->advanceToStep('install_tables', 'setup.install-tables');
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.upgrade-tables'));
         $this->assertEquals('upgrade_tables', session('install_step'));
     }
@@ -330,13 +305,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_upgrade_tables_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'upgrade_tables']);
 
         /** Act */
         $response = $this->get(route('setup.upgrade-tables'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.upgrade_tables');
     }
@@ -348,13 +323,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_redirects_if_upgrade_tables_step_is_wrong(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'wrong_step']);
 
         /** Act */
         $response = $this->get(route('setup.upgrade-tables'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.prerequisites'));
     }
 
@@ -365,13 +340,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_advances_to_create_user_for_new_install(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['is_upgrade' => false]);
-        
+
         /** Act */
         $response = $this->advanceToStep('upgrade_tables', 'setup.upgrade-tables');
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.create-user'));
         $this->assertEquals('create_user', session('install_step'));
     }
@@ -383,13 +358,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_advances_to_calculation_info_for_upgrade(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['is_upgrade' => true]);
-        
+
         /** Act */
         $response = $this->advanceToStep('upgrade_tables', 'setup.upgrade-tables');
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.calculation-info'));
         $this->assertEquals('calculation_info', session('install_step'));
     }
@@ -403,13 +378,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_create_user_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'create_user']);
 
         /** Act */
         $response = $this->get(route('setup.create-user'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.create_user');
     }
@@ -421,13 +396,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_redirects_if_create_user_step_is_wrong(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'wrong_step']);
 
         /** Act */
         $response = $this->get(route('setup.create-user'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.prerequisites'));
     }
 
@@ -440,15 +415,15 @@ class SetupControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $userData = [
-            'user_email' => 'admin@example.com',
-            'user_password' => 'password123',
+            'user_email'            => 'admin@example.com',
+            'user_password'         => 'password123',
             'user_password_confirm' => 'password123',
         ];
 
         /** Act */
         $response = $this->advanceToStep('create_user', 'setup.create-user', $userData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.calculation-info'));
     }
 
@@ -459,19 +434,19 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_fails_with_mismatched_passwords(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'create_user']);
         $userData = [
-            'btn_continue' => '1',
-            'user_email' => 'admin@example.com',
-            'user_password' => 'password123',
+            'btn_continue'          => '1',
+            'user_email'            => 'admin@example.com',
+            'user_password'         => 'password123',
             'user_password_confirm' => 'different',
         ];
 
         /** Act */
         $response = $this->post(route('setup.create-user'), $userData);
 
-        /** Assert */
+        /* Assert */
         $response->assertSessionHasErrors();
     }
 
@@ -484,13 +459,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_calculation_info_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'calculation_info']);
 
         /** Act */
         $response = $this->get(route('setup.calculation-info'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.calculation_info');
     }
@@ -502,13 +477,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_redirects_if_calculation_info_step_is_wrong(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'wrong_step']);
 
         /** Act */
         $response = $this->get(route('setup.calculation-info'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.prerequisites'));
     }
 
@@ -522,7 +497,7 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->advanceToStep('calculation_info', 'setup.calculation-info');
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('setup.complete'));
     }
 
@@ -535,13 +510,13 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_displays_complete_page(): void
     {
-        /** Arrange */
+        /* Arrange */
         session(['install_step' => 'complete']);
 
         /** Act */
         $response = $this->get(route('setup.complete'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::setup.complete');
     }
@@ -559,7 +534,7 @@ class SetupControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('setup.complete'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
     }
 
@@ -572,15 +547,15 @@ class SetupControllerTest extends FeatureTestCase
     #[Test]
     public function it_blocks_setup_when_disabled(): void
     {
-        /** Arrange */
+        /* Arrange */
         putenv('DISABLE_SETUP=true');
 
         /** Act */
         $response = $this->get(route('setup.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(403);
-        
+
         // Cleanup
         putenv('DISABLE_SETUP=false');
     }
@@ -595,14 +570,40 @@ class SetupControllerTest extends FeatureTestCase
         /** Arrange */
         $languageData = [
             'btn_continue' => '1',
-            'ip_lang' => 'invalid_lang',
+            'ip_lang'      => 'invalid_lang',
         ];
 
         /** Act */
         $response = $this->post(route('setup.language'), $languageData);
 
-        /** Assert */
+        /* Assert */
         // Should either reject or default to safe value
         $this->assertTrue($response->isRedirect() || $response->isOk());
+    }
+
+    /**
+     * Helper method to advance the setup workflow to a specific step.
+     *
+     * This reduces code duplication by handling common workflow advancement logic:
+     * - Sets the session to the current step
+     * - POSTs continue data to the current route
+     * - Returns the response for assertion
+     *
+     * @param string               $currentStep    The current step name (e.g., 'prerequisites')
+     * @param string               $currentRoute   The current route name (e.g., 'setup.prerequisites')
+     * @param array<string, mixed> $additionalData Additional form data beyond 'btn_continue'
+     *
+     * @return \Illuminate\Testing\TestResponse
+     */
+    private function advanceToStep(string $currentStep, string $currentRoute, array $additionalData = []): \Illuminate\Testing\TestResponse
+    {
+        // Set the session to the current step
+        session(['install_step' => $currentStep]);
+
+        // Merge continue button with any additional data
+        $postData = array_merge(['btn_continue' => '1'], $additionalData);
+
+        // POST to the route to advance
+        return $this->post(route($currentRoute), $postData);
     }
 }

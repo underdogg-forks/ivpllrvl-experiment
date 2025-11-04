@@ -2,11 +2,13 @@
 
 namespace Modules\Products\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Http\Requests\UnitRequest;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\UnitService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
  * UnitsController
  *
@@ -14,7 +16,6 @@ use Modules\Core\Support\TranslationHelper;
  *
  * @legacy-file application/modules/units/controllers/Units.php
  */
-class UnitsController
 class UnitsController
 {
     public function __construct(
@@ -27,12 +28,12 @@ class UnitsController
      *
      * @param int $page Page number for pagination
      *
-     * @return \Illuminate\View\View
+     * @return View
      *
      * @legacy-function index
      * @legacy-file application/modules/units/controllers/Units.php
      */
-    public function index(int $page = 0): \Illuminate\View\View
+    public function index(int $page = 0): View
     {
         $units = Unit::query()->ordered()
             ->paginate(15, ['*'], 'page', $page);
@@ -45,12 +46,12 @@ class UnitsController
     /**
      * Show the form for creating a new unit.
      *
-     * @return \Illuminate\View\View
+     * @return View
      *
      * @legacy-function form
      * @legacy-file application/modules/units/controllers/Units.php
      */
-    public function create(): \Illuminate\View\View
+    public function create(): View
     {
         $unit = new Unit();
         return view('products::units_form', ['unit' => $unit]);
@@ -61,12 +62,12 @@ class UnitsController
      *
      * @param UnitRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @legacy-function form (save action)
      * @legacy-file application/modules/units/controllers/Units.php
      */
-    public function store(UnitRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(UnitRequest $request): RedirectResponse
     {
         $this->unitService->create($request->validated());
 
@@ -79,12 +80,12 @@ class UnitsController
      *
      * @param Unit $unit
      *
-     * @return \Illuminate\View\View
+     * @return View
      *
      * @legacy-function form (with ID)
      * @legacy-file application/modules/units/controllers/Units.php
      */
-    public function edit(Unit $unit): \Illuminate\View\View
+    public function edit(Unit $unit): View
     {
         return view('products::units_form', ['unit' => $unit]);
     }
@@ -95,12 +96,12 @@ class UnitsController
      * @param UnitRequest $request
      * @param Unit        $unit
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @legacy-function form (update action)
      * @legacy-file application/modules/units/controllers/Units.php
      */
-    public function update(UnitRequest $request, Unit $unit): \Illuminate\Http\RedirectResponse
+    public function update(UnitRequest $request, Unit $unit): RedirectResponse
     {
         $this->unitService->update($unit->unit_id, $request->validated());
 
@@ -113,12 +114,12 @@ class UnitsController
      *
      * @param Unit $unit
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @legacy-function delete
      * @legacy-file application/modules/units/controllers/Units.php
      */
-    public function destroy(Unit $unit): \Illuminate\Http\RedirectResponse
+    public function destroy(Unit $unit): RedirectResponse
     {
         $this->unitService->delete($unit->unit_id);
 

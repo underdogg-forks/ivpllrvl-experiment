@@ -2,10 +2,11 @@
 
 namespace Modules\Core\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Modules\Core\Models\EmailTemplate;
 use Modules\Core\Services\EmailTemplateService;
-
 use Modules\Core\Support\TranslationHelper;
+
 /**
  * EmailTemplatesController
  *
@@ -14,11 +15,8 @@ use Modules\Core\Support\TranslationHelper;
  * @legacy-file application/modules/email_templates/controllers/Email_templates.php
  */
 class EmailTemplatesController
-*/
-class EmailTemplatesController
 {
     public function __construct(
-        protected EmailTemplateService $emailTemplateService
         protected EmailTemplateService $emailTemplateService
     ) {
     }
@@ -47,12 +45,12 @@ class EmailTemplatesController
      *
      * @param int|null $id Email template ID (null for create)
      *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\View\View|RedirectResponse
      *
      * @legacy-function form
      * @legacy-file application/modules/email_templates/controllers/Email_templates.php
      */
-    public function form(?int $id = null)
+    public function form(?int $id = null): \Illuminate\View\View|RedirectResponse
     {
         if (request()->post('btn_cancel')) {
             return redirect()->route('email_templates.index');
@@ -91,12 +89,12 @@ class EmailTemplatesController
      *
      * @param int $id Email template ID
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @legacy-function delete
      * @legacy-file application/modules/email_templates/controllers/Email_templates.php
      */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    public function delete(int $id): RedirectResponse
     {
         $this->emailTemplateService->delete($id);
 

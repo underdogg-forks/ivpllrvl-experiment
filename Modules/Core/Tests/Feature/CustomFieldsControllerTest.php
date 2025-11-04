@@ -6,8 +6,8 @@ use Modules\Core\Controllers\CustomFieldsController;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -29,11 +29,11 @@ class CustomFieldsControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         CustomField::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_fields.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::custom_fields_index');
         $response->assertViewHas('custom_fields');
@@ -47,19 +47,19 @@ class CustomFieldsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         CustomField::factory()->create(['custom_field_table' => 'ip_clients', 'custom_field_label' => 'Field B']);
         CustomField::factory()->create(['custom_field_table' => 'ip_clients', 'custom_field_label' => 'Field A']);
         CustomField::factory()->create(['custom_field_table' => 'ip_invoices', 'custom_field_label' => 'Field C']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_fields.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $customFields = $response->viewData('custom_fields');
-        
+
         // Verify ordering by table, then label
         $this->assertGreaterThan(0, $customFields->count());
     }
@@ -74,15 +74,15 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_fields.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::custom_fields_form');
         $response->assertViewHas('custom_field');
-        
+
         $customField = $response->viewData('custom_field');
         $this->assertInstanceOf(CustomField::class, $customField);
         $this->assertFalse($customField->exists);
@@ -96,18 +96,18 @@ class CustomFieldsControllerTest extends FeatureTestCase
     public function it_displays_edit_form_with_existing_custom_field(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_fields.form', ['id' => $customField->custom_field_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::custom_fields_form');
         $response->assertViewHas('custom_field');
-        
+
         $viewCustomField = $response->viewData('custom_field');
         $this->assertEquals($customField->custom_field_id, $viewCustomField->custom_field_id);
     }
@@ -121,30 +121,30 @@ class CustomFieldsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "custom_field_table": "ip_clients",
          *     "custom_field_label": "Test Field",
          *     "custom_field_column": "custom_test_field",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $customFieldData = [
-            'custom_field_table' => 'ip_clients',
-            'custom_field_label' => 'Test Field',
+            'custom_field_table'  => 'ip_clients',
+            'custom_field_label'  => 'Test Field',
             'custom_field_column' => 'custom_test_field',
-            'btn_submit' => '1',
+            'btn_submit'          => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('custom_fields.form'), $customFieldData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_fields.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_custom_fields', [
             'custom_field_table' => 'ip_clients',
             'custom_field_label' => 'Test Field',
@@ -159,34 +159,34 @@ class CustomFieldsControllerTest extends FeatureTestCase
     public function it_updates_existing_custom_field_with_valid_data(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create(['custom_field_label' => 'Old Label']);
-        
+
         /**
          * {
          *     "custom_field_table": "ip_clients",
          *     "custom_field_label": "Updated Label",
          *     "custom_field_column": "client_custom",
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $updateData = [
-            'custom_field_table' => $customField->custom_field_table,
-            'custom_field_label' => 'Updated Label',
+            'custom_field_table'  => $customField->custom_field_table,
+            'custom_field_label'  => 'Updated Label',
             'custom_field_column' => $customField->custom_field_column,
-            'btn_submit' => '1',
+            'btn_submit'          => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('custom_fields.form', ['id' => $customField->custom_field_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_fields.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_custom_fields', [
-            'custom_field_id' => $customField->custom_field_id,
+            'custom_field_id'    => $customField->custom_field_id,
             'custom_field_label' => 'Updated Label',
         ]);
     }
@@ -200,21 +200,21 @@ class CustomFieldsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "btn_cancel": "1"
-         * }
+         * }.
          */
         $cancelData = [
             'btn_cancel' => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('custom_fields.form'), $cancelData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_fields.index'));
     }
 
@@ -226,29 +226,29 @@ class CustomFieldsControllerTest extends FeatureTestCase
     public function it_deletes_custom_field(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user        = User::factory()->create();
         $customField = CustomField::factory()->create();
-        
+
         /**
          * {
          *     "custom_field_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'custom_field_id' => $customField->custom_field_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('custom_fields.delete', ['id' => $customField->custom_field_id]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('custom_fields.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_custom_fields', [
             'custom_field_id' => $customField->custom_field_id,
         ]);
@@ -263,24 +263,24 @@ class CustomFieldsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "custom_field_id": 99999
-         * }
+         * }.
          */
         $deletePayload = [
             'custom_field_id' => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('custom_fields.delete', ['id' => 99999]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -294,11 +294,11 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('custom_fields.form', ['id' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 }

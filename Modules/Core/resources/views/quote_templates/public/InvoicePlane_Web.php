@@ -53,7 +53,7 @@
 
 <?php
 if ($flash_message) {
-?>
+    ?>
             <div class="alert alert-info">
                 <?php echo $flash_message; ?>
             </div>
@@ -79,33 +79,33 @@ if ($logo = invoice_logo()) {
                             if ($quote->user_vat_id) {
                                 echo lang('vat_id_short') . ': ' . $quote->user_vat_id . '<br>';
                             }
-                            if ($quote->user_tax_code) {
-                                echo lang('tax_code_short') . ': ' . $quote->user_tax_code . '<br>';
-                            }
-                            if ($quote->user_address_1) {
-                                echo htmlsc($quote->user_address_1) . '<br>';
-                            }
-                            if ($quote->user_address_2) {
-                                echo htmlsc($quote->user_address_2) . '<br>';
-                            }
-                            if ($quote->user_city) {
-                                echo htmlsc($quote->user_city) . ' ';
-                            }
-                            if ($quote->user_state) {
-                                echo htmlsc($quote->user_state) . ' ';
-                            }
-                            if ($quote->user_zip) {
-                                echo htmlsc($quote->user_zip) . '<br>';
-                            }
-                            if ($quote->user_phone) {
-                                _trans('phone_abbr');
-                                echo ': ' . htmlsc($quote->user_phone) . '<br>';
-                            }
-                            if ($quote->user_fax) {
-                                _trans('fax_abbr');
-                                echo ': ' . htmlsc($quote->user_fax);
-                            }
-                            ?></p>
+if ($quote->user_tax_code) {
+    echo lang('tax_code_short') . ': ' . $quote->user_tax_code . '<br>';
+}
+if ($quote->user_address_1) {
+    echo htmlsc($quote->user_address_1) . '<br>';
+}
+if ($quote->user_address_2) {
+    echo htmlsc($quote->user_address_2) . '<br>';
+}
+if ($quote->user_city) {
+    echo htmlsc($quote->user_city) . ' ';
+}
+if ($quote->user_state) {
+    echo htmlsc($quote->user_state) . ' ';
+}
+if ($quote->user_zip) {
+    echo htmlsc($quote->user_zip) . '<br>';
+}
+if ($quote->user_phone) {
+    _trans('phone_abbr');
+    echo ': ' . htmlsc($quote->user_phone) . '<br>';
+}
+if ($quote->user_fax) {
+    _trans('fax_abbr');
+    echo ': ' . htmlsc($quote->user_fax);
+}
+?></p>
 
                     </div>
                     <div class="col-lg-2"></div>
@@ -113,34 +113,34 @@ if ($logo = invoice_logo()) {
 
                         <h4><?php _htmlsc($quote->client_name); ?></h4>
                         <p><?php
-                            if ($quote->client_vat_id) {
-                                _trans('vat_id_short');
-                                echo ': ' . $quote->client_vat_id . '<br>';
-                            }
-                            if ($quote->client_tax_code) {
-                                _trans('tax_code_short');
-                                echo ': ' . $quote->client_tax_code . '<br>';
-                            }
-                            if ($quote->client_address_1) {
-                                echo htmlsc($quote->client_address_1) . '<br>';
-                            }
-                            if ($quote->client_address_2) {
-                                echo htmlsc($quote->client_address_2) . '<br>';
-                            }
-                            if ($quote->client_city) {
-                                echo htmlsc($quote->client_city) . ' ';
-                            }
-                            if ($quote->client_state) {
-                                echo htmlsc($quote->client_state) . ' ';
-                            }
-                            if ($quote->client_zip) {
-                                echo htmlsc($quote->client_zip) . '<br>';
-                            }
-                            if ($quote->client_phone) {
-                                _trans('phone_abbr');
-                                echo ': ' . htmlsc($quote->client_phone) . '<br>';
-                            }
-                            ?></p>
+if ($quote->client_vat_id) {
+    _trans('vat_id_short');
+    echo ': ' . $quote->client_vat_id . '<br>';
+}
+if ($quote->client_tax_code) {
+    _trans('tax_code_short');
+    echo ': ' . $quote->client_tax_code . '<br>';
+}
+if ($quote->client_address_1) {
+    echo htmlsc($quote->client_address_1) . '<br>';
+}
+if ($quote->client_address_2) {
+    echo htmlsc($quote->client_address_2) . '<br>';
+}
+if ($quote->client_city) {
+    echo htmlsc($quote->client_city) . ' ';
+}
+if ($quote->client_state) {
+    echo htmlsc($quote->client_state) . ' ';
+}
+if ($quote->client_zip) {
+    echo htmlsc($quote->client_zip) . '<br>';
+}
+if ($quote->client_phone) {
+    _trans('phone_abbr');
+    echo ': ' . htmlsc($quote->client_phone) . '<br>';
+}
+?></p>
 
                         <br>
 
@@ -186,7 +186,7 @@ if ($logo = invoice_logo()) {
                             <tbody>
 <?php
 foreach ($items as $item) {
-?>
+    ?>
                                 <tr>
                                     <td><?php _htmlsc($item->item_name); ?></td>
                                     <td><?php echo nl2br(htmlsc($item->item_description)); ?></td>
@@ -201,7 +201,7 @@ foreach ($items as $item) {
 <?php if ($show_item_discounts) {?>
                                     <td class="amount"><?php echo format_currency($item->item_discount); ?></td>
 <?php } ?>
-                                    <td class="amount"><?php echo format_currency($item->item_subtotal-$item->item_discount); ?></td>
+                                    <td class="amount"><?php echo format_currency($item->item_subtotal - $item->item_discount); ?></td>
                                 </tr>
 <?php
 }
@@ -211,17 +211,17 @@ foreach ($items as $item) {
 $colspan = $show_item_discounts ? 4 : 3;
 if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
     if ( ! $legacy_calculation) {
-?>
+        ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
                                     <td class="amount"><?php _trans('discount'); ?></td>
                                     <td class="amount"><?php
-                                        if ($quote->quote_discount_percent > 0) {
-                                            echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
-                                        } else {
-                                            echo format_currency($quote->quote_discount_amount);
-                                        }
-                                    ?></td>
+                                                if ($quote->quote_discount_percent > 0) {
+                                                    echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
+                                                } else {
+                                                    echo format_currency($quote->quote_discount_amount);
+                                                }
+        ?></td>
                                 </tr>
 <?php
     }
@@ -236,7 +236,7 @@ if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
 
 <?php
 if ($quote->quote_item_tax_total > 0) {
-?>
+    ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
                                     <td class="amount"><?php _trans('item_tax'); ?></td>
@@ -248,7 +248,7 @@ if ($quote->quote_item_tax_total > 0) {
 
 <?php
 foreach ($quote_tax_rates as $quote_tax_rate) {
-?>
+    ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
                                     <td class="amount">
@@ -263,17 +263,17 @@ foreach ($quote_tax_rates as $quote_tax_rate) {
 <?php
 if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
     if ($legacy_calculation) {
-?>
+        ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
                                     <td class="amount"><?php _trans('discount'); ?></td>
                                     <td class="amount"><?php
-                                        if ($quote->quote_discount_percent > 0) {
-                                            echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
-                                        } else {
-                                            echo format_currency($quote->quote_discount_amount);
-                                        }
-                                    ?></td>
+                                                if ($quote->quote_discount_percent > 0) {
+                                                    echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
+                                                } else {
+                                                    echo format_currency($quote->quote_discount_amount);
+                                                }
+        ?></td>
                                 </tr>
 <?php
     }
@@ -293,7 +293,7 @@ if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
 
 <?php
 if ($quote->notes) {
-?>
+    ?>
                         <div class="col-xs-12 col-md-6">
                             <h4><?php _trans('notes'); ?></h4>
                             <p><?php echo nl2br(htmlsc($quote->notes)); ?></p>
@@ -304,14 +304,14 @@ if ($quote->notes) {
 
 <?php
 if (count($attachments) > 0) {
-?>
+    ?>
                         <div class="col-xs-12 col-md-6">
                             <h4><?php _trans('attachments'); ?></h4>
                             <div class="table-responsive">
                                 <table class="table table-condensed">
 <?php
-    foreach ($attachments as $attachment) {
-?>
+        foreach ($attachments as $attachment) {
+            ?>
                                     <tr class="attachments">
                                         <td><?php echo $attachment['name']; ?></td>
                                         <td>
@@ -322,8 +322,8 @@ if (count($attachments) > 0) {
                                         </td>
                                     </tr>
 <?php
-    }
-?>
+        }
+    ?>
                                 </table>
                             </div>
                         </div>

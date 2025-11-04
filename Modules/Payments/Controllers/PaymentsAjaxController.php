@@ -4,8 +4,8 @@ namespace Modules\Payments\Controllers;
 
 use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentMethod;
-use Modules\Payments\Services\PaymentService;
 use Modules\Payments\Services\PaymentMethodService;
+use Modules\Payments\Services\PaymentService;
 
 /**
  * AjaxController.
@@ -15,11 +15,10 @@ use Modules\Payments\Services\PaymentMethodService;
  */
 class PaymentsAjaxController
 {
-        public function __construct(
+    public function __construct(
         protected PaymentService $paymentService,
         protected PaymentMethodService $paymentMethodService
-    ) {
-    }
+    ) {}
 
     /**
      * Add a payment via AJAX.

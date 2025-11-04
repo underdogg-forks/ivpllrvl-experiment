@@ -6,8 +6,8 @@ use Modules\Core\Controllers\SettingsController;
 use Modules\Core\Models\Setting;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -27,19 +27,19 @@ class SettingsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         Setting::factory()->create(['setting_key' => 'company_name', 'setting_value' => 'Test Company']);
         Setting::factory()->create(['setting_key' => 'currency_code', 'setting_value' => 'USD']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('settings.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('core::settings_index');
         $response->assertViewHas('settings');
-        
+
         $settings = $response->viewData('settings');
         $this->assertIsArray($settings);
         $this->assertArrayHasKey('company_name', $settings);
@@ -55,11 +55,11 @@ class SettingsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         Setting::factory()->create(['setting_key' => 'email_from', 'setting_value' => 'noreply@example.com']);
         Setting::factory()->create(['setting_key' => 'invoice_prefix', 'setting_value' => 'INV-']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('settings.index'));
 
@@ -78,28 +78,28 @@ class SettingsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "company_name": "New Company",
          *     "currency_code": "EUR"
-         * }
+         * }.
          */
         $settingsData = [
-            'company_name' => 'New Company',
+            'company_name'  => 'New Company',
             'currency_code' => 'EUR',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('settings.save'), $settingsData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('settings.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_settings', [
-            'setting_key' => 'company_name',
+            'setting_key'   => 'company_name',
             'setting_value' => 'New Company',
         ]);
     }
@@ -113,28 +113,28 @@ class SettingsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         Setting::factory()->create(['setting_key' => 'company_name', 'setting_value' => 'Old Company']);
-        
+
         /**
          * {
          *     "company_name": "Updated Company"
-         * }
+         * }.
          */
         $settingsData = [
             'company_name' => 'Updated Company',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('settings.save'), $settingsData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('settings.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_settings', [
-            'setting_key' => 'company_name',
+            'setting_key'   => 'company_name',
             'setting_value' => 'Updated Company',
         ]);
     }
@@ -148,37 +148,37 @@ class SettingsControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "company_name": "Multi Test Company",
          *     "currency_code": "GBP",
          *     "invoice_prefix": "INV-"
-         * }
+         * }.
          */
         $settingsData = [
-            'company_name' => 'Multi Test Company',
-            'currency_code' => 'GBP',
+            'company_name'   => 'Multi Test Company',
+            'currency_code'  => 'GBP',
             'invoice_prefix' => 'INV-',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('settings.save'), $settingsData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('settings.index'));
-        
+
         $this->assertDatabaseHas('ip_settings', [
-            'setting_key' => 'company_name',
+            'setting_key'   => 'company_name',
             'setting_value' => 'Multi Test Company',
         ]);
         $this->assertDatabaseHas('ip_settings', [
-            'setting_key' => 'currency_code',
+            'setting_key'   => 'currency_code',
             'setting_value' => 'GBP',
         ]);
         $this->assertDatabaseHas('ip_settings', [
-            'setting_key' => 'invoice_prefix',
+            'setting_key'   => 'invoice_prefix',
             'setting_value' => 'INV-',
         ]);
     }
@@ -193,11 +193,11 @@ class SettingsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('settings.save'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('settings.index'));
     }
 
@@ -211,11 +211,11 @@ class SettingsControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('settings.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $settings = $response->viewData('settings');
         $this->assertIsArray($settings);

@@ -4,8 +4,8 @@ namespace Modules\Payments\Tests\Feature;
 
 use Modules\Crm\Controllers\Gateways\StripeController;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -43,17 +43,17 @@ class StripeControllerTest extends FeatureTestCase
          *             }
          *         }
          *     }
-         * }
+         * }.
          */
         $payload = [
-            'id' => 'evt_1234567890',
+            'id'   => 'evt_1234567890',
             'type' => 'payment_intent.succeeded',
             'data' => [
                 'object' => [
-                    'id' => 'pi_1234567890',
-                    'amount' => 10000,
+                    'id'       => 'pi_1234567890',
+                    'amount'   => 10000,
                     'currency' => 'usd',
-                    'status' => 'succeeded',
+                    'status'   => 'succeeded',
                     'metadata' => [
                         'invoice_id' => '123',
                     ],
@@ -63,7 +63,7 @@ class StripeControllerTest extends FeatureTestCase
 
         $response = $this->post(route('gateways.stripe.notify'), $payload);
 
-        /** Assert */
+        /* Assert */
         // Note: Current stub implementation returns OK without validation
         // Future implementation should verify webhook signature, handle event types, update payment records
         $response->assertOk();
@@ -92,15 +92,15 @@ class StripeControllerTest extends FeatureTestCase
          *             "refunded": true
          *         }
          *     }
-         * }
+         * }.
          */
         $payload = [
-            'id' => 'evt_0987654321',
+            'id'   => 'evt_0987654321',
             'type' => 'charge.refunded',
             'data' => [
                 'object' => [
-                    'id' => 'ch_0987654321',
-                    'amount' => 5000,
+                    'id'       => 'ch_0987654321',
+                    'amount'   => 5000,
                     'refunded' => true,
                 ],
             ],
@@ -108,7 +108,7 @@ class StripeControllerTest extends FeatureTestCase
 
         $response = $this->post(route('gateways.stripe.notify'), $payload);
 
-        /** Assert */
+        /* Assert */
         // Note: Current stub implementation returns OK without validation
         // Future implementation should handle different event types (refunds, disputes, etc.)
         $response->assertOk();

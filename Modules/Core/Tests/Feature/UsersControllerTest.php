@@ -5,8 +5,8 @@ namespace Modules\Core\Tests\Feature;
 use Modules\Core\Controllers\UsersController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -28,11 +28,11 @@ class UsersControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         User::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('users.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('users::index');
         $response->assertViewHas('users');
@@ -50,20 +50,20 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $adminUser = User::factory()->create(['user_name' => 'Admin']);
-        
+
         User::factory()->create(['user_name' => 'Zack']);
         User::factory()->create(['user_name' => 'Alice']);
         User::factory()->create(['user_name' => 'Bob']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($adminUser);
         $response = $this->get(route('users.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $users = $response->viewData('users');
         $names = $users->pluck('user_name')->toArray();
-        
+
         $this->assertEquals('Admin', $names[0]);
         $this->assertEquals('Alice', $names[1]);
         $this->assertEquals('Bob', $names[2]);
@@ -80,15 +80,15 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('users.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('users::form');
         $response->assertViewHas('user');
-        
+
         $formUser = $response->viewData('user');
         $this->assertInstanceOf(User::class, $formUser);
         $this->assertFalse($formUser->exists);
@@ -103,17 +103,17 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $adminUser = User::factory()->create();
-        $editUser = User::factory()->create();
+        $editUser  = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($adminUser);
         $response = $this->get(route('users.form', ['id' => $editUser->user_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('users::form');
         $response->assertViewHas('user');
-        
+
         $formUser = $response->viewData('user');
         $this->assertEquals($editUser->user_id, $formUser->user_id);
     }
@@ -127,7 +127,7 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $adminUser = User::factory()->create();
-        
+
         /**
          * {
          *     "user_name": "New User",
@@ -135,26 +135,26 @@ class UsersControllerTest extends FeatureTestCase
          *     "user_password": "password123",
          *     "user_type": 1,
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $userData = [
-            'user_name' => 'New User',
-            'user_email' => 'newuser@example.com',
+            'user_name'     => 'New User',
+            'user_email'    => 'newuser@example.com',
             'user_password' => 'password123',
-            'user_type' => User::USER_TYPE_ADMINISTRATOR,
-            'btn_submit' => '1',
+            'user_type'     => User::USER_TYPE_ADMINISTRATOR,
+            'btn_submit'    => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($adminUser);
         $response = $this->post(route('users.form'), $userData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('users.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_users', [
-            'user_name' => 'New User',
+            'user_name'  => 'New User',
             'user_email' => 'newuser@example.com',
         ]);
     }
@@ -168,8 +168,8 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $adminUser = User::factory()->create();
-        $editUser = User::factory()->create([
-            'user_name' => 'Old Name',
+        $editUser  = User::factory()->create([
+            'user_name'  => 'Old Name',
             'user_email' => 'old@example.com',
         ]);
 
@@ -179,25 +179,25 @@ class UsersControllerTest extends FeatureTestCase
          *     "user_email": "old@example.com",
          *     "user_type": 1,
          *     "btn_submit": "1"
-         * }
+         * }.
          */
         $updateData = [
-            'user_name' => 'Updated Name',
+            'user_name'  => 'Updated Name',
             'user_email' => $editUser->user_email,
-            'user_type' => User::USER_TYPE_ADMINISTRATOR,
+            'user_type'  => User::USER_TYPE_ADMINISTRATOR,
             'btn_submit' => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($adminUser);
         $response = $this->post(route('users.form', ['id' => $editUser->user_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('users.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_users', [
-            'user_id' => $editUser->user_id,
+            'user_id'   => $editUser->user_id,
             'user_name' => 'Updated Name',
         ]);
     }
@@ -211,21 +211,21 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "btn_cancel": "1"
-         * }
+         * }.
          */
         $cancelData = [
             'btn_cancel' => '1',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('users.form'), $cancelData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('users.index'));
     }
 
@@ -237,29 +237,29 @@ class UsersControllerTest extends FeatureTestCase
     public function it_deletes_user(): void
     {
         /** Arrange */
-        $adminUser = User::factory()->create();
+        $adminUser  = User::factory()->create();
         $deleteUser = User::factory()->create();
-        
+
         /**
          * {
          *     "user_id": 1
-         * }
+         * }.
          */
         $deletePayload = [
             'user_id' => $deleteUser->user_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($adminUser);
         $response = $this->post(
             route('users.delete', ['id' => $deleteUser->user_id]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('users.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_users', [
             'user_id' => $deleteUser->user_id,
         ]);
@@ -274,24 +274,24 @@ class UsersControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "user_id": 99999
-         * }
+         * }.
          */
         $deletePayload = [
             'user_id' => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('users.delete', ['id' => 99999]),
             $deletePayload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -305,11 +305,11 @@ class UsersControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('users.form', ['id' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 }

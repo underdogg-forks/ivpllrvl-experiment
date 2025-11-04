@@ -2,21 +2,12 @@
 
 namespace Modules\Core\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use App\Helpers\MailerHelper;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use Modules\Sessions\Controllers\DateTime;
-
-use function Modules\Sessions\Controllers\phpmail_send;
-
-use Modules\Sessions\Controllers\SessionsService;
-
-use function Modules\Sessions\Controllers\site_url;
-
-use Modules\Sessions\Controllers\UsersService;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Support\SettingsHelper;
 use Modules\Core\Support\TranslationHelper;
+
 /**
  * SessionsController
  *
@@ -255,14 +246,14 @@ class SessionsController
                 // Send the email with reset link
                 // Prepare some variables for the email
                 $email_resetlink = site_url('sessions/passwordreset/' . $token);
-                $email_message   = return view('emails/passwordreset', ['resetlink' => $email_resetlink], true);
+                $email_message   = view('emails/passwordreset', ['resetlink' => $email_resetlink], true);
                 $email_from      = SettingsHelper::getSetting('smtp_mail_from');
                 if (empty($email_from)) {
-                    $email_from = 'system@' . preg_replace('/^[\w]{2,6}:\/\/([\w\d\.\-]+).*$/', '$1', base_url());
+                    $email_from = 'system@' . preg_replace('/^[\w]{2,6}:\/\/([\w.\-]+).*$/', '$1', base_url());
                 }
                 // Mail the invoice with the pre-configured mailer if possible
                 if (MailerHelper::mailerConfigured()) {
-// TODO: Laravel autoloads helpers - $this->load->helper('mailer/phpmailer');
+                    // TODO: Laravel autoloads helpers - $this->load->helper('mailer/phpmailer');
                     if ( ! phpmail_send($email_from, $email, TranslationHelper::trans('password_reset'), $email_message)) {
                         $email_failed = true;
                     }

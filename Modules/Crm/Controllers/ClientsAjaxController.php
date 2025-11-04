@@ -2,13 +2,13 @@
 
 namespace Modules\Crm\Controllers;
 
-use Modules\Crm\Models\Client;
-use Modules\Crm\Services\ClientService;
-use Modules\Crm\Services\ClientNoteService;
 use Modules\Core\Services\SettingsService;
-
 use Modules\Core\Support\ClientHelper;
 use Modules\Core\Support\EchoHelper;
+use Modules\Crm\Models\Client;
+use Modules\Crm\Services\ClientNoteService;
+use Modules\Crm\Services\ClientService;
+
 /**
  * ClientsAjaxController
  *
@@ -17,8 +17,6 @@ use Modules\Core\Support\EchoHelper;
  * @legacy-file application/modules/clients/controllers/Ajax.php
  */
 class ClientsAjaxController
-    */
-    class ClientsAjaxController
     {
         /**
          * Initialize the ClientsAjaxController with dependency injection.
@@ -48,7 +46,7 @@ class ClientsAjaxController
         $response = [];
         $query = request()->query('query');
         $permissiveSearchClients = request()->query('permissive_search_clients');
-        
+
         if (empty($query)) {
             header('Content-Type: application/json');
             echo json_encode($response);
@@ -130,7 +128,7 @@ class ClientsAjaxController
     {
         $success = 0;
         $client_note_id = request()->input('client_note_id');
-        
+
         if ($this->clientNoteService->find($client_note_id) || empty($client_note_id)) {
             $result = $this->clientNoteService->delete($client_note_id);
             if ($result) {

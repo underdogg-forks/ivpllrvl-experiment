@@ -2,30 +2,9 @@
 
 namespace Modules\Core\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use Modules\Core\Services\SetupService;
-
-use const Modules\Setup\Controllers\APPPATH;
-
-use function Modules\Setup\Controllers\env_bool;
-
-use const Modules\Setup\Controllers\IPCONFIG_FILE;
-use const Modules\Setup\Controllers\LOGS_FOLDER;
-
-use function Modules\Setup\Controllers\show_error;
-
-use const Modules\Setup\Controllers\UPLOADS_ARCHIVE_FOLDER;
-use const Modules\Setup\Controllers\UPLOADS_CFILES_FOLDER;
-use const Modules\Setup\Controllers\UPLOADS_FOLDER;
-use const Modules\Setup\Controllers\UPLOADS_TEMP_FOLDER;
-use const Modules\Setup\Controllers\UPLOADS_TEMP_MPDF_FOLDER;
-
-use Modules\Setup\Controllers\UsersService;
-use Modules\Setup\Controllers\VersionsService;
-
-use function Modules\Setup\Controllers\write_file;
 
 /**
  * SetupController
@@ -60,13 +39,13 @@ class SetupController
         if (env_bool('DISABLE_SETUP', false)) {
             show_error('The setup is disabled.', 403);
         }
-        
+
         $this->setupService = $setupService;
         $this->usersService = $usersService;
         $this->versionsService = $versionsService;
 
         if ( ! session('ip_lang')) {
-            session(['ip_lang', 'en');
+            session(['ip_lang', 'en']);
         } else {
             set_language(session('ip_lang'));
         }
@@ -91,16 +70,16 @@ class SetupController
      *
      * @param Request $request
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function lang
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function language(Request $request): void
+    public function language(Request $request)
     {
         if (request()->input('btn_continue')) {
-            session(['ip_lang', request()->input('ip_lang'));
-            session(['install_step', 'prerequisites');
+            session('ip_lang', request()->input('ip_lang'));
+            session('install_step', 'prerequisites');
             redirect()->route('setup/prerequisites');
         }
         // Reset the session cache
@@ -108,7 +87,7 @@ class SetupController
         session()->forget('is_upgrade');
         // GetController all languages
         $languages = get_available_languages();
-        
+
         return view('core::setup_lang', [
             'languages' => $languages,
         ]);
@@ -119,18 +98,18 @@ class SetupController
      *
      * @param Request $request
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function prerequisites
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function prerequisites(Request $request): void
+    public function prerequisites(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         if (session('install_step') != 'prerequisites') {
             redirect()->route('setup/lang');
         }
         if (request()->input('btn_continue')) {
-            session(['install_step', 'configure_database');
+            session('install_step', 'configure_database');
             redirect()->route('setup/configure_database');
         }
         return view('core::setup_prerequisites', [
@@ -145,12 +124,12 @@ class SetupController
      *
      * @param Request $request
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function configureDatabase
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function configureDatabase(Request $request): void
+    public function configureDatabase(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         if (session('install_step') != 'configure_database') {
             redirect()->route('setup/prerequisites');
@@ -160,12 +139,12 @@ class SetupController
             // This might be an upgrade - check if it is
             if ( ! DB::table_exists('ip_versions')) {
                 // This appears to be an install
-                session(['install_step', 'install_tables');
+                session('install_step', 'install_tables');
                 redirect()->route('setup/install_tables');
             } else {
                 // This appears to be an upgrade
-                session(['is_upgrade', true);
-                session(['install_step', 'upgrade_tables');
+                session('is_upgrade', true);
+                session('install_step', 'upgrade_tables');
                 redirect()->route('setup/upgrade_tables');
             }
         }
@@ -175,7 +154,7 @@ class SetupController
         }
         // Check if the set credentials are correct
         $check_database = $this->checkDatabase();
-        
+
         return view('core::setup_configure_database', [
             'database' => $check_database,
             'errors' => $this->errors,
@@ -187,22 +166,22 @@ class SetupController
      *
      * @param Request $request
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function installTables
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function installTables(Request $request): void
+    public function installTables(Request $request)
     {
         if (session('install_step') != 'install_tables') {
             redirect()->route('setup/prerequisites');
         }
         if (request()->input('btn_continue')) {
-            session(['install_step', 'upgrade_tables');
+            session('install_step', 'upgrade_tables');
             redirect()->route('setup/upgrade_tables');
         }
         $this->loadCiDatabase();
-        
+
         return view('core::setup_install_tables', [
             'success' => $this->setupService->installTables(),
             'errors' => $this->setupService->errors,
@@ -224,17 +203,17 @@ class SetupController
      * @legacy-function upgradeTables
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function upgradeTables(Request $request): void
+    public function upgradeTables(Request $request)
     {
         if (session('install_step') != 'upgrade_tables') {
             redirect()->route('setup/prerequisites');
         }
         if (request()->input('btn_continue')) {
             if ( ! session('is_upgrade')) {
-                session(['install_step', 'create_user');
+                session('install_step', 'create_user');
                 redirect()->route('setup/create_user');
             } else {
-                session(['install_step', 'calculation_info');
+                session('install_step', 'calculation_info');
                 redirect()->route('setup/calculation_info');
             }
         }
@@ -243,7 +222,7 @@ class SetupController
         if (env('ENCRYPTION_KEY') === null || env('ENCRYPTION_KEY') === '') {
             $this->setEncryptionKey();
         }
-        
+
         return view('core::setup_upgrade_tables', [
             'success' => $this->setupService->upgradeTables(),
             'errors' => $this->setupService->errors,
@@ -264,18 +243,18 @@ class SetupController
      * @legacy-function createUser
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function createUser(Request $request): void
+    public function createUser(Request $request)
     {
-        if (session('install_step') != 'create_user') {
+        if (session('install_step') !== 'create_user') {
             redirect()->route('setup/prerequisites');
         }
         $this->loadCiDatabase();
-// TODO: Laravel autoloads helpers - $this->load->helper('country');
+        // TODO: Laravel autoloads helpers - $this->load->helper('country');
         if ($this->usersService->runValidation()) {
             $db_array              = $this->usersService->dbArray();
             $db_array['user_type'] = 1;
             $this->usersService->save(null, $db_array);
-            session(['install_step', 'calculation_info');
+            session('install_step', 'calculation_info');
             redirect()->route('setup/calculation_info');
         }
         return view('core::setup_create_user', [
@@ -289,27 +268,27 @@ class SetupController
      *
      * @param Request $request
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function calculationInfo
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function calculationInfo(Request $request): void
+    public function calculationInfo(Request $request)
     {
-        if (session('install_step') != 'calculation_info') {
+        if (session('install_step') !== 'calculation_info') {
             redirect()->route('setup/prerequisites');
         }
         if (request()->input('btn_continue')) {
-            session(['install_step', 'complete');
+            session('install_step', 'complete');
             redirect()->route('setup/complete');
         } elseif (request()->input('btn_agree')) {
             $this->writeCalculationConfig();
-            session(['install_step', 'complete');
+            session('install_step', 'complete');
             redirect()->route('setup/complete');
         }
         $checkCalculation = $this->checkCalculationConfig();
         if ($checkCalculation['needs_config'] === false) {
-            session(['install_step', 'complete');
+            session('install_step', 'complete');
             redirect()->route('setup/complete');
         }
         return view('core::setup_calculation_info', [
@@ -327,7 +306,7 @@ class SetupController
      * @legacy-function complete
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
-    public function complete(Request $request): void
+    public function complete(Request $request)
     {
         if (session('install_step') != 'complete') {
             redirect()->route('setup/prerequisites');
@@ -336,8 +315,8 @@ class SetupController
         $users = DB::query('SELECT * FROM ip_users');
         if ($users->numRows() === 0) {
             Log::error('there was already one or more users in the database');
-            session()->flash('alert_error', 'Something went wrong, check the log file for errors');
-            session(['install_step', 'create_user');
+            session()?->flash('alert_error', 'Something went wrong, check the log file for errors');
+            session('install_step', 'create_user');
             redirect()->route('setup/create_user');
         }
         // Additional tasks after setup is completed
@@ -353,9 +332,9 @@ class SetupController
         // Then check if the first version entry is less than 30 minutes old
         // If yes we assume that the user ran the setup a few minutes ago
         $update = $data[0]->version_date_applied < time() - 1800;
-        
+
         session()->flush();
-        
+
         return view('core::setup_complete', [
             'update' => $update,
         ]);

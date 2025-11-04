@@ -4,7 +4,6 @@ namespace Modules\Quotes\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Core\Models\InvoiceGroup;
 use Modules\Core\Models\QuoteCustom;
 use Modules\Core\Models\User;
 use Modules\Core\Services\UserService;
@@ -15,8 +14,6 @@ use Modules\Invoices\Services\InvoiceGroupService;
 use Modules\Invoices\Services\InvoiceItemService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
-use Modules\Products\Models\TaxRate;
-use Modules\Products\Models\Unit;
 use Modules\Products\Services\TaxRateService;
 use Modules\Products\Services\UnitService;
 use Modules\Quotes\Models\Quote;
@@ -46,8 +43,7 @@ class QuotesAjaxController
         protected ClientService $clientService,
         protected InvoiceGroupService $invoiceGroupService,
         protected TaxRateService $taxRateService
-    ) {
-    }
+    ) {}
 
     /**
      * Save quote with items, tax rates, and custom fields.
@@ -527,7 +523,7 @@ class QuotesAjaxController
             ]);
         }
 
-        $quote = $this->quoteService->createQuote($request->all());
+        $quote   = $this->quoteService->createQuote($request->all());
         $quoteId = $quote->quote_id;
 
         return response()->json([

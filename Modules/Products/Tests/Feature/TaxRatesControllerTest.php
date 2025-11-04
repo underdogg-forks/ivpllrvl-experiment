@@ -6,8 +6,8 @@ use Modules\Core\Models\User;
 use Modules\Products\Controllers\TaxRatesController;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -29,11 +29,11 @@ class TaxRatesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         TaxRate::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('tax_rates.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::tax_rates_index');
         $response->assertViewHas('tax_rates');
@@ -49,15 +49,15 @@ class TaxRatesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('tax_rates.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::tax_rates_form');
         $response->assertViewHas('tax_rate');
-        
+
         $taxRate = $response->viewData('tax_rate');
         $this->assertInstanceOf(TaxRate::class, $taxRate);
         $this->assertFalse($taxRate->exists);
@@ -72,28 +72,28 @@ class TaxRatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /**
          * {
          *     "tax_rate_name": "VAT 20%",
          *     "tax_rate_percent": "20.00"
-         * }
+         * }.
          */
         $taxRateData = [
-            'tax_rate_name' => 'VAT 20%',
+            'tax_rate_name'    => 'VAT 20%',
             'tax_rate_percent' => '20.00',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('tax_rates.form'), $taxRateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_tax_rates', [
-            'tax_rate_name' => 'VAT 20%',
+            'tax_rate_name'    => 'VAT 20%',
             'tax_rate_percent' => '20.00',
         ]);
     }
@@ -106,18 +106,18 @@ class TaxRatesControllerTest extends FeatureTestCase
     public function it_displays_edit_form_with_existing_tax_rate(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $taxRate = TaxRate::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('tax_rates.form', ['id' => $taxRate->tax_rate_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::tax_rates_form');
         $response->assertViewHas('tax_rate');
-        
+
         $viewTaxRate = $response->viewData('tax_rate');
         $this->assertEquals($taxRate->tax_rate_id, $viewTaxRate->tax_rate_id);
     }
@@ -130,34 +130,34 @@ class TaxRatesControllerTest extends FeatureTestCase
     public function it_updates_existing_tax_rate_with_valid_data(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $taxRate = TaxRate::factory()->create([
-            'tax_rate_name' => 'Old Name',
+            'tax_rate_name'    => 'Old Name',
             'tax_rate_percent' => '10.00',
         ]);
-        
+
         /**
          * {
          *     "tax_rate_name": "Updated VAT",
          *     "tax_rate_percent": "25.00"
-         * }
+         * }.
          */
         $updateData = [
-            'tax_rate_name' => 'Updated VAT',
+            'tax_rate_name'    => 'Updated VAT',
             'tax_rate_percent' => '25.00',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('tax_rates.form', ['id' => $taxRate->tax_rate_id]), $updateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseHas('ip_tax_rates', [
-            'tax_rate_id' => $taxRate->tax_rate_id,
-            'tax_rate_name' => 'Updated VAT',
+            'tax_rate_id'      => $taxRate->tax_rate_id,
+            'tax_rate_name'    => 'Updated VAT',
             'tax_rate_percent' => '25.00',
         ]);
     }
@@ -170,17 +170,17 @@ class TaxRatesControllerTest extends FeatureTestCase
     public function it_deletes_tax_rate(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $taxRate = TaxRate::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->delete(route('tax_rates.destroy', $taxRate));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_tax_rates', [
             'tax_rate_id' => $taxRate->tax_rate_id,
         ]);
@@ -194,19 +194,19 @@ class TaxRatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         TaxRate::factory()->create(['tax_rate_name' => 'Zero Rate', 'tax_rate_percent' => '0.00']);
         TaxRate::factory()->create(['tax_rate_name' => 'Standard Rate', 'tax_rate_percent' => '20.00']);
         TaxRate::factory()->create(['tax_rate_name' => 'Reduced Rate', 'tax_rate_percent' => '5.00']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('tax_rates.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $taxRates = $response->viewData('tax_rates');
-        
+
         // Verify we have all tax rates
         $this->assertCount(3, $taxRates);
     }
@@ -220,21 +220,21 @@ class TaxRatesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /** @var array{tax_rate_name: string, tax_rate_percent: string} $taxRateData */
         $taxRateData = [
-            'tax_rate_name' => 'No Tax',
+            'tax_rate_name'    => 'No Tax',
             'tax_rate_percent' => '0.00',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('tax_rates.form'), $taxRateData);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $this->assertDatabaseHas('ip_tax_rates', [
-            'tax_rate_name' => 'No Tax',
+            'tax_rate_name'    => 'No Tax',
             'tax_rate_percent' => '0.00',
         ]);
     }

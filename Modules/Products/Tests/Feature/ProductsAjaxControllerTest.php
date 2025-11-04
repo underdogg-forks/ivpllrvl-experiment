@@ -7,8 +7,8 @@ use Modules\Products\Controllers\AjaxController as ProductsAjaxController;
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -31,11 +31,11 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         Product::factory()->count(3)->create();
         Family::factory()->count(2)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.ajax.modal_product_lookups'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::modal_product_lookups');
         $response->assertViewHas('products');
@@ -50,20 +50,20 @@ class ProductsAjaxControllerTest extends FeatureTestCase
     public function it_filters_products_by_family(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $family1 = Family::factory()->create();
         $family2 = Family::factory()->create();
-        
+
         $product1 = Product::factory()->create(['family_id' => $family1->family_id]);
         $product2 = Product::factory()->create(['family_id' => $family2->family_id]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.ajax.modal_product_lookups', [
             'filter_family' => $family1->family_id,
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('filter_family', $family1->family_id);
     }
@@ -79,13 +79,13 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         Product::factory()->create(['product_name' => 'Widget']);
         Product::factory()->create(['product_name' => 'Gadget']);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.ajax.modal_product_lookups', [
             'filter_product' => 'Widget',
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('filter_product', 'Widget');
     }
@@ -100,13 +100,13 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.ajax.modal_product_lookups', [
             'filter_product' => 'test',
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::partial_product_table_modal');
     }
@@ -121,13 +121,13 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.ajax.modal_product_lookups', [
             'reset_table' => '1',
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('products::partial_product_table_modal');
     }
@@ -142,14 +142,14 @@ class ProductsAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('products.ajax.modal_product_lookups'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('default_item_tax_rate');
-        
+
         $defaultTaxRate = $response->viewData('default_item_tax_rate');
         $this->assertIsNumeric($defaultTaxRate);
     }

@@ -3,36 +3,37 @@
 namespace Modules\Invoices\Controllers;
 
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Support\MailerHelper;
 use Modules\Core\Services\EmailTemplateService;
 use Modules\Core\Services\UploadService;
+use Modules\Core\Support\MailerHelper;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoicesRecurringService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * CronController
+ * CronController.
  *
  * Handles scheduled cron tasks for recurring invoices
  *
  * @legacy-file application/modules/invoices/controllers/Cron.php
  */
 class CronController
-{    /**
+{
+    /**
      * Initialize the CronController with dependency injection.
      *
-     * @param InvoiceService $invoiceService
+     * @param InvoiceService           $invoiceService
      * @param InvoicesRecurringService $invoicesRecurringService
-     * @param EmailTemplateService $emailTemplateService
-     * @param UploadService $uploadService
+     * @param EmailTemplateService     $emailTemplateService
+     * @param UploadService            $uploadService
      */
     public function __construct(
         protected InvoiceService $invoiceService,
         protected InvoicesRecurringService $invoicesRecurringService,
         protected EmailTemplateService $emailTemplateService,
         protected UploadService $uploadService
-    ) {
-    }
+    ) {}
+
     /**
      * Process recurring invoices via cron job.
      *
@@ -41,6 +42,7 @@ class CronController
      * @return void
      *
      * @legacy-function recur
+     *
      * @legacy-file application/modules/invoices/controllers/Cron.php
      */
     public function recur(?string $cron_key = null): void
@@ -53,21 +55,21 @@ class CronController
 
         // Gather a list of recurring invoices to generate
         $invoices_recurring = $this->invoicesRecurringService->getActive();
-        $recurInfo = [];
+        $recurInfo          = [];
 
         foreach ($invoices_recurring as $invoice_recurring) {
             $recurInfo = [
-                'invoice_id' => $invoice_recurring->invoice_id,
-                'client_id' => $invoice_recurring->client_id,
-                'invoice_group_id' => $invoice_recurring->invoice_group_id,
-                'invoice_status_id' => $invoice_recurring->invoice_status_id,
-                'invoice_number' => $invoice_recurring->invoice_number,
+                'invoice_id'           => $invoice_recurring->invoice_id,
+                'client_id'            => $invoice_recurring->client_id,
+                'invoice_group_id'     => $invoice_recurring->invoice_group_id,
+                'invoice_status_id'    => $invoice_recurring->invoice_status_id,
+                'invoice_number'       => $invoice_recurring->invoice_number,
                 'invoice_recurring_id' => $invoice_recurring->invoice_recurring_id,
-                'recur_start_date' => $invoice_recurring->recur_start_date,
-                'recur_end_date' => $invoice_recurring->recur_end_date,
-                'recur_frequency' => $invoice_recurring->recur_frequency,
-                'recur_next_date' => $invoice_recurring->recur_next_date,
-                'recur_status' => $invoice_recurring->recur_status,
+                'recur_start_date'     => $invoice_recurring->recur_start_date,
+                'recur_end_date'       => $invoice_recurring->recur_end_date,
+                'recur_frequency'      => $invoice_recurring->recur_frequency,
+                'recur_next_date'      => $invoice_recurring->recur_next_date,
+                'recur_status'         => $invoice_recurring->recur_status,
             ];
 
             if (defined('IP_DEBUG') && IP_DEBUG) {
@@ -88,16 +90,16 @@ class CronController
 
             // Create the new invoice
             $db_array = [
-                'client_id' => $invoice->client_id,
-                'payment_method' => $invoice->payment_method,
-                'invoice_date_created' => $invoice_recurring->recur_next_date,
-                'invoice_date_due' => $this->invoiceService->getDateDue($invoice_recurring->recur_next_date),
-                'invoice_group_id' => $invoice->invoice_group_id,
-                'user_id' => $invoice->user_id,
-                'invoice_number' => $this->invoiceService->getInvoiceNumber($invoice->invoice_group_id),
-                'invoice_url_key' => $this->invoiceService->getUrlKey(),
-                'invoice_terms' => $invoice->invoice_terms,
-                'invoice_discount_amount' => $invoice->invoice_discount_amount,
+                'client_id'                => $invoice->client_id,
+                'payment_method'           => $invoice->payment_method,
+                'invoice_date_created'     => $invoice_recurring->recur_next_date,
+                'invoice_date_due'         => $this->invoiceService->getDateDue($invoice_recurring->recur_next_date),
+                'invoice_group_id'         => $invoice->invoice_group_id,
+                'user_id'                  => $invoice->user_id,
+                'invoice_number'           => $this->invoiceService->getInvoiceNumber($invoice->invoice_group_id),
+                'invoice_url_key'          => $this->invoiceService->getUrlKey(),
+                'invoice_terms'            => $invoice->invoice_terms,
+                'invoice_discount_amount'  => $invoice->invoice_discount_amount,
                 'invoice_discount_percent' => $invoice->invoice_discount_percent,
             ];
 
@@ -128,13 +130,13 @@ class CronController
 
                 // Set the email body, use default email template if available
                 $email_template_id = SettingsHelper::getSetting('email_invoice_template');
-                if (!$email_template_id) {
+                if ( ! $email_template_id) {
                     Log::error('[CronController] No email template set in the system settings!');
                     continue;
                 }
 
                 $email_template = $this->emailTemplateService->find($email_template_id);
-                if (!$email_template) {
+                if ( ! $email_template) {
                     Log::error('[CronController] No email template set in the system settings!');
                     continue;
                 }
@@ -152,12 +154,12 @@ class CronController
                     $body = htmlspecialchars_decode(nl2br($body), ENT_COMPAT);
                 }
 
-                $from = empty($tpl->email_template_from_email) ? [$invoice->user_email, ''] : [$tpl->email_template_from_email, $tpl->email_template_from_name];
-                $subject = empty($tpl->email_template_subject) ? TranslationHelper::trans('invoice') . ' #' . $new_invoice->invoice_number : $tpl->email_template_subject;
+                $from         = empty($tpl->email_template_from_email) ? [$invoice->user_email, ''] : [$tpl->email_template_from_email, $tpl->email_template_from_name];
+                $subject      = empty($tpl->email_template_subject) ? TranslationHelper::trans('invoice') . ' #' . $new_invoice->invoice_number : $tpl->email_template_subject;
                 $pdf_template = $tpl->email_template_pdf_template;
-                $to = $invoice->client_email;
-                $cc = $tpl->email_template_cc;
-                $bcc = $tpl->email_template_bcc;
+                $to           = $invoice->client_email;
+                $cc           = $tpl->email_template_cc;
+                $bcc          = $tpl->email_template_bcc;
 
                 $email_invoice = email_invoice($target_id, $pdf_template, $from, $to, $subject, $body, $cc, $bcc, $attachment_files);
 

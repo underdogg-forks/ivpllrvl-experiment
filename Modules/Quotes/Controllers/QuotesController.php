@@ -2,28 +2,21 @@
 
 namespace Modules\Quotes\Controllers;
 
-use Modules\Core\Models\CustomField;
-use Modules\Core\Models\CustomValue;
 use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Services\CustomValueService;
 use Modules\Core\Services\UserService;
 use Modules\Core\Support\PdfHelper;
 use Modules\Core\Support\TranslationHelper;
-use Modules\Products\Models\TaxRate;
-use Modules\Products\Models\Unit;
 use Modules\Products\Services\TaxRateService;
 use Modules\Products\Services\UnitService;
 use Modules\Quotes\Models\Quote;
-use Modules\Quotes\Models\QuoteAmount;
-use Modules\Quotes\Models\QuoteItem;
-use Modules\Quotes\Models\QuoteTaxRate;
 use Modules\Quotes\Services\QuoteAmountService;
 use Modules\Quotes\Services\QuoteItemService;
 use Modules\Quotes\Services\QuoteService;
 use Modules\Quotes\Services\QuoteTaxRateService;
 
 /**
- * QuotesController
+ * QuotesController.
  *
  * Handles quote management including creation, editing, viewing, PDF generation,
  * status filtering, and tax management
@@ -42,8 +35,7 @@ class QuotesController
         protected UnitService $unitService,
         protected QuoteItemService $quoteItemService,
         protected QuoteTaxRateService $quoteTaxRateService
-    ) {
-    }
+    ) {}
 
     /**
      * Redirect to all quotes view.

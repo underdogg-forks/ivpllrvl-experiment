@@ -5,8 +5,8 @@ namespace Modules\Core\Tests\Feature;
 use Modules\Core\Controllers\SessionsController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -30,7 +30,7 @@ class SessionsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('sessions.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -47,7 +47,7 @@ class SessionsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('sessions.login'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('sessions::login');
         $response->assertViewHas('login_logo');
@@ -67,7 +67,7 @@ class SessionsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('sessions.logout'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
         $this->assertNull(session('user_id'));
     }
@@ -85,7 +85,7 @@ class SessionsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('sessions.passwordreset'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('sessions::passwordreset');
     }
@@ -103,7 +103,7 @@ class SessionsControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('sessions.passwordreset', ['token' => $token]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('sessions::passwordreset');
     }

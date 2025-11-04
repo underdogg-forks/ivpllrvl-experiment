@@ -13,6 +13,16 @@ use Modules\Core\Models\BaseModel;
 class Task extends BaseModel
 {
     /**
+     * Task statuses constant.
+     */
+    public const STATUSES = [
+        1 => ['label' => 'Not Started', 'class' => 'default'],
+        2 => ['label' => 'In Progress', 'class' => 'info'],
+        3 => ['label' => 'Complete', 'class' => 'success'],
+        4 => ['label' => 'On Hold', 'class' => 'warning'],
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -53,16 +63,6 @@ class Task extends BaseModel
     protected $casts = [
         'task_id'    => 'integer',
         'project_id' => 'integer',
-    ];
-
-    /**
-     * Task statuses constant.
-     */
-    public const STATUSES = [
-        1 => ['label' => 'Not Started', 'class' => 'default'],
-        2 => ['label' => 'In Progress', 'class' => 'info'],
-        3 => ['label' => 'Complete', 'class' => 'success'],
-        4 => ['label' => 'On Hold', 'class' => 'warning'],
     ];
 
     /**

@@ -5,32 +5,23 @@ namespace Modules\Invoices\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
-use Modules\Core\Models\CustomField;
 use Modules\Core\Models\CustomValue;
-use Modules\Core\Models\InvoiceCustom;
-use Modules\Core\Services\UserService;
 use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Services\CustomValueService;
-use Modules\Crm\Models\Task;
+use Modules\Core\Services\UserService;
+use Modules\Core\Support\PdfHelper;
+use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceAmount;
-use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item;
 use Modules\Invoices\Services\InvoiceAmountService;
-use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceItemService;
+use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoiceTaxRateService;
-use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
-use Modules\Products\Models\TaxRate;
-use Modules\Products\Models\Unit;
 use Modules\Products\Services\TaxRateService;
 use Modules\Products\Services\UnitService;
 use Modules\Projects\Services\TaskService;
 use Sumex;
 
-use Modules\Core\Support\PdfHelper;
-use Modules\Core\Support\TranslationHelper;
 /**
  * InvoicesController.
  *
@@ -38,7 +29,7 @@ use Modules\Core\Support\TranslationHelper;
  */
 class InvoicesController
 {
-        public function __construct(
+    public function __construct(
         protected UserService $userService,
         protected InvoiceService $invoiceService,
         protected InvoiceItemService $invoiceItemService,
@@ -49,8 +40,7 @@ class InvoicesController
         protected UnitService $unitService,
         protected PaymentMethodService $paymentMethodService,
         protected TaskService $taskService
-    ) {
-    }
+    ) {}
 
     /**
      * Redirect to all invoices status view.
@@ -173,8 +163,10 @@ class InvoicesController
      */
     public function view(int $invoiceId): View
     {
-        $invoice = $this->invoiceService->findWithRelationsOrFail($invoiceId, 
-            ['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments']);
+        $invoice = $this->invoiceService->findWithRelationsOrFail(
+            $invoiceId,
+            ['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments']
+        );
 
         // Get custom fields and values
         $customFields = $this->customFieldService->getByTable('ip_invoice_custom');

@@ -5,8 +5,8 @@ namespace Modules\Core\Tests\Feature;
 use Modules\Core\Controllers\UploadController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -23,7 +23,7 @@ class UploadControllerTest extends FeatureTestCase
     {
         parent::setUp();
         $this->testUploadDir = base_path('uploads/test');
-        if (!is_dir($this->testUploadDir)) {
+        if ( ! is_dir($this->testUploadDir)) {
             mkdir($this->testUploadDir, 0777, true);
         }
     }
@@ -58,16 +58,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('document.pdf', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertArrayHasKey('message', $data);
@@ -89,12 +89,12 @@ class UploadControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -108,14 +108,14 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), []);
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(400);
         $data = $response->json();
         $this->assertArrayHasKey('message', $data);
@@ -135,16 +135,16 @@ class UploadControllerTest extends FeatureTestCase
         // Create file larger than 10MB
         $file = \Illuminate\Http\UploadedFile::fake()->create('large.pdf', 11000); // 11MB
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(413); // Payload Too Large
         $data = $response->json();
         $this->assertArrayHasKey('message', $data);
@@ -163,16 +163,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('malicious.php', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(415); // Unsupported Media Type
         $data = $response->json();
         $this->assertArrayHasKey('message', $data);
@@ -191,16 +191,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('malicious.html', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(415); // Unsupported Media Type
         $data = $response->json();
         $this->assertArrayHasKey('extension', $data);
@@ -218,16 +218,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('malicious.exe', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(415); // Unsupported Media Type
     }
 
@@ -239,17 +239,17 @@ class UploadControllerTest extends FeatureTestCase
     public function it_accepts_allowed_file_types(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user         = User::factory()->create();
         $allowedTypes = ['pdf', 'jpg', 'png', 'docx', 'xlsx', 'csv'];
 
-        /** Act & Assert */
+        /* Act & Assert */
         foreach ($allowedTypes as $type) {
             $file = \Illuminate\Http\UploadedFile::fake()->create("document.{$type}", 100);
-            
+
             $this->actingAs($user);
             $response = $this->post(route('upload.upload-file', [
                 'customerId' => 1,
-                'url_key' => 'test_' . $type
+                'url_key'    => 'test_' . $type,
             ]), [
                 'file' => $file,
             ]);
@@ -266,29 +266,29 @@ class UploadControllerTest extends FeatureTestCase
     public function it_rejects_duplicate_file_upload(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user  = User::factory()->create();
         $file1 = \Illuminate\Http\UploadedFile::fake()->create('document.pdf', 100);
         $file2 = \Illuminate\Http\UploadedFile::fake()->create('document.pdf', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         // Upload first file
         $response1 = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file1,
         ]);
-        
+
         // Try to upload duplicate
         $response2 = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file2,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response1->assertOk();
         $response2->assertStatus(409);
         $data = $response2->json();
@@ -307,16 +307,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('document.pdf', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => '../../../malicious'
+            'url_key'    => '../../../malicious',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         // Should succeed but sanitize the url_key
         $response->assertOk();
     }
@@ -332,16 +332,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('../../../etc/passwd', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         // Filename should be sanitized, removing path traversal characters
         $response->assertOk();
         $data = $response->json();
@@ -360,16 +360,16 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->create('file<script>alert(1)</script>.pdf', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         // Should sanitize dangerous characters
@@ -388,22 +388,22 @@ class UploadControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         // Create filename with >200 chars
         $longName = str_repeat('a', 250);
-        $file = \Illuminate\Http\UploadedFile::fake()->create($longName . '.pdf', 100);
+        $file     = \Illuminate\Http\UploadedFile::fake()->create($longName . '.pdf', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         // Filename should be truncated (200 chars + .pdf extension)
-        $this->assertLessThanOrEqual(204, strlen($data['filename']));
+        $this->assertLessThanOrEqual(204, mb_strlen($data['filename']));
     }
 
     /**
@@ -418,16 +418,16 @@ class UploadControllerTest extends FeatureTestCase
         // Create file without extension
         $file = \Illuminate\Http\UploadedFile::fake()->create('noextension', 100);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('upload.upload-file', [
             'customerId' => 1,
-            'url_key' => 'test_key'
+            'url_key'    => 'test_key',
         ]), [
             'file' => $file,
         ]);
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         // Should add safe default extension 'bin'
@@ -444,17 +444,17 @@ class UploadControllerTest extends FeatureTestCase
     public function it_creates_directory_successfully(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $testDir = $this->testUploadDir . '/new_dir';
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.create-dir', ['path' => $testDir]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $this->assertTrue(is_dir($testDir));
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($testDir) && is_dir($testDir)) {
             rmdir($testDir);
@@ -469,18 +469,18 @@ class UploadControllerTest extends FeatureTestCase
     public function it_handles_existing_directory(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $testDir = $this->testUploadDir . '/existing_dir';
         mkdir($testDir);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.create-dir', ['path' => $testDir]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $this->assertTrue(is_dir($testDir));
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($testDir) && is_dir($testDir)) {
             rmdir($testDir);
@@ -499,11 +499,11 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.show-files', ['url_key' => 'test_key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertJsonStructure([]);
     }
@@ -518,11 +518,11 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.show-files'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertJson([]);
     }
@@ -537,7 +537,7 @@ class UploadControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('upload.show-files', ['url_key' => 'test_key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -551,28 +551,28 @@ class UploadControllerTest extends FeatureTestCase
     public function it_deletes_file_successfully(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $filename = 'test_file.txt';
-        $urlKey = 'test_key';
-        
+        $urlKey   = 'test_key';
+
         // Create a test file
         $filePath = config('filesystems.cfiles_folder') . $urlKey . '_' . $filename;
         touch($filePath);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.delete-file', [
             'url_key' => $urlKey,
-            'name' => $filename,
+            'name'    => $filename,
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $data = $response->json();
         $this->assertArrayHasKey('message', $data);
         // Message should be translated
         $this->assertNotEquals('upload_file_deleted_successfully', $data['message']);
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($filePath)) {
             unlink($filePath);
@@ -589,18 +589,18 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.delete-file', [
             'url_key' => 'test_key',
-            'name' => 'nonexistent.txt',
+            'name'    => 'nonexistent.txt',
         ]));
 
-        /** Assert */
+        /* Assert */
         // Should handle gracefully
         $this->assertTrue(
-            $response->isOk() || 
-            $response->getStatusCode() == 410
+            $response->isOk()
+            || $response->getStatusCode() == 410
         );
     }
 
@@ -614,14 +614,14 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.delete-file', [
             'url_key' => 'test_key',
-            'name' => '../../../etc/passwd',
+            'name'    => '../../../etc/passwd',
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertStatus(410);
         $data = $response->json();
         $this->assertArrayHasKey('message', $data);
@@ -639,14 +639,14 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.delete-file', [
             'url_key' => '../../malicious',
-            'name' => 'test.txt',
+            'name'    => 'test.txt',
         ]));
 
-        /** Assert */
+        /* Assert */
         // Should fail due to path validation
         $response->assertStatus(410);
     }
@@ -661,10 +661,10 @@ class UploadControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('upload.delete-file', [
             'url_key' => 'test_key',
-            'name' => 'test.txt',
+            'name'    => 'test.txt',
         ]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 
@@ -678,20 +678,20 @@ class UploadControllerTest extends FeatureTestCase
     public function it_retrieves_file_successfully(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $filename = 'test_file.txt';
         $filePath = config('filesystems.cfiles_folder') . $filename;
-        
+
         // Create test file
         file_put_contents($filePath, 'test content');
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.get-file', ['filename' => $filename]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
-        
+
         // Cleanup - use file_exists to avoid errors
         if (file_exists($filePath)) {
             unlink($filePath);
@@ -708,11 +708,11 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.get-file', ['filename' => 'nonexistent.txt']));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -726,11 +726,11 @@ class UploadControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('upload.get-file', ['filename' => '../../../etc/passwd']));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -744,7 +744,7 @@ class UploadControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('upload.get-file', ['filename' => 'test.txt']));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('sessions.login'));
     }
 }
