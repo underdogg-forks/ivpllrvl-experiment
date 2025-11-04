@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * SetupController
+ * SetupController.
  *
  * Handles application installation and upgrade process
  *
@@ -18,7 +18,9 @@ class SetupController
     public $errors = 0;
 
     protected SetupService $setupService;
+
     protected UsersService $usersService;
+
     protected VersionsService $versionsService;
 
     /**
@@ -27,8 +29,8 @@ class SetupController
      * Enforces setup availability, loads required framework resources, and initializes localization.
      * Aborts with HTTP 403 if the DISABLE_SETUP environment flag is true.
      *
-     * @param SetupService $setupService
-     * @param UsersService $usersService
+     * @param SetupService    $setupService
+     * @param UsersService    $usersService
      * @param VersionsService $versionsService
      */
     public function __construct(
@@ -40,8 +42,8 @@ class SetupController
             show_error('The setup is disabled.', 403);
         }
 
-        $this->setupService = $setupService;
-        $this->usersService = $usersService;
+        $this->setupService    = $setupService;
+        $this->usersService    = $usersService;
         $this->versionsService = $versionsService;
 
         if ( ! session('ip_lang')) {
@@ -58,6 +60,7 @@ class SetupController
      * @return void
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function index(): void
@@ -73,6 +76,7 @@ class SetupController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function lang
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function language(Request $request)
@@ -101,6 +105,7 @@ class SetupController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function prerequisites
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function prerequisites(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -112,10 +117,11 @@ class SetupController
             session('install_step', 'configure_database');
             redirect()->route('setup/configure_database');
         }
+
         return view('core::setup_prerequisites', [
-            'basics' => $this->checkBasics(),
+            'basics'    => $this->checkBasics(),
             'writables' => $this->checkWritables(),
-            'errors' => $this->errors,
+            'errors'    => $this->errors,
         ]);
     }
 
@@ -127,6 +133,7 @@ class SetupController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function configureDatabase
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function configureDatabase(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -157,7 +164,7 @@ class SetupController
 
         return view('core::setup_configure_database', [
             'database' => $check_database,
-            'errors' => $this->errors,
+            'errors'   => $this->errors,
         ]);
     }
 
@@ -169,6 +176,7 @@ class SetupController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function installTables
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function installTables(Request $request)
@@ -184,7 +192,7 @@ class SetupController
 
         return view('core::setup_install_tables', [
             'success' => $this->setupService->installTables(),
-            'errors' => $this->setupService->errors,
+            'errors'  => $this->setupService->errors,
         ]);
     }
 
@@ -201,6 +209,7 @@ class SetupController
      * @return void
      *
      * @legacy-function upgradeTables
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function upgradeTables(Request $request)
@@ -225,7 +234,7 @@ class SetupController
 
         return view('core::setup_upgrade_tables', [
             'success' => $this->setupService->upgradeTables(),
-            'errors' => $this->setupService->errors,
+            'errors'  => $this->setupService->errors,
         ]);
     }
 
@@ -241,6 +250,7 @@ class SetupController
      * @return void
      *
      * @legacy-function createUser
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function createUser(Request $request)
@@ -257,6 +267,7 @@ class SetupController
             session('install_step', 'calculation_info');
             redirect()->route('setup/calculation_info');
         }
+
         return view('core::setup_create_user', [
             'countries' => get_country_list(trans('cldr')),
             'languages' => get_available_languages(),
@@ -271,6 +282,7 @@ class SetupController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      *
      * @legacy-function calculationInfo
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function calculationInfo(Request $request)
@@ -291,6 +303,7 @@ class SetupController
             session('install_step', 'complete');
             redirect()->route('setup/complete');
         }
+
         return view('core::setup_calculation_info', [
             'calculation_check' => $checkCalculation,
         ]);
@@ -304,6 +317,7 @@ class SetupController
      * @return void
      *
      * @legacy-function complete
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     public function complete(Request $request)
@@ -346,6 +360,7 @@ class SetupController
      * @return array
      *
      * @legacy-function checkBasics
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function checkBasics(): array
@@ -374,6 +389,7 @@ class SetupController
      * @return array
      *
      * @legacy-function checkWritables
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function checkWritables(): array
@@ -401,11 +417,12 @@ class SetupController
      * @return void
      *
      * @legacy-function loadCiDatabase
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function loadCiDatabase()
     {
-// TODO: Database always available in Laravel - $this->load->database();
+        // TODO: Database always available in Laravel - $this->load->database();
     }
 
     /**
@@ -415,11 +432,12 @@ class SetupController
      * @param string $username
      * @param string $password
      * @param string $database
-     * @param int $port
+     * @param int    $port
      *
      * @return void
      *
      * @legacy-function writeDatabaseConfig
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function writeDatabaseConfig(string $hostname, string $username, string $password, string $database, $port = 3306)
@@ -439,6 +457,7 @@ class SetupController
      * @return array
      *
      * @legacy-function checkDatabase
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function checkDatabase(): array
@@ -459,7 +478,7 @@ class SetupController
         }
         // Initialize the database connection, turn off automatic error reporting to display connection issues manually
         error_reporting(0);
-// TODO: Database always available in Laravel - $db_object = $this->load->database($db, true);
+        // TODO: Database always available in Laravel - $db_object = $this->load->database($db, true);
         // Try to initialize the database connection
         $can_connect = (bool) $db_object->conn_id;
         if ( ! $can_connect) {
@@ -477,6 +496,7 @@ class SetupController
      * @return void
      *
      * @legacy-function setEncryptionKey
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      */
     private function setEncryptionKey()

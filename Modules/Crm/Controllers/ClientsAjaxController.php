@@ -10,28 +10,27 @@ use Modules\Crm\Services\ClientNoteService;
 use Modules\Crm\Services\ClientService;
 
 /**
- * ClientsAjaxController
+ * ClientsAjaxController.
  *
  * Handles AJAX requests for client-related operations
  *
  * @legacy-file application/modules/clients/controllers/Ajax.php
  */
 class ClientsAjaxController
-    {
-        /**
-         * Initialize the ClientsAjaxController with dependency injection.
+{
+    /**
+     * Initialize the ClientsAjaxController with dependency injection.
      * Initialize the ClientsAjaxController with dependency injection.
      *
-     * @param ClientService $clientService
+     * @param ClientService     $clientService
      * @param ClientNoteService $clientNoteService
-     * @param SettingsService $settingsService
+     * @param SettingsService   $settingsService
      */
     public function __construct(
         protected ClientService $clientService,
         protected ClientNoteService $clientNoteService,
         protected SettingsService $settingsService
-    ) {
-    }
+    ) {}
 
     /**
      * Search for clients by name query (AJAX endpoint).
@@ -39,12 +38,13 @@ class ClientsAjaxController
      * @return void Outputs JSON response
      *
      * @legacy-function nameQuery
+     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
      */
     public function nameQuery(): void
     {
-        $response = [];
-        $query = request()->query('query');
+        $response                = [];
+        $query                   = request()->query('query');
         $permissiveSearchClients = request()->query('permissive_search_clients');
 
         if (empty($query)) {
@@ -54,14 +54,14 @@ class ClientsAjaxController
         }
 
         $moreClientsQuery = $permissiveSearchClients ? '%' : '';
-        $escapedQuery = str_replace('%', '', $query);
+        $escapedQuery     = str_replace('%', '', $query);
 
         $clients = Client::query()
             ->where('client_active', 1)
             ->where(function ($q) use ($escapedQuery, $moreClientsQuery) {
                 $q->where('client_name', 'LIKE', $moreClientsQuery . $escapedQuery . '%')
-                  ->orWhere('client_surname', 'LIKE', $moreClientsQuery . $escapedQuery . '%')
-                  ->orWhere('client_fullname', 'LIKE', $moreClientsQuery . $escapedQuery . '%');
+                    ->orWhere('client_surname', 'LIKE', $moreClientsQuery . $escapedQuery . '%')
+                    ->orWhere('client_fullname', 'LIKE', $moreClientsQuery . $escapedQuery . '%');
             })
             ->orderBy('client_name')
             ->get();
@@ -80,12 +80,13 @@ class ClientsAjaxController
      * @return void Outputs JSON response
      *
      * @legacy-function getLatest
+     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
      */
     public function getLatest(): void
     {
         $response = [];
-        $clients = Client::query()
+        $clients  = Client::query()
             ->where('client_active', 1)
             ->limit(5)
             ->orderBy('client_date_created')
@@ -105,12 +106,13 @@ class ClientsAjaxController
      * @return void
      *
      * @legacy-function savePreferencePermissiveSearchClients
+     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
      */
     public function savePreferencePermissiveSearchClients(): void
     {
         $permissiveSearchClients = request()->query('permissive_search_clients');
-        if (!preg_match('!^[0-1]{1}$!', $permissiveSearchClients)) {
+        if ( ! preg_match('!^[0-1]{1}$!', $permissiveSearchClients)) {
             exit;
         }
         $this->settingsService->save('enable_permissive_search_clients', $permissiveSearchClients);
@@ -122,11 +124,12 @@ class ClientsAjaxController
      * @return void Outputs JSON response
      *
      * @legacy-function deleteClientNote
+     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
      */
     public function deleteClientNote(): void
     {
-        $success = 0;
+        $success        = 0;
         $client_note_id = request()->input('client_note_id');
 
         if ($this->clientNoteService->find($client_note_id) || empty($client_note_id)) {
@@ -146,6 +149,7 @@ class ClientsAjaxController
      * @return void Outputs JSON response
      *
      * @legacy-function saveClientNote
+     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
      */
     public function saveClientNote(): void
@@ -168,11 +172,12 @@ class ClientsAjaxController
      * @return \Illuminate\View\View
      *
      * @legacy-function loadClientNotes
+     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
      */
     public function loadClientNotes(): \Illuminate\View\View
     {
-        $client_id = request()->input('client_id');
+        $client_id    = request()->input('client_id');
         $client_notes = $this->clientNoteService->getByClientId($client_id);
 
         return view('crm::clients_partial_notes', [

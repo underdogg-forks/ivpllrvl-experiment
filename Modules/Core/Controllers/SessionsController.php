@@ -9,24 +9,24 @@ use Modules\Core\Support\SettingsHelper;
 use Modules\Core\Support\TranslationHelper;
 
 /**
- * SessionsController
+ * SessionsController.
  *
  * Handles user authentication, login, logout, and password reset functionality
  *
  * @legacy-file application/modules/sessions/controllers/Sessions.php
  */
 class SessionsController
-{    /**
+{
+    /**
      * Initialize the SessionsController with dependency injection.
      *
      * @param SessionsService $sessionsService
-     * @param UsersService $usersService
+     * @param UsersService    $usersService
      */
     public function __construct(
         protected SessionsService $sessionsService,
         protected UsersService $usersService
-    ) {
-    }
+    ) {}
 
     /**
      * Redirect to the login page.
@@ -34,6 +34,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function index()
@@ -53,6 +54,7 @@ class SessionsController
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View a redirect response after form processing or the login view when displaying the form
      *
      * @legacy-function login
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function login(Request $request)
@@ -98,6 +100,7 @@ class SessionsController
      * @return bool `true` if authentication succeeds and the failure log is reset, `false` otherwise
      *
      * @legacy-function authenticate
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function authenticate($email_address, $password): bool
@@ -123,6 +126,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function logout
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function logout()
@@ -139,12 +143,13 @@ class SessionsController
      * - If the new-password form is submitted: validate input and token, update the user's password, clear the reset token and login failures, and redirect to the login page.
      * - If the password-reset request form is submitted: validate the email, throttle abuse, generate and store a reset token, send the reset email, and redirect to the login page.
      *
-     * @param Request $request
-     * @param string|null $token the password reset token supplied via the URL, or null when not using a token
+     * @param Request     $request
+     * @param string|null $token   the password reset token supplied via the URL, or null when not using a token
      *
      * @return mixed a view response for rendering the appropriate password reset page or a redirect response after processing
      *
      * @legacy-function passwordreset
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function passwordreset(Request $request, $token = null)
@@ -237,7 +242,7 @@ class SessionsController
                     redirect()->route('/');
                 }
                 //use salt to prevent predictability of the reset token (CVE-2021-29023)
-// TODO: Use Laravel services/facades - $this->load->library('crypt');
+                // TODO: Use Laravel services/facades - $this->load->library('crypt');
                 $token = md5(time() . $email . $this->crypt->salt());
                 // Save the token to the database and set the user to inactive
                 $db_array = ['user_passwordreset_token' => $token];
@@ -258,7 +263,7 @@ class SessionsController
                         $email_failed = true;
                     }
                 } else {
-// TODO: Use Laravel services/facades - $this->load->library('email');
+                    // TODO: Use Laravel services/facades - $this->load->library('email');
                     // Set email configuration
                     $config['mailtype'] = 'html';
                     $this->email->initialize($config);
@@ -294,6 +299,7 @@ class SessionsController
      * @return mixed login log record or null
      *
      * @legacy-function loginLogCheck
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogCheck($username)
@@ -323,6 +329,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function loginLogAddfailure
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogAddfailure($username)
@@ -344,6 +351,7 @@ class SessionsController
      * @return void
      *
      * @legacy-function loginLogReset
+     *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogReset($username)

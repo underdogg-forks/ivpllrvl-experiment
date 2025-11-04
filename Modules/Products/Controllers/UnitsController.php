@@ -10,7 +10,7 @@ use Modules\Products\Models\Unit;
 use Modules\Products\Services\UnitService;
 
 /**
- * UnitsController
+ * UnitsController.
  *
  * Handles product unit management (e.g., hours, items, kg, etc.)
  *
@@ -20,8 +20,7 @@ class UnitsController
 {
     public function __construct(
         protected UnitService $unitService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of product units.
@@ -31,6 +30,7 @@ class UnitsController
      * @return View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/units/controllers/Units.php
      */
     public function index(int $page = 0): View
@@ -49,11 +49,13 @@ class UnitsController
      * @return View
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/units/controllers/Units.php
      */
     public function create(): View
     {
         $unit = new Unit();
+
         return view('products::units_form', ['unit' => $unit]);
     }
 
@@ -65,6 +67,7 @@ class UnitsController
      * @return RedirectResponse
      *
      * @legacy-function form (save action)
+     *
      * @legacy-file application/modules/units/controllers/Units.php
      */
     public function store(UnitRequest $request): RedirectResponse
@@ -83,6 +86,7 @@ class UnitsController
      * @return View
      *
      * @legacy-function form (with ID)
+     *
      * @legacy-file application/modules/units/controllers/Units.php
      */
     public function edit(Unit $unit): View
@@ -99,6 +103,7 @@ class UnitsController
      * @return RedirectResponse
      *
      * @legacy-function form (update action)
+     *
      * @legacy-file application/modules/units/controllers/Units.php
      */
     public function update(UnitRequest $request, Unit $unit): RedirectResponse
@@ -117,6 +122,7 @@ class UnitsController
      * @return RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/units/controllers/Units.php
      */
     public function destroy(Unit $unit): RedirectResponse

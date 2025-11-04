@@ -9,7 +9,7 @@ use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 
 /**
- * InvoiceGroupsController
+ * InvoiceGroupsController.
  *
  * Manages invoice groups which control invoice numbering patterns
  */
@@ -17,22 +17,24 @@ class InvoiceGroupsController
 {
     /**
      * InvoiceGroup service instance.
+     *
      * @param InvoiceGroupService $invoiceGroupService
      */
     public function __construct(
         protected InvoiceGroupService $invoiceGroupService
-    )
-    {
-    }
+    ) {}
 
     /**
-     * Display a paginated list of invoice groups
+     * Display a paginated list of invoice groups.
      *
      * @param int $page Page number for pagination
+     *
      * @return View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
+     *
      * @legacy-line 32
      */
     public function index(int $page = 0): View
@@ -46,13 +48,16 @@ class InvoiceGroupsController
     }
 
     /**
-     * Display form for creating or editing an invoice group
+     * Display form for creating or editing an invoice group.
      *
      * @param int|null $id Invoice group ID (null for create)
+     *
      * @return View|RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
+     *
      * @legacy-line 42
      */
     public function form(?int $id = null): View|RedirectResponse
@@ -65,7 +70,7 @@ class InvoiceGroupsController
         // Handle form submission
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             // Validate input
-            $rules = $this->invoiceGroupService->getValidationRules();
+            $rules     = $this->invoiceGroupService->getValidationRules();
             $validated = request()->validate($rules);
 
             if ($id) {
@@ -83,14 +88,14 @@ class InvoiceGroupsController
         // Load existing record for editing
         if ($id) {
             $invoiceGroup = $this->invoiceGroupService->find($id);
-            if (!$invoiceGroup) {
+            if ( ! $invoiceGroup) {
                 abort(404);
             }
         } else {
             // Set defaults for new record
             $invoiceGroup = new InvoiceGroup([
                 'invoice_group_left_pad' => 0,
-                'invoice_group_next_id' => 1,
+                'invoice_group_next_id'  => 1,
             ]);
         }
 
@@ -100,13 +105,16 @@ class InvoiceGroupsController
     }
 
     /**
-     * Delete an invoice group
+     * Delete an invoice group.
      *
      * @param int $id Invoice group ID
+     *
      * @return RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
+     *
      * @legacy-line 71
      */
     public function delete(int $id): RedirectResponse
