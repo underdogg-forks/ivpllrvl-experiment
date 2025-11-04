@@ -5,8 +5,8 @@ namespace Modules\Quotes\Tests\Feature;
 use Modules\Crm\Controllers\QuotesController as GuestQuotesController;
 use Modules\Quotes\Models\Quote;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -30,7 +30,7 @@ class CrmQuotesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.quotes'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_quotes');
     }
@@ -48,11 +48,11 @@ class CrmQuotesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.quotes.view', ['urlKey' => 'test-quote-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('crm::guest_quote_view');
         $response->assertViewHas('quote');
-        
+
         $viewQuote = $response->viewData('quote');
         $this->assertEquals($quote->quote_id, $viewQuote->quote_id);
     }
@@ -70,7 +70,7 @@ class CrmQuotesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.quotes.view', ['urlKey' => 'non-existent-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -82,17 +82,17 @@ class CrmQuotesControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $quote = Quote::factory()->create([
-            'quote_url_key' => 'approve-key',
+            'quote_url_key'   => 'approve-key',
             'quote_status_id' => 2, // Sent
         ]);
 
         /** Act */
         $response = $this->get(route('guest.quotes.approve', ['urlKey' => 'approve-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect();
         $response->assertSessionHas('alert_success');
-        
+
         $quote->refresh();
         $this->assertEquals(4, $quote->quote_status_id); // Approved
     }
@@ -110,7 +110,7 @@ class CrmQuotesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.quotes.approve', ['urlKey' => 'invalid-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -126,7 +126,7 @@ class CrmQuotesControllerTest extends FeatureTestCase
         /** Act */
         $response = $this->get(route('guest.quotes.view', ['urlKey' => 'guest-quote-key']));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
     }
 }

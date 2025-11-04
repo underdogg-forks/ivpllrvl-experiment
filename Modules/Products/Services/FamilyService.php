@@ -13,14 +13,6 @@ use Modules\Products\Models\Family;
 class FamilyService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return Family::class;
-    }
-
-    /**
      * Get all families ordered and paginated.
      *
      * @param int $perPage
@@ -31,5 +23,13 @@ class FamilyService extends BaseService
     public function getAllPaginated(int $perPage = 15, int $page = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Family::ordered()->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return Family::class;
     }
 }

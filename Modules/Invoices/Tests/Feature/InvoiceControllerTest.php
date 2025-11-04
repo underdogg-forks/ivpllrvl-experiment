@@ -6,8 +6,8 @@ use Modules\Core\Models\User;
 use Modules\Invoices\Controllers\InvoiceController;
 use Modules\Invoices\Models\Invoice;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -29,11 +29,11 @@ class InvoiceControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Invoice::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('invoices::index');
         $response->assertViewHas('invoices');
@@ -47,24 +47,24 @@ class InvoiceControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         Invoice::factory()->create([
             'invoice_date_created' => '2024-01-01',
-            'invoice_number' => 'INV-001',
+            'invoice_number'       => 'INV-001',
         ]);
         Invoice::factory()->create([
             'invoice_date_created' => '2024-01-02',
-            'invoice_number' => 'INV-002',
+            'invoice_number'       => 'INV-002',
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $invoices = $response->viewData('invoices');
-        
+
         // Most recent should be first
         $this->assertGreaterThan(0, $invoices->count());
     }
@@ -77,18 +77,18 @@ class InvoiceControllerTest extends FeatureTestCase
     public function it_displays_invoice_with_relationships(): void
     {
         /** Arrange */
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice.show', ['id' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('invoices::show');
         $response->assertViewHas('invoice');
-        
+
         $viewInvoice = $response->viewData('invoice');
         $this->assertEquals($invoice->invoice_id, $viewInvoice->invoice_id);
     }
@@ -103,11 +103,11 @@ class InvoiceControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice.show', ['id' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -121,11 +121,11 @@ class InvoiceControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoice.form'));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('invoices::create');
     }
@@ -139,19 +139,19 @@ class InvoiceControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /** @var array{client_id: int, invoice_number: string, invoice_date_created: string} $invoiceData */
         $invoiceData = [
-            'client_id' => 1,
-            'invoice_number' => 'TEST-001',
+            'client_id'            => 1,
+            'invoice_number'       => 'TEST-001',
             'invoice_date_created' => '2024-01-01',
         ];
 
         /** Act */
         $controller = new InvoiceController();
-        $invoice = $controller->store($invoiceData);
+        $invoice    = $controller->store($invoiceData);
 
-        /** Assert */
+        /* Assert */
         $this->assertInstanceOf(Invoice::class, $invoice);
         $this->assertDatabaseHas('ip_invoices', [
             'invoice_number' => 'TEST-001',
@@ -167,19 +167,19 @@ class InvoiceControllerTest extends FeatureTestCase
     {
         /** Arrange */
         $user = User::factory()->create();
-        
+
         /** @var array{client_id: int, invoice_number: string, invoice_date_created: string} $invoiceData */
         $invoiceData = [
-            'client_id' => 1,
-            'invoice_number' => 'TEST-002',
+            'client_id'            => 1,
+            'invoice_number'       => 'TEST-002',
             'invoice_date_created' => '2024-01-01',
         ];
 
         /** Act */
         $controller = new InvoiceController();
-        $invoice = $controller->store($invoiceData);
+        $invoice    = $controller->store($invoiceData);
 
-        /** Assert */
+        /* Assert */
         $this->assertDatabaseHas('ip_invoice_amounts', [
             'invoice_id' => $invoice->invoice_id,
         ]);

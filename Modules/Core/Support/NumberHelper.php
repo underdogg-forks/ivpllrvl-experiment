@@ -16,6 +16,7 @@ class NumberHelper
      *
      *
      * @origin Modules/Core/Helpers/number_helper.php
+     *
      * @param $amount
      */
     public static function format_currency($amount): string
@@ -44,6 +45,7 @@ class NumberHelper
      *
      *
      * @origin Modules/Core/Helpers/number_helper.php
+     *
      * @return null|string
      */
     public static function format_amount($amount = null)
@@ -64,6 +66,7 @@ class NumberHelper
      *
      *
      * @origin Modules/Core/Helpers/number_helper.php
+     *
      * @return null|string
      */
     public static function format_quantity($amount = null)
@@ -83,6 +86,7 @@ class NumberHelper
      *
      *
      * @origin Modules/Core/Helpers/number_helper.php
+     *
      * @param $amount
      */
     public static function standardize_amount($amount): float|int|string|array|false|null

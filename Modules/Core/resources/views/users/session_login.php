@@ -37,15 +37,15 @@
 
 <?php
 if ($login_logo) {
-?>
+    ?>
             <img src="<?php echo base_url(); ?>uploads/<?php echo $login_logo; ?>" class="login-logo img-responsive">
 <?php
 } else {
-?>
+    ?>
             <h1><?php _trans('login'); ?></h1>
 <?php
 }
-?>
+    ?>
 
         <div class="row"><?php $this->layout->load_view('layout/alerts'); ?></div>
 

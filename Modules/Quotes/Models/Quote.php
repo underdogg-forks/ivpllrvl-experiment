@@ -69,8 +69,6 @@ class Quote extends BaseModel
         'quote_discount_percent' => 'decimal:2',
     ];
 
-
-
     /**
      * Get the client that owns the quote.
      */

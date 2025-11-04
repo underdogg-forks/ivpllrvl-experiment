@@ -4,21 +4,19 @@ namespace Modules\Crm\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Modules\Crm\Models\Client;
-use Modules\Crm\Services\ClientService;
-use Modules\Crm\Services\ClientNoteService;
-use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Services\InvoiceService;
-use Modules\Payments\Models\Payment;
-use Modules\Payments\Services\PaymentService;
-use Modules\Quotes\Models\Quote;
-use Modules\Quotes\Services\QuoteService;
 use Modules\Core\Services\CustomFieldService;
-
 use Modules\Core\Support\CountryHelper;
 use Modules\Core\Support\TranslationHelper;
+use Modules\Crm\Models\Client;
+use Modules\Crm\Services\ClientNoteService;
+use Modules\Crm\Services\ClientService;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Services\InvoiceService;
+use Modules\Payments\Services\PaymentService;
+use Modules\Quotes\Services\QuoteService;
+
 /**
- * ClientsController
+ * ClientsController.
  *
  * Handles client management including CRUD operations, viewing, and eInvoicing integration
  *
@@ -27,14 +25,15 @@ use Modules\Core\Support\TranslationHelper;
 class ClientsController
 {
     private const CLIENT_TITLE = 'client_title';
+
     /**
      * Initialize the ClientsController with dependency injection.
      *
-     * @param ClientService $clientService
-     * @param ClientNoteService $clientNoteService
-     * @param InvoiceService $invoiceService
-     * @param QuoteService $quoteService
-     * @param PaymentService $paymentService
+     * @param ClientService      $clientService
+     * @param ClientNoteService  $clientNoteService
+     * @param InvoiceService     $invoiceService
+     * @param QuoteService       $quoteService
+     * @param PaymentService     $paymentService
      * @param CustomFieldService $customFieldService
      */
     public function __construct(
@@ -44,8 +43,7 @@ class ClientsController
         protected QuoteService $quoteService,
         protected PaymentService $paymentService,
         protected CustomFieldService $customFieldService
-    ) {
-    }
+    ) {}
 
     /**
      * Redirect to the default client status view (active clients).
@@ -55,6 +53,7 @@ class ClientsController
      * @return void
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
     public function index(Request $request)
@@ -67,12 +66,13 @@ class ClientsController
      * Display clients filtered by status with pagination.
      *
      * @param Request $request
-     * @param string $status
-     * @param int $page
+     * @param string  $status
+     * @param int     $page
      *
      * @return void
      *
      * @legacy-function status
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
     public function status(Request $request, string $status = 'active', $page = 0)
@@ -112,12 +112,13 @@ class ClientsController
     /**
      * Handle the client form for creating or editing a client.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param int|null $id
      *
      * @return void
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
     public function form(Request $request, $id = null)
@@ -145,19 +146,19 @@ class ClientsController
         // Handle form submission
         if ($request->isMethod('post') && $request->input('btn_submit')) {
             $validated = $request->validate([
-                'client_name' => 'required|string|max:255',
-                'client_surname' => 'nullable|string|max:255',
-                'client_email' => 'nullable|email|max:255',
-                'client_phone' => 'nullable|string|max:50',
-                'client_mobile' => 'nullable|string|max:50',
+                'client_name'      => 'required|string|max:255',
+                'client_surname'   => 'nullable|string|max:255',
+                'client_email'     => 'nullable|email|max:255',
+                'client_phone'     => 'nullable|string|max:50',
+                'client_mobile'    => 'nullable|string|max:50',
                 'client_address_1' => 'nullable|string|max:255',
                 'client_address_2' => 'nullable|string|max:255',
-                'client_city' => 'nullable|string|max:255',
-                'client_state' => 'nullable|string|max:255',
-                'client_zip' => 'nullable|string|max:20',
-                'client_country' => 'nullable|string|max:255',
-                'client_vat_id' => 'nullable|string|max:50',
-                'client_tax_code' => 'nullable|string|max:50',
+                'client_city'      => 'nullable|string|max:255',
+                'client_state'     => 'nullable|string|max:255',
+                'client_zip'       => 'nullable|string|max:20',
+                'client_country'   => 'nullable|string|max:255',
+                'client_vat_id'    => 'nullable|string|max:50',
+                'client_tax_code'  => 'nullable|string|max:50',
             ]);
 
             // Handle custom title
@@ -174,7 +175,7 @@ class ClientsController
                 $this->clientService->update($id, $validated);
             } else {
                 $client = $this->clientService->create($validated);
-                $id = $client->client_id;
+                $id     = $client->client_id;
             }
 
             // TODO: Handle custom fields save
@@ -185,7 +186,7 @@ class ClientsController
 
         // Load client for editing
         $client = $id ? $this->clientService->findOrFail($id) : new Client();
-        
+
         $req_einvoicing = SettingsHelper::getSetting('einvoicing');
         if ($req_einvoicing && $id) {
             // Get a check of filled Required (client and users) fields for eInvoicing
@@ -195,7 +196,7 @@ class ClientsController
         // Get custom fields
         $custom_fields = $this->customFieldService->byTable('ip_client_custom')->get();
         $custom_values = [];
-        
+
         // TODO: Load custom field values for this client
         // This requires additional service methods
 
@@ -217,13 +218,14 @@ class ClientsController
      * Display detailed client information with related invoices, quotes, and payments.
      *
      * @param Request $request
-     * @param int $client_id
-     * @param string $activeTab
-     * @param int $page
+     * @param int     $client_id
+     * @param string  $activeTab
+     * @param int     $page
      *
      * @return void
      *
      * @legacy-function view
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
     public function view(Request $request, $client_id, $activeTab = 'detail', $page = 0)
@@ -249,7 +251,7 @@ class ClientsController
         } else {
             // Set pages saved in session
             $sessionData = session($key, $p);
-            
+
             // Up Actual page num
             $sessionData[$activeTab] = $page;
             // Save in session
@@ -258,10 +260,10 @@ class ClientsController
 
         // Get related data - use service methods
         $client_notes = $this->clientNoteService->getByClientId($client_id);
-        $invoices = $this->invoiceService->getByClientId($client_id);
-        $quotes = $this->quoteService->getByClientId($client_id);
-        $payments = $this->paymentService->getByClientId($client_id);
-        
+        $invoices     = $this->invoiceService->getByClientId($client_id);
+        $quotes       = $this->quoteService->getByClientId($client_id);
+        $payments     = $this->paymentService->getByClientId($client_id);
+
         // Get custom fields
         $custom_fields = $this->customFieldService->byTable('ip_client_custom')->get();
 
@@ -283,11 +285,12 @@ class ClientsController
      * Delete a client by ID.
      *
      * @param Request $request
-     * @param int $client_id
+     * @param int     $client_id
      *
      * @return void
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
     public function delete(Request $request, $client_id)
@@ -302,6 +305,7 @@ class ClientsController
      * @return array
      *
      * @legacy-function get_client_title_choices
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
     private function get_client_title_choices(): array
@@ -321,9 +325,11 @@ class ClientsController
      * @return object
      *
      * @legacy-function check_client_einvoice_active
+     *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
-    private function check_client_einvoice_active($client, $req_einvoicing) {
+    private function check_client_einvoice_active($client, $req_einvoicing)
+    {
         // Update active eInvoicing client
         $o = $client->client_einvoicing_active;
         if ( ! empty($client->client_einvoicing_version) && $req_einvoicing->clients[$client->client_id]->einvoicing_empty_fields == 0) {
@@ -335,7 +341,7 @@ class ClientsController
         // Update db if need
         if ($o != $client->client_einvoicing_active) {
             $this->clientService->update($client->client_id, [
-                'client_einvoicing_active' => $client->client_einvoicing_active
+                'client_einvoicing_active' => $client->client_einvoicing_active,
             ]);
         }
 

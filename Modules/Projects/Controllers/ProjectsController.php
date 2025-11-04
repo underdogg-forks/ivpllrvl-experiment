@@ -2,13 +2,13 @@
 
 namespace Modules\Projects\Controllers;
 
+use Modules\Core\Support\TranslationHelper;
 use Modules\Projects\Models\Project;
 use Modules\Projects\Services\ProjectService;
 use Modules\Projects\Services\TaskService;
 
-use Modules\Core\Support\TranslationHelper;
 /**
- * ProjectsController
+ * ProjectsController.
  *
  * Manages project CRUD operations and project task relationships
  *
@@ -19,8 +19,7 @@ class ProjectsController
     public function __construct(
         protected ProjectService $projectService,
         protected TaskService $taskService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a paginated list of projects.
@@ -30,6 +29,7 @@ class ProjectsController
      * @return \Illuminate\View\View
      *
      * @legacy-function index
+     *
      * @legacy-file application/modules/projects/controllers/Projects.php
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -54,6 +54,7 @@ class ProjectsController
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
      * @legacy-function form
+     *
      * @legacy-file application/modules/projects/controllers/Projects.php
      */
     public function form(?int $id = null)
@@ -64,8 +65,8 @@ class ProjectsController
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
             $validated = request()->validate([
-                'project_name' => 'required|string|max:255',
-                'client_id' => 'nullable|integer|exists:ip_clients,client_id',
+                'project_name'        => 'required|string|max:255',
+                'client_id'           => 'nullable|integer|exists:ip_clients,client_id',
                 'project_description' => 'nullable|string',
             ]);
 
@@ -80,7 +81,7 @@ class ProjectsController
         }
 
         $project = $id ? $this->projectService->find($id) : new Project();
-        if ($id && !$project) {
+        if ($id && ! $project) {
             abort(404);
         }
 
@@ -95,20 +96,21 @@ class ProjectsController
      * @return \Illuminate\View\View
      *
      * @legacy-function view
+     *
      * @legacy-file application/modules/projects/controllers/Projects.php
      */
     public function view(int $projectId): \Illuminate\View\View
     {
         $project = $this->projectService->find($projectId);
-        if (!$project) {
+        if ( ! $project) {
             abort(404);
         }
 
         $tasks = $this->projectService->getTasks($projectId);
 
         return view('projects::projects_view', [
-            'project' => $project,
-            'tasks' => $tasks,
+            'project'       => $project,
+            'tasks'         => $tasks,
             'task_statuses' => $this->taskService->getStatuses(),
         ]);
     }
@@ -121,6 +123,7 @@ class ProjectsController
      * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
+     *
      * @legacy-file application/modules/projects/controllers/Projects.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

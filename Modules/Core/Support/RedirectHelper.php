@@ -14,6 +14,7 @@ class RedirectHelper
      *
      *
      * @origin Modules/Core/Helpers/redirect_helper.php
+     *
      * @param string $fallback_url_string
      * @param bool   $redirect
      *

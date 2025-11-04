@@ -4,11 +4,11 @@ namespace Modules\Projects\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\Core\Support\SettingsHelper;
-use Modules\Projects\Services\TaskService;
 use Modules\Projects\Models\Task;
+use Modules\Projects\Services\TaskService;
 
 /**
- * TasksAjaxController
+ * TasksAjaxController.
  *
  * Handles AJAX requests for task-related operations
  *
@@ -23,8 +23,8 @@ class TasksAjaxController
      */
     public function __construct(
         protected TaskService $taskService
-    ) {
-    }
+    ) {}
+
     /**
      * Display modal for task lookups (AJAX endpoint).
      *
@@ -33,17 +33,18 @@ class TasksAjaxController
      * @return \Illuminate\Contracts\View\View
      *
      * @legacy-function modalTaskLookups
+     *
      * @legacy-file application/modules/tasks/controllers/Ajax.php
      */
     public function modalTaskLookups(?int $invoice_id = null): \Illuminate\Contracts\View\View
     {
         $default_item_tax_rate = SettingsHelper::getSetting('default_item_tax_rate');
-        $data = [
+        $data                  = [
             'default_item_tax_rate' => $default_item_tax_rate !== '' ? $default_item_tax_rate : 0,
-            'tasks' => [],
+            'tasks'                 => [],
         ];
 
-        if (!empty($invoice_id)) {
+        if ( ! empty($invoice_id)) {
             $data['tasks'] = $this->taskService->getTasksToInvoice($invoice_id);
         }
 
@@ -58,12 +59,13 @@ class TasksAjaxController
      * @return void Outputs JSON response
      *
      * @legacy-function processTaskSelections
+     *
      * @legacy-file application/modules/tasks/controllers/Ajax.php
      */
     public function processTaskSelections(Request $request): void
     {
         $taskIds = $request->input('task_ids', []);
-        $tasks = Task::query()->whereIn('task_id', $taskIds)->get();
+        $tasks   = Task::query()->whereIn('task_id', $taskIds)->get();
 
         foreach ($tasks as $task) {
             $task->task_price = format_amount($task->task_price);

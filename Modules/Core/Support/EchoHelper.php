@@ -14,6 +14,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param $output
      *
      * @return string|null
@@ -32,6 +33,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param mixed $output
      *
      * @return void
@@ -50,6 +52,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param mixed $output
      *
      * @return void
@@ -68,6 +71,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param string      $line
      * @param string      $id
      * @param null|string $default
@@ -82,6 +86,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param        $str
      * @param string $type
      * @param bool   $popup
@@ -107,6 +112,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param string $asset
      */
     public static function _theme_asset($asset): void
@@ -122,6 +128,7 @@ class EchoHelper
      *
      *
      * @origin Modules/Core/Helpers/echo_helper.php
+     *
      * @param string $asset
      */
     public static function _core_asset($asset): void

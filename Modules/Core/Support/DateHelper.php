@@ -80,7 +80,7 @@ class DateHelper
     {
         if ($date) {
             // SECURITY FIX: Use Request facade instead of direct $_POST access
-            if (!$ignorePostCheck && request()->has('custom_date_format')) {
+            if ( ! $ignorePostCheck && request()->has('custom_date_format')) {
                 $date_format = request()->input('custom_date_format');
             } else {
                 $date_format = self::dateFormatSetting();

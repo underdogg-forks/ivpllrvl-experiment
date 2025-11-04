@@ -13,14 +13,6 @@ use Modules\Products\Models\TaxRate;
 class TaxRateService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return TaxRate::class;
-    }
-
-    /**
      * Get all tax rates.
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -38,5 +30,13 @@ class TaxRateService extends BaseService
     public function getAllOrdered()
     {
         return TaxRate::query()->orderBy('tax_rate_name')->get();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return TaxRate::class;
     }
 }

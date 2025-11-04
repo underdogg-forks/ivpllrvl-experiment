@@ -12,11 +12,6 @@ use Modules\Projects\Models\Task;
  */
 class TaskService extends BaseService
 {
-    protected function getModelClass(): string
-    {
-        return Task::class;
-    }
-
     /**
      * Update tasks by invoice ID.
      *
@@ -29,11 +24,12 @@ class TaskService extends BaseService
     {
         return $this->query()->where('invoice_id', $invoiceId)->update($data);
     }
+
     /**
      * Get all tasks with relationships, ordered and paginated.
      *
      * @param array $relations Relations to eager load
-     * @param int $perPage Number of items per page
+     * @param int   $perPage   Number of items per page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -42,5 +38,10 @@ class TaskService extends BaseService
         return Task::query()->with($relations)
             ->orderBy('task_name')
             ->paginate($perPage);
+    }
+
+    protected function getModelClass(): string
+    {
+        return Task::class;
     }
 }

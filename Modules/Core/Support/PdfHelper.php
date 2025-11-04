@@ -9,9 +9,9 @@ class PdfHelper
      *
      * @origin Modules/Core/Helpers/pdf_helper.php
      *
-     * @param object $obj Invoice or quote object
-     * @param bool $show_item_discounts Whether item discounts are shown
-     * @param string $is Type of document ('invoice' or 'quote')
+     * @param object $obj                 Invoice or quote object
+     * @param bool   $show_item_discounts Whether item discounts are shown
+     * @param string $is                  Type of document ('invoice' or 'quote')
      */
     public static function discount_global_print_in_pdf($obj, $show_item_discounts, string $is = 'invoice'): void
     {
@@ -44,25 +44,26 @@ class PdfHelper
      *
      * @origin Modules/Core/Helpers/pdf_helper.php
      *
-     * @param string $invoice_id Invoice ID
-     * @param bool $stream Whether to stream the PDF
+     * @param string      $invoice_id       Invoice ID
+     * @param bool        $stream           Whether to stream the PDF
      * @param string|null $invoice_template Template to use
-     * @param bool|null $is_guest Whether viewing as guest
+     * @param bool|null   $is_guest         Whether viewing as guest
+     *
      * @return string|null PDF content or filename
      */
     public static function generate_invoice_pdf($invoice_id, $stream = true, $invoice_template = null, $is_guest = null)
     {
-        $invoiceService = app(\Modules\Invoices\Services\InvoiceService::class);
-        $paymentMethodService = app(\Modules\Payments\Services\PaymentMethodService::class);
-        $invoiceItemService = app(\Modules\Invoices\Services\InvoiceItemService::class);
+        $invoiceService        = app(\Modules\Invoices\Services\InvoiceService::class);
+        $paymentMethodService  = app(\Modules\Payments\Services\PaymentMethodService::class);
+        $invoiceItemService    = app(\Modules\Invoices\Services\InvoiceItemService::class);
         $invoiceTaxRateService = app(\Modules\Invoices\Services\InvoiceTaxRateService::class);
-        
+
         $invoice = $invoiceService->findWithRelations($invoice_id, ['client', 'user']);
-        
-        if (!$invoice) {
-            return null;
+
+        if ( ! $invoice) {
+            return;
         }
-        
+
         // Get invoice with payments - TODO: move to service method
         $invoice = $invoiceService->findWithRelations($invoice_id, ['payments']);
 
@@ -178,22 +179,23 @@ class PdfHelper
      *
      * @origin Modules/Core/Helpers/pdf_helper.php
      *
-     * @param string $invoice_id Invoice ID
-     * @param bool $stream Whether to stream the PDF
+     * @param string      $invoice_id       Invoice ID
+     * @param bool        $stream           Whether to stream the PDF
      * @param string|null $invoice_template Template to use
-     * @param bool $client Whether called from client context
+     * @param bool        $client           Whether called from client context
+     *
      * @return string|null PDF content or filename
      */
     public static function generate_invoice_sumex($invoice_id, $stream = true, $invoice_template = null, $client = false)
     {
         $invoice = \Modules\Invoices\Models\Invoice::find($invoice_id);
-        
-        if (!$invoice) {
-            return null;
+
+        if ( ! $invoice) {
+            return;
         }
 
         $invoiceItemService = app(\Modules\Invoices\Services\InvoiceItemService::class);
-        $items = $invoiceItemService->getByInvoiceId($invoice_id);
+        $items              = $invoiceItemService->getByInvoiceId($invoice_id);
 
         $sumex = new \Modules\Core\Libraries\Sumex([
             'invoice' => $invoice,
@@ -249,21 +251,22 @@ class PdfHelper
      *
      * @origin Modules/Core/Helpers/pdf_helper.php
      *
-     * @param string $quote_id Quote ID
-     * @param bool $stream Whether to stream the PDF
+     * @param string      $quote_id       Quote ID
+     * @param bool        $stream         Whether to stream the PDF
      * @param string|null $quote_template Template to use
+     *
      * @return string|null PDF content or filename
      */
     public static function generate_quote_pdf($quote_id, $stream = true, $quote_template = null)
     {
-        $quoteService = app(\Modules\Quotes\Services\QuoteService::class);
-        $quoteItemService = app(\Modules\Quotes\Services\QuoteItemService::class);
+        $quoteService        = app(\Modules\Quotes\Services\QuoteService::class);
+        $quoteItemService    = app(\Modules\Quotes\Services\QuoteItemService::class);
         $quoteTaxRateService = app(\Modules\Quotes\Services\QuoteTaxRateService::class);
-        
+
         $quote = $quoteService->findWithRelations($quote_id, ['client', 'user']);
-        
-        if (!$quote) {
-            return null;
+
+        if ( ! $quote) {
+            return;
         }
 
         set_language($quote->client_language);
@@ -317,36 +320,37 @@ class PdfHelper
      * Helper method to retrieve custom field values from database.
      *
      * @param string $table Custom field table name
-     * @param int $id Record ID
+     * @param int    $id    Record ID
+     *
      * @return array Array of custom field values
      */
     protected static function getCustomFieldValues(string $table, int $id): array
     {
         $modelClass = match($table) {
             'ip_invoice_custom' => \Modules\Core\Models\InvoiceCustom::class,
-            'ip_quote_custom' => \Modules\Core\Models\QuoteCustom::class,
-            'ip_client_custom' => \Modules\Core\Models\ClientCustom::class,
-            'ip_user_custom' => \Modules\Core\Models\UserCustom::class,
+            'ip_quote_custom'   => \Modules\Core\Models\QuoteCustom::class,
+            'ip_client_custom'  => \Modules\Core\Models\ClientCustom::class,
+            'ip_user_custom'    => \Modules\Core\Models\UserCustom::class,
             'ip_payment_custom' => \Modules\Core\Models\PaymentCustom::class,
-            default => null,
+            default             => null,
         };
-        
-        if (!$modelClass) {
+
+        if ( ! $modelClass) {
             return [];
         }
-        
+
         // Get the ID field name from the table
         $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
-        
+
         // Get all custom field records for this ID
         $records = $modelClass::query()->where($idField, $id)->get();
-        
+
         // Convert to array format
         $values = [];
         foreach ($records as $record) {
             $values[] = $record->toArray();
         }
-        
+
         return $values;
     }
 }

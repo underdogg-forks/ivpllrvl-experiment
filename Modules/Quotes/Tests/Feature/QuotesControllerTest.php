@@ -9,8 +9,8 @@ use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -33,11 +33,11 @@ class QuotesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.index'));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('quotes.status', ['status' => 'all']));
     }
 
@@ -62,11 +62,11 @@ class QuotesControllerTest extends FeatureTestCase
             'user_id'   => $user->user_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/quotes/status/draft');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewIs('quotes::index');
         $response->assertViewHas('quotes');
@@ -100,11 +100,11 @@ class QuotesControllerTest extends FeatureTestCase
             'user_id'   => $user->user_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/quotes/status/all');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('quotes');
         $response->assertViewHas('status', 'all');
@@ -126,11 +126,11 @@ class QuotesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/quotes/status/all');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('quote_statuses');
         $quoteStatuses = $response->viewData('quote_statuses');
@@ -157,19 +157,19 @@ class QuotesControllerTest extends FeatureTestCase
         $item1 = QuoteItem::factory()->create(['quote_id' => $quote->quote_id]);
         $item2 = QuoteItem::factory()->create(['quote_id' => $quote->quote_id]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('quote');
         $response->assertViewHas('items');
         $response->assertViewHas('quote_id');
 
         $viewQuote = $response->viewData('quote');
-        $items = $response->viewData('items');
-        $quoteId = $response->viewData('quote_id');
+        $items     = $response->viewData('items');
+        $quoteId   = $response->viewData('quote_id');
 
         $this->assertEquals($quote->quote_id, $viewQuote->quote_id);
         $this->assertEquals($quote->quote_id, $quoteId);
@@ -187,11 +187,11 @@ class QuotesControllerTest extends FeatureTestCase
         $user               = User::factory()->create();
         $nonExistentQuoteId = 99999;
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.view', ['quote_id' => $nonExistentQuoteId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -211,11 +211,11 @@ class QuotesControllerTest extends FeatureTestCase
             'user_id'   => $user->user_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('custom_fields');
         $response->assertViewHas('custom_values');
@@ -237,11 +237,11 @@ class QuotesControllerTest extends FeatureTestCase
             'user_id'   => $user->user_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('tax_rates');
         $response->assertViewHas('quote_tax_rates');
@@ -264,24 +264,24 @@ class QuotesControllerTest extends FeatureTestCase
         ]);
 
         $quoteId = $quote->quote_id;
-        
+
         /**
          * {
          *     "quote_id": 1
-         * }
+         * }.
          */
         $deleteParams = [
             'quote_id' => $quoteId,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('quotes.delete', $deleteParams));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('quotes.index'));
 
-        /** Verify quote was deleted */
+        /* Verify quote was deleted */
         $this->assertNull(Quote::find($quoteId));
     }
 
@@ -307,20 +307,20 @@ class QuotesControllerTest extends FeatureTestCase
         $quoteId   = $quote->quote_id;
         $itemId    = $item->item_id;
         $taxRateId = $taxRate->quote_tax_rate_id;
-        
+
         /**
          * {
          *     "quote_id": 1
-         * }
+         * }.
          */
         $deleteParams = [
             'quote_id' => $quoteId,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user)->post(route('quotes.delete', $deleteParams));
 
-        /** Assert - verify all related records are deleted */
+        /* Assert - verify all related records are deleted */
         $this->assertNull(Quote::find($quoteId));
         $this->assertNull(QuoteItem::find($itemId));
         $this->assertNull(QuoteTaxRate::find($taxRateId));
@@ -352,7 +352,7 @@ class QuotesControllerTest extends FeatureTestCase
         /** Act */
         /**
          * Note: Empty payload is correct - IDs are passed via route parameters
-         * Route: POST /quotes/delete_tax/{quote_id}/{quote_tax_rate_id}
+         * Route: POST /quotes/delete_tax/{quote_id}/{quote_tax_rate_id}.
          */
         $payload = [];
 
@@ -365,10 +365,10 @@ class QuotesControllerTest extends FeatureTestCase
             $payload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('quotes.view', ['quote_id' => $quote->quote_id]));
 
-        /** Verify tax rate was deleted */
+        /* Verify tax rate was deleted */
         $this->assertNull(QuoteTaxRate::find($quoteTaxRateId));
     }
 
@@ -392,7 +392,7 @@ class QuotesControllerTest extends FeatureTestCase
         /** Act */
         /**
          * Note: Empty payload is correct - IDs are passed via route parameters
-         * Route: POST /quotes/delete_tax/{quote_id}/{quote_tax_rate_id}
+         * Route: POST /quotes/delete_tax/{quote_id}/{quote_tax_rate_id}.
          */
         $payload = [];
 
@@ -405,7 +405,7 @@ class QuotesControllerTest extends FeatureTestCase
             $payload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('quotes.view', ['quote_id' => $quote->quote_id]));
         $response->assertSessionHas('success');
     }
@@ -433,14 +433,14 @@ class QuotesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * {}.
          */
         $recalculatePayload = [];
 
         $this->actingAs($user);
         $response = $this->post(route('quotes.recalculate_all'), $recalculatePayload);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect();
         $response->assertSessionHas('success');
     }
@@ -458,16 +458,16 @@ class QuotesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * {}.
          */
         $recalculatePayload = [];
 
         $this->actingAs($user);
         $response = $this->post(route('quotes.recalculate_all'), $recalculatePayload);
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect();
-        /** Should still return success even with no quotes */
+        /* Should still return success even with no quotes */
         $response->assertSessionHas('success');
     }
 
@@ -481,7 +481,7 @@ class QuotesControllerTest extends FeatureTestCase
         $user   = User::factory()->create();
         $client = Client::factory()->create();
 
-        /** Create 20 draft quotes (more than the 15 per page limit) */
+        /* Create 20 draft quotes (more than the 15 per page limit) */
         for ($i = 0; $i < 20; $i++) {
             Quote::factory()->draft()->create([
                 'client_id' => $client->client_id,
@@ -489,11 +489,11 @@ class QuotesControllerTest extends FeatureTestCase
             ]);
         }
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/quotes/status/draft');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $quotes = $response->viewData('quotes');
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $quotes);
@@ -522,11 +522,11 @@ class QuotesControllerTest extends FeatureTestCase
             'user_id'   => $user->user_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/quotes/status/sent');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $quotes   = $response->viewData('quotes');
         $quoteIds = $quotes->pluck('quote_id')->toArray();
@@ -556,11 +556,11 @@ class QuotesControllerTest extends FeatureTestCase
             'user_id'   => $user->user_id,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/quotes/status/approved');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $quotes   = $response->viewData('quotes');
         $quoteIds = $quotes->pluck('quote_id')->toArray();

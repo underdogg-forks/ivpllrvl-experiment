@@ -10,8 +10,8 @@ use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -32,7 +32,7 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.index'));
 
@@ -52,7 +52,7 @@ class InvoicesControllerTest extends FeatureTestCase
         $draftInvoice = Invoice::factory()->draft()->create();
         $sentInvoice  = Invoice::factory()->sent()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/invoices/status/draft');
 
@@ -81,11 +81,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $sentInvoice  = Invoice::factory()->sent()->create();
         $paidInvoice  = Invoice::factory()->paid()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/invoices/status/all');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $invoices   = $response->viewData('invoices');
         $invoiceIds = $invoices->pluck('invoice_id')->toArray();
@@ -105,11 +105,11 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/invoices/status/all');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('invoice_statuses');
         $response->assertViewHas('status', 'all');
@@ -127,11 +127,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         Item::factory()->count(3)->create(['invoice_id' => $invoice->invoice_id]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('invoice');
         $response->assertViewHas('items');
@@ -155,7 +155,7 @@ class InvoicesControllerTest extends FeatureTestCase
         $this->actingAs($user);
         $response = $this->get(route('invoices.view', ['invoiceId' => 99999]));
 
-        /** Assert */
+        /* Assert */
         $response->assertNotFound();
     }
 
@@ -170,11 +170,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('custom_fields');
         $response->assertViewHas('custom_values');
@@ -192,11 +192,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         TaxRate::factory()->count(5)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $response->assertViewHas('tax_rates');
         $taxRates = $response->viewData('tax_rates');
@@ -213,17 +213,17 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
-        
+
         /**
          * {
          *     "invoiceId": 1
-         * }
+         * }.
          */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.delete', $deleteParams));
 
@@ -243,11 +243,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
         $task    = Task::factory()->create(['invoice_id' => $invoice->invoice_id, 'task_status' => 4]);
-        
+
         /**
          * {
          *     "invoiceId": 1
-         * }
+         * }.
          */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
@@ -272,17 +272,17 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         config(['settings.enable_invoice_deletion' => false]);
         $invoice = Invoice::factory()->sent()->create(); // Not a draft
-        
+
         /**
          * {
          *     "invoiceId": 1
-         * }
+         * }.
          */
         $deleteParams = [
             'invoiceId' => $invoice->invoice_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.delete', $deleteParams));
 
@@ -301,7 +301,7 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.archive'));
 
@@ -362,7 +362,7 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Act */
         /**
          * Note: Empty payload is correct - IDs are passed via route parameters
-         * Route: POST /invoices/delete-tax/{invoiceId}/{taxRateId}
+         * Route: POST /invoices/delete-tax/{invoiceId}/{taxRateId}.
          */
         $payload = [];
 
@@ -394,7 +394,7 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Act */
         /**
          * Note: Empty payload is correct - IDs are passed via route parameters
-         * Route: POST /invoices/delete-tax/{invoiceId}/{taxRateId}
+         * Route: POST /invoices/delete-tax/{invoiceId}/{taxRateId}.
          */
         $payload = [];
 
@@ -407,7 +407,7 @@ class InvoicesControllerTest extends FeatureTestCase
             $payload
         );
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
     }
 
@@ -425,7 +425,7 @@ class InvoicesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * {}.
          */
         $recalculatePayload = [];
 
@@ -451,7 +451,7 @@ class InvoicesControllerTest extends FeatureTestCase
 
         /** Act */
         /**
-         * {}
+         * {}.
          */
         $recalculatePayload = [];
 
@@ -494,11 +494,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $draftInvoice = Invoice::factory()->draft()->create();
         $paidInvoice  = Invoice::factory()->paid()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/invoices/status/paid');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $invoices   = $response->viewData('invoices');
         $invoiceIds = $invoices->pluck('invoice_id')->toArray();
@@ -519,11 +519,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $overdueInvoice = Invoice::factory()->overdue()->create();
         $paidInvoice    = Invoice::factory()->paid()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/invoices/status/overdue');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $invoices   = $response->viewData('invoices');
         $invoiceIds = $invoices->pluck('invoice_id')->toArray();
@@ -542,7 +542,7 @@ class InvoicesControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->create(['sumex_id' => 12345]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.view', ['invoiceId' => $invoice->invoice_id]));
 
@@ -561,11 +561,11 @@ class InvoicesControllerTest extends FeatureTestCase
         $user = User::factory()->create();
         Invoice::factory()->count(30)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get('/invoices/status/all');
 
-        /** Assert */
+        /* Assert */
         $response->assertOk();
         $invoices = $response->viewData('invoices');
         $this->assertLessThanOrEqual(15, $invoices->count());

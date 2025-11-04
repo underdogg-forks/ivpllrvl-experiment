@@ -93,10 +93,10 @@ class DropzoneHelper
      *
      * @origin Modules/Core/Helpers/dropzone_helper.php
      *
-     * @param string|null $url_key URL key for upload endpoint
-     * @param int $client_id Client ID
-     * @param string $site_url Site URL
-     * @param array|null $acceptedExts Accepted file extensions
+     * @param string|null $url_key      URL key for upload endpoint
+     * @param int         $client_id    Client ID
+     * @param string      $site_url     Site URL
+     * @param array|null  $acceptedExts Accepted file extensions
      */
     public static function _dropzone_script($url_key = null, $client_id = 1, $site_url = '', $acceptedExts = null): void
     {

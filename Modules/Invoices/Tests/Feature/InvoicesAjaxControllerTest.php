@@ -11,8 +11,8 @@ use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Feature\FeatureTestCase;
 
 /**
@@ -47,7 +47,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "client_id": 1,
          *     "user_id": 1,
          *     "invoice_date_created": "2024-01-01"
-         * }
+         * }.
          */
         $payload = [
             'client_id'            => $client->client_id,
@@ -55,7 +55,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_date_created' => '2024-01-01',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.create'), $payload);
 
@@ -119,7 +119,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "invoice_date_created": "2024-01-01",
          *     "invoice_date_due": "2024-01-31",
          *     "invoice_status_id": 1
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
@@ -132,7 +132,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_status_id'        => 1,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -141,7 +141,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
         $this->assertEquals(2, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
-        
+
         // Verify invoice data was saved
         $invoice->refresh();
         $this->assertEquals('INV-001', $invoice->invoice_number);
@@ -196,7 +196,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "invoice_status_id": 2,
          *     "invoice_discount_percent": 0,
          *     "invoice_discount_amount": 0
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
@@ -209,7 +209,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_discount_amount'  => 0,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -217,11 +217,11 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        
+
         $invoice->refresh();
         $this->assertEquals('INV-002', $invoice->invoice_number);
         $this->assertEquals(2, $invoice->invoice_status_id);
-        
+
         $item->refresh();
         $this->assertEquals('Updated Item', $item->item_name);
         $this->assertEquals(3, $item->item_quantity);
@@ -245,13 +245,13 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
-        
+
         /**
          * {
          *     "invoice_id": 1,
          *     "items": "[]",
          *     "invoice_date_created": "invalid-date"
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'           => $invoice->invoice_id,
@@ -259,7 +259,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_date_created' => 'invalid-date',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -306,7 +306,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "invoice_date_created": "2024-01-01",
          *     "invoice_date_due": "2024-01-31",
          *     "invoice_status_id": 1
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
@@ -319,7 +319,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_status_id'        => 1,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -360,14 +360,14 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          * {
          *     "invoice_id": 1,
          *     "items": "[{\"item_id\":null,\"item_name\":\"\",\"item_quantity\":5,\"item_price\":100,\"item_discount_amount\":0}]"
-         * }
+         * }.
          */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'items'      => json_encode($items),
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -403,7 +403,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "invoice_id": 1,
          *     "tax_rate_id": 1,
          *     "include_item_tax": 1
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'       => $invoice->invoice_id,
@@ -411,7 +411,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'include_item_tax' => 1,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save_tax_rate'), $payload);
 
@@ -446,11 +446,11 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /**
          * {
          *     "item_id": 1
-         * }
+         * }.
          */
         $payload = ['item_id' => $item->item_id];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('invoices.ajax.delete_item', ['invoiceId' => $invoice->invoice_id]),
@@ -477,15 +477,15 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
     public function it_returns_failure_when_deleting_item_for_non_existent_invoice(): void
     {
         /* Arrange */
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         /**
          * {
          *     "item_id": 99999
-         * }
+         * }.
          */
         $payload = ['item_id' => 99999];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(
             route('invoices.ajax.delete_item', ['invoiceId' => 99999]),
@@ -514,7 +514,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'item_price' => 100.00,
         ]);
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.ajax.get_item', ['item_id' => $item->item_id]));
 
@@ -535,7 +535,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /* Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.ajax.get_item', ['item_id' => 99999]));
 
@@ -574,7 +574,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "user_id": 1,
          *     "invoice_date_created": "2024-01-01",
          *     "invoice_change_client": 0
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'            => $sourceInvoice->invoice_id,
@@ -584,7 +584,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_change_client' => 0,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.copy'), $payload);
 
@@ -621,14 +621,14 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          * {
          *     "invoice_id": 1,
          *     "user_id": 1
-         * }
+         * }.
          */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'user_id'    => $newUser->user_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.change_user'), $payload);
 
@@ -661,14 +661,14 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          * {
          *     "invoice_id": 1,
          *     "user_id": 99999
-         * }
+         * }.
          */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'user_id'    => 99999,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.change_user'), $payload);
 
@@ -701,14 +701,14 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          * {
          *     "invoice_id": 1,
          *     "client_id": 1
-         * }
+         * }.
          */
         $payload = [
             'invoice_id' => $invoice->invoice_id,
             'client_id'  => $newClient->client_id,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.change_client'), $payload);
 
@@ -749,7 +749,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "recur_start_date": "2024-01-01",
          *     "recur_end_date": "2025-01-01",
          *     "recur_frequency": "1M"
-         * }
+         * }.
          */
         $payload = [
             'client_id'        => $client->client_id,
@@ -760,7 +760,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'recur_frequency'  => '1M',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.create_recurring'), $payload);
 
@@ -784,7 +784,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /* Arrange */
         $user = User::factory()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.ajax.recur_start_date', ['recur_frequency' => '1M']));
 
@@ -818,14 +818,14 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          * {
          *     "invoice_id": 1,
          *     "invoice_date_created": "2024-01-01"
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'           => $sourceInvoice->invoice_id,
             'invoice_date_created' => '2024-01-01',
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.create_credit'), $payload);
 
@@ -852,7 +852,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         Client::factory()->count(3)->create();
         User::factory()->count(2)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.modal.copy', ['invoice_id' => $invoice->invoice_id]));
 
@@ -878,7 +878,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         Client::factory()->count(5)->create();
         User::factory()->count(2)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.modal.create'));
 
@@ -903,7 +903,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         User::factory()->count(3)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.modal.change_user', ['invoice_id' => $invoice->invoice_id]));
 
@@ -928,7 +928,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice = Invoice::factory()->draft()->create();
         Client::factory()->count(4)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.modal.change_client', ['invoice_id' => $invoice->invoice_id]));
 
@@ -953,7 +953,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         Client::factory()->count(2)->create();
         User::factory()->count(2)->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.modal.create_recurring'));
 
@@ -975,7 +975,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->paid()->create();
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->get(route('invoices.modal.create_credit', ['invoice_id' => $invoice->invoice_id]));
 
@@ -1030,7 +1030,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_status_id'        => 1,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -1091,7 +1091,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
          *     "invoice_date_created": "2024-01-01",
          *     "invoice_date_due": "2024-01-31",
          *     "invoice_status_id": 1
-         * }
+         * }.
          */
         $payload = [
             'invoice_id'               => $invoice->invoice_id,
@@ -1104,7 +1104,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
             'invoice_status_id'        => 1,
         ];
 
-        /** Act */
+        /* Act */
         $this->actingAs($user);
         $response = $this->post(route('invoices.ajax.save'), $payload);
 
@@ -1114,7 +1114,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $this->assertEquals(1, $data['success']);
         $invoice->refresh();
         $this->assertEquals(30.00, $invoice->invoice_discount_amount);
-        /** Verify items were created */
+        /* Verify items were created */
         $this->assertEquals(2, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
     }
 }

@@ -13,17 +13,9 @@ use Modules\Payments\Models\Payment;
 class PaymentService extends BaseService
 {
     /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return Payment::class;
-    }
-
-    /**
      * Get a payment with its relationships.
      *
-     * @param int $id Payment ID
+     * @param int   $id        Payment ID
      * @param array $relations Relations to eager load (default: invoice, paymentMethod)
      *
      * @return Payment|null
@@ -37,7 +29,7 @@ class PaymentService extends BaseService
      * Get all payments with relationships, ordered by date descending.
      *
      * @param array $relations Relations to eager load (default: invoice, paymentMethod)
-     * @param int $perPage Number of items per page
+     * @param int   $perPage   Number of items per page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -58,5 +50,13 @@ class PaymentService extends BaseService
     public function getByClientId(int $clientId): \Illuminate\Database\Eloquent\Collection
     {
         return Payment::query()->where('client_id', $clientId)->get();
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return Payment::class;
     }
 }

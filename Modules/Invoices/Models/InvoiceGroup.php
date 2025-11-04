@@ -75,5 +75,4 @@ class InvoiceGroup extends BaseModel
     {
         return $this->hasMany('Modules\Invoices\Models\Invoice', 'invoice_group_id', 'invoice_group_id');
     }
-
 }

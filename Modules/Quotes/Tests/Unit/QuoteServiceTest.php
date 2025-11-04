@@ -3,13 +3,10 @@
 namespace Modules\Quotes\Tests\Unit;
 
 use Modules\Quotes\Models\Quote;
-use Modules\Quotes\Models\QuoteAmount;
-use Modules\Quotes\Models\QuoteItem;
-use Modules\Quotes\Models\QuoteTaxRate;
 use Modules\Quotes\Services\QuoteService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\AbstractServiceTestCase;
 
 #[CoversClass(QuoteService::class)]
@@ -75,12 +72,12 @@ class QuoteServiceTest extends AbstractServiceTestCase
     public function it_returns_save_validation_rules_with_quote_id(): void
     {
         $quoteId = 123;
-        $rules = $this->service->getSaveValidationRules($quoteId);
+        $rules   = $this->service->getSaveValidationRules($quoteId);
 
         $this->assertIsArray($rules);
         $this->assertArrayHasKey('quote_number', $rules);
         $this->assertStringContainsString('unique:ip_quotes,quote_number', $rules['quote_number']);
-        $this->assertStringContainsString((string)$quoteId, $rules['quote_number']);
+        $this->assertStringContainsString((string) $quoteId, $rules['quote_number']);
     }
 
     #[Test]
@@ -89,34 +86,34 @@ class QuoteServiceTest extends AbstractServiceTestCase
         $urlKey = $this->service->generateUrlKey();
 
         $this->assertIsString($urlKey);
-        $this->assertEquals(32, strlen($urlKey)); // 16 bytes = 32 hex chars
+        $this->assertEquals(32, mb_strlen($urlKey)); // 16 bytes = 32 hex chars
     }
 
     #[Group('exotic')]
     #[Test]
     public function it_calculates_date_due(): void
     {
-        /** Arrange */
+        /* Arrange */
         // Mock the get_setting function to return a 30-day due period
-        if (!function_exists('get_setting')) {
-            function get_setting($key) {
+        if ( ! function_exists('get_setting')) {
+            function get_setting($key)
+            {
                 if ($key === 'quotes_expire_after') {
                     return 30;
                 }
-                return null;
             }
         }
-        
+
         $createdDate = '2024-01-01';
 
         /** Act */
         // Note: This test assumes QuoteService has a calculateDateDue method
         // If it doesn't exist, we're testing the concept
         // For now, we'll test the date calculation logic
-        $expiresAfter = get_setting('quotes_expire_after');
+        $expiresAfter    = get_setting('quotes_expire_after');
         $expectedDueDate = date('Y-m-d', strtotime($createdDate . ' + ' . $expiresAfter . ' days'));
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals('2024-01-31', $expectedDueDate);
         $this->assertEquals(30, $expiresAfter);
     }
@@ -127,16 +124,16 @@ class QuoteServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = \Modules\Crm\Models\Client::factory()->create();
-        $user = \Modules\Core\Models\User::factory()->create();
-        $quote = Quote::factory()->create([
+        $user   = \Modules\Core\Models\User::factory()->create();
+        $quote  = Quote::factory()->create([
             'client_id' => $client->client_id,
-            'user_id' => $user->user_id,
+            'user_id'   => $user->user_id,
         ]);
 
         /** Act */
         $result = $this->service->findWithRelations($quote->quote_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertNotNull($result);
         $this->assertEquals($quote->quote_id, $result->quote_id);
         $this->assertTrue($result->relationLoaded('client'));
@@ -151,14 +148,14 @@ class QuoteServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = \Modules\Crm\Models\Client::factory()->create();
-        $quote = Quote::factory()->create([
+        $quote  = Quote::factory()->create([
             'client_id' => $client->client_id,
         ]);
 
         /** Act */
         $result = $this->service->findWithRelations($quote->quote_id, ['client']);
 
-        /** Assert */
+        /* Assert */
         $this->assertNotNull($result);
         $this->assertTrue($result->relationLoaded('client'));
         $this->assertFalse($result->relationLoaded('user'));
@@ -171,7 +168,7 @@ class QuoteServiceTest extends AbstractServiceTestCase
         /** Act */
         $result = $this->service->findWithRelations(99999);
 
-        /** Assert */
+        /* Assert */
         $this->assertNull($result);
     }
 
@@ -181,14 +178,14 @@ class QuoteServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = \Modules\Crm\Models\Client::factory()->create();
-        $quote = Quote::factory()->create([
+        $quote  = Quote::factory()->create([
             'client_id' => $client->client_id,
         ]);
 
         /** Act */
         $result = $this->service->findWithRelationsOrFail($quote->quote_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertNotNull($result);
         $this->assertEquals($quote->quote_id, $result->quote_id);
         $this->assertTrue($result->relationLoaded('client'));
@@ -199,10 +196,10 @@ class QuoteServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_throws_exception_when_quote_not_found(): void
     {
-        /** Assert */
+        /* Assert */
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
-        /** Act */
+        /* Act */
         $this->service->findWithRelationsOrFail(99999);
     }
 
@@ -212,17 +209,17 @@ class QuoteServiceTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = \Modules\Crm\Models\Client::factory()->create();
-        $user = \Modules\Core\Models\User::factory()->create();
-        
+        $user   = \Modules\Core\Models\User::factory()->create();
+
         Quote::factory()->count(3)->create([
             'client_id' => $client->client_id,
-            'user_id' => $user->user_id,
+            'user_id'   => $user->user_id,
         ]);
 
         /** Act */
         $result = $this->service->getAllWithRelations();
 
-        /** Assert */
+        /* Assert */
         $this->assertGreaterThanOrEqual(3, $result->total());
         $this->assertTrue($result->first()->relationLoaded('client'));
         $this->assertTrue($result->first()->relationLoaded('user'));
@@ -233,28 +230,28 @@ class QuoteServiceTest extends AbstractServiceTestCase
     public function it_filters_quotes_by_status(): void
     {
         /** Arrange */
-        $client = \Modules\Crm\Models\Client::factory()->create();
+        $client     = \Modules\Crm\Models\Client::factory()->create();
         $draftQuote = Quote::factory()->create([
-            'client_id' => $client->client_id,
+            'client_id'       => $client->client_id,
             'quote_status_id' => 1, // Draft
         ]);
         $sentQuote = Quote::factory()->create([
-            'client_id' => $client->client_id,
+            'client_id'       => $client->client_id,
             'quote_status_id' => 2, // Sent
         ]);
 
         /** Act */
         $draftResult = $this->service->getAllWithRelations(['client'], 'draft');
-        $sentResult = $this->service->getAllWithRelations(['client'], 'sent');
+        $sentResult  = $this->service->getAllWithRelations(['client'], 'sent');
 
-        /** Assert */
+        /* Assert */
         $this->assertGreaterThanOrEqual(1, $draftResult->total());
         $this->assertGreaterThanOrEqual(1, $sentResult->total());
-        
+
         // Verify all drafts have status_id = 1
         $draftStatuses = $draftResult->pluck('quote_status_id')->unique()->all();
         $this->assertEquals([1], $draftStatuses);
-        
+
         // Verify all sent have status_id = 2
         $sentStatuses = $sentResult->pluck('quote_status_id')->unique()->all();
         $this->assertEquals([2], $sentStatuses);
@@ -273,7 +270,7 @@ class QuoteServiceTest extends AbstractServiceTestCase
         /** Act */
         $result = $this->service->getAllWithRelations(['client'], null, 5);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(5, $result->perPage());
     }
 
@@ -284,18 +281,17 @@ class QuoteServiceTest extends AbstractServiceTestCase
         /** Arrange */
         $client1 = \Modules\Crm\Models\Client::factory()->create();
         $client2 = \Modules\Crm\Models\Client::factory()->create();
-        $quote1 = Quote::factory()->create(['client_id' => $client1->client_id]);
-        $quote2 = Quote::factory()->create(['client_id' => $client1->client_id]);
-        $quote3 = Quote::factory()->create(['client_id' => $client2->client_id]);
+        $quote1  = Quote::factory()->create(['client_id' => $client1->client_id]);
+        $quote2  = Quote::factory()->create(['client_id' => $client1->client_id]);
+        $quote3  = Quote::factory()->create(['client_id' => $client2->client_id]);
 
         /** Act */
         $result = $this->service->getByClientId($client1->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertCount(2, $result);
         $this->assertTrue($result->contains('quote_id', $quote1->quote_id));
         $this->assertTrue($result->contains('quote_id', $quote2->quote_id));
         $this->assertFalse($result->contains('quote_id', $quote3->quote_id));
     }
 }
-

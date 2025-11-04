@@ -4,8 +4,8 @@ namespace Modules\Quotes\Tests\Unit;
 
 use Modules\Quotes\Services\QuoteItemAmountService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\AbstractServiceTestCase;
 
 #[CoversClass(QuoteItemAmountService::class)]
@@ -23,30 +23,30 @@ class QuoteItemAmountServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_calculates_item_amounts_in_legacy_mode(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->cleanupQuoteTables();
         $this->createClientFixture(['client_id' => 1]);
         $quote = $this->createQuoteFixture(['quote_id' => 100, 'client_id' => 1]);
-        
+
         // Mock config_item to return legacy mode
-        if (!function_exists('config_item')) {
-            function config_item($key) {
+        if ( ! function_exists('config_item')) {
+            function config_item($key)
+            {
                 if ($key === 'legacy_calculation') {
                     return true;
                 }
-                return null;
             }
         }
-        
+
         $item = \Modules\Quotes\Models\QuoteItem::create([
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Test Item',
-            'item_quantity' => 2,
-            'item_price' => 100.00,
+            'quote_id'             => $quote->quote_id,
+            'item_name'            => 'Test Item',
+            'item_quantity'        => 2,
+            'item_price'           => 100.00,
             'item_discount_amount' => 5.00,
         ]);
 
-        /** Act */
+        /* Act */
         $this->service->calculate($item->item_id);
 
         /** Assert */
@@ -60,35 +60,35 @@ class QuoteItemAmountServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_calculates_item_amounts_in_new_mode(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->cleanupQuoteTables();
         $this->createClientFixture(['client_id' => 1]);
         $quote = $this->createQuoteFixture(['quote_id' => 100, 'client_id' => 1]);
-        
+
         // Mock config_item to return new mode (false for legacy)
-        if (!function_exists('config_item')) {
-            function config_item($key) {
+        if ( ! function_exists('config_item')) {
+            function config_item($key)
+            {
                 if ($key === 'legacy_calculation') {
                     return false;
                 }
-                return null;
             }
         }
-        
+
         $item = \Modules\Quotes\Models\QuoteItem::create([
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Test Item',
-            'item_quantity' => 2,
-            'item_price' => 100.00,
+            'quote_id'             => $quote->quote_id,
+            'item_name'            => 'Test Item',
+            'item_quantity'        => 2,
+            'item_price'           => 100.00,
             'item_discount_amount' => 5.00,
         ]);
-        
+
         $globalDiscount = [
-            'amount' => 20.00,
+            'amount'         => 20.00,
             'items_subtotal' => 200.00,
         ];
 
-        /** Act */
+        /* Act */
         $this->service->calculate($item->item_id, $globalDiscount);
 
         /** Assert */
@@ -102,26 +102,26 @@ class QuoteItemAmountServiceTest extends AbstractServiceTestCase
     #[Test]
     public function it_applies_global_discount_proportionally(): void
     {
-        /** Arrange */
+        /* Arrange */
         $this->cleanupQuoteTables();
         $this->createClientFixture(['client_id' => 1]);
         $quote = $this->createQuoteFixture(['quote_id' => 100, 'client_id' => 1]);
-        
+
         $item = \Modules\Quotes\Models\QuoteItem::create([
-            'quote_id' => $quote->quote_id,
-            'item_name' => 'Test Item',
-            'item_quantity' => 1,
-            'item_price' => 100.00,
+            'quote_id'             => $quote->quote_id,
+            'item_name'            => 'Test Item',
+            'item_quantity'        => 1,
+            'item_price'           => 100.00,
             'item_discount_amount' => 0.00,
         ]);
-        
+
         // Set up global discount scenario
         $globalDiscount = [
-            'amount' => 50.00, // $50 discount
+            'amount'         => 50.00, // $50 discount
             'items_subtotal' => 200.00, // Total items worth $200
         ];
 
-        /** Act */
+        /* Act */
         $this->service->calculate($item->item_id, $globalDiscount);
 
         /** Assert */

@@ -52,7 +52,7 @@ class ClientNote extends BaseModel
         // TODO: Add more casts as needed
     ];
 
-    /**
+    /*
      * Get validation rules for client notes.
      *
      * @return array

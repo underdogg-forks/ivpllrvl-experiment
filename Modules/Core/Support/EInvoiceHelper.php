@@ -11,17 +11,18 @@ class EInvoiceHelper
      *
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
-     * @param mixed $invoice Invoice data
-     * @param mixed $items Invoice items
-     * @param string $xml_lib XML library/template to use
+     * @param mixed  $invoice  Invoice data
+     * @param mixed  $items    Invoice items
+     * @param string $xml_lib  XML library/template to use
      * @param string $filename Output filename
-     * @param mixed $options Additional options
+     * @param mixed  $options  Additional options
+     *
      * @return string Path to generated XML file
      */
     public static function generate_xml_invoice_file($invoice, $items, string $xml_lib, string $filename, $options): string
     {
         $className = '\\Modules\\Core\\Libraries\\XMLtemplates\\' . $xml_lib . 'Xml';
-        
+
         $xmlGenerator = new $className([
             'invoice'  => $invoice,
             'items'    => $items,
@@ -40,7 +41,8 @@ class EInvoiceHelper
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
      * @param string $embedXml XML filename to embed
-     * @param string $urn URN for the document type
+     * @param string $urn      URN for the document type
+     *
      * @return string RDF metadata XML
      */
     public static function include_rdf(string $embedXml, string $urn = 'factur-x'): string
@@ -97,6 +99,7 @@ class EInvoiceHelper
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
      * @param string $xml_id XML template ID
+     *
      * @return string|null Full template name with country
      */
     public static function get_xml_full_name(string $xml_id)
@@ -123,11 +126,13 @@ class EInvoiceHelper
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
      * @param string|int $user_id Optional user ID to filter
+     *
      * @return array Array of active admin users
      */
     public static function get_admin_active_users($user_id = ''): array
     {
         $userService = app(\Modules\Core\Services\UserService::class);
+
         return $userService->getActiveAdminUsers($user_id);
     }
 
@@ -148,8 +153,9 @@ class EInvoiceHelper
      *
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
-     * @param object|null $client Client object
-     * @param string|int $user_id User ID
+     * @param object|null $client  Client object
+     * @param string|int  $user_id User ID
+     *
      * @return object Object containing required field flags
      */
     public static function get_req_fields_einvoice($client = null, $user_id = ''): object
@@ -242,8 +248,9 @@ class EInvoiceHelper
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
      * @param object $invoice Invoice object
-     * @param array $items Invoice items
-     * @param bool $full Whether to return full data
+     * @param array  $items   Invoice items
+     * @param bool   $full    Whether to return full data
+     *
      * @return object E-invoice usage data
      */
     public static function get_einvoice_usage($invoice, array $items, $full = true): object
@@ -283,6 +290,7 @@ class EInvoiceHelper
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
      * @param array $items Invoice items
+     *
      * @return array Tax usage data
      */
     public static function get_items_tax_usages($items): array
@@ -306,6 +314,7 @@ class EInvoiceHelper
      * @origin Modules/Core/Helpers/e-invoice_helper.php
      *
      * @param array $items Invoice items
+     *
      * @return mixed False if valid, error data if invalid
      */
     public static function items_tax_usages_bad($items): mixed

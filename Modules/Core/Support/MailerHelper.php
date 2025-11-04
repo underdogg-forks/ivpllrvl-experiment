@@ -31,6 +31,7 @@ class MailerHelper
      *
      *
      * @origin Modules/Core/Helpers/mailer_helper.php
+     *
      * @param        $quote_id
      * @param string $status   string "accepted" or "rejected"
      *
@@ -51,6 +52,7 @@ class MailerHelper
      *
      *
      * @origin Modules/Core/Helpers/mailer_helper.php
+     *
      * @param string $email
      *
      * @return bool returns true if all emails are valid otherwise false
@@ -72,8 +74,8 @@ class MailerHelper
     }
 
     /**
-     *
      * @origin Modules/Core/Helpers/mailer_helper.php
+     *
      * @param []  $errors
      * @param string $redirect
      *
@@ -98,15 +100,16 @@ class MailerHelper
      * Send an invoice via email.
      *
      * @origin Modules/Core/Helpers/mailer_helper.php
+     *
      * @param string $invoice_id
-     * @param mixed $invoice_template
-     * @param array $from
-     * @param mixed $to
-     * @param mixed $subject
+     * @param mixed  $invoice_template
+     * @param array  $from
+     * @param mixed  $to
+     * @param mixed  $subject
      * @param string $body
-     * @param mixed $cc
-     * @param mixed $bcc
-     * @param mixed $attachments
+     * @param mixed  $cc
+     * @param mixed  $bcc
+     * @param mixed  $attachments
      *
      * @return bool
      */
@@ -124,7 +127,7 @@ class MailerHelper
         $db_invoice = \Modules\Invoices\Models\Invoice::query()->where('invoice_id', $invoice_id)->first();
 
         if ($db_invoice === null) {
-            throw new \RuntimeException("Invoice with ID {$invoice_id} not found");
+            throw new RuntimeException("Invoice with ID {$invoice_id} not found");
         }
 
         if ($db_invoice->sumex_id == null) {
@@ -134,7 +137,7 @@ class MailerHelper
         }
 
         // Need Specific eInvoice filename?
-        if (! empty($_SERVER['CIIname'])) {
+        if ( ! empty($_SERVER['CIIname'])) {
             // Use $options['CIIname' => '{{{tags}}}'] in your config (helpers/XMLconfigs)
             // Or set $_SERVER['CIIname'] in your generator (libraries/XMLtemplates)
             $_SERVER['CIIname'] = parse_template($db_invoice, $_SERVER['CIIname']);
@@ -142,16 +145,16 @@ class MailerHelper
 
         $message = parse_template($db_invoice, $body);
         $subject = parse_template($db_invoice, $subject);
-        $cc = parse_template($db_invoice, $cc);
-        $bcc = parse_template($db_invoice, $bcc);
-        $from = [parse_template($db_invoice, $from[0]), parse_template($db_invoice, $from[1])];
+        $cc      = parse_template($db_invoice, $cc);
+        $bcc     = parse_template($db_invoice, $bcc);
+        $from    = [parse_template($db_invoice, $from[0]), parse_template($db_invoice, $from[1])];
 
         $errors = [];
-        if (! self::validate_email_address($to)) {
+        if ( ! self::validate_email_address($to)) {
             $errors[] = 'to_email';
         }
 
-        if (! self::validate_email_address($from[0])) {
+        if ( ! self::validate_email_address($from[0])) {
             $errors[] = 'from_email';
         }
 
@@ -175,15 +178,16 @@ class MailerHelper
      * Send a quote via email.
      *
      * @origin Modules/Core/Helpers/mailer_helper.php
+     *
      * @param string $quote_id
-     * @param mixed $quote_template
-     * @param array $from
-     * @param mixed $to
-     * @param mixed $subject
+     * @param mixed  $quote_template
+     * @param array  $from
+     * @param mixed  $to
+     * @param mixed  $subject
      * @param string $body
-     * @param mixed $cc
-     * @param mixed $bcc
-     * @param mixed $attachments
+     * @param mixed  $cc
+     * @param mixed  $bcc
+     * @param mixed  $attachments
      *
      * @return bool
      */
@@ -203,21 +207,21 @@ class MailerHelper
         $db_quote = \Modules\Quotes\Models\Quote::query()->where('quote_id', $quote_id)->first();
 
         if ($db_quote === null) {
-            throw new \RuntimeException("Quote with ID {$quote_id} not found");
+            throw new RuntimeException("Quote with ID {$quote_id} not found");
         }
 
         $message = parse_template($db_quote, $body);
         $subject = parse_template($db_quote, $subject);
-        $cc = parse_template($db_quote, $cc);
-        $bcc = parse_template($db_quote, $bcc);
-        $from = [parse_template($db_quote, $from[0]), parse_template($db_quote, $from[1])];
+        $cc      = parse_template($db_quote, $cc);
+        $bcc     = parse_template($db_quote, $bcc);
+        $from    = [parse_template($db_quote, $from[0]), parse_template($db_quote, $from[1])];
 
         $errors = [];
-        if (! self::validate_email_address($to)) {
+        if ( ! self::validate_email_address($to)) {
             $errors[] = 'to_email';
         }
 
-        if (! self::validate_email_address($from[0])) {
+        if ( ! self::validate_email_address($from[0])) {
             $errors[] = 'from_email';
         }
 
