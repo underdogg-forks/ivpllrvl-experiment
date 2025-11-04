@@ -196,9 +196,9 @@ class TaskServiceTest extends TestCase
     public function it_orders_tasks_by_name(): void
     {
         /** Arrange */
-        $task1 = Task::factory()->create(['task_name' => 'Zebra Task']);
-        $task2 = Task::factory()->create(['task_name' => 'Alpha Task']);
-        $task3 = Task::factory()->create(['task_name' => 'Beta Task']);
+        Task::factory()->create(['task_name' => 'Zebra Task']);
+        Task::factory()->create(['task_name' => 'Alpha Task']);
+        Task::factory()->create(['task_name' => 'Beta Task']);
 
         /** Act */
         $result = $this->service->getAllWithRelations();
