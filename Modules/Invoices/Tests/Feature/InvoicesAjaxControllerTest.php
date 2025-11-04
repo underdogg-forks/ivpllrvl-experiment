@@ -140,7 +140,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        $this->assertEquals(2, Item::where('invoice_id', $invoice->invoice_id)->count());
+        $this->assertEquals(2, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
         
         // Verify invoice data was saved
         $invoice->refresh();
@@ -419,7 +419,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        $savedTax = InvoiceTaxRate::where('invoice_id', $invoice->invoice_id)
+        $savedTax = InvoiceTaxRate::query()->where('invoice_id', $invoice->invoice_id)
             ->where('tax_rate_id', $taxRate->tax_rate_id)
             ->first();
         $this->assertNotNull($savedTax);
@@ -596,7 +596,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $newInvoice = Invoice::find($data['invoice_id']);
         $this->assertNotNull($newInvoice);
         $this->assertEquals($client->client_id, $newInvoice->client_id);
-        $this->assertEquals(3, Item::where('invoice_id', $newInvoice->invoice_id)->count());
+        $this->assertEquals(3, Item::query()->where('invoice_id', $newInvoice->invoice_id)->count());
     }
 
     /**
@@ -1038,7 +1038,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        $savedItem = Item::where('invoice_id', $invoice->invoice_id)->first();
+        $savedItem = Item::query()->where('invoice_id', $invoice->invoice_id)->first();
         $this->assertEquals('Consulting Services', $savedItem->item_name);
         $this->assertEquals('Full project consultation', $savedItem->item_description);
         $this->assertEquals(10, $savedItem->item_quantity);
@@ -1115,6 +1115,6 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice->refresh();
         $this->assertEquals(30.00, $invoice->invoice_discount_amount);
         /** Verify items were created */
-        $this->assertEquals(2, Item::where('invoice_id', $invoice->invoice_id)->count());
+        $this->assertEquals(2, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
     }
 }

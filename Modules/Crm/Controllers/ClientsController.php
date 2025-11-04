@@ -130,7 +130,7 @@ class ClientsController
 
         // Set validation rule based on is_update
         if ($request->input('is_update') == 0 && $request->input('client_name') != '') {
-            $check = Client::where('client_name', $request->input('client_name'))
+            $check = Client::query()->where('client_name', $request->input('client_name'))
                 ->where('client_surname', $request->input('client_surname'))
                 ->first();
 
@@ -260,9 +260,9 @@ class ClientsController
         $client_notes = $this->clientNoteService->getByClientId($client_id);
         
         // For invoices, quotes, payments - use Eloquent directly until service methods are added
-        $invoices = Invoice::where('client_id', $client_id)->get();
-        $quotes = Quote::where('client_id', $client_id)->get();
-        $payments = Payment::where('client_id', $client_id)->get();
+        $invoices = Invoice::query()->where('client_id', $client_id)->get();
+        $quotes = Quote::query()->where('client_id', $client_id)->get();
+        $payments = Payment::query()->where('client_id', $client_id)->get();
         
         // Get custom fields
         $custom_fields = $this->customFieldService->byTable('ip_client_custom')->get();

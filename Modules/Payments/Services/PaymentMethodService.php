@@ -27,7 +27,7 @@ class PaymentMethodService extends BaseService
      */
     public function getAllPaginated(int $perPage = 15, int $page = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return PaymentMethod::orderBy('payment_method_name')
+        return PaymentMethod::query()->orderBy('payment_method_name')
             ->paginate($perPage, ['*'], 'page', $page);
     }
 
@@ -38,6 +38,6 @@ class PaymentMethodService extends BaseService
      */
     public function getAllOrdered()
     {
-        return PaymentMethod::orderBy('payment_method_name')->get();
+        return PaymentMethod::query()->orderBy('payment_method_name')->get();
     }
 }

@@ -117,16 +117,16 @@ class InvoiceService
         $invoice = Invoice::findOrFail($invoiceId);
         $deleted = $invoice->delete();
 
-        InvoiceAmount::where('invoice_id', $invoiceId)->delete();
-        Item::where('invoice_id', $invoiceId)->delete();
-        InvoiceTaxRate::where('invoice_id', $invoiceId)->delete();
+        InvoiceAmount::query()->where('invoice_id', $invoiceId)->delete();
+        Item::query()->where('invoice_id', $invoiceId)->delete();
+        InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->delete();
 
         return $deleted;
     }
 
     public function markViewed(int $invoiceId): bool
     {
-        $invoice = Invoice::select('invoice_status_id')
+        $invoice = Invoice::query()->select('invoice_status_id')
             ->where('invoice_id', $invoiceId)
             ->first();
 
@@ -140,7 +140,7 @@ class InvoiceService
 
     public function markSent(int $invoiceId): bool
     {
-        $invoice = Invoice::select('invoice_status_id')
+        $invoice = Invoice::query()->select('invoice_status_id')
             ->where('invoice_id', $invoiceId)
             ->first();
 

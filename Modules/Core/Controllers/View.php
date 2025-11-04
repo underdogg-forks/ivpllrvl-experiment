@@ -309,7 +309,7 @@ class View
      */
     private function getAttachments(string $url_key): array
     {
-        $results = Upload::select('file_name_new', 'file_name_original')
+        $results = Upload::query()->select('file_name_new', 'file_name_original')
             ->where('url_key', $url_key)
             ->get();
         $names   = [];

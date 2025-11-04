@@ -38,7 +38,7 @@ class PaymentsController
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $payments = Payment::with(['invoice', 'paymentMethod'])
+        $payments = Payment::query()->with(['invoice', 'paymentMethod'])
             ->orderBy('payment_date', 'desc')
             ->paginate(15, ['*'], 'page', $page);
 
@@ -103,7 +103,7 @@ class PaymentsController
 
         // Load payment for editing
         if ($id) {
-            $payment = Payment::with(['invoice', 'paymentMethod'])->find($id);
+            $payment = Payment::query()->with(['invoice', 'paymentMethod'])->find($id);
             if ( ! $payment) {
                 abort(404);
             }
@@ -146,7 +146,7 @@ class PaymentsController
      */
     public function onlineLogs(int $page = 0): \Illuminate\View\View
     {
-        $paymentLogs = PaymentLog::with('invoice')
+        $paymentLogs = PaymentLog::query()->with('invoice')
             ->orderBy('payment_log_date', 'desc')
             ->paginate(15, ['*'], 'page', $page);
 

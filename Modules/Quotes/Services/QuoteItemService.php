@@ -88,7 +88,7 @@ class QuoteItemService
         $item->delete();
 
         // Delete the item amounts
-        QuoteItemAmount::where('item_id', $itemId)->delete();
+        QuoteItemAmount::query()->where('item_id', $itemId)->delete();
 
         // Recalculate quote amounts with global discount
         $globalDiscount = [
@@ -109,11 +109,11 @@ class QuoteItemService
     public function getItemsSubtotal(int $quoteId): float
     {
         // Get all item IDs for this quote
-        $itemIds = QuoteItem::where('quote_id', $quoteId)
+        $itemIds = QuoteItem::query()->where('quote_id', $quoteId)
             ->pluck('item_id');
 
         // Sum the subtotals from quote_item_amounts
-        $result = QuoteItemAmount::whereIn('item_id', $itemIds)
+        $result = QuoteItemAmount::query()->whereIn('item_id', $itemIds)
             ->sum('item_subtotal');
 
         return (float) ($result ?? 0.0);

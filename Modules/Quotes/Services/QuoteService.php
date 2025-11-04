@@ -142,10 +142,10 @@ class QuoteService
      */
     public function copyQuote(int $sourceId, int $targetId): void
     {
-        $sourceQuote = Quote::with(['items', 'taxRates'])->findOrFail($sourceId);
+        $sourceQuote = Quote::query()->with(['items', 'taxRates'])->findOrFail($sourceId);
 
         // Calculate global discount
-        $itemsSubtotal  = QuoteItem::where('quote_id', $sourceId)->sum('item_subtotal');
+        $itemsSubtotal  = QuoteItem::query()->where('quote_id', $sourceId)->sum('item_subtotal');
         $globalDiscount = [
             'amount'         => $sourceQuote->quote_discount_amount,
             'percent'        => $sourceQuote->quote_discount_percent,
@@ -187,7 +187,7 @@ class QuoteService
         }
 
         // Copy custom fields
-        $sourceCustom = QuoteCustom::where('quote_id', $sourceId)->first();
+        $sourceCustom = QuoteCustom::query()->where('quote_id', $sourceId)->first();
         if ($sourceCustom) {
             $customData = $sourceCustom->toArray();
             unset($customData['quote_custom_id']);
@@ -263,10 +263,10 @@ class QuoteService
         $deleted = $quote->delete();
 
         // Cleanup orphaned records
-        QuoteAmount::where('quote_id', $quoteId)->delete();
-        QuoteItem::where('quote_id', $quoteId)->delete();
-        QuoteTaxRate::where('quote_id', $quoteId)->delete();
-        QuoteCustom::where('quote_id', $quoteId)->delete();
+        QuoteAmount::query()->where('quote_id', $quoteId)->delete();
+        QuoteItem::query()->where('quote_id', $quoteId)->delete();
+        QuoteTaxRate::query()->where('quote_id', $quoteId)->delete();
+        QuoteCustom::query()->where('quote_id', $quoteId)->delete();
 
         return $deleted;
     }
@@ -361,7 +361,7 @@ class QuoteService
      */
     public function markViewed(int $quoteId): bool
     {
-        $quote = Quote::select('quote_status_id')
+        $quote = Quote::query()->select('quote_status_id')
             ->where('quote_id', $quoteId)
             ->first();
 
@@ -382,7 +382,7 @@ class QuoteService
      */
     public function markSent(int $quoteId): bool
     {
-        $quote = Quote::select('quote_status_id')
+        $quote = Quote::query()->select('quote_status_id')
             ->where('quote_id', $quoteId)
             ->first();
 

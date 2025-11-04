@@ -216,7 +216,7 @@ class InvoicesAjaxController
     public function modalCopyInvoice()
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice   = Invoice::with(['client', 'user'])->findOrFail($invoiceId);
+        $invoice   = Invoice::query()->with(['client', 'user'])->findOrFail($invoiceId);
 
         $clients = $this->clientService->getAllOrderedByName();
         $users   = $this->userService->getAll();
@@ -320,7 +320,7 @@ class InvoicesAjaxController
     public function modalChangeClient()
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice   = Invoice::with('client')->findOrFail($invoiceId);
+        $invoice   = Invoice::query()->with('client')->findOrFail($invoiceId);
         $clients   = $this->clientService->getAllOrderedByName();
 
         return view('invoices::modal_change_client', compact('invoice', 'clients'));
@@ -493,7 +493,7 @@ class InvoicesAjaxController
     public function modalCreateCredit()
     {
         $invoiceId = request()->input('invoice_id');
-        $invoice   = Invoice::with(['client', 'user'])->findOrFail($invoiceId);
+        $invoice   = Invoice::query()->with(['client', 'user'])->findOrFail($invoiceId);
 
         return view('invoices::modal_create_credit', compact('invoice'));
     }

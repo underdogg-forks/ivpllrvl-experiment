@@ -16,7 +16,7 @@ class TasksController
 
     public function index(int $page = 0): \Illuminate\View\View
     {
-        $tasks = Task::with(['project', 'taxRate'])->orderBy('task_name')->paginate(15, ['*'], 'page', $page);
+        $tasks = Task::query()->with(['project', 'taxRate'])->orderBy('task_name')->paginate(15, ['*'], 'page', $page);
 
         return view('projects::tasks_index', [
             'filter_display'     => true,
@@ -30,8 +30,8 @@ class TasksController
     public function create(): \Illuminate\View\View
     {
         $task     = new Task();
-        $projects = Project::orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
+        $projects = Project::query()->orderBy('project_name')->get();
+        $taxRates = \Modules\Products\Models\TaxRate::query()->orderBy('tax_rate_name')->get();
 
         return view('projects::tasks_form', [
             'task'          => $task,
@@ -49,8 +49,8 @@ class TasksController
 
     public function edit(Task $task): \Illuminate\View\View
     {
-        $projects = Project::orderBy('project_name')->get();
-        $taxRates = \Modules\Products\Models\TaxRate::orderBy('tax_rate_name')->get();
+        $projects = Project::query()->orderBy('project_name')->get();
+        $taxRates = \Modules\Products\Models\TaxRate::query()->orderBy('tax_rate_name')->get();
 
         return view('projects::tasks_form', [
             'task'          => $task,

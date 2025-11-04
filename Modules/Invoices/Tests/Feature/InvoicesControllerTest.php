@@ -421,7 +421,7 @@ class InvoicesControllerTest extends FeatureTestCase
         /* Arrange */
         $user = User::factory()->create();
         Invoice::factory()->count(5)->create();
-        $initialCount = Invoice::count();
+        $initialCount = Invoice::query()->count();
 
         /** Act */
         /**
@@ -434,7 +434,7 @@ class InvoicesControllerTest extends FeatureTestCase
 
         /* Assert */
         $response->assertRedirect();
-        $this->assertEquals($initialCount, Invoice::count()); // All still exist
+        $this->assertEquals($initialCount, Invoice::query()->count()); // All still exist
         $response->assertSessionHas('alert_success');
     }
 

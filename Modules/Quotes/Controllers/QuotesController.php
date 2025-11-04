@@ -65,7 +65,7 @@ class QuotesController
      */
     public function status(string $status = 'all', int $page = 0)
     {
-        $query = Quote::with(['client', 'user']);
+        $query = Quote::query()->with(['client', 'user']);
 
         // Apply status filter
         switch ($status) {
@@ -123,7 +123,7 @@ class QuotesController
      */
     public function view(int $quote_id)
     {
-        $quote = Quote::with([
+        $quote = Quote::query()->with([
             'client',
             'user',
             'invoiceGroup',
@@ -138,7 +138,7 @@ class QuotesController
         }
 
         // Get custom fields for quotes
-        $customFields = CustomField::where('custom_field_table', 'ip_quote_custom')
+        $customFields = CustomField::query()->where('custom_field_table', 'ip_quote_custom')
             ->orderBy('custom_field_order')
             ->get();
 
@@ -146,24 +146,24 @@ class QuotesController
         $customValues = [];
         foreach ($customFields as $field) {
             if (in_array($field->custom_field_type, ['select', 'dropdown'])) {
-                $customValues[$field->custom_field_id] = CustomValue::where('custom_field_id', $field->custom_field_id)->get();
+                $customValues[$field->custom_field_id] = CustomValue::query()->where('custom_field_id', $field->custom_field_id)->get();
             }
         }
 
         // Get all items for this quote
-        $items = QuoteItem::where('quote_id', $quote_id)
+        $items = QuoteItem::query()->where('quote_id', $quote_id)
             ->with(['product', 'unit'])
             ->orderBy('item_order')
             ->get();
 
         // Get tax rates
-        $taxRates      = TaxRate::all();
-        $quoteTaxRates = QuoteTaxRate::where('quote_id', $quote_id)
+        $taxRates      = TaxRate::query()->all();
+        $quoteTaxRates = QuoteTaxRate::query()->where('quote_id', $quote_id)
             ->with('taxRate')
             ->get();
 
         // Get units
-        $units = Unit::all();
+        $units = Unit::query()->all();
 
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = $this->userService->hasMultipleActiveAdmins();
@@ -253,7 +253,7 @@ class QuotesController
     public function deleteQuoteTax(int $quote_id, int $quote_tax_rate_id)
     {
         // Delete the tax rate
-        QuoteTaxRate::where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
+        QuoteTaxRate::query()->where('quote_tax_rate_id', $quote_tax_rate_id)->delete();
 
         // Get global discount for recalculation
         $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quote_id)];
@@ -280,7 +280,7 @@ class QuotesController
      */
     public function recalculateAllQuotes()
     {
-        $quoteIds = Quote::pluck('quote_id');
+        $quoteIds = Quote::query()->pluck('quote_id');
 
         foreach ($quoteIds as $quoteId) {
             $globalDiscount = ['item' => $this->quoteAmountService->getGlobalDiscount($quoteId)];

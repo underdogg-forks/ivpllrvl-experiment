@@ -103,7 +103,7 @@ class TemplateHelper
                                 if ($modelClass) {
                                     // Get the ID field name from the table
                                     $idField = str_replace('_custom', '_id', str_replace('ip_', '', $cf_table));
-                                    $record = $modelClass::where($idField, $object->{$idField})->first();
+                                    $record = $modelClass::query()->where($idField, $object->{$idField})->first();
                                     $replace = $record ? $record->{$cf_column} : '';
                                     
                                     if ($cf->custom_field_type == 'SINGLE-CHOICE' && $replace) {

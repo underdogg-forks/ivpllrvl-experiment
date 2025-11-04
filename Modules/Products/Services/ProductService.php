@@ -31,6 +31,6 @@ class ProductService extends BaseService
      */
     public function getByIds(array $productIds)
     {
-        return Product::whereIn('product_id', $productIds)->get();
+        return Product::query()->whereIn('product_id', $productIds)->get();
     }
 }

@@ -256,7 +256,7 @@ class Sumex
 
         $payment_method = false;
         if ($this->invoice->payment_method != 0) {
-            $payment_method = \Modules\Payments\Models\PaymentMethod::where('payment_method_id', $this->invoice->payment_method)->first();
+            $payment_method = \Modules\Payments\Models\PaymentMethod::query()->where('payment_method_id', $this->invoice->payment_method)->first();
         }
 
         // Determine if discounts should be displayed
@@ -293,7 +293,7 @@ class Sumex
 
         $data = [
             'invoice'             => $this->invoice,
-            'invoice_tax_rates'   => \Modules\Invoices\Models\InvoiceTaxRate::where('invoice_id', $this->invoice->invoice_id)->get(),
+            'invoice_tax_rates'   => \Modules\Invoices\Models\InvoiceTaxRate::query()->where('invoice_id', $this->invoice->invoice_id)->get(),
             'items'               => $this->items,
             'payment_method'      => $payment_method,
             'output_type'         => 'pdf',
@@ -346,7 +346,7 @@ class Sumex
         $idField = str_replace('_custom', '_id', str_replace('ip_', '', $table));
         
         // Get all custom field records for this ID
-        $records = $modelClass::where($idField, $id)->get();
+        $records = $modelClass::query()->where($idField, $id)->get();
         
         // Convert to array format
         $values = [];

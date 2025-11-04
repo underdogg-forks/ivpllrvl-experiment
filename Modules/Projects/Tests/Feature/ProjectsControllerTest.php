@@ -326,7 +326,7 @@ class ProjectsControllerTest extends FeatureTestCase
         $response->assertRedirect(route('projects.index'));
         
         /** Verify XSS is prevented/escaped */
-        $project = Project::where('client_id', $client->client_id)->first();
+        $project = Project::query()->where('client_id', $client->client_id)->first();
         $this->assertNotNull($project);
         // Name should be stored but will be escaped on output
         $this->assertStringContainsString('Project', $project->project_name);

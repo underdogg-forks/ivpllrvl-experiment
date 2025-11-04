@@ -29,7 +29,7 @@ class UserClientService extends BaseService
      */
     public function getAllPaginated(int $page = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return UserClient::with(['user', 'client'])->paginate(15, ['*'], 'page', $page);
+        return UserClient::query()->with(['user', 'client'])->paginate(15, ['*'], 'page', $page);
     }
 
     /**

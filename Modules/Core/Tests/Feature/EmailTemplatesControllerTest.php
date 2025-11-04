@@ -437,7 +437,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
         
-        $template = EmailTemplate::where('email_template_title', 'HTML Template')->first();
+        $template = EmailTemplate::query()->where('email_template_title', 'HTML Template')->first();
         $this->assertNotNull($template);
         $this->assertStringContainsString('<p>', $template->email_template_body);
     }
@@ -474,7 +474,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /** Assert */
         $response->assertRedirect(route('email_templates.index'));
         
-        $template = EmailTemplate::where('email_template_title', 'Variable Template')->first();
+        $template = EmailTemplate::query()->where('email_template_title', 'Variable Template')->first();
         $this->assertStringContainsString('{client_name}', $template->email_template_body);
         $this->assertStringContainsString('{invoice_number}', $template->email_template_subject);
     }

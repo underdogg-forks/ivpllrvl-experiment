@@ -85,7 +85,7 @@ class InvoicesController
     public function status(string $status = 'all', int $page = 0): View
     {
         // Build query based on status
-        $query = Invoice::with(['client', 'user']);
+        $query = Invoice::query()->with(['client', 'user']);
 
         match ($status) {
             'draft'   => $query->draft(),
@@ -185,11 +185,11 @@ class InvoicesController
      */
     public function view(int $invoiceId): View
     {
-        $invoice = Invoice::with(['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments'])
+        $invoice = Invoice::query()->with(['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments'])
             ->findOrFail($invoiceId);
 
         // Get custom fields and values
-        $fields       = InvoiceCustom::where('invoice_id', $invoiceId)->get();
+        $fields       = InvoiceCustom::query()->where('invoice_id', $invoiceId)->get();
         $customFields = $this->customFieldService->getByTable('ip_invoice_custom');
         $customValues = [];
 
@@ -440,7 +440,7 @@ class InvoicesController
      */
     public function recalculateAllInvoices(): RedirectResponse
     {
-        $invoiceIds = Invoice::select('invoice_id')->get();
+        $invoiceIds = Invoice::query()->select('invoice_id')->get();
 
         foreach ($invoiceIds as $invoice) {
             $invoiceAmountService = app(InvoiceAmountService::class);

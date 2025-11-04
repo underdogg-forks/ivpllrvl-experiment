@@ -32,7 +32,7 @@ if ( ! function_exists('email_invoice')) {
     $bcc = null,
     $attachments = null
 ) {
-    $db_invoice = \Modules\Invoices\Models\Invoice::where('invoice_id', $invoice_id)->first();
+    $db_invoice = \Modules\Invoices\Models\Invoice::query()->where('invoice_id', $invoice_id)->first();
 
     if ($db_invoice->sumex_id == null) {
         $invoice = generate_invoice_pdf($invoice_id, false, $invoice_template);
@@ -104,7 +104,7 @@ if ( ! function_exists('email_quote')) {
 ) {
     $quote = generate_quote_pdf($quote_id, false, $quote_template);
 
-    $db_quote = \Modules\Quotes\Models\Quote::where('quote_id', $quote_id)->first();
+    $db_quote = \Modules\Quotes\Models\Quote::query()->where('quote_id', $quote_id)->first();
 
     $message = parse_template($db_quote, $body);
     $subject = parse_template($db_quote, $subject);

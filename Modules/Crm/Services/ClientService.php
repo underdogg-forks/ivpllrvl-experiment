@@ -24,7 +24,7 @@ class ClientService extends BaseService
      */
     public function getActiveClients()
     {
-        return Client::where('client_active', 1)->orderBy('client_name')->get();
+        return Client::query()->where('client_active', 1)->orderBy('client_name')->get();
     }
 
     /**

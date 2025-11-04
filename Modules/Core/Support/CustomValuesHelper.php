@@ -71,7 +71,7 @@ class CustomValuesHelper
         }
 
         $values      = explode(',', $txt);
-        $values      = \Modules\Core\Models\CustomValue::whereIn('custom_values_id', $values)->get();
+        $values      = \Modules\Core\Models\CustomValue::query()->whereIn('custom_values_id', $values)->get();
         $values_text = [];
 
         foreach ($values as $value) {

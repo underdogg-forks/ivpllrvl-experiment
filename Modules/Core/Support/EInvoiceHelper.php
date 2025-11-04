@@ -127,7 +127,7 @@ class EInvoiceHelper
      */
     public static function get_admin_active_users($user_id = ''): array
     {
-        $query = \Modules\Core\Models\User::where('user_type', '1')
+        $query = \Modules\Core\Models\User::query()->where('user_type', '1')
             ->where('user_active', '1');
 
         if ($user_id) {

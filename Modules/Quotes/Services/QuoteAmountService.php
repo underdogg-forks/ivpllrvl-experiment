@@ -46,10 +46,10 @@ class QuoteAmountService
         $decimalPlaces = (int) SettingsHelper::getSetting('tax_rate_decimal_places');
 
         // Get all item IDs for this quote
-        $itemIds = QuoteItem::where('quote_id', $quoteId)->pluck('item_id');
+        $itemIds = QuoteItem::query()->where('quote_id', $quoteId)->pluck('item_id');
 
         // Get the basic totals from quote item amounts using Eloquent
-        $quoteAmounts = QuoteItemAmount::whereIn('item_id', $itemIds)
+        $quoteAmounts = QuoteItemAmount::query()->whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) AS quote_item_subtotal,
                 SUM(item_tax_total) AS quote_item_tax_total,
@@ -130,10 +130,10 @@ class QuoteAmountService
     public function getGlobalDiscount(int $quoteId): float
     {
         // Get all item IDs for this quote
-        $itemIds = QuoteItem::where('quote_id', $quoteId)->pluck('item_id');
+        $itemIds = QuoteItem::query()->where('quote_id', $quoteId)->pluck('item_id');
 
         // Calculate global discount using Eloquent
-        $result = QuoteItemAmount::whereIn('item_id', $itemIds)
+        $result = QuoteItemAmount::query()->whereIn('item_id', $itemIds)
             ->selectRaw('
                 SUM(item_subtotal) - (SUM(item_total) - SUM(item_tax_total) + SUM(item_discount)) AS global_discount
             ')
@@ -156,12 +156,12 @@ class QuoteAmountService
 
         // Only applicable in legacy calculation mode
         $quoteTaxRates = $legacyCalculation
-            ? QuoteTaxRate::where('quote_id', $quoteId)->get()
+            ? QuoteTaxRate::query()->where('quote_id', $quoteId)->get()
             : collect([]);
 
         if ($quoteTaxRates->isNotEmpty()) {
             // Get current quote amount record
-            $quoteAmount = QuoteAmount::where('quote_id', $quoteId)->first();
+            $quoteAmount = QuoteAmount::query()->where('quote_id', $quoteId)->first();
 
             // Loop through quote taxes and update amounts
             foreach ($quoteTaxRates as $quoteTaxRate) {
@@ -176,19 +176,19 @@ class QuoteAmountService
                 }
 
                 // Update the quote tax rate record
-                QuoteTaxRate::where('quote_tax_rate_id', $quoteTaxRate->quote_tax_rate_id)
+                QuoteTaxRate::query()->where('quote_tax_rate_id', $quoteTaxRate->quote_tax_rate_id)
                     ->update(['quote_tax_rate_amount' => $quoteTaxRateAmount]);
             }
 
             // Update quote amount with total tax
-            $quoteTaxTotal = QuoteTaxRate::where('quote_id', $quoteId)
+            $quoteTaxTotal = QuoteTaxRate::query()->where('quote_id', $quoteId)
                 ->sum('quote_tax_rate_amount');
 
-            QuoteAmount::where('quote_id', $quoteId)
+            QuoteAmount::query()->where('quote_id', $quoteId)
                 ->update(['quote_tax_total' => $quoteTaxTotal]);
 
             // Get updated quote amount
-            $quoteAmount = QuoteAmount::where('quote_id', $quoteId)->first();
+            $quoteAmount = QuoteAmount::query()->where('quote_id', $quoteId)->first();
 
             // Recalculate quote total
             $quoteTotal = $quoteAmount->quote_item_subtotal
@@ -201,11 +201,11 @@ class QuoteAmountService
             }
 
             // Update quote amount
-            QuoteAmount::where('quote_id', $quoteId)
+            QuoteAmount::query()->where('quote_id', $quoteId)
                 ->update(['quote_total' => $quoteTotal]);
         } else {
             // No quote taxes applied
-            QuoteAmount::where('quote_id', $quoteId)
+            QuoteAmount::query()->where('quote_id', $quoteId)
                 ->update(['quote_tax_total' => '0.00']);
         }
     }

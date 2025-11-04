@@ -48,7 +48,7 @@ class InvoiceItemService
         $invoiceId = $item->invoice_id;
         $item->delete();
 
-        ItemAmount::where('item_id', $itemId)->delete();
+        ItemAmount::query()->where('item_id', $itemId)->delete();
 
         $globalDiscount = [
             'item' => app(InvoiceAmountService::class)->getGlobalDiscount($invoiceId),
@@ -61,11 +61,11 @@ class InvoiceItemService
     public function getItemsSubtotal(int $invoiceId): float
     {
         // Get all item IDs for this invoice
-        $itemIds = Item::where('invoice_id', $invoiceId)
+        $itemIds = Item::query()->where('invoice_id', $invoiceId)
             ->pluck('item_id');
 
         // Sum the subtotals from invoice_item_amounts
-        $result = ItemAmount::whereIn('item_id', $itemIds)
+        $result = ItemAmount::query()->whereIn('item_id', $itemIds)
             ->sum('item_subtotal');
 
         return (float) ($result ?? 0.0);
@@ -80,7 +80,7 @@ class InvoiceItemService
      */
     public function getItemsByInvoiceId(int $invoiceId)
     {
-        return Item::where('invoice_id', $invoiceId)->orderBy('item_order')->get();
+        return Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
     }
 
     /**
@@ -93,7 +93,7 @@ class InvoiceItemService
      */
     public function findByInvoiceAndItemId(int $invoiceId, int $itemId): ?Item
     {
-        return Item::where('invoice_id', $invoiceId)
+        return Item::query()->where('invoice_id', $invoiceId)
             ->where('item_id', $itemId)
             ->first();
     }

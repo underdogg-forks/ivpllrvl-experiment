@@ -81,7 +81,7 @@ class CustomFieldService extends BaseService
      */
     public function getByTable(string $tableName): \Illuminate\Database\Eloquent\Collection
     {
-        return CustomField::where('custom_field_table', $tableName)->get();
+        return CustomField::query()->where('custom_field_table', $tableName)->get();
     }
 
     /**
@@ -93,6 +93,6 @@ class CustomFieldService extends BaseService
      */
     public function existsForTable(string $tableName): bool
     {
-        return CustomField::where('custom_field_table', $tableName)->exists();
+        return CustomField::query()->where('custom_field_table', $tableName)->exists();
     }
 }
