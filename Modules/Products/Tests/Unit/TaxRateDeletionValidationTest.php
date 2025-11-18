@@ -144,12 +144,12 @@ class TaxRateDeletionValidationTest extends AbstractServiceTestCase
     public function it_returns_correct_blocker_counts(): void
     {
         /** Arrange */
+
         $taxRate = TaxRate::factory()->create();
         
         Product::factory()->count(2)->create(['tax_rate_id' => $taxRate->tax_rate_id]);
         InvoiceItem::factory()->count(3)->create(['item_tax_rate_id' => $taxRate->tax_rate_id]);
         QuoteItem::factory()->count(1)->create(['item_tax_rate_id' => $taxRate->tax_rate_id]);
-
         /** Act */
         $blockers = $this->service->getDeletionBlockers($taxRate->tax_rate_id);
 

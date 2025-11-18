@@ -51,28 +51,13 @@ class TaskService extends BaseService
      */
     public function canDelete(int $taskId): bool
     {
+        // Reuse existing method
         $task = Task::query()->find($taskId);
-        
         if (!$task) {
-            return true; // Task doesn't exist, can "delete"
+            return true;
         }
-
-        // Check if task has an invoice_id (is assigned to an invoice)
-        return $task->invoice_id === null;
-    }
-
-    /**
-     * Check if task is assigned to an invoice.
-     *
-     * @param int $taskId
-     *
-     * @return bool
-     */
-    public function isAssignedToInvoice(int $taskId): bool
-    {
-        $task = Task::query()->find($taskId);
         
-        return $task && $task->invoice_id !== null;
+        return !$this->isAssignedToInvoice($taskId);
     }
 
     protected function getModelClass(): string

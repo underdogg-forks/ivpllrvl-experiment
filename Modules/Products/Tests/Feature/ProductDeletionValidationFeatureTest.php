@@ -112,6 +112,10 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
+
+        // Optionally verify the count appears in the error message
+        $errorMessage = session('alert_error');
+        $this->assertStringContainsString('3', $errorMessage);
         
         // Product should still exist
         $this->assertDatabaseHas('ip_products', [

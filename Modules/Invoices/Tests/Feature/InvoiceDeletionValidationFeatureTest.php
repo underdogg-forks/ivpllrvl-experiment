@@ -233,6 +233,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         // Enable invoice deletion in config
+        $originalConfig = config('settings.enable_invoice_deletion');
         config(['settings.enable_invoice_deletion' => true]);
 
         $invoice = Invoice::factory()->create([
@@ -249,6 +250,9 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         $this->assertDatabaseMissing('ip_invoices', [
             'invoice_id' => $invoice->invoice_id,
         ]);
+
+        // Restore original config
+        config(['settings.enable_invoice_deletion' => $originalConfig]);
     }
 
     /**
