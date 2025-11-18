@@ -284,19 +284,33 @@ class ClientsController
     /**
      * Delete a client by ID.
      *
+     * Implements:
+     * - Early returns for validation
+     * - Proper redirect response
+     * - Error handling
+     *
      * @param Request $request
      * @param int     $client_id
      *
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      *
      * @legacy-function delete
      *
      * @legacy-file application/modules/clients/controllers/Clients.php
      */
-    public function delete(Request $request, $client_id)
+    public function delete(Request $request, $client_id): \Illuminate\Http\RedirectResponse
     {
-        $this->clientService->delete($client_id);
-        redirect('clients');
+        // Validate client ID
+        if ( ! is_numeric($client_id) || $client_id <= 0) {
+            return redirect()->route('clients.index')
+                ->with('alert_error', TranslationHelper::trans('invalid_client_id'));
+        }
+
+        // Execute deletion
+        $this->clientService->delete((int) $client_id);
+        
+        return redirect()->route('clients.index')
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
 
     /**

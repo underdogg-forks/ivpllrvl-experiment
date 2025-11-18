@@ -3,6 +3,7 @@
 namespace Modules\Products\Controllers;
 
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
@@ -13,11 +14,14 @@ use Modules\Products\Services\ProductService;
  * ProductsController.
  *
  * Manages product CRUD operations
+ * Implements SOLID principles, DRY pattern, and early returns
  *
  * @legacy-file application/modules/products/controllers/Products.php
  */
 class ProductsController
 {
+    use HandlesDeletion;
+
     public function __construct(
         protected ProductService $productService
     ) {}
@@ -61,32 +65,60 @@ class ProductsController
      */
     public function form(?int $id = null)
     {
+        // Early return for cancel action
         if (request()->post('btn_cancel')) {
             return redirect()->route('products.index');
         }
 
+        // Early return for form submission
         if (request()->isMethod('post') && request()->post('btn_submit')) {
-            $validated = request()->validate([
-                'product_name'        => 'required|string|max:255',
-                'product_sku'         => 'nullable|string|max:255',
-                'product_description' => 'nullable|string',
-                'product_price'       => 'required|numeric|min:0',
-                'family_id'           => 'nullable|integer|exists:ip_families,family_id',
-                'unit_id'             => 'nullable|integer|exists:ip_units,unit_id',
-                'tax_rate_id'         => 'nullable|integer|exists:ip_tax_rates,tax_rate_id',
-            ]);
-
-            if ($id) {
-                $this->productService->update($id, $validated);
-            } else {
-                $this->productService->create($validated);
-            }
-
-            return redirect()->route('products.index')
-                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
+            return $this->handleFormSubmission($id);
         }
 
+        return $this->showForm($id);
+    }
+
+    /**
+     * Handle form submission for create/update.
+     *
+     * @param int|null $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function handleFormSubmission(?int $id): \Illuminate\Http\RedirectResponse
+    {
+        $validated = request()->validate([
+            'product_name'        => 'required|string|max:255',
+            'product_sku'         => 'nullable|string|max:255',
+            'product_description' => 'nullable|string',
+            'product_price'       => 'required|numeric|min:0',
+            'family_id'           => 'nullable|integer|exists:ip_families,family_id',
+            'unit_id'             => 'nullable|integer|exists:ip_units,unit_id',
+            'tax_rate_id'         => 'nullable|integer|exists:ip_tax_rates,tax_rate_id',
+        ]);
+
+        if ($id) {
+            $this->productService->update($id, $validated);
+        } else {
+            $this->productService->create($validated);
+        }
+
+        return redirect()->route('products.index')
+            ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
+    }
+
+    /**
+     * Show the form for create/edit.
+     *
+     * @param int|null $id
+     *
+     * @return \Illuminate\View\View
+     */
+    protected function showForm(?int $id): \Illuminate\View\View
+    {
         $product = $id ? $this->productService->find($id) : new Product();
+        
+        // Early return with 404 if product not found
         if ($id && ! $product) {
             abort(404);
         }
@@ -104,7 +136,13 @@ class ProductsController
     }
 
     /**
-     * Delete a product.
+     * Delete a product with security checks and error handling.
+     *
+     * Implements:
+     * - Early returns for validation
+     * - DRY principle via HandlesDeletion trait
+     * - SOLID principles with single responsibility
+     * - Proper error handling
      *
      * @param int $id Product ID
      *
@@ -116,9 +154,22 @@ class ProductsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $this->productService->delete($id);
+        // Validate ID
+        if ($id <= 0) {
+            return $this->redirectWithError('products.index', TranslationHelper::trans('invalid_product_id'));
+        }
 
-        return redirect()->route('products.index')
-            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Check if product exists
+        $product = $this->productService->find($id);
+        if ( ! $product) {
+            return $this->redirectWithError('products.index', TranslationHelper::trans('product_not_found'));
+        }
+
+        // Execute delete with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->productService->delete($id),
+            'products.index'
+        );
     }
 }
+
