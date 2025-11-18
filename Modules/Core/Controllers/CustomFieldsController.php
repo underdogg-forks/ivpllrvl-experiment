@@ -5,6 +5,7 @@ namespace Modules\Core\Controllers;
 use Modules\Core\Models\CustomField;
 use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 
 /**
  * CustomFieldsController.
@@ -15,6 +16,8 @@ use Modules\Core\Support\TranslationHelper;
  */
 class CustomFieldsController
 {
+    use HandlesDeletion;
+
     public function __construct(
         protected CustomFieldService $customFieldService
     ) {}
@@ -100,8 +103,31 @@ class CustomFieldsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $this->customFieldService->delete($id);
+        // Early return for validation
+        if ($id <= 0) {
+            return $this->redirectWithError('custom_fields.index', TranslationHelper::trans('invalid_custom_field_id'));
+        }
 
-        return redirect()->route('custom_fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Check if custom field exists
+        $customField = $this->customFieldService->find($id);
+        if (!$customField) {
+            return $this->redirectWithError('custom_fields.index', TranslationHelper::trans('custom_field_not_found'));
+        }
+
+        // Business rule: Cannot delete custom fields with related custom values
+        if (!$this->customFieldService->canDelete($id)) {
+            $blockers = $this->customFieldService->getDeletionBlockers($id);
+            $message = TranslationHelper::trans('custom_field_deletion_not_allowed', [
+                'custom_values' => $blockers['custom_values'],
+            ]);
+
+            return $this->redirectWithError('custom_fields.index', $message);
+        }
+
+        // Execute deletion with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->customFieldService->delete($id),
+            'custom_fields.index'
+        );
     }
 }

@@ -87,6 +87,44 @@ class UserService extends BaseService
     }
 
     /**
+     * Check if user can be deleted.
+     *
+     * @param int $id User ID
+     *
+     * @return bool True if user can be deleted
+     */
+    public function canDelete(int $id): bool
+    {
+        $blockers = $this->getDeletionBlockers($id);
+
+        return $blockers['invoices'] === 0 
+            && $blockers['quotes'] === 0 
+            && $blockers['sessions'] === 0;
+    }
+
+    /**
+     * Get deletion blockers for user.
+     *
+     * @param int $id User ID
+     *
+     * @return array Array of blocker counts
+     */
+    public function getDeletionBlockers(int $id): array
+    {
+        return [
+            'invoices' => \Modules\Invoices\Models\Invoice::query()
+                ->where('user_id', $id)
+                ->count(),
+            'quotes' => \Modules\Quotes\Models\Quote::query()
+                ->where('user_id', $id)
+                ->count(),
+            'sessions' => \Modules\Core\Models\Session::query()
+                ->where('user_id', $id)
+                ->count(),
+        ];
+    }
+
+    /**
      * Get user types.
      *
      * @return array

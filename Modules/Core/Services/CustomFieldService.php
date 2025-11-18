@@ -103,6 +103,36 @@ class CustomFieldService extends BaseService
     }
 
     /**
+     * Check if custom field can be deleted.
+     *
+     * @param int $id Custom field ID
+     *
+     * @return bool True if custom field can be deleted
+     */
+    public function canDelete(int $id): bool
+    {
+        $blockers = $this->getDeletionBlockers($id);
+
+        return $blockers['custom_values'] === 0;
+    }
+
+    /**
+     * Get deletion blockers for custom field.
+     *
+     * @param int $id Custom field ID
+     *
+     * @return array Array of blocker counts
+     */
+    public function getDeletionBlockers(int $id): array
+    {
+        return [
+            'custom_values' => \Modules\Core\Models\CustomValue::query()
+                ->where('custom_values_field', $id)
+                ->count(),
+        ];
+    }
+
+    /**
      * Get the model class for this service.
      */
     protected function getModelClass(): string

@@ -5,6 +5,7 @@ namespace Modules\Invoices\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 
@@ -15,6 +16,8 @@ use Modules\Invoices\Services\InvoiceGroupService;
  */
 class InvoiceGroupsController
 {
+    use HandlesDeletion;
+
     /**
      * InvoiceGroup service instance.
      *
@@ -119,9 +122,32 @@ class InvoiceGroupsController
      */
     public function delete(int $id): RedirectResponse
     {
-        $this->invoiceGroupService->delete($id);
+        // Early return for validation
+        if ($id <= 0) {
+            return $this->redirectWithError('invoice_groups.index', TranslationHelper::trans('invalid_invoice_group_id'));
+        }
 
-        return redirect()->route('invoice_groups.index')
-            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Check if invoice group exists
+        $invoiceGroup = $this->invoiceGroupService->find($id);
+        if (!$invoiceGroup) {
+            return $this->redirectWithError('invoice_groups.index', TranslationHelper::trans('invoice_group_not_found'));
+        }
+
+        // Business rule: Cannot delete invoice groups with related invoices or quotes
+        if (!$this->invoiceGroupService->canDelete($id)) {
+            $blockers = $this->invoiceGroupService->getDeletionBlockers($id);
+            $message = TranslationHelper::trans('invoice_group_deletion_not_allowed', [
+                'invoices' => $blockers['invoices'],
+                'quotes'   => $blockers['quotes'],
+            ]);
+
+            return $this->redirectWithError('invoice_groups.index', $message);
+        }
+
+        // Execute deletion with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->invoiceGroupService->delete($id),
+            'invoice_groups.index'
+        );
     }
 }

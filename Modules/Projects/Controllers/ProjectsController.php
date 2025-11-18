@@ -168,23 +168,30 @@ class ProjectsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        // Validate ID
+        // Early return for validation
         if ($id <= 0) {
             return $this->redirectWithError('projects.index', TranslationHelper::trans('invalid_project_id'));
         }
 
         // Check if project exists
         $project = $this->projectService->find($id);
-        if ( ! $project) {
+        if (!$project) {
             return $this->redirectWithError('projects.index', TranslationHelper::trans('project_not_found'));
+        }
+
+        // Business rule: Cannot delete projects with related tasks
+        if (!$this->projectService->canDelete($id)) {
+            $blockers = $this->projectService->getDeletionBlockers($id);
+            $message = TranslationHelper::trans('project_deletion_not_allowed', [
+                'tasks' => $blockers['tasks'],
+            ]);
+
+            return $this->redirectWithError('projects.index', $message);
         }
 
         // Execute delete with standardized error handling
         return $this->executeDelete(
-            function () use ($id) {
-                $this->taskService->updateOnProjectDelete($id);
-                return $this->projectService->delete($id);
-            },
+            fn () => $this->projectService->delete($id),
             'projects.index'
         );
     }
