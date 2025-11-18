@@ -3,6 +3,7 @@
 namespace Modules\Projects\Controllers;
 
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Products\Services\TaxRateService;
 use Modules\Projects\Http\Requests\TaskRequest;
 use Modules\Projects\Models\Task;
@@ -11,6 +12,8 @@ use Modules\Projects\Services\TaskService;
 
 class TasksController
 {
+    use HandlesDeletion;
+
     public function __construct(
         protected TaskService $taskService,
         protected ProjectService $projectService,
@@ -59,6 +62,46 @@ class TasksController
             'task_statuses' => Task::STATUSES,
             'tax_rates'     => $taxRates,
         ]);
+    }
+
+    /**
+     * Delete a task with security checks and error handling.
+     *
+     * Implements:
+     * - Early returns for validation
+     * - DRY principle via HandlesDeletion trait
+     * - Business rule: Cannot delete tasks assigned to invoices
+     *
+     * @param int $id Task ID
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    {
+        // Validate ID
+        if ($id <= 0) {
+            return $this->redirectWithError('tasks.index', TranslationHelper::trans('invalid_task_id'));
+        }
+
+        // Check if task exists
+        $task = $this->taskService->find($id);
+        if (!$task) {
+            return $this->redirectWithError('tasks.index', TranslationHelper::trans('task_not_found'));
+        }
+
+        // Business rule: Cannot delete tasks that are assigned to invoices
+        if (!$this->taskService->canDelete($id)) {
+            return $this->redirectWithError(
+                'tasks.index',
+                TranslationHelper::trans('task_deletion_not_allowed_assigned_to_invoice')
+            );
+        }
+
+        // Execute delete with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->taskService->delete($id),
+            'tasks.index'
+        );
     }
 
     public function destroy(Task $task): \Illuminate\Http\RedirectResponse

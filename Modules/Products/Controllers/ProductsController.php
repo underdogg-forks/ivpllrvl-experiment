@@ -143,6 +143,7 @@ class ProductsController
      * - DRY principle via HandlesDeletion trait
      * - SOLID principles with single responsibility
      * - Proper error handling
+     * - Business rule: Cannot delete products used in invoices
      *
      * @param int $id Product ID
      *
@@ -163,6 +164,15 @@ class ProductsController
         $product = $this->productService->find($id);
         if ( ! $product) {
             return $this->redirectWithError('products.index', TranslationHelper::trans('product_not_found'));
+        }
+
+        // Business rule: Cannot delete products that are used in invoices
+        if ( ! $this->productService->canDelete($id)) {
+            $itemCount = $this->productService->getInvoiceItemCount($id);
+            return $this->redirectWithError(
+                'products.index',
+                TranslationHelper::trans('product_deletion_not_allowed_invoice_items', ['count' => $itemCount])
+            );
         }
 
         // Execute delete with standardized error handling
