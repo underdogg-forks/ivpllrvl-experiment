@@ -286,6 +286,7 @@ class ClientsController
      *
      * Implements:
      * - Early returns for validation
+     * - Business rule: Cannot delete clients with invoices, quotes, or projects
      * - Proper redirect response
      * - Error handling
      *
@@ -306,8 +307,30 @@ class ClientsController
                 ->with('alert_error', TranslationHelper::trans('invalid_client_id'));
         }
 
+        $clientId = (int) $client_id;
+
+        // Check if client exists
+        $client = $this->clientService->find($clientId);
+        if (!$client) {
+            return redirect()->route('clients.index')
+                ->with('alert_error', TranslationHelper::trans('client_not_found'));
+        }
+
+        // Business rule: Cannot delete clients with related records
+        if (!$this->clientService->canDelete($clientId)) {
+            $blockers = $this->clientService->getDeletionBlockers($clientId);
+            $message = TranslationHelper::trans('client_deletion_not_allowed', [
+                'invoices' => $blockers['invoices'],
+                'quotes'   => $blockers['quotes'],
+                'projects' => $blockers['projects'],
+            ]);
+            
+            return redirect()->route('clients.index')
+                ->with('alert_error', $message);
+        }
+
         // Execute deletion
-        $this->clientService->delete((int) $client_id);
+        $this->clientService->delete($clientId);
         
         return redirect()->route('clients.index')
             ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));

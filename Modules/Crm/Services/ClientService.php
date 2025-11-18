@@ -4,6 +4,9 @@ namespace Modules\Crm\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Crm\Models\Client;
+use Modules\Invoices\Models\Invoice;
+use Modules\Quotes\Models\Quote;
+use Modules\Projects\Models\Project;
 
 /**
  * ClientService.
@@ -86,6 +89,59 @@ class ClientService extends BaseService
             ->whereNotIn('client_id', $ids)
             ->orderBy('client_name')
             ->get();
+    }
+
+    /**
+     * Check if a client can be deleted.
+     *
+     * A client cannot be deleted if it has:
+     * - Invoices
+     * - Quotes
+     * - Projects
+     *
+     * @param int $clientId
+     *
+     * @return bool
+     */
+    public function canDelete(int $clientId): bool
+    {
+        // Check for invoices
+        $invoiceCount = Invoice::query()->where('client_id', $clientId)->count();
+        if ($invoiceCount > 0) {
+            return false;
+        }
+
+        // Check for quotes
+        $quoteCount = Quote::query()->where('client_id', $clientId)->count();
+        if ($quoteCount > 0) {
+            return false;
+        }
+
+        // Check for projects
+        $projectCount = Project::query()->where('client_id', $clientId)->count();
+        if ($projectCount > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get deletion blocker details for a client.
+     *
+     * Returns an array with counts of related records.
+     *
+     * @param int $clientId
+     *
+     * @return array
+     */
+    public function getDeletionBlockers(int $clientId): array
+    {
+        return [
+            'invoices' => Invoice::query()->where('client_id', $clientId)->count(),
+            'quotes'   => Quote::query()->where('client_id', $clientId)->count(),
+            'projects' => Project::query()->where('client_id', $clientId)->count(),
+        ];
     }
 
     protected function getModelClass(): string
