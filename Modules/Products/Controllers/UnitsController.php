@@ -5,6 +5,7 @@ namespace Modules\Products\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Products\Http\Requests\UnitRequest;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\UnitService;
@@ -18,6 +19,8 @@ use Modules\Products\Services\UnitService;
  */
 class UnitsController
 {
+    use HandlesDeletion;
+
     public function __construct(
         protected UnitService $unitService
     ) {}
@@ -115,7 +118,12 @@ class UnitsController
     }
 
     /**
-     * Remove the specified unit.
+     * Remove the specified unit with business logic validation.
+     *
+     * Implements:
+     * - Early returns for validation
+     * - Business rule: Cannot delete units used in products, invoice items, or quote items
+     * - DRY principle via HandlesDeletion trait
      *
      * @param Unit $unit
      *
@@ -127,9 +135,24 @@ class UnitsController
      */
     public function destroy(Unit $unit): RedirectResponse
     {
-        $this->unitService->delete($unit->unit_id);
+        $unitId = $unit->unit_id;
 
-        return redirect()->route('units.index')
-            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Business rule: Cannot delete units that are in use
+        if (!$this->unitService->canDelete($unitId)) {
+            $blockers = $this->unitService->getDeletionBlockers($unitId);
+            $message = TranslationHelper::trans('unit_deletion_not_allowed', [
+                'products'      => $blockers['products'],
+                'invoice_items' => $blockers['invoice_items'],
+                'quote_items'   => $blockers['quote_items'],
+            ]);
+            
+            return $this->redirectWithError('units.index', $message);
+        }
+
+        // Execute delete with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->unitService->delete($unitId),
+            'units.index'
+        );
     }
 }
