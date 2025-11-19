@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Tests\Feature;
 
-use Modules\Core\Controllers\AjaxController as CoreAjaxController;
+//use Modules\Core\Controllers\AjaxController as CoreAjaxController;
 use Modules\Core\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;

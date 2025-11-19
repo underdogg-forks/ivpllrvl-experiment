@@ -12,6 +12,7 @@ use Modules\Invoices\Services\InvoiceAmountService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\AbstractServiceTestCase;
 
 #[CoversClass(InvoiceAmountService::class)]
 class InvoiceAmountServiceTest extends AbstractServiceTestCase

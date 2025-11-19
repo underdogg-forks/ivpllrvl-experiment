@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use src\Controllers\UnitsController;
+use Modules\Products\Controllers\UnitsController;
 
 Route::middleware('web')->group(function () {
     Route::get('units', [UnitsController::class, 'index'])->name('units.index');

@@ -6,6 +6,7 @@ use Modules\Invoices\Services\InvoiceSumexService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\AbstractServiceTestCase;
 
 #[CoversClass(InvoiceSumexService::class)]
 class InvoiceSumexServiceTest extends AbstractServiceTestCase

@@ -9,6 +9,7 @@ use Modules\Invoices\Services\InvoiceTaxRateService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\AbstractServiceTestCase;
 
 #[CoversClass(InvoiceTaxRateService::class)]
 class InvoiceTaxRateServiceTest extends AbstractServiceTestCase

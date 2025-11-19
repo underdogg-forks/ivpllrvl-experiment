@@ -3,7 +3,7 @@
 namespace Modules\Products\Tests\Feature;
 
 use Modules\Core\Models\User;
-use Modules\Products\Controllers\AjaxController as ProductsAjaxController;
+use Modules\Products\Controllers\ProductsAjaxController as ProductsAjaxController;
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 use PHPUnit\Framework\Attributes\CoversClass;

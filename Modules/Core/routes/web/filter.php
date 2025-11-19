@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Controllers\FilterAjaxController;
+use Modules\Core\Controllers\View as FilterAjaxController;
 
 Route::middleware('web')->group(function () {
     Route::get('filter/filter-invoices', [FilterAjaxController::class, 'filterInvoices'])->name('filter.filter-invoices');

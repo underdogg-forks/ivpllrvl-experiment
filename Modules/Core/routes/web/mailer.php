@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Controllers\Controllers\MailerController;
+use Modules\Core\Controllers\MailerController;
 
 Route::middleware('web')->group(function () {
     Route::get('mailer/invoice', [MailerController::class, 'invoice'])->name('mailer.invoice');

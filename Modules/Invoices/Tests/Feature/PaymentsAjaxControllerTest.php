@@ -4,7 +4,7 @@ namespace Modules\Invoices\Tests\Feature;
 
 use Modules\Core\Models\User;
 use Modules\Invoices\Models\Invoice;
-use Modules\Payments\Controllers\AjaxController as PaymentsAjaxController;
+use Modules\Payments\Controllers\PaymentsAjaxController as PaymentsAjaxController;
 use Modules\Payments\Models\Payment;
 use Modules\Payments\Models\PaymentMethod;
 use PHPUnit\Framework\Attributes\CoversClass;

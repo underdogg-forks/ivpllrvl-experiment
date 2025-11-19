@@ -24,7 +24,7 @@ class CrmServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerViews();
-        $this->registerConfig();
+        // $this->registerConfig();
     }
 
     /**

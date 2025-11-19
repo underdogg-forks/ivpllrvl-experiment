@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Payments\app\Http\Controllers\PaymentMethodsController;
+use Modules\Payments\Controllers\PaymentMethodsController;
 
 Route::middleware('web')->group(function () {
     Route::get('payment-methods', [PaymentMethodsController::class, 'index'])->name('payment-methods.index');

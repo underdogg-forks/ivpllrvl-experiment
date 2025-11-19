@@ -3,7 +3,7 @@
 namespace Modules\Crm\Tests\Feature;
 
 use Modules\Core\Models\User;
-use Modules\Crm\Controllers\AjaxController as CrmAjaxController;
+use Modules\Crm\Controllers\ClientsAjaxController as CrmAjaxController;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;

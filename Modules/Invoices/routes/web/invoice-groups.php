@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Invoices\app\Http\Controllers\InvoiceGroupsController;
+use Modules\Invoices\Controllers\InvoiceGroupsController;
 
 Route::middleware('web')->group(function () {
     Route::get('invoice-groups', [InvoiceGroupsController::class, 'index'])->name('invoice-groups.index');

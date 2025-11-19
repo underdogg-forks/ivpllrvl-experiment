@@ -1,0 +1,1597 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to static method query\(\) on an unknown class Modules\\Custom\\Models\\CustomValue\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/CustomValuesController.php
+
+		-
+			message: '#^Instantiated class Modules\\Custom\\Models\\CustomValue not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/CustomValuesController.php
+
+		-
+			message: '#^Function log_message not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Controllers/GetController.php
+
+		-
+			message: '#^Parameter \$userClientService of method Modules\\Core\\Controllers\\GuestController\:\:__construct\(\) has invalid type Modules\\Core\\Services\\UserClientService\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/GuestController.php
+
+		-
+			message: '#^Property Modules\\Core\\Controllers\\GuestController\:\:\$userClientService has unknown class Modules\\Core\\Services\\UserClientService as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/GuestController.php
+
+		-
+			message: '#^Function directory_map not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Controllers/ImportController.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Core\\Support\\MailerHelper\:\:mailerConfigured\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: Modules/Core/Controllers/MailerController.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Controllers\\SessionsController\:\:\$crypt\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Controllers\\SessionsController\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 7
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Call to static method mailerConfigured\(\) on an unknown class Modules\\Core\\Controllers\\MailerHelper\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Function phpmail_send not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Controllers\\DateTime not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Parameter \$sessionsService of method Modules\\Core\\Controllers\\SessionsController\:\:__construct\(\) has invalid type Modules\\Core\\Controllers\\SessionsService\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Parameter \$usersService of method Modules\\Core\\Controllers\\SessionsController\:\:__construct\(\) has invalid type Modules\\Core\\Controllers\\UsersService\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Property Modules\\Core\\Controllers\\SessionsController\:\:\$sessionsService has unknown class Modules\\Core\\Controllers\\SessionsService as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Property Modules\\Core\\Controllers\\SessionsController\:\:\$usersService has unknown class Modules\\Core\\Controllers\\UsersService as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SessionsController.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Invoices\\Models\\Template\:\:query\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: Modules/Core/Controllers/SettingsController.php
+
+		-
+			message: '#^Call to static method query\(\) on an unknown class Modules\\CustomFields\\Models\\CustomField\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SettingsController.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Controllers\\SetupController\:\:\$lang\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Function show_error not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Function write_file not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Parameter \$setupService of method Modules\\Core\\Controllers\\SetupController\:\:__construct\(\) has invalid type Modules\\Core\\Controllers\\SetupService\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Parameter \$usersService of method Modules\\Core\\Controllers\\SetupController\:\:__construct\(\) has invalid type Modules\\Core\\Controllers\\UsersService\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Parameter \$versionsService of method Modules\\Core\\Controllers\\SetupController\:\:__construct\(\) has invalid type Modules\\Core\\Controllers\\VersionsService\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Property Modules\\Core\\Controllers\\SetupController\:\:\$setupService has unknown class Modules\\Core\\Controllers\\SetupService as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Property Modules\\Core\\Controllers\\SetupController\:\:\$usersService has unknown class Modules\\Core\\Controllers\\UsersService as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Property Modules\\Core\\Controllers\\SetupController\:\:\$versionsService has unknown class Modules\\Core\\Controllers\\VersionsService as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Controllers/SetupController.php
+
+		-
+			message: '#^Call to static method getSetting\(\) on an unknown class Modules\\Core\\Controllers\\SettingsHelper\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Core/Controllers/UsersController.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Libraries\\StdClass not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Core/Libraries/ClientTitleEnum.php
+
+		-
+			message: '#^Attribute class Modules\\Core\\Libraries\\AllowDynamicProperties does not exist\.$#'
+			identifier: attribute.notFound
+			count: 1
+			path: Modules/Core/Libraries/Cryptor.php
+
+		-
+			message: '#^Function log_message not found\.$#'
+			identifier: function.notFound
+			count: 14
+			path: Modules/Core/Libraries/Gateways/PaypalLib.php
+
+		-
+			message: '#^Modules\\Core\\Libraries\\MY_Form_validation\:\:run\(\) calls parent\:\:run\(\) but Modules\\Core\\Libraries\\MY_Form_validation does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: Modules/Core/Libraries/MY_Form_validation.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Libraries\\Sumex\:\:\$currencyCode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Libraries\\Sumex\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 3
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Libraries\\DOMDocument not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Libraries\\Error not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Unknown parameter \$associated_files in call to function pdf_create\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Unknown parameter \$embed_xml in call to function pdf_create\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Unknown parameter \$is_guest in call to function pdf_create\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: Modules/Core/Libraries/Sumex.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Libraries\\XMLtemplates\\Zugferdv10Xml\:\:\$currencyCode\.$#'
+			identifier: property.notFound
+			count: 3
+			path: Modules/Core/Libraries/XMLtemplates/Zugferdv10Xml.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Libraries\\XMLtemplates\\Zugferdv10Xml\:\:\$filename\.$#'
+			identifier: property.notFound
+			count: 2
+			path: Modules/Core/Libraries/XMLtemplates/Zugferdv10Xml.php
+
+		-
+			message: '#^Access to an undefined property Modules\\Core\\Libraries\\XMLtemplates\\Zugferdv10Xml\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 3
+			path: Modules/Core/Libraries/XMLtemplates/Zugferdv10Xml.php
+
+		-
+			message: '#^Call to static method createFromFormat\(\) on an unknown class Modules\\Core\\Libraries\\XMLtemplates\\DateTime\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Libraries/XMLtemplates/Zugferdv10Xml.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Libraries\\XMLtemplates\\DOMDocument not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Libraries/XMLtemplates/Zugferdv10Xml.php
+
+		-
+			message: '#^Access to constant VALUES on an unknown class Modules\\Core\\Support\\ClientTitleEnum\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Support/ClientHelper.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Support/DropzoneHelper.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/Support/DropzoneHelper.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Support/DropzoneHelper.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Support/EInvoiceHelper.php
+
+		-
+			message: '#^Function auto_link not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Support/EchoHelper.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/Support/EchoHelper.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/Support/InvoiceHelper.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Support\\Error not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: Modules/Core/Support/InvoiceHelper.php
+
+		-
+			message: '#^Undefined variable\: \$bridge$#'
+			identifier: variable.undefined
+			count: 4
+			path: Modules/Core/Support/InvoiceHelper.php
+
+		-
+			message: '#^Function form_error not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/Support/JsonErrorHelper.php
+
+		-
+			message: '#^Function Modules\\Sessions\\Controllers\\phpmail_send not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/Support/MailerHelper.php
+
+		-
+			message: '#^Instantiated class Modules\\Core\\Support\\ISOCurrencies not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Support/PaymentsHelper.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/Support/PdfHelper.php
+
+		-
+			message: '#^Unknown parameter \$associated_files in call to function pdf_create\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: Modules/Core/Support/PdfHelper.php
+
+		-
+			message: '#^Unknown parameter \$embed_xml in call to function pdf_create\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: Modules/Core/Support/PdfHelper.php
+
+		-
+			message: '#^Unknown parameter \$is_guest in call to function pdf_create\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: Modules/Core/Support/PdfHelper.php
+
+		-
+			message: '#^Class Modules\\Crm\\Models\\ClientCustom not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Support/TemplateHelper.php
+
+		-
+			message: '#^Class Modules\\Invoices\\Models\\InvoiceCustom not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Support/TemplateHelper.php
+
+		-
+			message: '#^Class Modules\\Payments\\Models\\PaymentCustom not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Support/TemplateHelper.php
+
+		-
+			message: '#^Class Modules\\Quotes\\Models\\QuoteCustom not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Support/TemplateHelper.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/Support/TemplateHelper.php
+
+		-
+			message: '#^Undefined variable\: \$bridge$#'
+			identifier: variable.undefined
+			count: 6
+			path: Modules/Core/Support/TemplateHelper.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Tests/Feature/CoreAjaxControllerTest.php
+
+		-
+			message: '#^Call to static method factory\(\) on an unknown class Modules\\Custom\\Models\\CustomValue\.$#'
+			identifier: class.notFound
+			count: 5
+			path: Modules/Core/Tests/Feature/CustomValuesControllerTest.php
+
+		-
+			message: '#^Class Modules\\Custom\\Models\\CustomValue not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/Tests/Feature/CustomValuesControllerTest.php
+
+		-
+			message: '#^Access to undefined constant Modules\\Core\\Models\\User\:\:USER_TYPE_ADMINISTRATOR\.$#'
+			identifier: classConstant.notFound
+			count: 2
+			path: Modules/Core/Tests/Feature/UsersControllerTest.php
+
+		-
+			message: '#^Result of static method Modules\\Core\\Support\\EchoHelper\:\:_htmle\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 1
+			path: Modules/Core/Tests/Unit/EchoHelperTest.php
+
+		-
+			message: '#^Result of static method Modules\\Core\\Support\\EchoHelper\:\:_htmlsc\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 1
+			path: Modules/Core/Tests/Unit/EchoHelperTest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/ajax/modal_change_user_client.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/calculation_info.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/complete.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/configure_database.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/create_user.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/custom_field_usage_list.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/custom_field_usage_list.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 13
+			path: Modules/Core/resources/views/dashboard/index.php
+
+		-
+			message: '#^Function lang not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/dashboard/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 7
+			path: Modules/Core/resources/views/dashboard/index.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/edit.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/edit.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/field.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/field.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/head.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 9
+			path: Modules/Core/resources/views/head.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/import_index.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/includes/head.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 9
+			path: Modules/Core/resources/views/includes/head.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 33
+			path: Modules/Core/resources/views/includes/navbar.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/includes/navbar.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 7
+			path: Modules/Core/resources/views/includes/sidebar.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/install_tables.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/invoice.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/invoice_aging_index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Core/resources/views/invoice_templates/public/InvoicePlane_Web.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/invoices_per_client_index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/language.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Core/resources/views/layout_guest.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/layout_guest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 5
+			path: Modules/Core/resources/views/layout_guest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/modal_change_user_client.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 33
+			path: Modules/Core/resources/views/navbar.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/navbar.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/new.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/new.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial/custom_field_usage_list.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial/custom_field_usage_list.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/partial_custom_fields_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/partial_custom_values_field.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/partial_custom_values_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/partial_custom_values_table.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial_settings_general.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial_settings_general.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial_settings_general.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial_settings_invoices.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/partial_settings_invoices.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/payment_history_index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/prerequisites.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/quote.php
+
+		-
+			message: '#^Function lang not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/quote_templates/public/InvoicePlane_Web.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 5
+			path: Modules/Core/resources/views/quote_templates/public/InvoicePlane_Web.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/sales_by_client_index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/sales_by_year_index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 7
+			path: Modules/Core/resources/views/sidebar.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/upgrade_tables.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/users/form.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/users/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/users/modal_user_client.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Core/resources/views/users/partial_users_table.php
+
+		-
+			message: '#^Function base_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/users/session_login.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Core/resources/views/users/session_login.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/users/session_new_password.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/users/session_passwordreset.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Core/resources/views/versions.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/routes/web/email-templates.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\FilterAjaxController not found\.$#'
+			identifier: class.notFound
+			count: 15
+			path: Modules/Core/routes/web/filter.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\CustomerPortalController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\Gateways\\PaypalController not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\Gateways\\StripeController not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\InvoicesController not found\.$#'
+			identifier: class.notFound
+			count: 5
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\PaymentInformation not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\PaymentsController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\QuotesController not found\.$#'
+			identifier: class.notFound
+			count: 6
+			path: Modules/Core/routes/web/guest.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\Controllers\\MailerController not found\.$#'
+			identifier: class.notFound
+			count: 4
+			path: Modules/Core/routes/web/mailer.php
+
+		-
+			message: '#^Call to static method cases\(\) on an unknown class Modules\\Crm\\Controllers\\ClientTitleEnum\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Crm/Controllers/ClientsController.php
+
+		-
+			message: '#^Call to static method getSetting\(\) on an unknown class Modules\\Crm\\Controllers\\SettingsHelper\.$#'
+			identifier: class.notFound
+			count: 5
+			path: Modules/Crm/Controllers/ClientsController.php
+
+		-
+			message: '#^Class Modules\\Crm\\Tests\\Feature\\ClientsAjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Crm/Tests/Feature/ClientsAjaxControllerTest.php
+
+		-
+			message: '#^Class Modules\\Crm\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Crm/Tests/Feature/ClientsAjaxDetailsTest.php
+
+		-
+			message: '#^Class Modules\\Crm\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Crm/Tests/Feature/ClientsAjaxEdgeCasesTest.php
+
+		-
+			message: '#^Class Modules\\Crm\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Crm/Tests/Feature/ClientsAjaxModalTest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Crm/resources/views/field.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Crm/resources/views/gateways/paypal.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/gateways/stripe.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 5
+			path: Modules/Crm/resources/views/invoices_index.php
+
+		-
+			message: '#^Function lang not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/invoices_view.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Crm/resources/views/invoices_view.php
+
+		-
+			message: '#^Function lang not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Crm/resources/views/modal_task_lookups.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/modal_task_lookups.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Crm/resources/views/partial_client_einvoicing.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/partial_client_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Crm/resources/views/partial_client_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Crm/resources/views/partial_invoices_table.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/partial_projects_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Crm/resources/views/partial_projects_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 5
+			path: Modules/Crm/resources/views/partial_quotes_table.php
+
+		-
+			message: '#^Function lang not found\.$#'
+			identifier: function.notFound
+			count: 5
+			path: Modules/Crm/resources/views/partial_task_table_modal.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/partial_tasks_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Crm/resources/views/partial_tasks_table.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Crm/resources/views/payment_information.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Crm/resources/views/payment_information.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Crm/resources/views/payments_index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Crm/resources/views/paypal.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 6
+			path: Modules/Crm/resources/views/quotes_index.php
+
+		-
+			message: '#^Function lang not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/quotes_view.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Crm/resources/views/quotes_view.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Crm/resources/views/stripe.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Crm/resources/views/view.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Crm/resources/views/view.php
+
+		-
+			message: '#^Class Modules\\Crm\\app\\Http\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 6
+			path: Modules/Crm/routes/web/clients.php
+
+		-
+			message: '#^Class Modules\\Crm\\app\\Http\\Controllers\\ClientsController not found\.$#'
+			identifier: class.notFound
+			count: 5
+			path: Modules/Crm/routes/web/clients.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Core\\Support\\MailerHelper\:\:mailerConfigured\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: Modules/Invoices/Controllers/CronController.php
+
+		-
+			message: '#^Call to static method getSetting\(\) on an unknown class Modules\\Invoices\\Controllers\\SettingsHelper\.$#'
+			identifier: class.notFound
+			count: 4
+			path: Modules/Invoices/Controllers/CronController.php
+
+		-
+			message: '#^Function log_message not found\.$#'
+			identifier: function.notFound
+			count: 5
+			path: Modules/Invoices/Controllers/CronController.php
+
+		-
+			message: '#^Instantiated class Sumex not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Invoices/Controllers/InvoicesController.php
+
+		-
+			message: '#^Access to undefined constant Modules\\Invoices\\Models\\InvoicesRecurring\:\:RECUR_FREQUENCIES\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: Modules/Invoices/Controllers/RecurringController.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Invoices/Services/InvoiceAmountService.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/Services/InvoiceItemAmountService.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/Services/InvoiceTaxRateService.php
+
+		-
+			message: '#^Class Modules\\Invoices\\Controllers\\CronController constructor invoked with 0 parameters, 4 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: Modules/Invoices/Tests/Feature/CronControllerTest.php
+
+		-
+			message: '#^Inner named functions are not supported by PHPStan\. Consider refactoring to an anonymous function, class method, or a top\-level\-defined function\. See issue \#165 \(https\://github\.com/phpstan/phpstan/issues/165\) for more details\.$#'
+			identifier: function.inner
+			count: 2
+			path: Modules/Invoices/Tests/Feature/CronControllerTest.php
+
+		-
+			message: '#^Class Modules\\Invoices\\Controllers\\InvoiceController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Invoices/Tests/Feature/InvoiceControllerTest.php
+
+		-
+			message: '#^Instantiated class Modules\\Invoices\\Controllers\\InvoiceController not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Invoices/Tests/Feature/InvoiceControllerTest.php
+
+		-
+			message: '#^Class Modules\\Invoices\\Controllers\\InvoiceGroupsController constructor invoked with 0 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 9
+			path: Modules/Invoices/Tests/Feature/InvoiceGroupsControllerTest.php
+
+		-
+			message: '#^Call to static method factory\(\) on an unknown class Modules\\Crm\\Models\\Task\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Invoices/Tests/Feature/InvoicesControllerTest.php
+
+		-
+			message: '#^Call to static method find\(\) on an unknown class Modules\\Crm\\Models\\Task\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Invoices/Tests/Feature/InvoicesControllerTest.php
+
+		-
+			message: '#^Class Modules\\Payments\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Invoices/Tests/Feature/PaymentsAjaxControllerTest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 14
+			path: Modules/Invoices/resources/views/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Invoices/resources/views/index_client.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/index_recurring.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Invoices/resources/views/modal_add_invoice_tax.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Invoices/resources/views/modal_copy_invoice.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Invoices/resources/views/modal_create_credit.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Invoices/resources/views/modal_create_invoice.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Invoices/resources/views/modal_create_recurring.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/modal_delete_invoice.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/partial_invoice_archive.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 6
+			path: Modules/Invoices/resources/views/partial_invoice_table.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/partial_invoices_recurring_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Invoices/resources/views/partial_invoices_recurring_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/partial_itemlist_responsive.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/partial_itemlist_table.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/view.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 15
+			path: Modules/Invoices/resources/views/view.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Invoices/resources/views/view_sumex.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 13
+			path: Modules/Invoices/resources/views/view_sumex.php
+
+		-
+			message: '#^Class Modules\\Invoices\\app\\Http\\Controllers\\InvoiceGroupsController not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: Modules/Invoices/routes/web/invoice-groups.php
+
+		-
+			message: '#^Class Modules\\Invoices\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 17
+			path: Modules/Invoices/routes/web/invoices.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Payments/resources/views/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Payments/resources/views/modal_add_payment.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Payments/resources/views/online_logs.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Payments/resources/views/partial_online_logs_table.php
+
+		-
+			message: '#^Function anchor not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Payments/resources/views/partial_payments_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Payments/resources/views/partial_payments_table.php
+
+		-
+			message: '#^Class Modules\\Payments\\app\\Http\\Controllers\\PaymentMethodsController not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: Modules/Payments/routes/web/payment-methods.php
+
+		-
+			message: '#^Class Modules\\Products\\Controllers\\AjaxController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Products/Tests/Feature/ProductsAjaxControllerTest.php
+
+		-
+			message: '#^Class Modules\\Products\\Controllers\\ProductsController constructor invoked with 0 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 11
+			path: Modules/Products/Tests/Feature/ProductsControllerTest.php
+
+		-
+			message: '#^Class Modules\\Products\\Controllers\\TaxRatesController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Modules/Products/Tests/Feature/TaxRatesControllerTest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Products/resources/views/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Products/resources/views/modal_product_lookups.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: Modules/Products/resources/views/partial_families_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 4
+			path: Modules/Products/resources/views/partial_products_table.php
+
+		-
+			message: '#^Class Modules\\Core\\Controllers\\FamiliesController not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: Modules/Products/routes/web/families.php
+
+		-
+			message: '#^Class src\\Controllers\\UnitsController not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: Modules/Products/routes/web/units.php
+
+		-
+			message: '#^Result of function _trans \(void\) is used\.$#'
+			identifier: function.void
+			count: 2
+			path: Modules/Projects/Resources/views/projects_form.php
+
+		-
+			message: '#^Result of function _trans \(void\) is used\.$#'
+			identifier: function.void
+			count: 2
+			path: Modules/Projects/Resources/views/tasks_form.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Projects\\Services\\TaskService\:\:isAssignedToInvoice\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: Modules/Projects/Services/TaskService.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Projects\\Services\\TaskService\:\:query\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: Modules/Projects/Services/TaskService.php
+
+		-
+			message: '#^Undefined variable\: \$user$#'
+			identifier: variable.undefined
+			count: 2
+			path: Modules/Projects/Tests/Feature/TasksControllerTest.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Quotes/Services/QuoteAmountService.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Quotes/Services/QuoteItemAmountService.php
+
+		-
+			message: '#^Function config_item not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Quotes/Services/QuoteTaxRateService.php
+
+		-
+			message: '#^Call to static method factory\(\) on an unknown class Modules\\Core\\Models\\InvoiceGroup\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Modules/Quotes/Tests/Feature/QuotesAjaxControllerTest.php
+
+		-
+			message: '#^Inner named functions are not supported by PHPStan\. Consider refactoring to an anonymous function, class method, or a top\-level\-defined function\. See issue \#165 \(https\://github\.com/phpstan/phpstan/issues/165\) for more details\.$#'
+			identifier: function.inner
+			count: 2
+			path: Modules/Quotes/Tests/Unit/QuoteItemAmountServiceTest.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Quotes\\Tests\\Unit\\QuoteItemServiceTest\:\:assertDatabaseHas\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: Modules/Quotes/Tests/Unit/QuoteItemServiceTest.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Quotes\\Tests\\Unit\\QuoteItemServiceTest\:\:assertDatabaseMissing\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: Modules/Quotes/Tests/Unit/QuoteItemServiceTest.php
+
+		-
+			message: '#^Inner named functions are not supported by PHPStan\. Consider refactoring to an anonymous function, class method, or a top\-level\-defined function\. See issue \#165 \(https\://github\.com/phpstan/phpstan/issues/165\) for more details\.$#'
+			identifier: function.inner
+			count: 1
+			path: Modules/Quotes/Tests/Unit/QuoteServiceTest.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Quotes\\Tests\\Unit\\QuoteTaxRateServiceTest\:\:assertDatabaseHas\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: Modules/Quotes/Tests/Unit/QuoteTaxRateServiceTest.php
+
+		-
+			message: '#^Inner named functions are not supported by PHPStan\. Consider refactoring to an anonymous function, class method, or a top\-level\-defined function\. See issue \#165 \(https\://github\.com/phpstan/phpstan/issues/165\) for more details\.$#'
+			identifier: function.inner
+			count: 2
+			path: Modules/Quotes/Tests/Unit/QuoteTaxRateServiceTest.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 16
+			path: Modules/Quotes/resources/views/index.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Quotes/resources/views/modal_add_quote_tax.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Quotes/resources/views/modal_copy_quote.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Quotes/resources/views/modal_create_quote.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Quotes/resources/views/modal_delete_quote.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: Modules/Quotes/resources/views/modal_quote_to_invoice.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Quotes/resources/views/partial_itemlist_responsive.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: Modules/Quotes/resources/views/partial_itemlist_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 6
+			path: Modules/Quotes/resources/views/partial_quote_table.php
+
+		-
+			message: '#^Function site_url not found\.$#'
+			identifier: function.notFound
+			count: 12
+			path: Modules/Quotes/resources/views/view.php

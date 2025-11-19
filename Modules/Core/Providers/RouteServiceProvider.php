@@ -40,8 +40,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(): void
     {
-        Route::middleware('web')
-            ->group(module_path('Core', '/Routes/web/core.php'));
+        $routeDir = module_path('Core', 'routes/web');
+        foreach (glob($routeDir . '/*.php') as $routeFile) {
+            Route::middleware('web')
+                ->group($routeFile);
+        }
     }
 
     /**
