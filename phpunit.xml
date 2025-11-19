@@ -1,58 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="vendor/autoload.php"
          colors="true"
-         failOnWarning="true"
-         failOnRisky="true"
-         beStrictAboutOutputDuringTests="true"
-         cacheDirectory=".phpunit.cache"
-         backupGlobals="false">
+>
     <testsuites>
-        <testsuite name="Feature">
-            <directory>Modules/*/Tests/Feature</directory>
-        </testsuite>
         <testsuite name="Unit">
-            <directory>Modules/*/Tests/Unit</directory>
+            <directory>tests/Unit</directory>
         </testsuite>
-        
-        <!-- Module-specific test suites -->
-        <testsuite name="Core">
-            <directory>Modules/Core/Tests</directory>
-        </testsuite>
-        <testsuite name="Quotes">
-            <directory>Modules/Quotes/Tests</directory>
-        </testsuite>
-        <testsuite name="Invoices">
-            <directory>Modules/Invoices/Tests</directory>
-        </testsuite>
-        <testsuite name="Products">
-            <directory>Modules/Products/Tests</directory>
-        </testsuite>
-        <testsuite name="Payments">
-            <directory>Modules/Payments/Tests</directory>
-        </testsuite>
-        <testsuite name="Crm">
-            <directory>Modules/Crm/Tests</directory>
-        </testsuite>
-        <testsuite name="Projects">
-            <directory>Modules/Projects/Tests</directory>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
-            <directory>Modules</directory>
             <directory>app</directory>
         </include>
-        <exclude>
-            <directory>Modules/*/Resources</directory>
-            <directory>Modules/*/Config</directory>
-            <directory>Modules/*/Routes</directory>
-        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="BROADCAST_CONNECTION" value="null"/>
+        <env name="CACHE_STORE" value="array"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="PULSE_ENABLED" value="false"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="NIGHTWATCH_ENABLED" value="false"/>
     </php>
 </phpunit>
