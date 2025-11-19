@@ -45,6 +45,43 @@ return [
             'report'     => false,
         ],
 
+        'uploads' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/uploads'),
+            'throw'  => false,
+        ],
+
+        'uploads_archive' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/uploads/archive'),
+            'throw'  => false,
+        ],
+
+        'uploads_customer_files' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/uploads/customer_files'),
+            'throw'  => false,
+        ],
+
+        'uploads_import' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/uploads/import'),
+            'throw'  => false,
+        ],
+
+        'uploads_temp' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/uploads/temp'),
+            'throw'  => false,
+        ],
+
+        'uploads_temp_mpdf' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/uploads/temp/mpdf'),
+            'throw'  => false,
+        ],
+
+
         's3' => [
             'driver'                  => 's3',
             'key'                     => env('AWS_ACCESS_KEY_ID'),

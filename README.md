@@ -1,59 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<img align="right" alt="InvoicePlane logo" src="/assets/core/img/favicon.png">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# _InvoicePlane_
 
-## About Laravel
+<div align="center">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+_A libre self-hosted web application designed to help you manage invoices, clients, and payments efficiently._
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<br>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+[![Curent version](https://img.shields.io/badge/dynamic/json.svg?label=Current%20Version&url=https%3A%2F%2Fapi.github.com%2Frepos%2FInvoicePlane%2FInvoicePlane%2Freleases%2Flatest&query=%24.name&colorB=%23429ae1)](https://www.invoiceplane.com/)
+[![Downloads](https://img.shields.io/github/downloads/invoiceplane/invoiceplane/total?colorB=%23429ae1)](https://www.invoiceplane.com/)
+[![Translation](https://img.shields.io/badge/Translations-%40%20Crowdin-429ae1)](https://translations.invoiceplane.com/project/fusioninvoice)
 
-## Learning Laravel
+<br>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+[![Wiki](https://img.shields.io/badge/Help%3A-Official%20Wiki-429ae1.svg)](https://wiki.invoiceplane.com/)
+[![Community Forums](https://img.shields.io/badge/Help%3A-Community%20Forums-429ae1.svg)](https://community.invoiceplane.com/)
+[![Issue Tracker](https://img.shields.io/badge/Development%3A-Issue%20Tracker-429ae1.svg)](https://github.com/invoiceplane/invoiceplane/issues/)
+[![Contribution Guide](https://img.shields.io/badge/Development%3A-Contribution%20Guide-429ae1.svg)](CONTRIBUTING.md)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+</div>
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Key Features
 
-### Premium Partners
+- **Invoice & Quote Management:** Create, send, and manage professional invoices and quotes effortlessly.
+- **Client Management:** Maintain detailed client records, including contact information and transaction history.
+- **Payment Tracking:** Monitor payments, set up reminders, and integrate with multiple payment gateways.
+- **Customization:** Tailor templates, themes, and settings to match your brand preferences.
+- **Reporting:** Generate insightful reports to track your financial performance.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
+
+## Getting Started
+
+To get started with InvoicePlane:
+
+1. **Download the Latest Version:**
+   - Visit the [InvoicePlane website](https://www.invoiceplane.com/) to download the latest release.
+
+2. **Extract and Upload:**
+   - Extract the downloaded package and upload the files to your web server or hosting environment.
+
+3. **Configuration:**
+   - Duplicate `ipconfig.php.example` and rename it to `ipconfig.php`.
+   - Open `ipconfig.php` in a text editor and set your base URL.
+
+4. **Run the Installer:**
+   - Navigate to `http://your-domain.com/index.php/setup` in your browser and follow the on-screen instructions to complete the installation.
+
+For a **detailed installation guide**, including prerequisites and troubleshooting tips, refer to [INSTALLATION.md](INSTALLATION.md).
+
+---
+
+## Removing `index.php` from URLs (Optional)
+
+To remove `index.php` from your URLs:
+
+1. **Enable mod_rewrite:**
+   - Ensure the `mod_rewrite` module is enabled on your web server.
+
+2. **Update Configuration:**
+   - Set `REMOVE_INDEXPHP` to `true` in your `ipconfig.php` file.
+
+3. **Rename `.htaccess`:**
+   - Rename the `htaccess` file in the root directory to `.htaccess`.
+
+> **Note:** If you experience issues after making these changes, revert to the default settings by undoing the steps above.
+
+---
+
+## Community and Support
+
+Join our vibrant community for support, discussions, and contributions:
+
+- **Community Forums:** [InvoicePlane Forums](https://community.invoiceplane.com/) - Ask questions, share knowledge, and get help from the community.
+- **Discord:** [Join our Discord](https://discord.gg/PPzD2hTrXt) - Chat with users, developers, and contributors in real time.
+- **Issue Tracker:** [GitHub Issues](https://github.com/InvoicePlane/InvoicePlane/issues) - Report bugs and request features.
+- **Wiki & Documentation:** [InvoicePlane Wiki](https://wiki.invoiceplane.com/) - Find guides, FAQs, and detailed setup instructions.
+
+> *InvoicePlane is developed and maintained by a dedicated team of volunteers. Support is provided by the community on a best-effort basis.*
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+We welcome contributions from the community! To get involved:
 
-## Code of Conduct
+- **Report Issues:** Use the [Issue Tracker](https://github.com/InvoicePlane/InvoicePlane/issues) to report bugs or request features.
+- **Submit Pull Requests:** Fork the repository, make your changes, and submit a pull request for review.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Translate InvoicePlane:** Help translate the application into your language. Also see [Translations.md](TRANSLATIONS.md)
+
+For detailed contribution guidelines, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability, please email **[mail@invoiceplane.com](mailto:mail@invoiceplane.com)** before disclosing it publicly. We will address all security concerns promptly.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## License & Copyright
+
+InvoicePlane is licensed under the [MIT License](LICENSE.txt).
+
+The **InvoicePlane name** and **logo** are copyrighted by [Kovah.de](https://kovah.de/) and [InvoicePlane.com](https://www.invoiceplane.com/). Usage is restricted. For more information, visit [license & copyright](https://www.invoiceplane.com/license-copyright).

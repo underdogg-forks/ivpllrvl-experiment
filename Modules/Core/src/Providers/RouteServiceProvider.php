@@ -24,8 +24,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(): void
     {
-        $this->mapApiRoutes();
         $this->mapWebRoutes();
+        // Future: $this->mapApiRoutes();
     }
 
     /**
@@ -35,7 +35,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(): void
     {
-        Route::middleware('web')->group(module_path($this->name, 'routes/web.php'));
+        $routeDir = module_path('Core', 'routes/web');
+        foreach (glob($routeDir . '/*.php') as $routeFile) {
+            Route::middleware('web')
+                ->group($routeFile);
+        }
     }
 
     /**
@@ -45,6 +49,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes(): void
     {
-        Route::middleware('api')->prefix('api')->name('api.')->group(module_path($this->name, 'routes/api.php'));
+        // Future API routes implementation
+        // Route::prefix('api')
+        //     ->middleware('api')
+        //     ->group(module_path('Core', '/Routes/api/core.php'));
     }
 }

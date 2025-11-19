@@ -6,14 +6,13 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "wikimedia/composer-merge-plugin": true
-        }
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -21,6 +20,7 @@
         "php": "^8.2",
         "filament/filament": "^4.2",
         "laravel/framework": "^12.39",
+        "mpdf/mpdf": "^8.2.6",
         "nwidart/laravel-modules": "^12.0"
     },
     "require-dev": {
