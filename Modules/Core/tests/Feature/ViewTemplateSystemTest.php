@@ -62,7 +62,7 @@ class ViewTemplateSystemTest extends TestCase
     public function test_blade_views_can_be_rendered(): void
     {
         // Create a temporary Blade view
-        $viewPath = resource_path('views/test_blade_template.blade.php');
+        $viewPath     = resource_path('views/test_blade_template.blade.php');
         $bladeContent = <<<'BLADE'
 Hello, @{{ name }}
 {{-- escaped to show raw moustache --}}
@@ -77,7 +77,7 @@ BLADE;
 
             // Assert it renders correctly and compiles directives
             $this->assertStringContainsString('Blade Works: JOHN', $rendered);
-            $this->assertStringContainsString('@{ name }', str_replace(['{{ ', ' }}'], ['{{','}}'], '@{ name }')); // sanity (no actual raw)
+            $this->assertStringContainsString('@{ name }', str_replace(['{{ ', ' }}'], ['{{', '}}'], '@{ name }')); // sanity (no actual raw)
         } finally {
             // Clean up
             if (file_exists($viewPath)) {
