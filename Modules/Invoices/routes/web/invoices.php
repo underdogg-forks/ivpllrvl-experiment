@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Invoices\Controllers\InvoicesAjaxController;
 use Modules\Invoices\Controllers\CronController;
+use Modules\Invoices\Controllers\InvoicesAjaxController;
 use Modules\Invoices\Controllers\InvoicesController;
 use Modules\Invoices\Controllers\RecurringController;
 

@@ -1,15 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Controllers\GetController as CustomerPortalController;
-use Modules\Core\Controllers\View as PaypalController;
-use Modules\Core\Controllers\View as StripeController;
 use Modules\Core\Controllers\GetController;
+use Modules\Core\Controllers\GetController as CustomerPortalController;
 use Modules\Core\Controllers\GetController as InvoicesController;
 use Modules\Core\Controllers\GetController as PaymentInformation;
 use Modules\Core\Controllers\GetController as PaymentsController;
 use Modules\Core\Controllers\GetController as QuotesController;
 use Modules\Core\Controllers\View;
+use Modules\Core\Controllers\View as PaypalController;
+use Modules\Core\Controllers\View as StripeController;
 
 Route::middleware('web')->group(function () {
     Route::get('guest', [InvoicesController::class, 'index'])->name('guest.index');
