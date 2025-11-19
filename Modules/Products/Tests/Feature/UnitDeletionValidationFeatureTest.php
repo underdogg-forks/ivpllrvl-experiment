@@ -32,7 +32,7 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->delete(route('units.destroy', ['unit' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_units', ['unit_id' => $unit->unit_id]);
@@ -51,7 +51,7 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->delete(route('units.destroy', ['unit' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_units', ['unit_id' => $unit->unit_id]);
@@ -70,7 +70,7 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->delete(route('units.destroy', ['unit' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_units', ['unit_id' => $unit->unit_id]);
@@ -89,7 +89,7 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->delete(route('units.destroy', ['unit' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_units', ['unit_id' => $unit->unit_id]);
@@ -103,14 +103,14 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $unit = Unit::factory()->create();
-        
+
         Product::factory()->count(2)->create(['unit_id' => $unit->unit_id]);
         InvoiceItem::factory()->create(['item_product_unit_id' => $unit->unit_id]);
 
         /** Act */
         $response = $this->delete(route('units.destroy', ['unit' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('units.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_units', ['unit_id' => $unit->unit_id]);
@@ -123,7 +123,7 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
     public function it_allows_deletion_after_references_removed(): void
     {
         /** Arrange */
-        $unit = Unit::factory()->create();
+        $unit    = Unit::factory()->create();
         $product = Product::factory()->create(['unit_id' => $unit->unit_id]);
 
         // Initially cannot delete
@@ -136,7 +136,7 @@ class UnitDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response2 = $this->delete(route('units.destroy', ['unit' => $unit->unit_id]));
 
-        /** Assert */
+        /* Assert */
         $response2->assertRedirect(route('units.index'));
         $response2->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_units', ['unit_id' => $unit->unit_id]);

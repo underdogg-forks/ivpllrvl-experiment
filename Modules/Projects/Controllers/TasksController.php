@@ -85,12 +85,12 @@ class TasksController
 
         // Check if task exists
         $task = $this->taskService->find($id);
-        if (!$task) {
+        if ( ! $task) {
             return $this->redirectWithError('tasks.index', TranslationHelper::trans('task_not_found'));
         }
 
         // Business rule: Cannot delete tasks that are assigned to invoices
-        if (!$this->taskService->canDelete($id)) {
+        if ( ! $this->taskService->canDelete($id)) {
             return $this->redirectWithError(
                 'tasks.index',
                 TranslationHelper::trans('task_deletion_not_allowed_assigned_to_invoice')

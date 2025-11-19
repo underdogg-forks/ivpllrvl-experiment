@@ -44,7 +44,7 @@ class VerifyCsrfToken
         }
 
         // Verify CSRF token
-        if (!$this->tokensMatch($request)) {
+        if ( ! $this->tokensMatch($request)) {
             return $this->handleTokenMismatch($request);
         }
 

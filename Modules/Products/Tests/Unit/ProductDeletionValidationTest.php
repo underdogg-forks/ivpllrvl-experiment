@@ -44,7 +44,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($product->product_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Product without invoice items should be deletable');
     }
 
@@ -73,7 +73,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($product->product_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete, 'Product with invoice items should NOT be deletable');
     }
 
@@ -101,7 +101,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $itemCount = $this->service->getInvoiceItemCount($product->product_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(3, $itemCount, 'Should return correct count of invoice items');
     }
 
@@ -121,10 +121,10 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         ]);
 
         /** Act */
-        $canDelete    = $this->service->canDelete($product->product_id);
-        $itemCount    = $this->service->getInvoiceItemCount($product->product_id);
+        $canDelete = $this->service->canDelete($product->product_id);
+        $itemCount = $this->service->getInvoiceItemCount($product->product_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertEquals(1, $itemCount);
     }
@@ -149,7 +149,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($product->product_id);
         $itemCount = $this->service->getInvoiceItemCount($product->product_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertEquals(5, $itemCount);
     }
@@ -169,7 +169,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         $itemCount = $this->service->getInvoiceItemCount($nonexistentId);
         $canDelete = $this->service->canDelete($nonexistentId);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(0, $itemCount);
         $this->assertTrue($canDelete, 'Non-existent product should be "deletable" (returns true)');
     }
@@ -194,7 +194,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($product->product_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete, 'Product should not be deletable even with archived invoice items');
     }
 }

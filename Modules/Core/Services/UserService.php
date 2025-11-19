@@ -97,8 +97,8 @@ class UserService extends BaseService
     {
         $blockers = $this->getDeletionBlockers($id);
 
-        return $blockers['invoices'] === 0 
-            && $blockers['quotes'] === 0 
+        return $blockers['invoices'] === 0
+            && $blockers['quotes'] === 0
             && $blockers['sessions'] === 0;
     }
 

@@ -43,10 +43,10 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
         ]);
 
         /** Act */
-        $canDelete = $this->service->canDelete($task->task_id);
+        $canDelete  = $this->service->canDelete($task->task_id);
         $isAssigned = $this->service->isAssignedToInvoice($task->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Task without invoice assignment should be deletable');
         $this->assertFalse($isAssigned, 'Task should not be marked as assigned');
     }
@@ -61,7 +61,7 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $task = Task::factory()->create([
             'task_name'   => 'Invoiced Task',
             'invoice_id'  => $invoice->invoice_id, // Assigned to invoice
@@ -69,10 +69,10 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
         ]);
 
         /** Act */
-        $canDelete = $this->service->canDelete($task->task_id);
+        $canDelete  = $this->service->canDelete($task->task_id);
         $isAssigned = $this->service->isAssignedToInvoice($task->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete, 'Task assigned to invoice should NOT be deletable');
         $this->assertTrue($isAssigned, 'Task should be marked as assigned to invoice');
     }
@@ -87,11 +87,11 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $assignedTask = Task::factory()->create([
             'invoice_id' => $invoice->invoice_id,
         ]);
-        
+
         $unassignedTask = Task::factory()->create([
             'invoice_id' => null,
         ]);
@@ -100,7 +100,7 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
         $assignedIsAssigned   = $this->service->isAssignedToInvoice($assignedTask->task_id);
         $unassignedIsAssigned = $this->service->isAssignedToInvoice($unassignedTask->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($assignedIsAssigned, 'Assigned task should return true');
         $this->assertFalse($unassignedIsAssigned, 'Unassigned task should return false');
     }
@@ -117,10 +117,10 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $canDelete = $this->service->canDelete($nonexistentId);
+        $canDelete  = $this->service->canDelete($nonexistentId);
         $isAssigned = $this->service->isAssignedToInvoice($nonexistentId);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Non-existent task should return true for canDelete');
         $this->assertFalse($isAssigned, 'Non-existent task should return false for isAssigned');
     }
@@ -135,10 +135,10 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         // Create tasks with different statuses but all assigned to invoice
         $statuses = [1, 2, 3, 4]; // Not Started, In Progress, Complete, On Hold
-        
+
         foreach ($statuses as $status) {
             $task = Task::factory()->create([
                 'task_status' => $status,
@@ -148,7 +148,7 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
             /** Act */
             $canDelete = $this->service->canDelete($task->task_id);
 
-            /** Assert */
+            /* Assert */
             $this->assertFalse(
                 $canDelete,
                 "Task with status {$status} assigned to invoice should not be deletable"
@@ -173,7 +173,7 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($task->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Completed task without invoice should be deletable');
     }
 
@@ -187,18 +187,18 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         // Create multiple tasks assigned to same invoice
         $tasks = Task::factory()->count(3)->create([
             'invoice_id' => $invoice->invoice_id,
         ]);
 
-        /** Act & Assert */
+        /* Act & Assert */
         foreach ($tasks as $task) {
             $canDelete = $this->service->canDelete($task->task_id);
             $this->assertFalse(
                 $canDelete,
-                "Each task assigned to invoice should not be deletable"
+                'Each task assigned to invoice should not be deletable'
             );
         }
     }
@@ -213,7 +213,7 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $task = Task::factory()->create([
             'invoice_id' => $invoice->invoice_id,
         ]);
@@ -228,7 +228,7 @@ class TaskDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($task->task_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Task should be deletable after invoice reference removed');
     }
 }

@@ -53,11 +53,11 @@ class TaskService extends BaseService
     {
         // Reuse existing method
         $task = Task::query()->find($taskId);
-        if (!$task) {
+        if ( ! $task) {
             return true;
         }
-        
-        return !$this->isAssignedToInvoice($taskId);
+
+        return ! $this->isAssignedToInvoice($taskId);
     }
 
     protected function getModelClass(): string
@@ -65,4 +65,3 @@ class TaskService extends BaseService
         return Task::class;
     }
 }
-

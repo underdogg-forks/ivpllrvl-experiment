@@ -38,10 +38,10 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_success');
-        
+
         $this->assertDatabaseMissing('ip_clients', [
             'client_id' => $client->client_id,
         ]);
@@ -58,7 +58,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Invoice::factory()->create([
             'client_id' => $client->client_id,
         ]);
@@ -66,10 +66,10 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_error');
-        
+
         $this->assertDatabaseHas('ip_clients', [
             'client_id' => $client->client_id,
         ]);
@@ -86,7 +86,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Quote::factory()->create([
             'client_id' => $client->client_id,
         ]);
@@ -94,10 +94,10 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_error');
-        
+
         $this->assertDatabaseHas('ip_clients', [
             'client_id' => $client->client_id,
         ]);
@@ -114,7 +114,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Project::factory()->create([
             'client_id' => $client->client_id,
         ]);
@@ -122,10 +122,10 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_error');
-        
+
         $this->assertDatabaseHas('ip_clients', [
             'client_id' => $client->client_id,
         ]);
@@ -142,7 +142,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Invoice::factory()->count(2)->create(['client_id' => $client->client_id]);
         Quote::factory()->count(3)->create(['client_id' => $client->client_id]);
         Project::factory()->create(['client_id' => $client->client_id]);
@@ -150,10 +150,10 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_error');
-        
+
         $this->assertDatabaseHas('ip_clients', ['client_id' => $client->client_id]);
     }
 
@@ -172,7 +172,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $invalidId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -192,7 +192,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('clients.delete', ['client_id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('clients.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -208,7 +208,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         $invoice = Invoice::factory()->create(['client_id' => $client->client_id]);
         $quote   = Quote::factory()->create(['client_id' => $client->client_id]);
 
@@ -223,7 +223,7 @@ class ClientDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response2 = $this->post(route('clients.delete', ['client_id' => $client->client_id]));
 
-        /** Assert */
+        /* Assert */
         $response2->assertRedirect(route('clients.index'));
         $response2->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_clients', ['client_id' => $client->client_id]);

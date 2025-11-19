@@ -125,17 +125,17 @@ class FamiliesController
 
         // Check if family exists
         $family = $this->familyService->find($id);
-        if (!$family) {
+        if ( ! $family) {
             return $this->redirectWithError('families.index', TranslationHelper::trans('family_not_found'));
         }
 
         // Business rule: Cannot delete families that have products
-        if (!$this->familyService->canDelete($id)) {
+        if ( ! $this->familyService->canDelete($id)) {
             $blockers = $this->familyService->getDeletionBlockers($id);
-            $message = TranslationHelper::trans('family_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('family_deletion_not_allowed', [
                 'products' => $blockers['products'],
             ]);
-            
+
             return $this->redirectWithError('families.index', $message);
         }
 

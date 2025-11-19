@@ -129,14 +129,14 @@ class InvoiceGroupsController
 
         // Check if invoice group exists
         $invoiceGroup = $this->invoiceGroupService->find($id);
-        if (!$invoiceGroup) {
+        if ( ! $invoiceGroup) {
             return $this->redirectWithError('invoice_groups.index', TranslationHelper::trans('invoice_group_not_found'));
         }
 
         // Business rule: Cannot delete invoice groups with related invoices or quotes
-        if (!$this->invoiceGroupService->canDelete($id)) {
+        if ( ! $this->invoiceGroupService->canDelete($id)) {
             $blockers = $this->invoiceGroupService->getDeletionBlockers($id);
-            $message = TranslationHelper::trans('invoice_group_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('invoice_group_deletion_not_allowed', [
                 'invoices' => $blockers['invoices'],
                 'quotes'   => $blockers['quotes'],
             ]);

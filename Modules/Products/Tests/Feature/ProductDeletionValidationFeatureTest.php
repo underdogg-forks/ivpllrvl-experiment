@@ -38,10 +38,10 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $product->product_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_success');
-        
+
         // Verify product was actually deleted
         $this->assertDatabaseMissing('ip_products', [
             'product_id' => $product->product_id,
@@ -59,7 +59,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $product = Product::factory()->create([
             'product_name'  => 'Product In Use',
             'product_price' => 75.00,
@@ -75,10 +75,10 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $product->product_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
-        
+
         // Verify product still exists in database
         $this->assertDatabaseHas('ip_products', [
             'product_id'   => $product->product_id,
@@ -97,7 +97,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $product = Product::factory()->create();
 
         // Create 3 invoice items
@@ -109,14 +109,14 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $product->product_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
 
         // Optionally verify the count appears in the error message
         $errorMessage = session('alert_error');
         $this->assertStringContainsString('3', $errorMessage);
-        
+
         // Product should still exist
         $this->assertDatabaseHas('ip_products', [
             'product_id' => $product->product_id,
@@ -144,7 +144,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $product->product_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_products', ['product_id' => $product->product_id]);
@@ -174,7 +174,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $product->product_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_products', ['product_id' => $product->product_id]);
@@ -195,7 +195,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $invalidId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -215,7 +215,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('products.delete', ['id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('products.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -248,7 +248,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response2 = $this->post(route('products.delete', ['id' => $product->product_id]));
 
-        /** Assert */
+        /* Assert */
         $response2->assertRedirect(route('products.index'));
         $response2->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_products', ['product_id' => $product->product_id]);

@@ -43,7 +43,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($unit->unit_id);
         $blockers  = $this->service->getDeletionBlockers($unit->unit_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
         $this->assertEquals(0, $blockers['products']);
         $this->assertEquals(0, $blockers['invoice_items']);
@@ -63,7 +63,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($unit->unit_id);
         $blockers  = $this->service->getDeletionBlockers($unit->unit_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertGreaterThan(0, $blockers['products']);
     }
@@ -81,7 +81,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($unit->unit_id);
         $blockers  = $this->service->getDeletionBlockers($unit->unit_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertGreaterThan(0, $blockers['invoice_items']);
     }
@@ -99,7 +99,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($unit->unit_id);
         $blockers  = $this->service->getDeletionBlockers($unit->unit_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertGreaterThan(0, $blockers['quote_items']);
     }
@@ -111,7 +111,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $unit = Unit::factory()->create();
-        
+
         Product::factory()->count(2)->create(['unit_id' => $unit->unit_id]);
         InvoiceItem::factory()->count(3)->create(['item_product_unit_id' => $unit->unit_id]);
         QuoteItem::factory()->count(1)->create(['item_product_unit_id' => $unit->unit_id]);
@@ -120,7 +120,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($unit->unit_id);
         $blockers  = $this->service->getDeletionBlockers($unit->unit_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertEquals(2, $blockers['products']);
         $this->assertEquals(3, $blockers['invoice_items']);
@@ -133,7 +133,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
     public function it_allows_deletion_after_references_removed(): void
     {
         /** Arrange */
-        $unit = Unit::factory()->create();
+        $unit    = Unit::factory()->create();
         $product = Product::factory()->create(['unit_id' => $unit->unit_id]);
 
         // Initially cannot delete
@@ -145,7 +145,7 @@ class UnitDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($unit->unit_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
     }
 }

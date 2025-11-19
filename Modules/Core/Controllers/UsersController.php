@@ -204,14 +204,14 @@ class UsersController
 
         // Check if user exists
         $user = $this->userService->find($userId);
-        if (!$user) {
+        if ( ! $user) {
             return $this->redirectWithError('users.index', TranslationHelper::trans('user_not_found'));
         }
 
         // Business rule: Cannot delete users with related invoices, quotes, or sessions
-        if (!$this->userService->canDelete($userId)) {
+        if ( ! $this->userService->canDelete($userId)) {
             $blockers = $this->userService->getDeletionBlockers($userId);
-            $message = TranslationHelper::trans('user_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('user_deletion_not_allowed', [
                 'invoices' => $blockers['invoices'],
                 'quotes'   => $blockers['quotes'],
                 'sessions' => $blockers['sessions'],

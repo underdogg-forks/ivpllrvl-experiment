@@ -5,8 +5,8 @@ namespace Modules\Crm\Services;
 use Modules\Core\Services\BaseService;
 use Modules\Crm\Models\Client;
 use Modules\Invoices\Models\Invoice;
-use Modules\Quotes\Models\Quote;
 use Modules\Projects\Models\Project;
+use Modules\Quotes\Models\Quote;
 
 /**
  * ClientService.
@@ -119,11 +119,8 @@ class ClientService extends BaseService
 
         // Check for projects
         $projectCount = Project::query()->where('client_id', $clientId)->count();
-        if ($projectCount > 0) {
-            return false;
-        }
 
-        return true;
+        return ! ($projectCount > 0);
     }
 
     /**

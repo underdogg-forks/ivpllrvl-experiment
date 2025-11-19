@@ -3,8 +3,8 @@
 namespace Modules\Products\Services;
 
 use Modules\Core\Services\BaseService;
-use Modules\Products\Models\Product;
 use Modules\Invoices\Models\Item;
+use Modules\Products\Models\Product;
 
 /**
  * ProductService.

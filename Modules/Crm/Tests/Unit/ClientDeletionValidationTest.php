@@ -48,7 +48,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($client->client_id);
         $blockers  = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Client without related records should be deletable');
         $this->assertEquals(0, $blockers['invoices']);
         $this->assertEquals(0, $blockers['quotes']);
@@ -65,7 +65,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Invoice::factory()->create([
             'client_id' => $client->client_id,
         ]);
@@ -74,7 +74,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($client->client_id);
         $blockers  = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete, 'Client with invoices should NOT be deletable');
         $this->assertGreaterThan(0, $blockers['invoices']);
     }
@@ -89,7 +89,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Quote::factory()->create([
             'client_id' => $client->client_id,
         ]);
@@ -98,7 +98,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($client->client_id);
         $blockers  = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete, 'Client with quotes should NOT be deletable');
         $this->assertGreaterThan(0, $blockers['quotes']);
     }
@@ -113,7 +113,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Project::factory()->create([
             'client_id' => $client->client_id,
         ]);
@@ -122,7 +122,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($client->client_id);
         $blockers  = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete, 'Client with projects should NOT be deletable');
         $this->assertGreaterThan(0, $blockers['projects']);
     }
@@ -137,7 +137,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Invoice::factory()->count(3)->create([
             'client_id' => $client->client_id,
         ]);
@@ -146,7 +146,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($client->client_id);
         $blockers  = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertEquals(3, $blockers['invoices']);
     }
@@ -161,7 +161,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         Invoice::factory()->count(2)->create(['client_id' => $client->client_id]);
         Quote::factory()->count(3)->create(['client_id' => $client->client_id]);
         Project::factory()->create(['client_id' => $client->client_id]);
@@ -170,7 +170,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($client->client_id);
         $blockers  = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertEquals(2, $blockers['invoices']);
         $this->assertEquals(3, $blockers['quotes']);
@@ -191,7 +191,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $blockers = $this->service->getDeletionBlockers($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertIsArray($blockers);
         $this->assertArrayHasKey('invoices', $blockers);
         $this->assertArrayHasKey('quotes', $blockers);
@@ -208,7 +208,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
     {
         /** Arrange */
         $client = Client::factory()->create();
-        
+
         $invoice = Invoice::factory()->create(['client_id' => $client->client_id]);
         $quote   = Quote::factory()->create(['client_id' => $client->client_id]);
 
@@ -222,7 +222,7 @@ class ClientDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($client->client_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete, 'Client should be deletable after related records removed');
     }
 }

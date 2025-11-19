@@ -39,7 +39,7 @@ class FamilyDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($family->family_id);
         $blockers  = $this->service->getDeletionBlockers($family->family_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
         $this->assertEquals(0, $blockers['products']);
     }
@@ -57,7 +57,7 @@ class FamilyDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($family->family_id);
         $blockers  = $this->service->getDeletionBlockers($family->family_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertGreaterThan(0, $blockers['products']);
     }
@@ -75,7 +75,7 @@ class FamilyDeletionValidationTest extends AbstractServiceTestCase
         $canDelete = $this->service->canDelete($family->family_id);
         $blockers  = $this->service->getDeletionBlockers($family->family_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
         $this->assertEquals(5, $blockers['products']);
     }
@@ -86,7 +86,7 @@ class FamilyDeletionValidationTest extends AbstractServiceTestCase
     public function it_allows_deletion_after_products_removed(): void
     {
         /** Arrange */
-        $family = Family::factory()->create();
+        $family  = Family::factory()->create();
         $product = Product::factory()->create(['family_id' => $family->family_id]);
 
         // Initially cannot delete
@@ -98,7 +98,7 @@ class FamilyDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $canDelete = $this->service->canDelete($family->family_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
     }
 
@@ -113,7 +113,7 @@ class FamilyDeletionValidationTest extends AbstractServiceTestCase
         /** Act */
         $blockers = $this->service->getDeletionBlockers($family->family_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertIsArray($blockers);
         $this->assertArrayHasKey('products', $blockers);
     }

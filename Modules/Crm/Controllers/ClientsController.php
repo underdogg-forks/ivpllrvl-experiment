@@ -311,27 +311,27 @@ class ClientsController
 
         // Check if client exists
         $client = $this->clientService->find($clientId);
-        if (!$client) {
+        if ( ! $client) {
             return redirect()->route('clients.index')
                 ->with('alert_error', TranslationHelper::trans('client_not_found'));
         }
 
         // Business rule: Cannot delete clients with related records
-        if (!$this->clientService->canDelete($clientId)) {
+        if ( ! $this->clientService->canDelete($clientId)) {
             $blockers = $this->clientService->getDeletionBlockers($clientId);
-            $message = TranslationHelper::trans('client_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('client_deletion_not_allowed', [
                 'invoices' => $blockers['invoices'],
                 'quotes'   => $blockers['quotes'],
                 'projects' => $blockers['projects'],
             ]);
-            
+
             return redirect()->route('clients.index')
                 ->with('alert_error', $message);
         }
 
         // Execute deletion
         $this->clientService->delete($clientId);
-        
+
         return redirect()->route('clients.index')
             ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }

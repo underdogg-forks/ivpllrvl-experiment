@@ -3,9 +3,9 @@
 namespace Modules\Products\Services;
 
 use Modules\Core\Services\BaseService;
+use Modules\Invoices\Models\Item as InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\Unit;
-use Modules\Invoices\Models\Item as InvoiceItem;
 use Modules\Quotes\Models\QuoteItem;
 
 /**
@@ -53,7 +53,7 @@ class UnitService extends BaseService
      *
      * A unit cannot be deleted if it is used by:
      * - Products
-     * - Invoice items  
+     * - Invoice items
      * - Quote items
      *
      * @param int $unitId
@@ -73,11 +73,7 @@ class UnitService extends BaseService
         }
 
         // Check quote items
-        if (QuoteItem::query()->where('item_product_unit_id', $unitId)->exists()) {
-            return false;
-        }
-
-        return true;
+        return ! (QuoteItem::query()->where('item_product_unit_id', $unitId)->exists());
     }
 
     /**

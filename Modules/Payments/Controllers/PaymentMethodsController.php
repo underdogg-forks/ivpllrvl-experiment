@@ -107,14 +107,14 @@ class PaymentMethodsController
 
         // Check if payment method exists
         $paymentMethod = $this->paymentMethodService->find($id);
-        if (!$paymentMethod) {
+        if ( ! $paymentMethod) {
             return $this->redirectWithError('payment_methods.index', TranslationHelper::trans('payment_method_not_found'));
         }
 
         // Business rule: Cannot delete payment methods with related payments
-        if (!$this->paymentMethodService->canDelete($id)) {
+        if ( ! $this->paymentMethodService->canDelete($id)) {
             $blockers = $this->paymentMethodService->getDeletionBlockers($id);
-            $message = TranslationHelper::trans('payment_method_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('payment_method_deletion_not_allowed', [
                 'payments' => $blockers['payments'],
             ]);
 

@@ -79,6 +79,54 @@ class ProductsController
     }
 
     /**
+     * Delete a product with security checks and error handling.
+     *
+     * Implements:
+     * - Early returns for validation
+     * - DRY principle via HandlesDeletion trait
+     * - SOLID principles with single responsibility
+     * - Proper error handling
+     * - Business rule: Cannot delete products used in invoices
+     *
+     * @param int $id Product ID
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     *
+     * @legacy-file application/modules/products/controllers/Products.php
+     */
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    {
+        // Validate ID
+        if ($id <= 0) {
+            return $this->redirectWithError('products.index', TranslationHelper::trans('invalid_product_id'));
+        }
+
+        // Check if product exists
+        $product = $this->productService->find($id);
+        if ( ! $product) {
+            return $this->redirectWithError('products.index', TranslationHelper::trans('product_not_found'));
+        }
+
+        // Business rule: Cannot delete products that are used in invoices
+        if ( ! $this->productService->canDelete($id)) {
+            $itemCount = $this->productService->getInvoiceItemCount($id);
+
+            return $this->redirectWithError(
+                'products.index',
+                TranslationHelper::trans('product_deletion_not_allowed_invoice_items', ['count' => $itemCount])
+            );
+        }
+
+        // Execute delete with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->productService->delete($id),
+            'products.index'
+        );
+    }
+
+    /**
      * Handle form submission for create/update.
      *
      * @param int|null $id
@@ -117,7 +165,7 @@ class ProductsController
     protected function showForm(?int $id): \Illuminate\View\View
     {
         $product = $id ? $this->productService->find($id) : new Product();
-        
+
         // Early return with 404 if product not found
         if ($id && ! $product) {
             abort(404);
@@ -134,52 +182,4 @@ class ProductsController
             'tax_rates' => $taxRates,
         ]);
     }
-
-    /**
-     * Delete a product with security checks and error handling.
-     *
-     * Implements:
-     * - Early returns for validation
-     * - DRY principle via HandlesDeletion trait
-     * - SOLID principles with single responsibility
-     * - Proper error handling
-     * - Business rule: Cannot delete products used in invoices
-     *
-     * @param int $id Product ID
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @legacy-function delete
-     *
-     * @legacy-file application/modules/products/controllers/Products.php
-     */
-    public function delete(int $id): \Illuminate\Http\RedirectResponse
-    {
-        // Validate ID
-        if ($id <= 0) {
-            return $this->redirectWithError('products.index', TranslationHelper::trans('invalid_product_id'));
-        }
-
-        // Check if product exists
-        $product = $this->productService->find($id);
-        if ( ! $product) {
-            return $this->redirectWithError('products.index', TranslationHelper::trans('product_not_found'));
-        }
-
-        // Business rule: Cannot delete products that are used in invoices
-        if ( ! $this->productService->canDelete($id)) {
-            $itemCount = $this->productService->getInvoiceItemCount($id);
-            return $this->redirectWithError(
-                'products.index',
-                TranslationHelper::trans('product_deletion_not_allowed_invoice_items', ['count' => $itemCount])
-            );
-        }
-
-        // Execute delete with standardized error handling
-        return $this->executeDelete(
-            fn () => $this->productService->delete($id),
-            'products.index'
-        );
-    }
 }
-

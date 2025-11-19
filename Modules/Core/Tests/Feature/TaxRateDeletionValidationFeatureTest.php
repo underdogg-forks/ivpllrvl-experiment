@@ -3,12 +3,10 @@
 namespace Modules\Core\Tests\Feature;
 
 use Modules\Core\Controllers\TaxRatesController;
-use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item as InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
 use Modules\Quotes\Models\QuoteItem;
-use Modules\Quotes\Models\QuoteTaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,7 +32,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_tax_rates', ['tax_rate_id' => $taxRate->tax_rate_id]);
@@ -53,7 +51,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_tax_rates', ['tax_rate_id' => $taxRate->tax_rate_id]);
@@ -72,7 +70,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_tax_rates', ['tax_rate_id' => $taxRate->tax_rate_id]);
@@ -91,7 +89,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_tax_rates', ['tax_rate_id' => $taxRate->tax_rate_id]);
@@ -109,7 +107,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tax_rates.delete', ['id' => $invalidId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -126,7 +124,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tax_rates.delete', ['id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -151,7 +149,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response2 = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
 
-        /** Assert */
+        /* Assert */
         $response2->assertRedirect(route('tax_rates.index'));
         $response2->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_tax_rates', ['tax_rate_id' => $taxRate->tax_rate_id]);

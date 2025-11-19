@@ -41,7 +41,7 @@ class PaymentMethodDeletionValidationTest extends TestCase
         /** Act */
         $canDelete = $this->service->canDelete($paymentMethod->payment_method_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
     }
 
@@ -58,7 +58,7 @@ class PaymentMethodDeletionValidationTest extends TestCase
         /** Act */
         $canDelete = $this->service->canDelete($paymentMethod->payment_method_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertFalse($canDelete);
     }
 
@@ -75,7 +75,7 @@ class PaymentMethodDeletionValidationTest extends TestCase
         /** Act */
         $blockers = $this->service->getDeletionBlockers($paymentMethod->payment_method_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertArrayHasKey('payments', $blockers);
         $this->assertEquals(3, $blockers['payments']);
     }
@@ -92,7 +92,7 @@ class PaymentMethodDeletionValidationTest extends TestCase
         /** Act */
         $blockers = $this->service->getDeletionBlockers($paymentMethod->payment_method_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertEquals(0, $blockers['payments']);
     }
 
@@ -104,7 +104,7 @@ class PaymentMethodDeletionValidationTest extends TestCase
     {
         /** Arrange */
         $paymentMethod = PaymentMethod::factory()->create();
-        $payment = Payment::factory()->create(['payment_method_id' => $paymentMethod->payment_method_id]);
+        $payment       = Payment::factory()->create(['payment_method_id' => $paymentMethod->payment_method_id]);
 
         // Remove the payment
         $payment->delete();
@@ -112,7 +112,7 @@ class PaymentMethodDeletionValidationTest extends TestCase
         /** Act */
         $canDelete = $this->service->canDelete($paymentMethod->payment_method_id);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
     }
 
@@ -127,9 +127,9 @@ class PaymentMethodDeletionValidationTest extends TestCase
 
         /** Act */
         $canDelete = $this->service->canDelete($nonExistentId);
-        $blockers = $this->service->getDeletionBlockers($nonExistentId);
+        $blockers  = $this->service->getDeletionBlockers($nonExistentId);
 
-        /** Assert */
+        /* Assert */
         $this->assertTrue($canDelete);
         $this->assertEquals(0, $blockers['payments']);
     }

@@ -138,14 +138,14 @@ class UnitsController
         $unitId = $unit->unit_id;
 
         // Business rule: Cannot delete units that are in use
-        if (!$this->unitService->canDelete($unitId)) {
+        if ( ! $this->unitService->canDelete($unitId)) {
             $blockers = $this->unitService->getDeletionBlockers($unitId);
-            $message = TranslationHelper::trans('unit_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('unit_deletion_not_allowed', [
                 'products'      => $blockers['products'],
                 'invoice_items' => $blockers['invoice_items'],
                 'quote_items'   => $blockers['quote_items'],
             ]);
-            
+
             return $this->redirectWithError('units.index', $message);
         }
 

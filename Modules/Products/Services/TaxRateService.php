@@ -3,10 +3,10 @@
 namespace Modules\Products\Services;
 
 use Modules\Core\Services\BaseService;
+use Modules\Invoices\Models\InvoiceTaxRate;
+use Modules\Invoices\Models\Item as InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
-use Modules\Invoices\Models\Item as InvoiceItem;
-use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Quotes\Models\QuoteItem;
 use Modules\Quotes\Models\QuoteTaxRate;
 
@@ -74,11 +74,7 @@ class TaxRateService extends BaseService
         }
 
         // Check quote tax rates
-        if (QuoteTaxRate::query()->where('tax_rate_id', $taxRateId)->exists()) {
-            return false;
-        }
-
-        return true;
+        return ! (QuoteTaxRate::query()->where('tax_rate_id', $taxRateId)->exists());
     }
 
     /**

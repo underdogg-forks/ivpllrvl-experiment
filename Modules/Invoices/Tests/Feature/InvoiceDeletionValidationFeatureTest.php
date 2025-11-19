@@ -39,9 +39,9 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
-        
+
         // Verify invoice was deleted
         $this->assertDatabaseMissing('ip_invoices', [
             'invoice_id' => $invoice->invoice_id,
@@ -66,10 +66,10 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
         $response->assertSessionHas('alert_error');
-        
+
         // Verify invoice still exists
         $this->assertDatabaseHas('ip_invoices', [
             'invoice_id'        => $invoice->invoice_id,
@@ -95,7 +95,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_invoices', ['invoice_id' => $invoice->invoice_id]);
@@ -119,7 +119,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_invoices', ['invoice_id' => $invoice->invoice_id]);
@@ -143,7 +143,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_invoices', ['invoice_id' => $invoice->invoice_id]);
@@ -176,12 +176,12 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
-        
+
         // Verify invoice was deleted
         $this->assertDatabaseMissing('ip_invoices', ['invoice_id' => $invoice->invoice_id]);
-        
+
         // Verify tasks were updated to Complete status (3)
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'     => $task1->task_id,
@@ -213,7 +213,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
             /** Act */
             $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-            /** Assert */
+            /* Assert */
             $response->assertSessionHas('alert_error');
             $this->assertDatabaseHas('ip_invoices', [
                 'invoice_id'        => $invoice->invoice_id,
@@ -243,9 +243,9 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
-        
+
         // Verify invoice was deleted despite being sent
         $this->assertDatabaseMissing('ip_invoices', [
             'invoice_id' => $invoice->invoice_id,
@@ -272,7 +272,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('invoices.delete', ['invoiceId' => $invoice->invoice_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('invoices.index'));
         $this->assertDatabaseMissing('ip_invoices', ['invoice_id' => $invoice->invoice_id]);
     }
@@ -289,7 +289,7 @@ class InvoiceDeletionValidationFeatureTest extends FeatureTestCase
         /** Arrange */
         $invalidId = 99999;
 
-        /** Act & Assert */
+        /* Act & Assert */
         // This should throw a ModelNotFoundException or return 404
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $this->post(route('invoices.delete', ['invoiceId' => $invalidId]));

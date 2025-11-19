@@ -24,7 +24,7 @@ class AuthenticateUser
     public function handle(Request $request, Closure $next): Response
     {
         // Early return if user is not authenticated
-        if (!session()->has('user_id')) {
+        if ( ! session()->has('user_id')) {
             return redirect()->route('sessions.login')
                 ->with('alert_error', trans('auth.unauthenticated'));
         }

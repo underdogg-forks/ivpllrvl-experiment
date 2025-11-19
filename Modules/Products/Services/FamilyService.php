@@ -37,7 +37,7 @@ class FamilyService extends BaseService
      */
     public function canDelete(int $familyId): bool
     {
-        return !Product::query()->where('family_id', $familyId)->exists();
+        return ! Product::query()->where('family_id', $familyId)->exists();
     }
 
     /**

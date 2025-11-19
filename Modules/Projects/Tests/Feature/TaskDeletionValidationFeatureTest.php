@@ -38,10 +38,10 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_success');
-        
+
         // Verify task was actually deleted
         $this->assertDatabaseMissing('ip_tasks', [
             'task_id' => $task->task_id,
@@ -59,7 +59,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $task = Task::factory()->create([
             'task_name'   => 'Invoiced Task',
             'invoice_id'  => $invoice->invoice_id, // Assigned to invoice
@@ -69,10 +69,10 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_error');
-        
+
         // Verify task still exists in database
         $this->assertDatabaseHas('ip_tasks', [
             'task_id'    => $task->task_id,
@@ -99,7 +99,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_tasks', ['task_id' => $task->task_id]);
@@ -116,7 +116,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         // Test with different statuses
         $statuses = [
             1 => 'Not Started',
@@ -135,7 +135,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
             /** Act */
             $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
 
-            /** Assert */
+            /* Assert */
             $response->assertRedirect(route('tasks.index'));
             $response->assertSessionHas('alert_error');
             $this->assertDatabaseHas('ip_tasks', [
@@ -160,7 +160,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.delete', ['id' => $invalidId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -180,7 +180,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('tasks.delete', ['id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('tasks.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -196,7 +196,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $task = Task::factory()->create([
             'invoice_id' => $invoice->invoice_id,
         ]);
@@ -212,7 +212,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response2 = $this->post(route('tasks.delete', ['id' => $task->task_id]));
 
-        /** Assert */
+        /* Assert */
         $response2->assertRedirect(route('tasks.index'));
         $response2->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_tasks', ['task_id' => $task->task_id]);
@@ -229,15 +229,15 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
+
         $tasks = Task::factory()->count(3)->create([
             'invoice_id' => $invoice->invoice_id,
         ]);
 
-        /** Act & Assert */
+        /* Act & Assert */
         foreach ($tasks as $task) {
             $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
-            
+
             $response->assertRedirect(route('tasks.index'));
             $response->assertSessionHas('alert_error');
             $this->assertDatabaseHas('ip_tasks', ['task_id' => $task->task_id]);
@@ -258,10 +258,10 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
             'invoice_id' => null,
         ]);
 
-        /** Act & Assert */
+        /* Act & Assert */
         foreach ($tasks as $task) {
             $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
-            
+
             $response->assertRedirect(route('tasks.index'));
             $response->assertSessionHas('alert_success');
             $this->assertDatabaseMissing('ip_tasks', ['task_id' => $task->task_id]);
@@ -279,19 +279,19 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
     {
         /** Arrange */
         $invoice = Invoice::factory()->create();
-        
-        $deletableTask = Task::factory()->create(['invoice_id' => null]);
+
+        $deletableTask    = Task::factory()->create(['invoice_id' => null]);
         $nonDeletableTask = Task::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
         $response1 = $this->post(route('tasks.delete', ['id' => $deletableTask->task_id]));
         $response2 = $this->post(route('tasks.delete', ['id' => $nonDeletableTask->task_id]));
 
-        /** Assert */
+        /* Assert */
         // Deletable task deleted
         $response1->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_tasks', ['task_id' => $deletableTask->task_id]);
-        
+
         // Non-deletable task preserved
         $response2->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_tasks', ['task_id' => $nonDeletableTask->task_id]);

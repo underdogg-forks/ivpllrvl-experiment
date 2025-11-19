@@ -110,21 +110,21 @@ class TaxRatesController
 
         // Check if tax rate exists
         $taxRate = $this->taxRateService->find($id);
-        if (!$taxRate) {
+        if ( ! $taxRate) {
             return $this->redirectWithError('tax_rates.index', TranslationHelper::trans('tax_rate_not_found'));
         }
 
         // Business rule: Cannot delete tax rates that are in use
-        if (!$this->taxRateService->canDelete($id)) {
+        if ( ! $this->taxRateService->canDelete($id)) {
             $blockers = $this->taxRateService->getDeletionBlockers($id);
-            $message = TranslationHelper::trans('tax_rate_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('tax_rate_deletion_not_allowed', [
                 'products'          => $blockers['products'],
                 'invoice_items'     => $blockers['invoice_items'],
                 'invoice_tax_rates' => $blockers['invoice_tax_rates'],
                 'quote_items'       => $blockers['quote_items'],
                 'quote_tax_rates'   => $blockers['quote_tax_rates'],
             ]);
-            
+
             return $this->redirectWithError('tax_rates.index', $message);
         }
 

@@ -110,14 +110,14 @@ class CustomFieldsController
 
         // Check if custom field exists
         $customField = $this->customFieldService->find($id);
-        if (!$customField) {
+        if ( ! $customField) {
             return $this->redirectWithError('custom-fields.index', TranslationHelper::trans('custom_field_not_found'));
         }
 
         // Business rule: Cannot delete custom fields with related custom values
-        if (!$this->customFieldService->canDelete($id)) {
+        if ( ! $this->customFieldService->canDelete($id)) {
             $blockers = $this->customFieldService->getDeletionBlockers($id);
-            $message = TranslationHelper::trans('custom_field_deletion_not_allowed', [
+            $message  = TranslationHelper::trans('custom_field_deletion_not_allowed', [
                 'custom_values' => $blockers['custom_values'],
             ]);
 

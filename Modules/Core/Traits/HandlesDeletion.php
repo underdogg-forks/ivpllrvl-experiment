@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Traits;
 
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Modules\Core\Support\TranslationHelper;
 
@@ -47,7 +48,7 @@ trait HandlesDeletion
                 $redirectRoute,
                 $successMessage ?? TranslationHelper::trans('record_successfully_deleted')
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Log the error for debugging
             if (function_exists('log_message')) {
                 log_message('error', 'Delete operation failed: ' . $e->getMessage());
@@ -92,7 +93,7 @@ trait HandlesDeletion
     /**
      * Verify user has permission to delete a resource.
      *
-     * @param int|null $userId       Current user ID
+     * @param int|null $userId          Current user ID
      * @param int|null $resourceOwnerId Resource owner ID (if applicable)
      *
      * @return bool

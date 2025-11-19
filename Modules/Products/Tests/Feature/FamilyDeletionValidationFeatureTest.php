@@ -30,7 +30,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('families.delete', ['id' => $family->family_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_families', ['family_id' => $family->family_id]);
@@ -49,7 +49,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('families.delete', ['id' => $family->family_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_families', ['family_id' => $family->family_id]);
@@ -68,7 +68,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('families.delete', ['id' => $family->family_id]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_error');
         $this->assertDatabaseHas('ip_families', ['family_id' => $family->family_id]);
@@ -86,7 +86,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('families.delete', ['id' => $invalidId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -103,7 +103,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response = $this->post(route('families.delete', ['id' => $nonexistentId]));
 
-        /** Assert */
+        /* Assert */
         $response->assertRedirect(route('families.index'));
         $response->assertSessionHas('alert_error');
     }
@@ -115,7 +115,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
     public function it_allows_deletion_after_products_removed(): void
     {
         /** Arrange */
-        $family = Family::factory()->create();
+        $family  = Family::factory()->create();
         $product = Product::factory()->create(['family_id' => $family->family_id]);
 
         // Initially cannot delete
@@ -128,7 +128,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         /** Act */
         $response2 = $this->post(route('families.delete', ['id' => $family->family_id]));
 
-        /** Assert */
+        /* Assert */
         $response2->assertRedirect(route('families.index'));
         $response2->assertSessionHas('alert_success');
         $this->assertDatabaseMissing('ip_families', ['family_id' => $family->family_id]);
