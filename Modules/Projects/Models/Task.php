@@ -53,6 +53,7 @@ class Task extends BaseModel
         'task_name',
         'task_status',
         'task_finish_date',
+        'invoice_id',
     ];
 
     /**
@@ -63,6 +64,7 @@ class Task extends BaseModel
     protected $casts = [
         'task_id'    => 'integer',
         'project_id' => 'integer',
+        'invoice_id' => 'integer',
     ];
 
     /**
@@ -79,5 +81,13 @@ class Task extends BaseModel
     public function taxRate()
     {
         return $this->belongsTo(\Modules\Products\Models\TaxRate::class, 'tax_rate_id', 'tax_rate_id');
+    }
+
+    /**
+     * Get the invoice that references this task.
+     */
+    public function invoice()
+    {
+        return $this->belongsTo(\Modules\Invoices\Models\Invoice::class, 'invoice_id', 'invoice_id');
     }
 }

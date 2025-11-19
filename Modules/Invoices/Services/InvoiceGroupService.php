@@ -42,6 +42,39 @@ class InvoiceGroupService extends BaseService
         return InvoiceGroup::all();
     }
 
+    /**
+     * Check if invoice group can be deleted.
+     *
+     * @param int $id Invoice group ID
+     *
+     * @return bool True if invoice group can be deleted
+     */
+    public function canDelete(int $id): bool
+    {
+        $blockers = $this->getDeletionBlockers($id);
+
+        return $blockers['invoices'] === 0 && $blockers['quotes'] === 0;
+    }
+
+    /**
+     * Get deletion blockers for invoice group.
+     *
+     * @param int $id Invoice group ID
+     *
+     * @return array Array of blocker counts
+     */
+    public function getDeletionBlockers(int $id): array
+    {
+        return [
+            'invoices' => \Modules\Invoices\Models\Invoice::query()
+                ->where('invoice_group_id', $id)
+                ->count(),
+            'quotes' => \Modules\Quotes\Models\Quote::query()
+                ->where('invoice_group_id', $id)
+                ->count(),
+        ];
+    }
+
     protected function getModelClass(): string
     {
         return InvoiceGroup::class;

@@ -9,6 +9,7 @@ use Modules\Core\Services\CustomValueService;
 use Modules\Core\Services\UserService;
 use Modules\Core\Support\CountryHelper;
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Crm\Services\ClientService;
 use Modules\Crm\Services\UserClientService;
 
@@ -21,6 +22,8 @@ use Modules\Crm\Services\UserClientService;
  */
 class UsersController
 {
+    use HandlesDeletion;
+
     /**
      * Initialize the UsersController with dependency injection.
      *
@@ -186,13 +189,42 @@ class UsersController
      */
     public function delete($id): \Illuminate\Http\RedirectResponse
     {
-        // Don't delete the primary administrator
-        if ($id != 1) {
-            $this->userService->delete((int) $id);
+        // Convert to int for validation
+        $userId = (int) $id;
+
+        // Early return: Don't delete the primary administrator
+        if ($userId === 1) {
+            return $this->redirectWithError('users.index', TranslationHelper::trans('cannot_delete_primary_admin'));
         }
 
-        return redirect()->route('users.index')
-            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Early return for validation
+        if ($userId <= 0) {
+            return $this->redirectWithError('users.index', TranslationHelper::trans('invalid_user_id'));
+        }
+
+        // Check if user exists
+        $user = $this->userService->find($userId);
+        if (!$user) {
+            return $this->redirectWithError('users.index', TranslationHelper::trans('user_not_found'));
+        }
+
+        // Business rule: Cannot delete users with related invoices, quotes, or sessions
+        if (!$this->userService->canDelete($userId)) {
+            $blockers = $this->userService->getDeletionBlockers($userId);
+            $message = TranslationHelper::trans('user_deletion_not_allowed', [
+                'invoices' => $blockers['invoices'],
+                'quotes'   => $blockers['quotes'],
+                'sessions' => $blockers['sessions'],
+            ]);
+
+            return $this->redirectWithError('users.index', $message);
+        }
+
+        // Execute deletion with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->userService->delete($userId),
+            'users.index'
+        );
     }
 
     /**

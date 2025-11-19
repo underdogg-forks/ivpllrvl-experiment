@@ -40,8 +40,29 @@ class TaskService extends BaseService
             ->paginate($perPage);
     }
 
+    /**
+     * Check if a task can be deleted.
+     *
+     * A task cannot be deleted if it is referenced by an invoice.
+     *
+     * @param int $taskId
+     *
+     * @return bool
+     */
+    public function canDelete(int $taskId): bool
+    {
+        // Reuse existing method
+        $task = Task::query()->find($taskId);
+        if (!$task) {
+            return true;
+        }
+        
+        return !$this->isAssignedToInvoice($taskId);
+    }
+
     protected function getModelClass(): string
     {
         return Task::class;
     }
 }
+

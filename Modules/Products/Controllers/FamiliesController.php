@@ -3,6 +3,7 @@
 namespace Modules\Products\Controllers;
 
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Products\Models\Family;
 use Modules\Products\Services\FamilyService;
 
@@ -15,6 +16,8 @@ use Modules\Products\Services\FamilyService;
  */
 class FamiliesController
 {
+    use HandlesDeletion;
+
     public function __construct(
         protected FamilyService $familyService
     ) {}
@@ -98,7 +101,12 @@ class FamiliesController
     }
 
     /**
-     * Delete a product family.
+     * Delete a product family with business logic validation.
+     *
+     * Implements:
+     * - Early returns for validation
+     * - Business rule: Cannot delete families that have products
+     * - DRY principle via HandlesDeletion trait
      *
      * @param int $id Family ID
      *
@@ -110,9 +118,31 @@ class FamiliesController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $this->familyService->delete($id);
+        // Validate ID
+        if ($id <= 0) {
+            return $this->redirectWithError('families.index', TranslationHelper::trans('invalid_family_id'));
+        }
 
-        return redirect()->route('families.index')
-            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Check if family exists
+        $family = $this->familyService->find($id);
+        if (!$family) {
+            return $this->redirectWithError('families.index', TranslationHelper::trans('family_not_found'));
+        }
+
+        // Business rule: Cannot delete families that have products
+        if (!$this->familyService->canDelete($id)) {
+            $blockers = $this->familyService->getDeletionBlockers($id);
+            $message = TranslationHelper::trans('family_deletion_not_allowed', [
+                'products' => $blockers['products'],
+            ]);
+            
+            return $this->redirectWithError('families.index', $message);
+        }
+
+        // Execute delete with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->familyService->delete($id),
+            'families.index'
+        );
     }
 }

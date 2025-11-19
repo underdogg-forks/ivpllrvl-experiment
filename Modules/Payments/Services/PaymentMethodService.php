@@ -46,6 +46,36 @@ class PaymentMethodService extends BaseService
     }
 
     /**
+     * Check if payment method can be deleted.
+     *
+     * @param int $id Payment method ID
+     *
+     * @return bool True if payment method can be deleted
+     */
+    public function canDelete(int $id): bool
+    {
+        $blockers = $this->getDeletionBlockers($id);
+
+        return $blockers['payments'] === 0;
+    }
+
+    /**
+     * Get deletion blockers for payment method.
+     *
+     * @param int $id Payment method ID
+     *
+     * @return array Array of blocker counts
+     */
+    public function getDeletionBlockers(int $id): array
+    {
+        return [
+            'payments' => \Modules\Payments\Models\Payment::query()
+                ->where('payment_method_id', $id)
+                ->count(),
+        ];
+    }
+
+    /**
      * Get the model class for this service.
      */
     protected function getModelClass(): string

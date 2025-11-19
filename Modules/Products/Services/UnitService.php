@@ -3,7 +3,10 @@
 namespace Modules\Products\Services;
 
 use Modules\Core\Services\BaseService;
+use Modules\Products\Models\Product;
 use Modules\Products\Models\Unit;
+use Modules\Invoices\Models\Item as InvoiceItem;
+use Modules\Quotes\Models\QuoteItem;
 
 /**
  * UnitService.
@@ -43,6 +46,54 @@ class UnitService extends BaseService
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
         return Unit::query()->get();
+    }
+
+    /**
+     * Check if a unit can be deleted.
+     *
+     * A unit cannot be deleted if it is used by:
+     * - Products
+     * - Invoice items  
+     * - Quote items
+     *
+     * @param int $unitId
+     *
+     * @return bool
+     */
+    public function canDelete(int $unitId): bool
+    {
+        // Check products
+        if (Product::query()->where('unit_id', $unitId)->exists()) {
+            return false;
+        }
+
+        // Check invoice items
+        if (InvoiceItem::query()->where('item_product_unit_id', $unitId)->exists()) {
+            return false;
+        }
+
+        // Check quote items
+        if (QuoteItem::query()->where('item_product_unit_id', $unitId)->exists()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get deletion blocker details for a unit.
+     *
+     * @param int $unitId
+     *
+     * @return array
+     */
+    public function getDeletionBlockers(int $unitId): array
+    {
+        return [
+            'products'      => Product::query()->where('unit_id', $unitId)->count(),
+            'invoice_items' => InvoiceItem::query()->where('item_product_unit_id', $unitId)->count(),
+            'quote_items'   => QuoteItem::query()->where('item_product_unit_id', $unitId)->count(),
+        ];
     }
 
     /**

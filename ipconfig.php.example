@@ -1,5 +1,12 @@
 # <?php exit('No direct script access allowed'); ?>
 # InvoicePlane Configuration File
+#
+# NOTICE: This file is being deprecated in favor of the standard Laravel .env file.
+# Please use .env.example as a template and create your .env file instead.
+# This ipconfig.php.example is maintained for backward compatibility only.
+#
+# To migrate: Copy .env.example to .env and configure your settings there.
+# The application will prioritize .env settings over ipconfig.php settings.
 
 ### START HERE
 # Set your URL without trailing slash here, e.g. http://your-domain.com

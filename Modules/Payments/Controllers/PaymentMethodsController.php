@@ -3,6 +3,7 @@
 namespace Modules\Payments\Controllers;
 
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Payments\Models\PaymentMethod;
 use Modules\Payments\Services\PaymentMethodService;
 
@@ -15,6 +16,8 @@ use Modules\Payments\Services\PaymentMethodService;
  */
 class PaymentMethodsController
 {
+    use HandlesDeletion;
+
     public function __construct(
         protected PaymentMethodService $paymentMethodService
     ) {}
@@ -97,9 +100,31 @@ class PaymentMethodsController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $this->paymentMethodService->delete($id);
+        // Early return for validation
+        if ($id <= 0) {
+            return $this->redirectWithError('payment_methods.index', TranslationHelper::trans('invalid_payment_method_id'));
+        }
 
-        return redirect()->route('payment_methods.index')
-            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Check if payment method exists
+        $paymentMethod = $this->paymentMethodService->find($id);
+        if (!$paymentMethod) {
+            return $this->redirectWithError('payment_methods.index', TranslationHelper::trans('payment_method_not_found'));
+        }
+
+        // Business rule: Cannot delete payment methods with related payments
+        if (!$this->paymentMethodService->canDelete($id)) {
+            $blockers = $this->paymentMethodService->getDeletionBlockers($id);
+            $message = TranslationHelper::trans('payment_method_deletion_not_allowed', [
+                'payments' => $blockers['payments'],
+            ]);
+
+            return $this->redirectWithError('payment_methods.index', $message);
+        }
+
+        // Execute deletion with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->paymentMethodService->delete($id),
+            'payment_methods.index'
+        );
     }
 }

@@ -10,5 +10,5 @@ Route::middleware('web')->group(function () {
     Route::get('payments', [PaymentsController::class, 'index'])->name('payments.index');
     Route::get('payments/form', [PaymentsController::class, 'form'])->name('payments.form');
     Route::get('payments/online-logs', [PaymentsController::class, 'onlineLogs'])->name('payments.online-logs');
-    Route::get('payments/delete', [PaymentsController::class, 'delete'])->name('payments.delete');
+    Route::post('payments/delete', [PaymentsController::class, 'delete'])->name('payments.delete');
 });

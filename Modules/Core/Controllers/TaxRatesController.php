@@ -2,9 +2,10 @@
 
 namespace Modules\Core\Controllers;
 
-use Modules\Core\Services\TaxRatesService;
 use Modules\Core\Support\TranslationHelper;
+use Modules\Core\Traits\HandlesDeletion;
 use Modules\Products\Models\TaxRate;
+use Modules\Products\Services\TaxRateService;
 
 /**
  * TaxRatesController.
@@ -15,8 +16,10 @@ use Modules\Products\Models\TaxRate;
  */
 class TaxRatesController
 {
+    use HandlesDeletion;
+
     public function __construct(
-        protected TaxRatesService $taxRatesService
+        protected TaxRateService $taxRateService
     ) {}
 
     /**
@@ -66,15 +69,15 @@ class TaxRatesController
             $validated['tax_rate_percent'] = standardize_amount($validated['tax_rate_percent']);
 
             if ($id) {
-                $this->taxRatesService->update($id, $validated);
+                $this->taxRateService->update($id, $validated);
             } else {
-                $this->taxRatesService->create($validated);
+                $this->taxRateService->create($validated);
             }
 
             return redirect()->route('tax_rates.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
-        $taxRate = $id ? $this->taxRatesService->find($id) : new TaxRate();
+        $taxRate = $id ? $this->taxRateService->find($id) : new TaxRate();
         if ($id && ! $taxRate) {
             abort(404);
         }
@@ -83,7 +86,12 @@ class TaxRatesController
     }
 
     /**
-     * Delete a tax rate.
+     * Delete a tax rate with business logic validation.
+     *
+     * Implements:
+     * - Early returns for validation
+     * - Business rule: Cannot delete tax rates used in products, invoice items, quote items, or tax rate relations
+     * - DRY principle via HandlesDeletion trait
      *
      * @param int $id Tax rate ID
      *
@@ -95,8 +103,35 @@ class TaxRatesController
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        $this->taxRatesService->delete($id);
+        // Validate ID
+        if ($id <= 0) {
+            return $this->redirectWithError('tax_rates.index', TranslationHelper::trans('invalid_tax_rate_id'));
+        }
 
-        return redirect()->route('tax_rates.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
+        // Check if tax rate exists
+        $taxRate = $this->taxRateService->find($id);
+        if (!$taxRate) {
+            return $this->redirectWithError('tax_rates.index', TranslationHelper::trans('tax_rate_not_found'));
+        }
+
+        // Business rule: Cannot delete tax rates that are in use
+        if (!$this->taxRateService->canDelete($id)) {
+            $blockers = $this->taxRateService->getDeletionBlockers($id);
+            $message = TranslationHelper::trans('tax_rate_deletion_not_allowed', [
+                'products'          => $blockers['products'],
+                'invoice_items'     => $blockers['invoice_items'],
+                'invoice_tax_rates' => $blockers['invoice_tax_rates'],
+                'quote_items'       => $blockers['quote_items'],
+                'quote_tax_rates'   => $blockers['quote_tax_rates'],
+            ]);
+            
+            return $this->redirectWithError('tax_rates.index', $message);
+        }
+
+        // Execute delete with standardized error handling
+        return $this->executeDelete(
+            fn () => $this->taxRateService->delete($id),
+            'tax_rates.index'
+        );
     }
 }
