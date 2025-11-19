@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 // Template system example/demo page
 Route::get('/template-example', function () {
     return view('template-example');

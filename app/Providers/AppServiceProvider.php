@@ -43,9 +43,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Ensure PHP templates take precedence over Blade
-        // The view finder will look for .php files first
+        // The view finder will look for .php files first, then .blade.php
         if ($this->app->has('view')) {
+            // Register PHP engine for .php files (preferred)
             $this->app['view']->addExtension('php', 'php');
+
+            // Register Blade engine for .blade.php files (secondary)
+            $this->app['view']->addExtension('blade.php', 'blade');
         }
     }
 }

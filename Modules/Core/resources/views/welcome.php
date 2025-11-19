@@ -1,109 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$completed = env_bool('SETUP_COMPLETED') ? '' : ' hidden';
+$disabled  = env_bool('DISABLE_SETUP') ? ' hidden' : '';
+?><!doctype html>
+
+<!--[if lt IE 7]>
+<html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvoicePlane - Laravel Edition</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 60px;
-            text-align: center;
-            max-width: 600px;
-        }
-        h1 {
-            color: #667eea;
-            margin: 0 0 20px 0;
-            font-size: 3em;
-        }
-        .badge {
-            background: #10b981;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 30px;
-        }
-        p {
-            font-size: 1.1em;
-            line-height: 1.6;
-            color: #666;
-            margin: 20px 0;
-        }
-        .features {
-            text-align: left;
-            margin: 30px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        .features h3 {
-            color: #667eea;
-            margin-top: 0;
-        }
-        .features ul {
-            list-style: none;
-            padding: 0;
-        }
-        .features li {
-            padding: 8px 0;
-            color: #555;
-        }
-        .features li:before {
-            content: "✓ ";
-            color: #10b981;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            color: #999;
-            font-size: 0.9em;
-        }
-    </style>
+    <meta charset="utf-8">
+
+    <!-- Use the .htaccess and remove these lines to avoid edge case issues -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?></title>
+
+    <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="icon" href="<?php _core_asset('img/favicon.png'); ?>" type="image/png">
+
+    <!-- CSS: implied media=all -->
+    <link rel="stylesheet" href="<?php _theme_asset('css/welcome.css'); ?>" type="text/css">
+    <!-- end CSS-->
 </head>
 <body>
-    <div class="container">
-        <h1>InvoicePlane</h1>
-        <div class="badge">Laravel Edition</div>
-        
-        <p><strong>Congratulations!</strong> CodeIgniter has been completely removed and the application is now running on pure Laravel/Illuminate.</p>
-        
-        <div class="features">
-            <h3>Migration Complete</h3>
-            <ul>
-                <li>CodeIgniter framework removed</li>
-                <li>All models migrated to Modules/Core/Models</li>
-                <li>Laravel/Illuminate components active</li>
-                <li>PSR-4 autoloading in effect</li>
-                <li>Modern exception handling implemented</li>
-                <li>Professional bootstrap process</li>
-            </ul>
-        </div>
-        
-        <p>The application structure now follows Laravel best practices with a clean, maintainable codebase.</p>
-        
-        <div class="footer">
-            Environment: <strong><?php echo ENVIRONMENT; ?></strong><br>
-            PHP Version: <?php echo PHP_VERSION; ?>
+
+<div class="container">
+
+    <div id="content">
+        <div id="logo"><span>InvoicePlane</span></div>
+        <p class="alert alert-info text-center<?php echo $completed ? '' : ' hidden'; ?>">
+            Please install InvoicePlane.<br/>
+            <span class="text-muted">Bitte installiere InvoicePlane.</span><br/>
+            <span class="text-muted">S'il vous plaît installer InvoicePlane</span><br/>
+            <span class="text-muted">Por favor, instale InvoicePlane</span><br/>
+        </p>
+
+        <div class="btn-group btn-group-justified">
+            <a href="<?php echo site_url(); ?>" class="btn btn-default<?php echo $completed; ?>">
+                <i class="fa fa-user"></i> Enter
+            </a>
+            <a href="<?php echo site_url('setup'); ?>" class="btn btn-success<?php echo $disabled; ?>">
+                <i class="fa fa-cogs"></i> Setup
+            </a>
+            <a href="https://wiki.invoiceplane.com/" class="btn btn-info">
+                <i class="fa fa-info-circle"></i> Get Help
+            </a>
         </div>
     </div>
+
+</div>
+
 </body>
 </html>

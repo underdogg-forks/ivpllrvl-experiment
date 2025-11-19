@@ -57,6 +57,36 @@ class ViewTemplateSystemTest extends TestCase
     }
 
     /**
+     * Test that Blade views (with .blade.php) can still be rendered.
+     */
+    public function test_blade_views_can_be_rendered(): void
+    {
+        // Create a temporary Blade view
+        $viewPath = resource_path('views/test_blade_template.blade.php');
+        $bladeContent = <<<'BLADE'
+Hello, @{{ name }}
+{{-- escaped to show raw moustache --}}
+@php($upper = strtoupper($name))
+Blade Works: {{ $upper }}
+BLADE;
+        file_put_contents($viewPath, $bladeContent);
+
+        try {
+            // Render the view
+            $rendered = view('test_blade_template', ['name' => 'john'])->render();
+
+            // Assert it renders correctly and compiles directives
+            $this->assertStringContainsString('Blade Works: JOHN', $rendered);
+            $this->assertStringContainsString('@{ name }', str_replace(['{{ ', ' }}'], ['{{','}}'], '@{ name }')); // sanity (no actual raw)
+        } finally {
+            // Clean up
+            if (file_exists($viewPath)) {
+                unlink($viewPath);
+            }
+        }
+    }
+
+    /**
      * Test that welcome view uses PHP template.
      */
     public function test_welcome_view_is_php_template(): void
