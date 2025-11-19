@@ -31,7 +31,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_fields.index'));
+        $response = $this->get(route('custom-fields.index'));
 
         /* Assert */
         $response->assertOk();
@@ -54,7 +54,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_fields.index'));
+        $response = $this->get(route('custom-fields.index'));
 
         /* Assert */
         $response->assertOk();
@@ -76,7 +76,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_fields.form'));
+        $response = $this->get(route('custom-fields.form'));
 
         /* Assert */
         $response->assertOk();
@@ -101,7 +101,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_fields.form', ['id' => $customField->custom_field_id]));
+        $response = $this->get(route('custom-fields.form', ['id' => $customField->custom_field_id]));
 
         /* Assert */
         $response->assertOk();
@@ -139,10 +139,10 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('custom_fields.form'), $customFieldData);
+        $response = $this->post(route('custom-fields.form'), $customFieldData);
 
         /* Assert */
-        $response->assertRedirect(route('custom_fields.index'));
+        $response->assertRedirect(route('custom-fields.index'));
         $response->assertSessionHas('alert_success');
 
         $this->assertDatabaseHas('ip_custom_fields', [
@@ -179,10 +179,10 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('custom_fields.form', ['id' => $customField->custom_field_id]), $updateData);
+        $response = $this->post(route('custom-fields.form', ['id' => $customField->custom_field_id]), $updateData);
 
         /* Assert */
-        $response->assertRedirect(route('custom_fields.index'));
+        $response->assertRedirect(route('custom-fields.index'));
         $response->assertSessionHas('alert_success');
 
         $this->assertDatabaseHas('ip_custom_fields', [
@@ -212,10 +212,10 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('custom_fields.form'), $cancelData);
+        $response = $this->post(route('custom-fields.form'), $cancelData);
 
         /* Assert */
-        $response->assertRedirect(route('custom_fields.index'));
+        $response->assertRedirect(route('custom-fields.index'));
     }
 
     /**
@@ -241,12 +241,12 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('custom_fields.delete', ['id' => $customField->custom_field_id]),
+            route('custom-fields.delete', ['id' => $customField->custom_field_id]),
             $deletePayload
         );
 
         /* Assert */
-        $response->assertRedirect(route('custom_fields.index'));
+        $response->assertRedirect(route('custom-fields.index'));
         $response->assertSessionHas('alert_success');
 
         $this->assertDatabaseMissing('ip_custom_fields', [
@@ -276,7 +276,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('custom_fields.delete', ['id' => 99999]),
+            route('custom-fields.delete', ['id' => 99999]),
             $deletePayload
         );
 
@@ -296,7 +296,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_fields.form', ['id' => 99999]));
+        $response = $this->get(route('custom-fields.form', ['id' => 99999]));
 
         /* Assert */
         $response->assertNotFound();

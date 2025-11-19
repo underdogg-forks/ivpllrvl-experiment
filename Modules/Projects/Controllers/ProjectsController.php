@@ -64,12 +64,12 @@ class ProjectsController
     public function form(?int $id = null)
     {
         // Early return for cancel action
-        if (request()->post('btn_cancel')) {
+        if (request()->has('btn_cancel')) {
             return redirect()->route('projects.index');
         }
 
         // Early return for form submission
-        if (request()->isMethod('post') && request()->post('btn_submit')) {
+        if (request()->isMethod('post') && request()->has('btn_submit')) {
             return $this->handleFormSubmission($id);
         }
 
@@ -183,7 +183,7 @@ class ProjectsController
         if (!$this->projectService->canDelete($id)) {
             $blockers = $this->projectService->getDeletionBlockers($id);
             $message = TranslationHelper::trans('project_deletion_not_allowed', [
-                'tasks' => $blockers['tasks'],
+                'tasks' => $blockers['tasks'] ?? 0,
             ]);
 
             return $this->redirectWithError('projects.index', $message);

@@ -138,7 +138,10 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
             /** Assert */
             $response->assertRedirect(route('tasks.index'));
             $response->assertSessionHas('alert_error');
-            $this->assertDatabaseHas('ip_tasks', ['task_id' => $task->task_id]);
+            $this->assertDatabaseHas('ip_tasks', [
+                'task_id'    => $task->task_id,
+                'invoice_id' => $invoice->invoice_id,
+            ]);
         }
     }
 

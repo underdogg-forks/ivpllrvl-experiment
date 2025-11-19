@@ -57,7 +57,7 @@ class CustomFieldsController
     public function form(?int $id = null)
     {
         if (request()->post('btn_cancel')) {
-            return redirect()->route('custom_fields.index');
+            return redirect()->route('custom-fields.index');
         }
 
         if (request()->isMethod('post') && request()->post('btn_submit')) {
@@ -75,7 +75,7 @@ class CustomFieldsController
                 $this->customFieldService->create($validated);
             }
 
-            return redirect()->route('custom_fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
+            return redirect()->route('custom-fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
         if ($id) {
@@ -105,13 +105,13 @@ class CustomFieldsController
     {
         // Early return for validation
         if ($id <= 0) {
-            return $this->redirectWithError('custom_fields.index', TranslationHelper::trans('invalid_custom_field_id'));
+            return $this->redirectWithError('custom-fields.index', TranslationHelper::trans('invalid_custom_field_id'));
         }
 
         // Check if custom field exists
         $customField = $this->customFieldService->find($id);
         if (!$customField) {
-            return $this->redirectWithError('custom_fields.index', TranslationHelper::trans('custom_field_not_found'));
+            return $this->redirectWithError('custom-fields.index', TranslationHelper::trans('custom_field_not_found'));
         }
 
         // Business rule: Cannot delete custom fields with related custom values
@@ -121,13 +121,13 @@ class CustomFieldsController
                 'custom_values' => $blockers['custom_values'],
             ]);
 
-            return $this->redirectWithError('custom_fields.index', $message);
+            return $this->redirectWithError('custom-fields.index', $message);
         }
 
         // Execute deletion with standardized error handling
         return $this->executeDelete(
             fn () => $this->customFieldService->delete($id),
-            'custom_fields.index'
+            'custom-fields.index'
         );
     }
 }
