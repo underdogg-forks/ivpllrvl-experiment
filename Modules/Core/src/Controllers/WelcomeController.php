@@ -15,10 +15,10 @@ class WelcomeController
      * Display the welcome/landing page.
      *
      * @return \Illuminate\View\View
+     *
      * @legacy-file application/modules/welcome/controllers/Welcome.php
      *
      * @legacy-function index
-     *
      */
     public function index(): \Illuminate\View\View
     {

@@ -47,10 +47,10 @@ class UsersController
      * @param int $page Page number for pagination
      *
      * @return \Illuminate\View\View
+     *
      * @legacy-file application/modules/users/controllers/Users.php
      *
      * @legacy-function index
-     *
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -73,10 +73,10 @@ class UsersController
      * @param int|null $id      User ID (null for create)
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/users/controllers/Users.php
      *
      * @legacy-function form
-     *
      */
     public function form(Request $request, ?int $id = null)
     {
@@ -147,11 +147,10 @@ class UsersController
      * @param string $user_id User ID
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-
+     *
      * @legacy-file application/modules/users/controllers/Users.php
      *
      * @legacy-function changePassword
-     *
      */
     public function changePassword(string $user_id)
     {
@@ -183,10 +182,10 @@ class UsersController
      * @param int|string $id User ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/users/controllers/Users.php
      *
      * @legacy-function delete
-     *
      */
     public function delete($id): \Illuminate\Http\RedirectResponse
     {
@@ -235,10 +234,10 @@ class UsersController
      * @param mixed  $user_client_id User-client relation ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/users/controllers/Users.php
      *
      * @legacy-function deleteUserClient
-     *
      */
     public function deleteUserClient(string $user_id, $user_client_id): \Illuminate\Http\RedirectResponse
     {

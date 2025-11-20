@@ -58,10 +58,10 @@ class SetupController
      * Redirect to the language selection step.
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function index
-     *
      */
     public function index(): void
     {
@@ -74,10 +74,10 @@ class SetupController
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function lang
-     *
      */
     public function language(Request $request)
     {
@@ -103,10 +103,10 @@ class SetupController
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function prerequisites
-     *
      */
     public function prerequisites(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
@@ -131,10 +131,10 @@ class SetupController
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function configureDatabase
-     *
      */
     public function configureDatabase(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
@@ -174,10 +174,10 @@ class SetupController
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function installTables
-     *
      */
     public function installTables(Request $request)
     {
@@ -207,10 +207,10 @@ class SetupController
      * @param Request $request
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function upgradeTables
-     *
      */
     public function upgradeTables(Request $request)
     {
@@ -248,10 +248,10 @@ class SetupController
      * @param Request $request
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function createUser
-     *
      */
     public function createUser(Request $request)
     {
@@ -280,10 +280,10 @@ class SetupController
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function calculationInfo
-     *
      */
     public function calculationInfo(Request $request)
     {
@@ -315,10 +315,10 @@ class SetupController
      * @param Request $request
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function complete
-     *
      */
     public function complete(Request $request)
     {
@@ -358,10 +358,10 @@ class SetupController
      * Check basic PHP requirements for the application.
      *
      * @return array
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function checkBasics
-     *
      */
     private function checkBasics(): array
     {
@@ -387,10 +387,10 @@ class SetupController
      * Check writable permissions for required directories and files.
      *
      * @return array
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function checkWritables
-     *
      */
     private function checkWritables(): array
     {
@@ -415,10 +415,10 @@ class SetupController
      * Load the CodeIgniter database (placeholder for Laravel compatibility).
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function loadCiDatabase
-     *
      */
     private function loadCiDatabase()
     {
@@ -435,10 +435,10 @@ class SetupController
      * @param int    $port
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function writeDatabaseConfig
-     *
      */
     private function writeDatabaseConfig(string $hostname, string $username, string $password, string $database, $port = 3306)
     {
@@ -455,10 +455,10 @@ class SetupController
      * Check database connection with configured credentials.
      *
      * @return array
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function checkDatabase
-     *
      */
     private function checkDatabase(): array
     {
@@ -494,10 +494,10 @@ class SetupController
      * Generate and set a new encryption key in the ipconfig.php file.
      *
      * @return void
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function setEncryptionKey
-     *
      */
     private function setEncryptionKey()
     {
@@ -516,6 +516,7 @@ class SetupController
      * Mark the application's setup as completed in the IPCONFIG_FILE.
      *
      * Updates the SETUP_COMPLETED entry in the configuration file to `true`.
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function postSetupTasks
@@ -535,6 +536,7 @@ class SetupController
      *               - `needs_config` (bool): `true` if manual configuration is required, `false` otherwise.
      *               - `current_value` (string): the current `LEGACY_CALCULATION` value (`'not_set'`, `'true'`, or `'false'`).
      *               - `recommended` (string|null): the recommended value when configuration is required (`'false'`), or `null` when not applicable.
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function checkCalculationConfig
@@ -566,6 +568,7 @@ class SetupController
      *
      * Reads the contents of IPCONFIG_FILE, appends a newline and the line
      * `LEGACY_CALCULATION=false`, and writes the updated content back to the file.
+     *
      * @legacy-file application/modules/setup/controllers/Setup.php
      *
      * @legacy-function writeCalculationConfig

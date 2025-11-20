@@ -30,6 +30,7 @@ class CustomFieldsController
      * @return \Illuminate\View\View
      *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
+     *
      * @legacy-function index
      */
     public function index(int $page = 0): \Illuminate\View\View
@@ -90,7 +91,9 @@ class CustomFieldsController
      * @param int|null $id Custom field ID (null for create)
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
+     *
      * @legacy-function form
      */
     public function form(?int $id = null)
@@ -117,9 +120,8 @@ class CustomFieldsController
             return redirect()->route('custom-fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
-        
-	// return object after created?
-	if ($id) {
+        // return object after created?
+        if ($id) {
             $customField = $this->customFieldService->find($id);
             if ( ! $customField) {
                 abort(404);
@@ -137,10 +139,10 @@ class CustomFieldsController
      * @param int $id Custom field ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
      *
      * @legacy-function delete
-     *
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

@@ -17,10 +17,10 @@ class SettingsAjaxController
      * Generate a random cron key.
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @legacy-file application/modules/settings/controllers/Ajax.php
      *
      * @legacy-function getCronKey
-     *
      */
     public function getCronKey(): \Illuminate\Http\JsonResponse
     {

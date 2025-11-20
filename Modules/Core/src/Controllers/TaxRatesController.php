@@ -28,10 +28,10 @@ class TaxRatesController
      * @param int $page Page number for pagination
      *
      * @return \Illuminate\View\View
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
      *
      * @legacy-function index
-     *
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -48,10 +48,10 @@ class TaxRatesController
      * @param int|null $id Tax rate ID (null for create)
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
      *
      * @legacy-function form
-     *
      */
     public function form(?int $id = null)
     {
@@ -96,10 +96,10 @@ class TaxRatesController
      * @param int $id Tax rate ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @legacy-file application/modules/tax_rates/controllers/Tax_rates.php
      *
      * @legacy-function delete
-     *
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

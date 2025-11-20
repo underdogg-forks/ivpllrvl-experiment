@@ -39,10 +39,10 @@ class InvoicesAjaxController
      * Save invoice with items, tax rates, and custom fields.
      *
      * @return array JSON response with success/error status
+     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
      *
      * @legacy-function save
-     *
      *
      * @legacy-line 21
      */
@@ -530,20 +530,20 @@ class InvoicesAjaxController
         // Copy invoice data as credit (negative amounts)
         Invoice::copyCreditInvoice($sourceId, $creditInvoice->invoice_id);
 
-/**
-            // Set source invoice to read-only
-            if ($this->config->item('disable_read_only') == false) {
-                $this->invoice->where('invoice_id', $source_id);
-                $this->invoice->update('ip_invoices', ['is_read_only' => '1']);
-            }
-
-            // Set target invoice to credit invoice
-            $this->invoice->where('invoice_id', $target_id);
-            $this->invoice->update('ip_invoices', ['creditinvoice_parent_id' => $source_id]);
-
-            $this->invoice->where('invoice_id', $target_id);
-            $this->invoice->update('ip_invoice_amounts', ['invoice_sign' => '-1']);
-*/
+        /*
+         * // Set source invoice to read-only
+         * if ($this->config->item('disable_read_only') == false) {
+         * $this->invoice->where('invoice_id', $source_id);
+         * $this->invoice->update('ip_invoices', ['is_read_only' => '1']);
+         * }
+         *
+         * // Set target invoice to credit invoice
+         * $this->invoice->where('invoice_id', $target_id);
+         * $this->invoice->update('ip_invoices', ['creditinvoice_parent_id' => $source_id]);
+         *
+         * $this->invoice->where('invoice_id', $target_id);
+         * $this->invoice->update('ip_invoice_amounts', ['invoice_sign' => '-1']);
+         */
 
         return [
             'success'    => 1,

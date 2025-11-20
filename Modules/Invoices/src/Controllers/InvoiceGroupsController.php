@@ -29,8 +29,8 @@ class InvoiceGroupsController
      * @param int $page Page number for pagination
      *
      * @return View
-     * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
      *
+     * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
      *
      * @legacy-function index
      *
@@ -52,6 +52,7 @@ class InvoiceGroupsController
      * @param int|null $id Invoice group ID (null for create)
      *
      * @return View|RedirectResponse
+     *
      * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
      *
      * @legacy-function form
