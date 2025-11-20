@@ -2,55 +2,176 @@
 
 namespace Modules\Payments\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Modules\Core\Support\TranslationHelper;
+use Modules\Invoices\Services\InvoiceService;
+use Modules\Payments\Models\Payment;
+use Modules\Payments\Services\PaymentLogService;
+use Modules\Payments\Services\PaymentMethodService;
+use Modules\Payments\Services\PaymentService;
 
-class PaymentsController extends Controller
+/**
+ * PaymentsController.
+ *
+ * Handles payment recording and tracking
+ */
+class PaymentsController
 {
+    public function __construct(
+        protected PaymentService $paymentService,
+        protected PaymentLogService $paymentLogService,
+        protected PaymentMethodService $paymentMethodService,
+        protected InvoiceService $invoiceService
+    ) {}
+
     /**
-     * Display a listing of the resource.
+     * Display a paginated list of payments.
+     *
+     * @param int $page Page number for pagination
+     *
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function index
+     *
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-line 32
      */
-    public function index()
+    public function index(int $page = 0): \Illuminate\View\View
     {
-        return view('payments::index');
+        $payments = $this->paymentService->getAllWithRelations(['invoice', 'paymentMethod'], null, 15);
+
+        return view('payments::index', [
+            'filter_display'     => true,
+            'filter_placeholder' => TranslationHelper::trans('filter_payments'),
+            'filter_method'      => 'filter_payments',
+            'payments'           => $payments,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display form for creating or editing a payment.
+     *
+     * Note: Simplified custom fields handling - full implementation pending
+     *
+     * @param int|null $id Payment ID (null for create)
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function form
+     *
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-line 50
      */
-    public function create()
+    public function form(?int $id = null)
     {
-        return view('payments::create');
+        // Handle cancel button
+        if (request()->post('btn_cancel')) {
+            return redirect()->route('payments.index');
+        }
+
+        // Handle form submission
+        if (request()->isMethod('post') && request()->post('btn_submit')) {
+            // Validate input
+            $validated = request()->validate([
+                'invoice_id'        => 'required|integer|exists:ip_invoices,invoice_id',
+                'payment_date'      => 'required|date',
+                'payment_amount'    => 'required|numeric|min:0',
+                'payment_method_id' => 'nullable|integer|exists:ip_payment_methods,payment_method_id',
+                'payment_note'      => 'nullable|string',
+            ]);
+
+            if ($id) {
+                // Update existing
+                $this->paymentService->update($id, $validated);
+            } else {
+                // Create new
+                $payment = $this->paymentService->create($validated);
+                $id      = $payment->payment_id;
+            }
+
+            // Handle custom fields if present
+            // Note: Custom field handling deferred to Custom module implementation
+            $customData = request()->input('custom', []);
+            // TODO: Save custom fields when Custom module is fully integrated
+
+            return redirect()->route('payments.index')
+                ->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
+        }
+
+        // Load payment for editing
+        if ($id) {
+            $payment = $this->paymentService->findWithRelations($id, ['invoice', 'paymentMethod']);
+            if ( ! $payment) {
+                abort(404);
+            }
+        } else {
+            $payment = new Payment();
+        }
+
+        // Load related data
+        $paymentMethods = $this->paymentMethodService->getAllOrdered();
+
+        // Load open invoices (invoices with balance > 0)
+        $openInvoices = $this->invoiceService->getOpenInvoices();
+
+        // Custom fields - deferred to Custom module
+        $customFields = [];
+        $customValues = [];
+
+        return view('payments::form', [
+            'payment_id'      => $id,
+            'payment'         => $payment,
+            'payment_methods' => $paymentMethods,
+            'open_invoices'   => $openInvoices,
+            'custom_fields'   => $customFields,
+            'custom_values'   => $customValues,
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display online payment logs (PayPal, Stripe, etc.).
+     *
+     * @param int $page Page number for pagination
+     *
+     * @return \Illuminate\View\View
+     *
+     * @legacy-function online_logs
+     *
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-line 156
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function onlineLogs(int $page = 0): \Illuminate\View\View
     {
-        return view('payments::show');
+        $paymentLogs = $this->paymentLogService->getAllWithRelations(['invoice'], 15);
+
+        return view('payments::online_logs', [
+            'filter_display'     => true,
+            'filter_placeholder' => TranslationHelper::trans('filter_online_logs'),
+            'filter_method'      => 'filter_online_logs',
+            'payment_logs'       => $paymentLogs,
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Delete a payment.
+     *
+     * @param int $id Payment ID
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @legacy-function delete
+     *
+     * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-line 179
      */
-    public function edit($id)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
-        return view('payments::edit');
+        $this->paymentService->delete($id);
+
+        return redirect()->route('payments.index')
+            ->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

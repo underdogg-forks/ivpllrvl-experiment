@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    /**
+     * The module namespace to assume when generating URLs to actions.
+     *
+     * @var string
+     */
+    protected $namespace = 'Modules\Quotes\Controllers';
+
     protected string $name = 'Quotes';
 
     /**
@@ -24,8 +31,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(): void
     {
-        $this->mapApiRoutes();
         $this->mapWebRoutes();
+        // Future: $this->mapApiRoutes();
     }
 
     /**
@@ -35,7 +42,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(): void
     {
-        Route::middleware('web')->group(module_path($this->name, '/routes/web.php'));
+        $routeDir = module_path('Quotes', 'routes/web');
+        foreach (glob($routeDir . '/*.php') as $routeFile) {
+            Route::middleware('web')
+                ->group($routeFile);
+        }
     }
 
     /**
@@ -45,6 +56,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes(): void
     {
-        Route::middleware('api')->prefix('api')->name('api.')->group(module_path($this->name, '/routes/api.php'));
+        // Future API routes implementation
+        // Route::prefix('api')
+        //     ->middleware('api')
+        //     ->group(module_path('Quotes', '/Routes/api/quotes.php'));
     }
 }
