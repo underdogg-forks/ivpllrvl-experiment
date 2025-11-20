@@ -29,12 +29,14 @@ class CustomFieldsController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
+     * @legacy-function index
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
+        // Display all custom_fields tables by default
+        //redirect('custom_fields/table/all');
+
         $customFields = CustomField::query()
             ->orderBy('custom_field_table')
             ->orderBy('custom_field_label')
@@ -44,15 +46,52 @@ class CustomFieldsController
     }
 
     /**
+     * @param string $name of table (simple) NAME (more comprehensive) & why not a filter by type??? like I/Q payment & todo for product ;)
+     * @param int    $page
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/custom_fields/controllers/CustomFields.php
+     *
+     * @legacy-function table()
+     */
+    public function table(string $name = 'all', $page = 0): void
+    {
+        // Determine which name of table custom field to load
+        $custom_tables = $this->customfields->custom_tables();
+        if ($name != 'all' && in_array($name, $custom_tables)) {
+            $this->customfields->by_table_name($name);
+        }
+
+        // Paginate before result
+        $this->customfields->paginate(site_url('custom_fields/name/' . $name), $page);
+        $custom_fields = $this->customfields->result();
+
+        $this->load->model('custom_values/customvalue');
+        $this->layout->set(
+            [
+                'filter_display'     => true,
+                'filter_placeholder' => trans('filter_custom_fields'),
+                'filter_method'      => 'filter_custom_fields',
+
+                'custom_fields'       => $custom_fields,
+                'custom_tables'       => $custom_tables,
+                'custom_value_fields' => $this->customvalues->custom_value_fields(),
+                'positions'           => $this->customfields->get_positions(true),
+            ]
+        );
+        $this->layout->buffer('content', 'custom_fields/index');
+        $this->layout->render();
+    }
+
+    /**
      * Display form for creating or editing a custom field.
      *
      * @param int|null $id Custom field ID (null for create)
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
+     * @legacy-function form
      */
     public function form(?int $id = null)
     {
@@ -78,7 +117,9 @@ class CustomFieldsController
             return redirect()->route('custom-fields.index')->with('alert_success', TranslationHelper::trans('record_successfully_saved'));
         }
 
-        if ($id) {
+        
+	// return object after created?
+	if ($id) {
             $customField = $this->customFieldService->find($id);
             if ( ! $customField) {
                 abort(404);
@@ -96,10 +137,10 @@ class CustomFieldsController
      * @param int $id Custom field ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
      *
      * @legacy-function delete
      *
-     * @legacy-file application/modules/custom_fields/controllers/Custom_fields.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

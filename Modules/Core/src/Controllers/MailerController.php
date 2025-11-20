@@ -74,10 +74,10 @@ class MailerController
      * @param int     $invoice_id
      *
      * @return \Illuminate\Contracts\View\View|void
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      *
      * @legacy-function invoice
      *
-     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function invoice(Request $request, int $invoice_id)
     {
@@ -121,10 +121,10 @@ class MailerController
      * @param int     $quote_id
      *
      * @return \Illuminate\View\View|void
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      *
      * @legacy-function quote
      *
-     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function quote(Request $request, int $quote_id)
     {
@@ -167,10 +167,10 @@ class MailerController
      * @param Request $request
      * @param string  $invoice_id
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      *
      * @legacy-function sendInvoice
      *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function sendInvoice(Request $request, string $invoice_id)
@@ -218,10 +218,10 @@ class MailerController
      * @param string  $quote_id
      *
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @legacy-file application/modules/mailer/controllers/Mailer.php
      *
      * @legacy-function sendQuote
      *
-     * @legacy-file application/modules/mailer/controllers/Mailer.php
      */
     public function sendQuote(Request $request, string $quote_id)
     {

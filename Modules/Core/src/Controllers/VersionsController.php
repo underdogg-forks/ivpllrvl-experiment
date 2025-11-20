@@ -15,10 +15,10 @@ class VersionsController
      * Display version information and update status.
      *
      * @return \Illuminate\View\View
+     * @legacy-file application/modules/settings/controllers/Versions.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/settings/controllers/Versions.php
      */
     public function index(): \Illuminate\View\View
     {

@@ -52,9 +52,9 @@ class ClientsController
      *
      * @return void
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function index
      */
     public function index(Request $request)
     {
@@ -71,9 +71,9 @@ class ClientsController
      *
      * @return void
      *
-     * @legacy-function status
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function status
      */
     public function status(Request $request, string $status = 'active', $page = 0)
     {
@@ -91,6 +91,8 @@ class ClientsController
 
         $req_einvoicing = SettingsHelper::getSetting('einvoicing');
         if ($req_einvoicing) {
+            $this->load->helper('e-invoice'); // eInvoicing++
+
             foreach ($clients as &$client) {
                 // Get a check of filled Required (client and users) fields for eInvoicing
                 $req_einvoicing = get_req_fields_einvoice($client);
@@ -117,9 +119,9 @@ class ClientsController
      *
      * @return void
      *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function form
      */
     public function form(Request $request, $id = null)
     {
@@ -128,6 +130,7 @@ class ClientsController
         }
 
         $new_client = false;
+        $this->filter_input();  // <<<--- filters _POST array for nastiness
 
         // Set validation rule based on is_update
         if ($request->input('is_update') == 0 && $request->input('client_name') != '') {
@@ -224,9 +227,9 @@ class ClientsController
      *
      * @return void
      *
-     * @legacy-function view
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function view
      */
     public function view(Request $request, $client_id, $activeTab = 'detail', $page = 0)
     {
@@ -234,6 +237,8 @@ class ClientsController
 
         $req_einvoicing = SettingsHelper::getSetting('einvoicing');
         if ($req_einvoicing) {
+            $this->load->helper('e-invoice'); // eInvoicing++
+
             // Get a check of filled Required (client and users) fields for eInvoicing
             $req_einvoicing = get_req_fields_einvoice($client);
 
@@ -295,9 +300,9 @@ class ClientsController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function delete
      */
     public function delete(Request $request, $client_id): \Illuminate\Http\RedirectResponse
     {
@@ -341,9 +346,9 @@ class ClientsController
      *
      * @return array
      *
-     * @legacy-function get_client_title_choices
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function get_client_title_choices
      */
     private function get_client_title_choices(): array
     {
@@ -361,9 +366,9 @@ class ClientsController
      *
      * @return object
      *
-     * @legacy-function check_client_einvoice_active
-     *
      * @legacy-file application/modules/clients/controllers/Clients.php
+     *
+     * @legacy-function check_client_einvoice_active
      */
     private function check_client_einvoice_active($client, $req_einvoicing)
     {

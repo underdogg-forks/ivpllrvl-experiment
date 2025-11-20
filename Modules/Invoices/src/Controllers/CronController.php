@@ -41,9 +41,9 @@ class CronController
      *
      * @return void
      *
-     * @legacy-function recur
-     *
      * @legacy-file application/modules/invoices/controllers/Cron.php
+     *
+     * @legacy-function recur
      */
     public function recur(?string $cron_key = null): void
     {

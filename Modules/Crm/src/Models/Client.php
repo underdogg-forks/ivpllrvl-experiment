@@ -111,6 +111,10 @@ class Client extends BaseModel
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function is_active()
      */
     public function scopeActive($query)
     {

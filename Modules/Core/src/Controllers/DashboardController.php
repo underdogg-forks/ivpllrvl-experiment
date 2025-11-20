@@ -42,10 +42,10 @@ class DashboardController
      * Display the admin dashboard.
      *
      * @return \Illuminate\View\View
+     * @legacy-file application/modules/dashboard/controllers/Dashboard.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/dashboard/controllers/Dashboard.php
      */
     public function index(): \Illuminate\View\View
     {

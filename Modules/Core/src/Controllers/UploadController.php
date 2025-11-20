@@ -44,10 +44,10 @@ class UploadController
      * @param string  $url_key
      *
      * @return \Illuminate\Http\JsonResponse
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function uploadFile
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     public function uploadFile(Request $request, int $customerId, string $url_key): \Illuminate\Http\JsonResponse
     {
@@ -104,10 +104,10 @@ class UploadController
      * @param int    $chmod
      *
      * @return bool
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function createDir
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     public function createDir(string $path, int $chmod = 0755): bool
     {
@@ -124,10 +124,10 @@ class UploadController
      * @param string|null $url_key
      *
      * @return \Illuminate\Http\JsonResponse
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function showFiles
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     public function showFiles(?string $url_key = null): \Illuminate\Http\JsonResponse
     {
@@ -143,10 +143,10 @@ class UploadController
      * @param string  $url_key
      *
      * @return \Illuminate\Http\JsonResponse
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function deleteFile
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     public function deleteFile(Request $request, string $url_key): \Illuminate\Http\JsonResponse
     {
@@ -183,10 +183,10 @@ class UploadController
      * @param string $filename
      *
      * @return void
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function getFile
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     public function getFile(string $filename): void
     {
@@ -227,6 +227,9 @@ class UploadController
      * @originalName sanitizeFileName
      *
      * @originalFile UploadController.php
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
+     *
+     * @legacy-function sanitizeFileName
      */
     private function sanitizeFileName(string $filename): string
     {
@@ -269,6 +272,9 @@ class UploadController
      * @originalName getTargetFilePath
      *
      * @originalFile UploadController.php
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
+     *
+     * @legacy-function getTargetFilePath
      */
     private function getTargetFilePath(string $url_key, string $filename): string
     {
@@ -279,6 +285,9 @@ class UploadController
      * @originalName validateMimeType
      *
      * @originalFile UploadController.php
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
+     *
+     * @legacy-function validateMimeType
      */
     private function validateMimeType(string $mimeType): void
     {
@@ -296,10 +305,10 @@ class UploadController
      * @param string $filename
      *
      * @return void
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function saveFileMetadata
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     private function saveFileMetadata(int $customerId, string $url_key, string $filename): void
     {
@@ -323,10 +332,10 @@ class UploadController
      * @param string $filename
      *
      * @return void
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function moveUploadedFile
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     private function moveUploadedFile(string $tempFile, string $filePath, string $filename): void
     {
@@ -349,10 +358,10 @@ class UploadController
      * @param string $dynamicLogValue
      *
      * @return void
+     * @legacy-file application/modules/uploads/controllers/Uploads.php
      *
      * @legacy-function respondMessage
      *
-     * @legacy-file application/modules/uploads/controllers/Uploads.php
      */
     private function respondMessage(int $httpCode, string $messageKey, string $dynamicLogValue = ''): void
     {

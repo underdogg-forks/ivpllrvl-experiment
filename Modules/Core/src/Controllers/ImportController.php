@@ -31,10 +31,10 @@ class ImportController
      * @param int $page Page number for pagination
      *
      * @return \Illuminate\View\View
+     * @legacy-file application/modules/import/controllers/Import.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/import/controllers/Import.php
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -50,10 +50,10 @@ class ImportController
      * Display the import form or process a submitted import.
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/import/controllers/Import.php
      *
      * @legacy-function form
      *
-     * @legacy-file application/modules/import/controllers/Import.php
      */
     public function form()
     {
@@ -112,10 +112,10 @@ class ImportController
      * @param int $id Import ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/import/controllers/Import.php
      *
      * @legacy-function delete
      *
-     * @legacy-file application/modules/import/controllers/Import.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

@@ -37,9 +37,9 @@ class ClientsAjaxController
      *
      * @return void Outputs JSON response
      *
-     * @legacy-function nameQuery
-     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
+     *
+     * @legacy-function name_query
      */
     public function nameQuery(): void
     {
@@ -53,6 +53,7 @@ class ClientsAjaxController
             exit;
         }
 
+        // Search for chars "in the middle" of clients names
         $moreClientsQuery = $permissiveSearchClients ? '%' : '';
         $escapedQuery     = str_replace('%', '', $query);
 
@@ -79,12 +80,15 @@ class ClientsAjaxController
      *
      * @return void Outputs JSON response
      *
-     * @legacy-function getLatest
-     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
+     *
+     * @legacy-function get_latest
      */
     public function getLatest(): void
     {
+        // Load the model & helper
+        $this->load->model('clients/client');
+
         $response = [];
         $clients  = Client::query()
             ->where('client_active', 1)
@@ -105,9 +109,9 @@ class ClientsAjaxController
      *
      * @return void
      *
-     * @legacy-function savePreferencePermissiveSearchClients
-     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
+     *
+     * @legacy-function save_preference_permissive_search_clients
      */
     public function savePreferencePermissiveSearchClients(): void
     {
@@ -123,9 +127,9 @@ class ClientsAjaxController
      *
      * @return void Outputs JSON response
      *
-     * @legacy-function deleteClientNote
-     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
+     *
+     * @legacy-function delete_client_note
      */
     public function deleteClientNote(): void
     {
@@ -148,9 +152,9 @@ class ClientsAjaxController
      *
      * @return void Outputs JSON response
      *
-     * @legacy-function saveClientNote
-     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
+     *
+     * @legacy-function save_client_note
      */
     public function saveClientNote(): void
     {
@@ -171,9 +175,9 @@ class ClientsAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function loadClientNotes
-     *
      * @legacy-file application/modules/clients/controllers/Ajax.php
+     *
+     * @legacy-function load_client_notes
      */
     public function loadClientNotes(): \Illuminate\View\View
     {

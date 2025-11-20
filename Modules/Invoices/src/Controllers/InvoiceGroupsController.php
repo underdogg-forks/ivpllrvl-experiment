@@ -9,11 +9,7 @@ use Modules\Core\Traits\HandlesDeletion;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 
-/**
- * InvoiceGroupsController.
- *
- * Manages invoice groups which control invoice numbering patterns
- */
+#[AllowDynamicProperties]
 class InvoiceGroupsController
 {
     use HandlesDeletion;
@@ -33,10 +29,10 @@ class InvoiceGroupsController
      * @param int $page Page number for pagination
      *
      * @return View
+     * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
+     *
      *
      * @legacy-function index
-     *
-     * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
      *
      * @legacy-line 32
      */
@@ -56,10 +52,9 @@ class InvoiceGroupsController
      * @param int|null $id Invoice group ID (null for create)
      *
      * @return View|RedirectResponse
+     * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
      *
      * @legacy-function form
-     *
-     * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
      *
      * @legacy-line 42
      */
@@ -114,9 +109,9 @@ class InvoiceGroupsController
      *
      * @return RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/invoice_groups/controllers/Invoice_groups.php
+     *
+     * @legacy-function delete
      *
      * @legacy-line 71
      */

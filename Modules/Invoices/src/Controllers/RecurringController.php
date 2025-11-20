@@ -29,9 +29,9 @@ class RecurringController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/invoices/controllers/Recurring.php
+     *
+     * @legacy-function index
      *
      * @legacy-line 32
      */
@@ -57,9 +57,9 @@ class RecurringController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function stop
-     *
      * @legacy-file application/modules/invoices/controllers/Recurring.php
+     *
+     * @legacy-function stop
      *
      * @legacy-line 51
      */
@@ -78,9 +78,9 @@ class RecurringController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/invoices/controllers/Recurring.php
+     *
+     * @legacy-function delete
      *
      * @legacy-line 60
      */

@@ -50,10 +50,10 @@ class SettingsController
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\View\View
+     * @legacy-file application/modules/settings/controllers/Settings.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/settings/controllers/Settings.php
      */
     public function index(Request $request): \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\View\View
     {
@@ -128,10 +128,10 @@ class SettingsController
      * @param string  $type    Logo type (invoice or login)
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/settings/controllers/Settings.php
      *
      * @legacy-function removeLogo
      *
-     * @legacy-file application/modules/settings/controllers/Settings.php
      */
     public function removeLogo(Request $request, string $type): \Illuminate\Http\RedirectResponse
     {

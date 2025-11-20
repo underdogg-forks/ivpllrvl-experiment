@@ -24,6 +24,10 @@ class PaymentsAjaxController
      * Add a payment via AJAX.
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @legacy-file application/modules/payments/controllers/Ajax.php
+     *
+     * @legacy-function add()
      */
     public function add()
     {
@@ -55,6 +59,10 @@ class PaymentsAjaxController
      * Display modal for adding payment.
      *
      * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-file application/modules/payments/controllers/Ajax.php
+     *
+     * @legacy-function modal_add_payment()
      */
     public function modal_add_payment()
     {

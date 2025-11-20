@@ -28,17 +28,42 @@ class CustomValuesController
      * @param int $page Page number for pagination
      *
      * @return \Illuminate\View\View
+     * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
+
+
+/*
+       $this->customvalues->grouped()->paginate(site_url('custom_values/index'), $page);
+        $custom_values = $this->customvalues->result();
+
+        $this->load->model('custom_fields/customfield');
+        // Determine which name of table custom field to load
+        $custom_tables = $this->customfields->custom_tables();
+        // load positions by table name
+        $positions = $this->customfields->get_positions(true);
+
+        $this->layout->set(
+            [
+                'filter_display'     => true,
+                'filter_placeholder' => trans('filter_custom_values'),
+                'filter_method'      => 'filter_custom_values',
+                'custom_tables'      => $custom_tables,
+                'custom_values'      => $custom_values,
+                'positions'          => $positions,
+            ]
+        );
+*/
+
         $customValues = CustomValue::query()
             ->with('customField')
             ->orderBy('custom_field_id')
             ->paginate(15, ['*'], 'page', $page);
+
 
         return view('core::custom_values_index', ['custom_values' => $customValues]);
     }
@@ -49,10 +74,10 @@ class CustomValuesController
      * @param int|null $id Custom value ID (null for create)
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      *
      * @legacy-function form
      *
-     * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      */
     public function form(?int $id = null)
     {
@@ -91,13 +116,22 @@ class CustomValuesController
      * @param int $id Custom value ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      *
      * @legacy-function delete
      *
-     * @legacy-file application/modules/custom_values/controllers/Custom_values.php
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {
+/*
+        if ( ! $this->customvalues->delete($id)) {
+            $this->session->set_flashdata('alert_info', trans('id') . sprintf(' "%s" ', $id) . trans('custom_values_used_not_deletable'));
+        }
+
+        $fid = $this->input->post('custom_field_id');
+        redirect('custom_values' . ($fid ? '/field/' . $fid : ''));
+*/
+
         $this->customValueService->delete($id);
 
         return redirect()->route('custom_values.index')->with('alert_success', TranslationHelper::trans('record_successfully_deleted'));

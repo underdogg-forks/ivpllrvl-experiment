@@ -47,9 +47,9 @@ class InvoicesController
      *
      * @return RedirectResponse
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function index
      *
      * @legacy-line 29
      */
@@ -66,9 +66,9 @@ class InvoicesController
      *
      * @return View
      *
-     * @legacy-function status
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function status
      *
      * @legacy-line 38
      */
@@ -94,9 +94,9 @@ class InvoicesController
      *
      * @return View
      *
-     * @legacy-function archive
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function archive
      *
      * @legacy-line 77
      */
@@ -121,9 +121,9 @@ class InvoicesController
      *
      * @return Response
      *
-     * @legacy-function download
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function download
      *
      * @legacy-line 92
      */
@@ -155,9 +155,9 @@ class InvoicesController
      *
      * @return View
      *
-     * @legacy-function view
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function view
      *
      * @legacy-line 120
      */
@@ -221,9 +221,9 @@ class InvoicesController
      *
      * @return RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function delete
      *
      * @legacy-line 228
      */
@@ -254,9 +254,9 @@ class InvoicesController
      *
      * @return Response
      *
-     * @legacy-function generate_pdf
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function generate_pdf
      *
      * @legacy-line 254
      */
@@ -287,9 +287,9 @@ class InvoicesController
      *
      * @return Response
      *
-     * @legacy-function generate_xml
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function generate_xml
      *
      * @legacy-line 266
      */
@@ -334,9 +334,9 @@ class InvoicesController
      *
      * @return Response
      *
-     * @legacy-function generate_sumex_pdf
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function generate_sumex_pdf
      *
      * @legacy-line 301
      */
@@ -356,9 +356,9 @@ class InvoicesController
      *
      * @return Response
      *
-     * @legacy-function generate_sumex_copy
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function generate_sumex_copy
      *
      * @legacy-line 308
      */
@@ -388,9 +388,9 @@ class InvoicesController
      *
      * @return RedirectResponse
      *
-     * @legacy-function delete_invoice_tax
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function delete_invoice_tax
      *
      * @legacy-line 324
      */
@@ -411,9 +411,9 @@ class InvoicesController
      *
      * @return RedirectResponse
      *
-     * @legacy-function recalculate_all_invoices
-     *
      * @legacy-file application/modules/invoices/controllers/Invoices.php
+     *
+     * @legacy-function recalculate_all_invoices
      *
      * @legacy-line 337
      */

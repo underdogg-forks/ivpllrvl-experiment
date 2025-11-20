@@ -32,10 +32,10 @@ class SessionsController
      * Redirect to the login page.
      *
      * @return void
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function index()
     {
@@ -52,10 +52,10 @@ class SessionsController
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View a redirect response after form processing or the login view when displaying the form
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function login
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function login(Request $request)
     {
@@ -98,10 +98,10 @@ class SessionsController
      * @param string $password      the plaintext password to verify for the account
      *
      * @return bool `true` if authentication succeeds and the failure log is reset, `false` otherwise
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function authenticate
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function authenticate($email_address, $password): bool
     {
@@ -124,10 +124,10 @@ class SessionsController
      * Log out the current user and redirect to login page.
      *
      * @return void
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function logout
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function logout()
     {
@@ -147,10 +147,10 @@ class SessionsController
      * @param string|null $token   the password reset token supplied via the URL, or null when not using a token
      *
      * @return mixed a view response for rendering the appropriate password reset page or a redirect response after processing
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function passwordreset
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     public function passwordreset(Request $request, $token = null)
     {
@@ -297,10 +297,10 @@ class SessionsController
      * @param string $username
      *
      * @return mixed login log record or null
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function loginLogCheck
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogCheck($username)
     {
@@ -327,10 +327,10 @@ class SessionsController
      * @param string $username
      *
      * @return void
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function loginLogAddfailure
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogAddfailure($username)
     {
@@ -349,10 +349,10 @@ class SessionsController
      * @param string $username
      *
      * @return void
+     * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function loginLogReset
      *
-     * @legacy-file application/modules/sessions/controllers/Sessions.php
      */
     private function loginLogReset($username)
     {

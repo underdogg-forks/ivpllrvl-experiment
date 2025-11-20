@@ -34,10 +34,10 @@ class UserClientsController
      * Redirect to users index.
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      *
      * @legacy-function index
      *
-     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
     public function index(): \Illuminate\Http\RedirectResponse
     {
@@ -50,10 +50,10 @@ class UserClientsController
      * @param int|null $id User ID
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      *
      * @legacy-function user
      *
-     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
     public function user(?int $id = null)
     {
@@ -81,10 +81,10 @@ class UserClientsController
      * @param int|null $user_id User ID
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      *
      * @legacy-function create
      *
-     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
     public function create(?int $user_id = null)
     {
@@ -127,10 +127,10 @@ class UserClientsController
      * @param int $user_client_id User-client relation ID
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      *
      * @legacy-function delete
      *
-     * @legacy-file application/modules/user_clients/controllers/User_clients.php
      */
     public function delete(int $user_client_id): \Illuminate\Http\RedirectResponse
     {

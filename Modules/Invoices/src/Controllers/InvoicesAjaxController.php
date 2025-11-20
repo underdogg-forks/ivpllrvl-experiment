@@ -22,8 +22,11 @@ use Modules\Invoices\Services\InvoiceTaxRateService;
  *
  * @legacy-file application/modules/invoices/controllers/Ajax.php
  */
+#[AllowDynamicProperties]
 class InvoicesAjaxController
 {
+    public $ajax_controller = true;
+
     public function __construct(
         protected InvoiceService $invoiceService,
         protected InvoiceItemService $invoiceItemService,
@@ -36,10 +39,10 @@ class InvoicesAjaxController
      * Save invoice with items, tax rates, and custom fields.
      *
      * @return array JSON response with success/error status
+     * @legacy-file application/modules/invoices/controllers/Ajax.php
      *
      * @legacy-function save
      *
-     * @legacy-file application/modules/invoices/controllers/Ajax.php
      *
      * @legacy-line 21
      */
@@ -129,9 +132,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response
      *
-     * @legacy-function save_invoice_tax_rate
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function save_invoice_tax_rate
      *
      * @legacy-line 220
      */
@@ -157,9 +160,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response
      *
-     * @legacy-function delete_item
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function delete_item
      *
      * @legacy-line 244
      */
@@ -187,9 +190,9 @@ class InvoicesAjaxController
      *
      * @return array Item data
      *
-     * @legacy-function get_item
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function get_item
      *
      * @legacy-line 271
      */
@@ -206,9 +209,9 @@ class InvoicesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_copy_invoice
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function modal_copy_invoice
      *
      * @legacy-line 280
      */
@@ -228,9 +231,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response with new invoice URL
      *
-     * @legacy-function copy_invoice
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function copy_invoice
      *
      * @legacy-line 302
      */
@@ -264,9 +267,9 @@ class InvoicesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_change_user
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function modal_change_user
      *
      * @legacy-line 337
      */
@@ -284,9 +287,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response
      *
-     * @legacy-function change_user
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function change_user
      *
      * @legacy-line 351
      */
@@ -310,9 +313,9 @@ class InvoicesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_change_client
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function modal_change_client
      *
      * @legacy-line 386
      */
@@ -330,9 +333,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response
      *
-     * @legacy-function change_client
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function change_client
      *
      * @legacy-line 400
      */
@@ -356,9 +359,9 @@ class InvoicesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_create_invoice
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function modal_create_invoice
      *
      * @legacy-line 435
      */
@@ -375,9 +378,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response with new invoice ID
      *
-     * @legacy-function create
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function create
      *
      * @legacy-line 454
      */
@@ -401,9 +404,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response with recurring invoice ID
      *
-     * @legacy-function create_recurring
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function create_recurring
      *
      * @legacy-line 476
      */
@@ -429,9 +432,9 @@ class InvoicesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_create_recurring
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function modal_create_recurring
      *
      * @legacy-line 497
      */
@@ -448,9 +451,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response with start date
      *
-     * @legacy-function get_recur_start_date
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function get_recur_start_date
      *
      * @legacy-line 511
      */
@@ -483,9 +486,9 @@ class InvoicesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_create_credit
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function modal_create_credit
      *
      * @legacy-line 519
      */
@@ -502,9 +505,9 @@ class InvoicesAjaxController
      *
      * @return array JSON response with credit invoice ID
      *
-     * @legacy-function create_credit
-     *
      * @legacy-file application/modules/invoices/controllers/Ajax.php
+     *
+     * @legacy-function create_credit
      *
      * @legacy-line 538
      */
@@ -526,6 +529,21 @@ class InvoicesAjaxController
 
         // Copy invoice data as credit (negative amounts)
         Invoice::copyCreditInvoice($sourceId, $creditInvoice->invoice_id);
+
+/**
+            // Set source invoice to read-only
+            if ($this->config->item('disable_read_only') == false) {
+                $this->invoice->where('invoice_id', $source_id);
+                $this->invoice->update('ip_invoices', ['is_read_only' => '1']);
+            }
+
+            // Set target invoice to credit invoice
+            $this->invoice->where('invoice_id', $target_id);
+            $this->invoice->update('ip_invoices', ['creditinvoice_parent_id' => $source_id]);
+
+            $this->invoice->where('invoice_id', $target_id);
+            $this->invoice->update('ip_invoice_amounts', ['invoice_sign' => '-1']);
+*/
 
         return [
             'success'    => 1,

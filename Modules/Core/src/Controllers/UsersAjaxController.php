@@ -41,10 +41,10 @@ class UsersAjaxController
      * @param int $type User type filter (default: 1)
      *
      * @return void Outputs JSON response
+     * @legacy-file application/modules/users/controllers/Ajax.php
      *
      * @legacy-function nameQuery
      *
-     * @legacy-file application/modules/users/controllers/Ajax.php
      */
     public function nameQuery(int $type = 1): void
     {
@@ -86,10 +86,10 @@ class UsersAjaxController
      * Get latest active users (AJAX endpoint).
      *
      * @return void Outputs JSON response
+     * @legacy-file application/modules/users/controllers/Ajax.php
      *
      * @legacy-function getLatest
      *
-     * @legacy-file application/modules/users/controllers/Ajax.php
      */
     public function getLatest(): void
     {
@@ -112,10 +112,10 @@ class UsersAjaxController
      * Save user's permissive search preference (AJAX endpoint).
      *
      * @return void
+     * @legacy-file application/modules/users/controllers/Ajax.php
      *
      * @legacy-function savePreferencePermissiveSearchUsers
      *
-     * @legacy-file application/modules/users/controllers/Ajax.php
      */
     public function savePreferencePermissiveSearchUsers(): void
     {
@@ -130,10 +130,10 @@ class UsersAjaxController
      * Save user-client association (AJAX endpoint).
      *
      * @return void
+     * @legacy-file application/modules/users/controllers/Ajax.php
      *
      * @legacy-function saveUserClient
      *
-     * @legacy-file application/modules/users/controllers/Ajax.php
      */
     public function saveUserClient(): void
     {
@@ -166,10 +166,10 @@ class UsersAjaxController
      * Load user-client table partial (AJAX endpoint).
      *
      * @return \Illuminate\View\View
+     * @legacy-file application/modules/users/controllers/Ajax.php
      *
      * @legacy-function loadUserClientTable
      *
-     * @legacy-file application/modules/users/controllers/Ajax.php
      */
     public function loadUserClientTable(): \Illuminate\View\View
     {
@@ -199,10 +199,10 @@ class UsersAjaxController
      * @param int|null $user_id User ID
      *
      * @return \Illuminate\View\View
+     * @legacy-file application/modules/users/controllers/Ajax.php
      *
      * @legacy-function modalAddUserClient
      *
-     * @legacy-file application/modules/users/controllers/Ajax.php
      */
     public function modalAddUserClient(?int $user_id = null): \Illuminate\View\View
     {

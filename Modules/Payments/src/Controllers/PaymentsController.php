@@ -30,9 +30,9 @@ class PaymentsController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-function index
      *
      * @legacy-line 32
      */
@@ -57,9 +57,9 @@ class PaymentsController
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-function form
      *
      * @legacy-line 50
      */
@@ -136,9 +136,9 @@ class PaymentsController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function online_logs
-     *
      * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-function online_logs
      *
      * @legacy-line 156
      */
@@ -161,9 +161,9 @@ class PaymentsController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/payments/controllers/Payments.php
+     *
+     * @legacy-function delete
      *
      * @legacy-line 179
      */
