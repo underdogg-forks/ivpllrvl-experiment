@@ -19,6 +19,12 @@ class QuoteItemAmountService
      * @param int   $itemId
      * @param array $globalDiscount
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_item_amount.php
+     *
+     * @legacy-function calculate()
+     *
      * @return void
      */
     public function calculate(int $itemId, array &$globalDiscount = []): void

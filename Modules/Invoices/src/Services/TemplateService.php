@@ -4,6 +4,17 @@ namespace Modules\Invoices\Services;
 
 class TemplateService
 {
+    /**
+     * @param string $type
+     *
+     * @return array
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_template.php
+     *
+     * @legacy-function get_invoice_templates()
+     */
     public function getInvoiceTemplates(string $type = 'pdf'): array
     {
         $path = $type === 'pdf'
@@ -13,6 +24,17 @@ class TemplateService
         return $this->removeExtension($this->getTemplatesFromPath($path));
     }
 
+    /**
+     * @param string $type
+     *
+     * @return array|mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_template.php
+     *
+     * @legacy-function get_quote_templates()
+     */
     public function getQuoteTemplates(string $type = 'pdf'): array
     {
         $path = $type === 'pdf'
@@ -33,6 +55,15 @@ class TemplateService
         }));
     }
 
+    /**
+     * @param $files
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_template.php
+     *
+     * @legacy-function remove_extension()
+     */
     private function removeExtension(array $files): array
     {
         return array_map(static function ($file) {

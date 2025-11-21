@@ -32,9 +32,9 @@ class UnitsController
      *
      * @return View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
+     * @legacy-function index
      */
     public function index(int $page = 0): View
     {
@@ -51,9 +51,9 @@ class UnitsController
      *
      * @return View
      *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
+     * @legacy-function form
      */
     public function create(): View
     {
@@ -72,6 +72,8 @@ class UnitsController
      * @legacy-function form (save action)
      *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
+     * @legacy-function form()
      */
     public function store(UnitRequest $request): RedirectResponse
     {
@@ -132,6 +134,8 @@ class UnitsController
      * @legacy-function delete
      *
      * @legacy-file application/modules/units/controllers/Units.php
+     *
+     * @legacy-function delete()
      */
     public function destroy(Unit $unit): RedirectResponse
     {

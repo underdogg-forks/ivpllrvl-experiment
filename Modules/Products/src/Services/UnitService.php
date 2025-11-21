@@ -21,6 +21,12 @@ class UnitService extends BaseService
      * @param int|null $unitId
      * @param float    $quantity
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/units/models/Mdl_unit.php
+     *
+     * @legacy-function get_name()
+     *
      * @return string
      */
     public function getUnitName(?int $unitId, float $quantity = 1): string

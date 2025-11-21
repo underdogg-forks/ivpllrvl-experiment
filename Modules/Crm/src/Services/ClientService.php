@@ -42,7 +42,11 @@ class ClientService extends BaseService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      *
-     * @legacy-function getNotAssignedToUser
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function get_not_assigned_to_user()
      */
     public function getNotAssignedToUser(int $userId)
     {
@@ -56,6 +60,107 @@ class ClientService extends BaseService
             ->orderBy('client_name')
             ->get();
     }
+
+
+    /**
+     * @param int $id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function delete()
+     */
+    public function remove($id): void
+    {
+/*
+        parent::delete($id);
+
+        $this->load->helper('orphan');
+        delete_orphans();
+*/
+    }
+
+    /**
+     * Returns client_id of existing client.
+     *
+     * @param $client_name
+     *
+     * @return int|null
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function client_lookup()
+     */
+    public function client_lookup($client_name)
+    {
+/*
+        $client = $this->mdl_clients->where('client_name', $client_name)->get();
+
+        if ($client->num_rows()) {
+            $client_id = $client->row()->client_id;
+        } else {
+            $db_array = [
+                'client_name' => $client_name,
+            ];
+
+            $client_id = parent::save(null, $db_array);
+        }
+
+        return $client_id;
+*/
+    }
+
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function with_total()
+     */
+    public function with_total()
+    {
+/*
+        $this->filter_select('IFnull((SELECT SUM(invoice_total) FROM ip_invoice_amounts WHERE invoice_id IN (SELECT invoice_id FROM ip_invoices WHERE ip_invoices.client_id = ip_clients.client_id)), 0) AS client_invoice_total', false);
+
+        return $this;
+*/
+    }
+
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function with_total_paid()
+     */
+    public function with_total_paid()
+    {
+/*
+        $this->filter_select('IFnull((SELECT SUM(invoice_paid) FROM ip_invoice_amounts WHERE invoice_id IN (SELECT invoice_id FROM ip_invoices WHERE ip_invoices.client_id = ip_clients.client_id)), 0) AS client_invoice_paid', false);
+
+        return $this;
+*/
+    }
+
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function with_total_balance()
+     */
+    public function with_total_balance()
+    {
+/*
+        $this->filter_select('IFnull((SELECT SUM(invoice_balance) FROM ip_invoice_amounts WHERE invoice_id IN (SELECT invoice_id FROM ip_invoices WHERE ip_invoices.client_id = ip_clients.client_id)), 0) AS client_invoice_balance', false);
+
+        return $this;
+*/
+    }
+
 
     /**
      * Get clients by IDs.

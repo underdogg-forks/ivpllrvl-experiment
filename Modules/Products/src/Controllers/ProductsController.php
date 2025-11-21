@@ -2,6 +2,7 @@
 
 namespace Modules\Products\Controllers;
 
+use AllowDynamicProperties;
 use Modules\Core\Support\TranslationHelper;
 use Modules\Core\Traits\HandlesDeletion;
 use Modules\Products\Models\Family;
@@ -10,14 +11,7 @@ use Modules\Products\Models\TaxRate;
 use Modules\Products\Models\Unit;
 use Modules\Products\Services\ProductService;
 
-/**
- * ProductsController.
- *
- * Manages product CRUD operations
- * Implements SOLID principles, DRY pattern, and early returns
- *
- * @legacy-file application/modules/products/controllers/Products.php
- */
+#[AllowDynamicProperties]
 class ProductsController
 {
     use HandlesDeletion;
@@ -33,9 +27,9 @@ class ProductsController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/products/controllers/Products.php
+     *
+     * @legacy-function index
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -59,9 +53,9 @@ class ProductsController
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/products/controllers/Products.php
+     *
+     * @legacy-function form
      */
     public function form(?int $id = null)
     {
@@ -92,9 +86,9 @@ class ProductsController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/products/controllers/Products.php
+     *
+     * @legacy-function delete
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

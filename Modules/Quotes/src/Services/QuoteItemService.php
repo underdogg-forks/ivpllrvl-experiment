@@ -54,9 +54,15 @@ class QuoteItemService
      * @param array $data
      * @param array $globalDiscount
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_item.php
+     *
+     * @legacy-function save()
+     *
      * @return QuoteItem
      */
-    public function saveItem(array $data, array &$globalDiscount = []): QuoteItem
+    public function save(array $data, array &$globalDiscount = []): QuoteItem
     {
         // Create or update the item
         if (isset($data['item_id']) && $data['item_id']) {
@@ -82,9 +88,15 @@ class QuoteItemService
      *
      * @param int $itemId
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_item.php
+     *
+     * @legacy-function delete()
+     *
      * @return bool
      */
-    public function deleteItem(int $itemId): bool
+    public function delete(int $itemId): bool
     {
         // Get the item to find quote_id
         $item = QuoteItem::find($itemId);
@@ -114,6 +126,12 @@ class QuoteItemService
      * Get items subtotal for a quote.
      *
      * @param int $quoteId
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_item.php
+     *
+     * @legacy-function get_items_subtotal() 
      *
      * @return float
      */

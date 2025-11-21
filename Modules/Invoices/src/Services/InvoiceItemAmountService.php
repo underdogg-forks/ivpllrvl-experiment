@@ -7,6 +7,22 @@ use Modules\Invoices\Models\ItemAmount;
 
 class InvoiceItemAmountService
 {
+    /**
+     * item_amount_id
+     * item_id
+     * item_subtotal (item_quantity * item_price)
+     * item_tax_total
+     * item_total ((item_quantity * item_price) + item_tax_total).
+     *
+     * @param $item_id
+     * @param $global_discount
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item_amount.php
+     *
+     * @legacy-function calculate()
+     */
     public function calculate(int $itemId, array &$globalDiscount = []): void
     {
         $item = Item::query()->with('taxRate')->findOrFail($itemId);

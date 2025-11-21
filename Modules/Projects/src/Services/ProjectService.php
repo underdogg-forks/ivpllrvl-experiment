@@ -23,6 +23,50 @@ class ProjectService extends BaseService
     }
 
     /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/projects/models/Mdl_project.php
+     *
+     * @legacy-function get_latest()
+     */
+    public function getLatest()
+    {
+/*
+        $this->db->order_by('ip_projects.project_id', 'DESC');
+
+        return $this;
+*/
+    }
+
+
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/projects/models/Mdl_project.php
+     *
+     * @legacy-function get_tasks()
+     */
+    public function getTasks($project_id)
+    {
+/*
+        $result = [];
+
+        if ( ! $project_id) {
+            return $result;
+        }
+
+        $this->load->model('tasks/task');
+        $query = $this->mdl_tasks->where('ip_tasks.project_id', $project_id)->get();
+
+        foreach ($query->result() as $row) {
+            $result[] = $row;
+        }
+
+        return $result;
+*/
+    }
+
+    /**
      * Check if project can be deleted.
      *
      * @param int $id Project ID

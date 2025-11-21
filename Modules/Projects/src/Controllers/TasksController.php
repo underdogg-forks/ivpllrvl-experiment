@@ -20,6 +20,15 @@ class TasksController
         protected TaxRateService $taxRateService
     ) {}
 
+    /**
+     * @param int $page
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/tasks/controllers/Tasks.php
+     *
+     * @legacy-function index()
+     */
     public function index(int $page = 0): \Illuminate\View\View
     {
         $tasks = $this->taskService->getAllWithRelations(['project', 'taxRate'], 15);
@@ -33,6 +42,13 @@ class TasksController
         ]);
     }
 
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/tasks/controllers/Tasks.php
+     *
+     * @legacy-function form()
+     */
     public function form(?int $id = null): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         // Handle POST request (create/update)
@@ -74,6 +90,11 @@ class TasksController
      *
      * @param int $id Task ID
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/tasks/controllers/Tasks.php
+     *
+     * @legacy-function delete()
      * @return \Illuminate\Http\RedirectResponse
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
@@ -104,6 +125,15 @@ class TasksController
         );
     }
 
+    /**
+     * @param $id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/tasks/controllers/Tasks.php
+     *
+     * @legacy-function delete()
+     */
     public function destroy(Task $task): \Illuminate\Http\RedirectResponse
     {
         $this->taskService->delete($task->task_id);

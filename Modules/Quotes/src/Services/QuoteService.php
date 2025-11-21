@@ -25,6 +25,12 @@ class QuoteService
     /**
      * Get quote statuses.
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function statuses()
+     *
      * @return array
      */
     public function getStatuses(): array
@@ -106,6 +112,12 @@ class QuoteService
      *
      * @param array $data
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function create()
+     *
      * @return Quote
      */
     public function createQuote(array $data): Quote
@@ -137,6 +149,11 @@ class QuoteService
      *
      * @param int $sourceId
      * @param int $targetId
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
      *
      * @return void
      */
@@ -201,6 +218,12 @@ class QuoteService
      *
      * @param string $quoteDateCreated
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function get_date_due()
+     *
      * @return string
      */
     public function calculateDateDue(string $quoteDateCreated): string
@@ -217,6 +240,12 @@ class QuoteService
      *
      * @param int $invoiceGroupId
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function get_quote_number()
+     *
      * @return string
      */
     public function generateQuoteNumber(int $invoiceGroupId): string
@@ -229,6 +258,12 @@ class QuoteService
     /**
      * Generate a unique URL key.
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function get_url_key()
+     *
      * @return string
      */
     public function generateUrlKey(): string
@@ -240,6 +275,13 @@ class QuoteService
      * Get invoice group ID for a quote.
      *
      * @param int $quoteId
+     *
+     * @return mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
      *
      * @return int
      */
@@ -255,6 +297,12 @@ class QuoteService
      *
      * @param int $quoteId
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function delete()
+     *
      * @return bool|null
      */
     public function deleteQuote(int $quoteId): ?bool
@@ -268,7 +316,45 @@ class QuoteService
         QuoteTaxRate::query()->where('quote_id', $quoteId)->delete();
         QuoteCustom::query()->where('quote_id', $quoteId)->delete();
 
+	//delete_orphans()
+
         return $deleted;
+    }
+
+    /**
+     * @param $client_id
+     *
+     * @return $this
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function by_client()
+     */
+    public function by_client($client_id)
+    {
+        $this->filter_where('ip_quotes.client_id', $client_id);
+
+        return $this;
+    }
+
+    /**
+     * Get quote by URL key.
+     *
+     * @param string $urlKey
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function get_by_url_key()
+     *
+     * @return Quote
+     */
+    public function getByUrlKey(string $urlKey): Quote
+    {
+        return Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
     }
 
     /**
@@ -283,18 +369,6 @@ class QuoteService
         return Quote::query()->whereIn('quote_status_id', [2, 3])
             ->where('quote_url_key', $quoteUrlKey)
             ->update(['quote_status_id' => 4]);
-    }
-
-    /**
-     * Get quote by URL key.
-     *
-     * @param string $urlKey
-     *
-     * @return Quote
-     */
-    public function getByUrlKey(string $urlKey): Quote
-    {
-        return Quote::query()->where('quote_url_key', $urlKey)->firstOrFail();
     }
 
     /**
@@ -357,6 +431,12 @@ class QuoteService
      *
      * @param int $quoteId
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function mark_viewed()
+     *
      * @return bool
      */
     public function markViewed(int $quoteId): bool
@@ -377,6 +457,12 @@ class QuoteService
      * Mark quote as sent (only if currently draft).
      *
      * @param int $quoteId
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function mark_sent()
      *
      * @return bool
      */
@@ -408,6 +494,12 @@ class QuoteService
      * Generate quote number if applicable.
      *
      * @param int $quoteId
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function generate_quote_number_if_applicable()
      *
      * @return void
      */

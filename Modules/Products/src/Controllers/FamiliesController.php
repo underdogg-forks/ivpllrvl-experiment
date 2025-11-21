@@ -29,9 +29,9 @@ class FamiliesController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/families/controllers/Families.php
+     *
+     * @legacy-function index
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -52,9 +52,9 @@ class FamiliesController
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/families/controllers/Families.php
+     *
+     * @legacy-function form
      */
     public function form(?int $id = null)
     {
@@ -112,9 +112,9 @@ class FamiliesController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/families/controllers/Families.php
+     *
+     * @legacy-function delete
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

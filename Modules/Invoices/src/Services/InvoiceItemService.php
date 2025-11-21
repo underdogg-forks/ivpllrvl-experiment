@@ -20,7 +20,18 @@ class InvoiceItemService
         ];
     }
 
-    public function saveItem(?int $itemId, array $data, int $invoiceId, array &$globalDiscount = []): Item
+    /**
+     * @param []   $global_discount
+     *
+     * @return int|null
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item.php
+     *
+     * @legacy-function save()
+     */
+    public function save(?int $itemId, array $data, int $invoiceId, array &$globalDiscount = []): Item
     {
         $payload = array_merge($data, ['invoice_id' => $invoiceId]);
 
@@ -37,7 +48,16 @@ class InvoiceItemService
         return $item;
     }
 
-    public function deleteItem(int $itemId): bool
+    /**
+     * @param int $item_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item.php
+     *
+     * @legacy-function delete()
+     */
+    public function delete(int $itemId): bool
     {
         $item = Item::find($itemId);
 
@@ -58,6 +78,19 @@ class InvoiceItemService
         return true;
     }
 
+    /**
+     * legacy_calculation false: Need to recalculate invoice amounts - since v1.6.3.
+     *
+     * @param $invoice_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item.php
+     *
+     * @legacy-function get_items_subtotal()
+     *
+     * return items_subtotal
+     */
     public function getItemsSubtotal(int $invoiceId): float
     {
         // Get all item IDs for this invoice
@@ -77,6 +110,7 @@ class InvoiceItemService
      * @param int $invoiceId
      *
      * @return \Illuminate\Database\Eloquent\Collection
+
      */
     public function getItemsByInvoiceId(int $invoiceId)
     {

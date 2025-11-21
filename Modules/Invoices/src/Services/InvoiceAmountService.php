@@ -12,6 +12,34 @@ use Modules\Payments\Models\Payment;
 
 class InvoiceAmountService
 {
+    /**
+     * IP_INVOICE_AMOUNTS
+     * invoice_amount_id
+     * invoice_id
+     * invoice_item_subtotal    SUM(item_subtotal)
+     * invoice_item_tax_total   SUM(item_tax_total)
+     * invoice_tax_total
+     * invoice_total            invoice_item_subtotal + invoice_item_tax_total + invoice_tax_total
+     * invoice_paid
+     * invoice_balance          invoice_total - invoice_paid.
+     *
+     * IP_INVOICE_ITEM_AMOUNTS
+     * item_amount_id
+     * item_id
+     * item_tax_rate_id
+     * item_subtotal            item_quantity * item_price
+     * item_tax_total           item_subtotal * tax_rate_percent
+     * item_total               item_subtotal + item_tax_total
+     *
+     * @param $invoice_id
+     * @param $global_discount
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function calculate()
+     */
     public function calculate(int $invoiceId, array $globalDiscount = []): void
     {
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
@@ -70,6 +98,18 @@ class InvoiceAmountService
         $this->calculateInvoiceTaxes($invoiceId, $decimalPlaces);
     }
 
+    /**
+     * @param $invoice_id
+     * @param $invoice_total
+     *
+     * @return float
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function calculate_discount()
+     */
     public function calculateDiscount(int $invoiceId, float $invoiceTotal, int $decimalPlaces = 2): float
     {
         $invoice = Invoice::findOrFail($invoiceId);
@@ -83,6 +123,19 @@ class InvoiceAmountService
         return $total - round(($total / 100 * $discountPercent), $decimalPlaces);
     }
 
+    /**
+     * legacy_calculation false: Need global_discount to recalculate invoice amounts - since v1.6.3.
+     *
+     * @param $invoice_id
+     *
+     * return global_discount
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function get_global_discount()
+     */
     public function getGlobalDiscount(int $invoiceId): float
     {
         // Get all item IDs for this invoice
@@ -153,21 +206,59 @@ class InvoiceAmountService
             ]);
     }
 
+    /**
+     * @return mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function get_total_invoiced()
+     */
     public function getTotalInvoiced(?string $period = null): float
     {
         return $this->sumByPeriod('invoice_total', $period);
     }
 
+    /**
+     * @return mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function get_total_paid()
+     */
     public function getTotalPaid(?string $period = null): float
     {
         return $this->sumByPeriod('invoice_paid', $period);
     }
 
+    /**
+     * @return mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function get_total_balance()
+     */
     public function getTotalBalance(?string $period = null): float
     {
         return $this->sumByPeriod('invoice_balance', $period);
     }
 
+    /**
+     * @param string $period
+     *
+     * @return array
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_amount.php
+     *
+     * @legacy-function get_status_totals()
+     */
     public function getStatusTotals(string $period = 'this-month'): array
     {
         $results = match ($period) {

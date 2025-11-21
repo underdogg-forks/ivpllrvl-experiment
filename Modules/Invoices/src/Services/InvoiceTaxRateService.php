@@ -34,7 +34,16 @@ class InvoiceTaxRateService extends BaseService
         return $this->getTaxRatesByInvoiceId($invoiceId);
     }
 
-    public function saveTaxRate(array $data): ?InvoiceTaxRate
+    /**
+     * @return void
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_tax_rate.php
+     *
+     * @legacy-function save()
+     */
+    public function save(array $data): ?InvoiceTaxRate
     {
         if ( ! config_item('legacy_calculation')) {
             return null;

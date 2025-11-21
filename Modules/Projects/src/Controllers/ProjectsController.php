@@ -32,9 +32,9 @@ class ProjectsController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/projects/controllers/Projects.php
+     *
+     * @legacy-function index
      */
     public function index(int $page = 0): \Illuminate\View\View
     {
@@ -57,9 +57,9 @@ class ProjectsController
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      *
-     * @legacy-function form
-     *
      * @legacy-file application/modules/projects/controllers/Projects.php
+     *
+     * @legacy-function form
      */
     public function form(?int $id = null)
     {
@@ -83,9 +83,9 @@ class ProjectsController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function view
-     *
      * @legacy-file application/modules/projects/controllers/Projects.php
+     *
+     * @legacy-function view
      */
     public function view(int $projectId): \Illuminate\View\View
     {
@@ -118,9 +118,9 @@ class ProjectsController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/projects/controllers/Projects.php
+     *
+     * @legacy-function delete
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse
     {

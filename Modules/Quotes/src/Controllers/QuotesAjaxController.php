@@ -52,9 +52,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function save
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function save
      *
      * @legacy-line 21
      */
@@ -200,9 +200,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function save_quote_tax_rate
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function save_quote_tax_rate
      *
      * @legacy-line 183
      */
@@ -234,9 +234,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function delete_item
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function delete_item
      *
      * @legacy-line 207
      */
@@ -264,9 +264,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function get_item
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function get_item
      *
      * @legacy-line 229
      */
@@ -285,9 +285,9 @@ class QuotesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_copy_quote
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function modal_copy_quote
      *
      * @legacy-line 238
      */
@@ -317,9 +317,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function copy_quote
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function copy_quote
      *
      * @legacy-line 259
      */
@@ -355,9 +355,9 @@ class QuotesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_change_user
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function modal_change_user
      *
      * @legacy-line 294
      */
@@ -382,9 +382,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function change_user
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function change_user
      *
      * @legacy-line 308
      */
@@ -416,9 +416,9 @@ class QuotesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_change_client
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function modal_change_client
      *
      * @legacy-line 343
      */
@@ -443,9 +443,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function change_client
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function change_client
      *
      * @legacy-line 357
      */
@@ -477,9 +477,9 @@ class QuotesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_create_quote
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function modal_create_quote
      *
      * @legacy-line 392
      */
@@ -505,9 +505,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function create
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function create
      *
      * @legacy-line 411
      */
@@ -539,9 +539,9 @@ class QuotesAjaxController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function modal_quote_to_invoice
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function modal_quote_to_invoice
      *
      * @legacy-line 433
      */
@@ -565,9 +565,9 @@ class QuotesAjaxController
      *
      * @return JsonResponse
      *
-     * @legacy-function quote_to_invoice
-     *
      * @legacy-file application/modules/quotes/controllers/Ajax.php
+     *
+     * @legacy-function quote_to_invoice
      *
      * @legacy-line 449
      */

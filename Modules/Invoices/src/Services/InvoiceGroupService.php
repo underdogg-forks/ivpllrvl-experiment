@@ -17,6 +17,18 @@ class InvoiceGroupService extends BaseService
         ];
     }
 
+    /**
+     * @param      $invoice_group_id
+     * @param bool $set_next
+     *
+     * @return mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoice_groups/models/Mdl_invoice_group.php
+     *
+     * @legacy-function generate_invoice_number()
+     */
     public function generateInvoiceNumber(InvoiceGroup $invoiceGroup, bool $setNext = true): string
     {
         $identifier = $this->parseIdentifierFormat(
@@ -80,11 +92,33 @@ class InvoiceGroupService extends BaseService
         return InvoiceGroup::class;
     }
 
+    /**
+     * @param $invoice_group_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoice_groups/models/Mdl_invoice_group.php
+     *
+     * @legacy-function set_next_invoice_number()
+     */
     private function setNextInvoiceNumber(InvoiceGroup $invoiceGroup): void
     {
         $invoiceGroup->increment('invoice_group_next_id');
     }
 
+    /**
+     * @param $identifier_format
+     * @param $next_id
+     * @param $left_pad
+     *
+     * @return mixed
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoice_groups/models/Mdl_invoice_group.php
+     *
+     * @legacy-function parse_identifier_format()
+     */
     private function parseIdentifierFormat(string $identifierFormat, string $nextId, int $leftPad): string
     {
         if (preg_match_all('/{{{([^{|}]*)}}}/', $identifierFormat, $templateVars)) {

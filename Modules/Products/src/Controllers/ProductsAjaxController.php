@@ -2,21 +2,23 @@
 
 namespace Modules\Products\Controllers;
 
+use AllowDynamicProperties;
 use Modules\Products\Models\Family;
 use Modules\Products\Models\Product;
 
-/**
- * AjaxController.
- *
- * Handles AJAX requests for products
- * Migrated from CodeIgniter Ajax controller
- */
+#[AllowDynamicProperties]
 class ProductsAjaxController
 {
+    public $ajax_controller = true;
+
     /**
      * Display modal for product lookups.
      *
      * @return \Illuminate\Contracts\View\View
+     *
+     * @legacy-file application/modules/products/controllers/Ajax.php
+     *
+     * @legacy-function modal_product_lookups()
      */
     public function modal_product_lookups()
     {
@@ -59,6 +61,10 @@ class ProductsAjaxController
      * Process product selections and return JSON.
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @legacy-file application/modules/products/controllers/Ajax.php
+     *
+     * @legacy-function process_product_selections()
      */
     public function process_product_selections()
     {

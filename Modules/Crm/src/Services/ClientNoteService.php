@@ -109,6 +109,23 @@ class ClientNoteService extends BaseService
     }
 
     /**
+     * @param int $id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client_note.php
+     *
+     * @legacy-function delete()
+     */
+    public function delete($id): bool
+    {
+        parent::delete($id);
+
+        // For Ajax Check if deletion was successful
+        return true;
+    }
+
+    /**
      * Get the model class for this service.
      */
     protected function getModelClass(): string

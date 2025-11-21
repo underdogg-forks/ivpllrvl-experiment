@@ -2,6 +2,7 @@
 
 namespace Modules\Quotes\Controllers;
 
+use AllowDynamicProperties;
 use Modules\Core\Services\CustomFieldService;
 use Modules\Core\Services\CustomValueService;
 use Modules\Core\Services\UserService;
@@ -15,14 +16,7 @@ use Modules\Quotes\Services\QuoteItemService;
 use Modules\Quotes\Services\QuoteService;
 use Modules\Quotes\Services\QuoteTaxRateService;
 
-/**
- * QuotesController.
- *
- * Handles quote management including creation, editing, viewing, PDF generation,
- * status filtering, and tax management
- *
- * @legacy-file application/modules/quotes/controllers/Quotes.php
- */
+#[AllowDynamicProperties]
 class QuotesController
 {
     public function __construct(
@@ -42,9 +36,9 @@ class QuotesController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function index
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function index
      *
      * @legacy-line 29
      */
@@ -61,9 +55,9 @@ class QuotesController
      *
      * @return \Illuminate\View\View
      *
-     * @legacy-function status
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function status
      *
      * @legacy-line 38
      */
@@ -90,9 +84,9 @@ class QuotesController
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @legacy-function view
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function view
      *
      * @legacy-line 83
      */
@@ -163,9 +157,9 @@ class QuotesController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function delete
      *
      * @legacy-line 188
      */
@@ -186,9 +180,9 @@ class QuotesController
      *
      * @return mixed PDF response
      *
-     * @legacy-function generate_pdf
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function generate_pdf
      *
      * @legacy-line 201
      */
@@ -212,9 +206,9 @@ class QuotesController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function delete_quote_tax
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function delete_quote_tax
      *
      * @legacy-line 217
      */
@@ -240,9 +234,9 @@ class QuotesController
      *
      * @return \Illuminate\Http\RedirectResponse
      *
-     * @legacy-function recalculate_all_quotes
-     *
      * @legacy-file application/modules/quotes/controllers/Quotes.php
+     *
+     * @legacy-function recalculate_all_quotes
      *
      * @legacy-line 230
      */

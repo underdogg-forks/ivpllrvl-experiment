@@ -26,6 +26,18 @@ class ProductService extends BaseService
     }
 
     /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/products/models/Mdl_product.php
+     *
+     * @legacy-function by_family()
+     */
+    public function byFamily($match)
+    {
+        //$this->db->where('ip_products.family_id', $match);
+    }
+
+    /**
      * Check if a product can be deleted.
      *
      * A product cannot be deleted if it is referenced by any invoice items.

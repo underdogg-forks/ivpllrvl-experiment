@@ -128,18 +128,66 @@ class UserClientService extends BaseService
         return true;
     }
 
+
+    /**
+     * @param $user_id
+     *
+     * @return $this
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
+     *
+     * @legacy-function assigned_to()
+     */
+    public function assigned_to($user_id)
+    {
+/*
+        $this->filter_where('ip_user_clients.user_id', $user_id);
+
+        return $this;
+*/
+    }
+
+
     /**
      * Set all clients for a user.
      *
      * @param array $userIds Array of user IDs
      *
-     * @return void
+     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
      *
-     * @legacy-function setAllClientsUser
+     * @legacy-function set_all_clients_user()
+     *
+     * @return void
      */
     public function setAllClientsUser(array $userIds): void
     {
         // TODO: Implement set all clients logic
+    }
+
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
+     *
+     * @legacy-function get_users_all_clients()
+     */
+    public function get_users_all_clients()
+    {
+/*
+        $this->load->model('users/user');
+        $users = $this->mdl_users->where('user_all_clients', 1)->get()->result();
+
+        $new_users = [];
+        $nbUsers   = count($users);
+
+        for ($i = 0; $i < $nbUsers; $i++) {
+            $new_users[] = $users[$i]->user_id;
+        }
+
+        $this->set_all_clients_user($new_users);
+*/
     }
 
     /**

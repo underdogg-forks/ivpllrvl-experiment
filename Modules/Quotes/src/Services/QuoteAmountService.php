@@ -37,6 +37,12 @@ class QuoteAmountService
      * @param int   $quoteId
      * @param array $globalDiscount
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_amount.php
+     *
+     * @legacy-function calculate()
+     *
      * @return void
      */
     public function calculate(int $quoteId, array $globalDiscount = []): void
@@ -103,6 +109,12 @@ class QuoteAmountService
      * @param float $quoteTotal
      * @param int   $decimalPlaces
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_amount.php
+     *
+     * @legacy-function calculate_discount()
+     *
      * @return float
      */
     public function calculateDiscount(int $quoteId, float $quoteTotal, int $decimalPlaces = 2): float
@@ -122,6 +134,12 @@ class QuoteAmountService
      * Get global discount for a quote.
      *
      * @param int $quoteId
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_amount.php
+     *
+     * @legacy-function get_global_discount()
      *
      * @return float
      */
@@ -145,6 +163,12 @@ class QuoteAmountService
      *
      * @param int $quoteId
      * @param int $decimalPlaces
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_amount.php
+     *
+     * @legacy-function calculate_quote_taxes()
      *
      * @return void
      */
@@ -213,6 +237,12 @@ class QuoteAmountService
      *
      * @param string|null $period
      *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_amount.php
+     *
+     * @legacy-function get_total_quoted()
+     *
      * @return float
      */
     public function getTotalQuoted(?string $period = null): float
@@ -258,6 +288,12 @@ class QuoteAmountService
      * Get status totals for a period.
      *
      * @param string $period
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote_amount.php
+     *
+     * @legacy-function get_status_totals()
      *
      * @return array
      */

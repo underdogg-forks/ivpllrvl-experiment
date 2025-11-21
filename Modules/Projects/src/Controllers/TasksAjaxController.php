@@ -32,9 +32,9 @@ class TasksAjaxController
      *
      * @return \Illuminate\Contracts\View\View
      *
-     * @legacy-function modalTaskLookups
-     *
      * @legacy-file application/modules/tasks/controllers/Ajax.php
+     *
+     * @legacy-function modalTaskLookups
      */
     public function modalTaskLookups(?int $invoice_id = null): \Illuminate\Contracts\View\View
     {
@@ -58,9 +58,9 @@ class TasksAjaxController
      *
      * @return void Outputs JSON response
      *
-     * @legacy-function processTaskSelections
-     *
      * @legacy-file application/modules/tasks/controllers/Ajax.php
+     *
+     * @legacy-function processTaskSelections
      */
     public function processTaskSelections(Request $request): void
     {
