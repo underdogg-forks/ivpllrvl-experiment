@@ -4,6 +4,7 @@ namespace Modules\Invoices\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Invoices\Models\InvoicesRecurring;
+use DateTime;
 
 class InvoicesRecurringService extends BaseService
 {
@@ -26,8 +27,8 @@ class InvoicesRecurringService extends BaseService
     /**
      * Get all recurring invoices with relationships.
      *
-     * @param array $relations
-     * @param int   $perPage
+     * @param array $relations Relations to eager load
+     * @param int   $perPage   Number of items per page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
@@ -47,12 +48,11 @@ class InvoicesRecurringService extends BaseService
      *
      * @legacy-function stop()
      */
-    public function stop($invoice_recurring_id)
+    public function stop($invoice_recurring_id): void
     {
-        InvoicesRecurring::query()
-            ->where('invoice_recurring_id', $invoice_recurring_id)
+        InvoicesRecurring::query()->where('invoice_recurring_id', $invoice_recurring_id)
             ->update([
-                'recur_end_date'  => now()->toDateString(),
+                'recur_end_date'  => now()->format('Y-m-d'),
                 'recur_next_date' => null,
             ]);
     }
@@ -71,9 +71,9 @@ class InvoicesRecurringService extends BaseService
     public function active()
     {
         return InvoicesRecurring::query()
-            ->where('recur_next_date', '<=', now()->toDateString())
+            ->where('recur_next_date', '<=', now()->format('Y-m-d'))
             ->where(function ($query) {
-                $query->where('recur_end_date', '>', now()->toDateString())
+                $query->where('recur_end_date', '>', now()->format('Y-m-d'))
                     ->orWhereNull('recur_end_date');
             });
     }
@@ -87,17 +87,34 @@ class InvoicesRecurringService extends BaseService
      *
      * @legacy-function set_next_recur_date()
      */
-    public function set_next_recur_date($invoice_recurring_id)
+    public function set_next_recur_date($invoice_recurring_id): void
     {
-        $recurring = InvoicesRecurring::query()->find($invoice_recurring_id);
+        $invoiceRecurring = InvoicesRecurring::query()
+            ->findOrFail($invoice_recurring_id);
 
-        if (!$recurring) {
-            return;
-        }
+        $recurNextDate = $this->incrementDate($invoiceRecurring->recur_next_date, $invoiceRecurring->recur_frequency);
 
-        $recur_next_date = increment_date($recurring->recur_next_date, $recurring->recur_frequency);
+        $invoiceRecurring->update(['recur_next_date' => $recurNextDate]);
+    }
 
-        $recurring->update(['recur_next_date' => $recur_next_date]);
+    /**
+     * Increment a date string by a frequency string (legacy helper replacement)
+     */
+    protected function incrementDate(string $date, string $frequency): string
+    {
+        $dt = new DateTime($date);
+
+        match ($frequency) {
+            'daily'   => $dt->modify('+1 day'),
+            'weekly'  => $dt->modify('+1 week'),
+            'biweekly'=> $dt->modify('+2 weeks'),
+            'monthly' => $dt->modify('+1 month'),
+            'quarterly'=> $dt->modify('+3 months'),
+            'yearly'  => $dt->modify('+1 year'),
+            default   => $dt,
+        };
+
+        return $dt->format('Y-m-d');
     }
 
     protected function getModelClass(): string
