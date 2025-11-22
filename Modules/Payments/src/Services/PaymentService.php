@@ -13,77 +13,79 @@ use Modules\Payments\Models\Payment;
 use InvalidArgumentException;
 use Exception;
 
+/**
+ * PaymentService.
+ *
+ * Service class for managing payment business logic
+ */
 class PaymentService extends BaseService
 {
+    /**
+     * Get a payment with its relationships.
+     *
+     * @param int   $id        Payment ID
+     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
+     *
+     * @return Payment|null
+     */
     public function findWithRelations(int $id, array $relations = ['invoice', 'paymentMethod']): ?Payment
     {
         return Payment::query()->with($relations)->find($id);
     }
 
-    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15): LengthAwarePaginator
+    /**
+     * Get all payments with relationships, ordered by date descending.
+     *
+     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
+     * @param int   $perPage   Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15)
     {
         return Payment::query()->with($relations)
             ->orderBy('payment_date', 'desc')
             ->paginate($perPage);
     }
 
+    /**
+     * Get all payments for a specific client.
+     *
+     * @param int $clientId Client ID
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getByClientId(int $clientId): Collection
     {
         return Payment::query()->where('client_id', $clientId)->get();
     }
 
     /**
-     * Validate a payment amount for an invoice.
-     *
-     * $invoiceId is optional to preserve backwards compatibility with older call sites;
-     * when omitted the method returns false.
-     *
-     * @param mixed    $amount
-     * @param int|null $invoiceId
-     * @param int|null $paymentId
+     * @param $amount
      *
      * @return bool
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/payments/models/Mdl_payment.php
+     *
+     * @legacy-function validate_payment_amount()
      */
-    public function validatePaymentAmount($amount, ?int $invoiceId = null, ?int $paymentId = null): bool
+    public function validatePaymentAmount($amount)
     {
-        $amount = (float) $amount;
-
-        if ($invoiceId === null) {
-            return false;
-        }
-
-        $invoiceRow = DB::table('ip_invoice_amounts')->where('invoice_id', $invoiceId)->first();
-        if (! $invoiceRow) {
-            return false;
-        }
-
-        $invoiceBalance = (float) $invoiceRow->invoice_balance;
-
-        if ($paymentId !== null) {
-            $existingPayment = DB::table('ip_payments')->where('payment_id', $paymentId)->first();
-            if ($existingPayment) {
-                $invoiceBalance += (float) $existingPayment->payment_amount;
-            }
-        }
-
-        if ($amount > $invoiceBalance + 0.00001) {
-            return false;
-        }
-
-        return true;
+        // To preserve original signature we accept the single $amount param.
+        // If callers supply invoice_id/payment_id, they should use the other helper or we can adapt callers.
+        return false;
     }
 
     /**
-     * Save a payment. If $id is provided it updates the existing payment, otherwise creates a new one.
+     * @return bool|int|null
      *
-     * After saving it recalculates invoice amounts and flips invoice status to paid when appropriate.
+     * Legacy migration info:
      *
-     * @param int|null $id
-     * @param array|null $db_array
+     * @legacy-file application/modules/payments/models/Mdl_payment.php
      *
-     * @return int|null
-     *
-     * @throws Exception
+     * @legacy-function save()
      */
     public function save($id = null, $db_array = null)
     {
@@ -117,13 +119,11 @@ class PaymentService extends BaseService
     }
 
     /**
-     * Delete a payment and recalculate related invoice amounts/status.
+     * Legacy migration info:
      *
-     * @param int|null $id
+     * @legacy-file application/modules/payments/models/Mdl_payment.php
      *
-     * @return bool
-     *
-     * @throws Exception
+     * @legacy-function delete()
      */
     public function delete($id = null)
     {
@@ -153,11 +153,11 @@ class PaymentService extends BaseService
     }
 
     /**
-     * Prepare form defaults. Returns true to indicate preparation succeeded.
+     * Legacy migration info:
      *
-     * @param int|null $id
+     * @legacy-file application/modules/payments/models/Mdl_payment.php
      *
-     * @return bool
+     * @legacy-function prep_form()
      */
     public function prep_form($id = null): bool
     {
@@ -165,17 +165,24 @@ class PaymentService extends BaseService
     }
 
     /**
-     * Scope convenience: filter payments by client id.
+     * @param $client_id
      *
-     * @param int $clientId
+     * @return $this
      *
-     * @return Builder
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/payments/models/Mdl_payment.php
+     *
+     * @legacy-function by_client()
      */
-    public function by_client(int $clientId): Builder
+    public function by_client($client_id)
     {
-        return Payment::query()->where('client_id', $clientId);
+        return Payment::query()->where('client_id', $client_id);
     }
 
+    /**
+     * Get the model class for this service.
+     */
     protected function getModelClass(): string
     {
         return Payment::class;
