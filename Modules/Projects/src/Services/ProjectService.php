@@ -24,9 +24,14 @@ class ProjectService extends BaseService
     }
 
     /**
+     * Get latest projects (ordered by descending ID).
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
      * Legacy migration info:
      *
      * @legacy-file application/modules/projects/models/Mdl_project.php
+     *
      * @legacy-function get_latest()
      */
     public function getLatest()
@@ -35,22 +40,27 @@ class ProjectService extends BaseService
     }
 
     /**
-     * @param int $project_id
+     * Get tasks for a specific project.
      *
-     * @return \Illuminate\Support\Collection
+     * @param int $projectId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      *
      * Legacy migration info:
      *
      * @legacy-file application/modules/projects/models/Mdl_project.php
+     *
      * @legacy-function get_tasks()
      */
-    public function getTasks(int $project_id)
+    public function getTasks(int $projectId)
     {
-        if (!$project_id) {
+        if (! $projectId) {
             return collect();
         }
 
-        return Task::query()->where('project_id', $project_id)->get();
+        return Task::query()
+            ->where('project_id', $projectId)
+            ->get();
     }
 
     /**
@@ -83,6 +93,9 @@ class ProjectService extends BaseService
         ];
     }
 
+    /**
+     * Get the model class managed by this service.
+     */
     protected function getModelClass(): string
     {
         return Project::class;
