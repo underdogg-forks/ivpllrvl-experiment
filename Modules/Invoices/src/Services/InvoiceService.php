@@ -551,59 +551,17 @@ class InvoiceService
     {
         $base = function_exists('uploads_archive_path') ? uploads_archive_path() : storage_path('app/uploads/archive/');
         $files = [];
+
         if (! empty($invoice_number)) {
             $pattern = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*_*' . $invoice_number . '*.pdf';
             $files = glob($pattern) ?: [];
             return $files;
         }
+
         $pattern = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*.pdf';
         $files = glob($pattern) ?: [];
         rsort($files);
         return $files;
-    }
-
-    /**
-     * @param $invoice
-     *
-     * @return mixed
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_payments()
-     */
-    public function get_payments_duplicate($invoice)
-    {
-        $payments = DB::table('ip_payments')->where('invoice_id', $invoice->invoice_id)->get();
-        $invoice->payments = $payments->isNotEmpty() ? $payments->toArray() : null;
-        return $invoice;
-    }
-
-    /**
-     * @return mixed
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_custom_values()
-     */
-    public function get_custom_values_duplicate($id)
-    {
-        return $this->get_custom_values($id);
-    }
-
-    /**
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_archives()
-     */
-    public function get_archives_duplicate($invoice_number): array
-    {
-        return $this->get_archives($invoice_number);
     }
 
     /**
