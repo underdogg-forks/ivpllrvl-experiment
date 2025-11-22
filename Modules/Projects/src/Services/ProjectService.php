@@ -4,6 +4,7 @@ namespace Modules\Projects\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Projects\Models\Project;
+use Modules\Projects\Models\Task;
 
 /**
  * ProjectService.
@@ -31,13 +32,8 @@ class ProjectService extends BaseService
      */
     public function getLatest()
     {
-/*
-        $this->db->order_by('ip_projects.project_id', 'DESC');
-
-        return $this;
-*/
+        return Project::query()->orderByDesc('project_id');
     }
-
 
     /**
      * Legacy migration info:
@@ -48,22 +44,13 @@ class ProjectService extends BaseService
      */
     public function getTasks($project_id)
     {
-/*
-        $result = [];
-
-        if ( ! $project_id) {
-            return $result;
+        if (! $project_id) {
+            return [];
         }
 
-        $this->load->model('tasks/task');
-        $query = $this->mdl_tasks->where('ip_tasks.project_id', $project_id)->get();
-
-        foreach ($query->result() as $row) {
-            $result[] = $row;
-        }
-
-        return $result;
-*/
+        return Task::query()
+            ->where('project_id', $project_id)
+            ->get();
     }
 
     /**
@@ -90,7 +77,7 @@ class ProjectService extends BaseService
     public function getDeletionBlockers(int $id): array
     {
         return [
-            'tasks' => \Modules\Projects\Models\Task::query()
+            'tasks' => Task::query()
                 ->where('project_id', $id)
                 ->count(),
         ];
