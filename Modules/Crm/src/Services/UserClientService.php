@@ -2,40 +2,26 @@
 
 namespace Modules\Crm\Services;
 
-use Exception;
-use InvalidArgumentException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Services\BaseService;
+use Modules\Crm\Models\Client;
 use Modules\Crm\Models\UserClient;
+use InvalidArgumentException;
+use Exception;
 
-/**
- * UserClientService.
- *
- * Service class for managing user-client relationship business logic
- */
 class UserClientService extends BaseService
 {
-    /**
-     * Get all user clients paginated with relationships.
-     *
-     * @param int $page
-     *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function getAllPaginated(int $page = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function getAllPaginated(int $page = 0): LengthAwarePaginator
     {
-        return UserClient::query()->with(['user', 'client'])->paginate(15, ['*'], 'page', $page);
+        $page = max(1, $page);
+        return UserClient::query()
+            ->with(['user', 'client'])
+            ->paginate(15, ['*'], 'page', $page);
     }
 
-    /**
-     * Get user clients by user ID.
-     *
-     * @param int $userId
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     *
-     * @legacy-function assignedTo
-     */
-    public function getByUserId(int $userId)
+    public function getByUserId(int $userId): Collection
     {
         return UserClient::query()
             ->where('user_id', $userId)
@@ -43,16 +29,6 @@ class UserClientService extends BaseService
             ->get();
     }
 
-    /**
-     * Get user client by user ID and client ID.
-     *
-     * @param int $userId
-     * @param int $clientId
-     *
-     * @return UserClient|null
-     *
-     * @legacy-function getByUserAndClient
-     */
     public function getByUserAndClient(int $userId, int $clientId): ?UserClient
     {
         return UserClient::query()
@@ -61,58 +37,44 @@ class UserClientService extends BaseService
             ->first();
     }
 
-    /**
-     * Validate user client assignment.
-     *
-     * @param array $data Data to validate
-     *
-     * @return bool Returns true if validation passes
-     *
-     * @throws InvalidArgumentException When validation fails
-     *
-     * @legacy-function runValidation
-     */
     public function validate(array $data): bool
     {
         $errors = [];
 
-        // Validate user_id exists and is an integer
         if (empty($data['user_id']) || ! is_numeric($data['user_id'])) {
             $errors[] = 'User ID is required and must be a valid integer';
         }
 
-        // Validate client_id exists and is an integer
         if (empty($data['client_id']) || ! is_numeric($data['client_id'])) {
             $errors[] = 'Client ID is required and must be a valid integer';
         }
 
-        // Check if user and client exist (basic validation)
-        if ( ! empty($data['user_id']) && is_numeric($data['user_id'])) {
-            $userExists = \Illuminate\Support\Facades\DB::table('ip_users')
+        if (! empty($data['user_id']) && is_numeric($data['user_id'])) {
+            $userExists = DB::table('ip_users')
                 ->where('user_id', $data['user_id'])
                 ->exists();
-            if ( ! $userExists) {
+
+            if (! $userExists) {
                 $errors[] = 'User with ID ' . $data['user_id'] . ' does not exist';
             }
         }
 
-        if ( ! empty($data['client_id']) && is_numeric($data['client_id'])) {
-            $clientExists = \Illuminate\Support\Facades\DB::table('ip_clients')
+        if (! empty($data['client_id']) && is_numeric($data['client_id'])) {
+            $clientExists = DB::table('ip_clients')
                 ->where('client_id', $data['client_id'])
                 ->exists();
-            if ( ! $clientExists) {
+
+            if (! $clientExists) {
                 $errors[] = 'Client with ID ' . $data['client_id'] . ' does not exist';
             }
         }
 
-        // Check for duplicate assignment (user can't be assigned to same client twice)
-        if ( ! empty($data['user_id']) && ! empty($data['client_id'])) {
+        if (! empty($data['user_id']) && ! empty($data['client_id'])) {
             $existingAssignment = UserClient::query()
                 ->where('user_id', $data['user_id'])
                 ->where('client_id', $data['client_id']);
 
-            // If updating, exclude the current record
-            if ( ! empty($data['user_client_id'])) {
+            if (! empty($data['user_client_id'])) {
                 $existingAssignment->where('user_client_id', '!=', $data['user_client_id']);
             }
 
@@ -121,115 +83,96 @@ class UserClientService extends BaseService
             }
         }
 
-        if ( ! empty($errors)) {
+        if (! empty($errors)) {
             throw new InvalidArgumentException('Validation failed: ' . implode(', ', $errors));
         }
 
         return true;
     }
 
-
-    /**
-     * @param $user_id
-     *
-     * @return $this
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
-     *
-     * @legacy-function assigned_to()
-     */
-    public function assigned_to($user_id)
+    public function assigned_to(int $userId): Collection
     {
-/*
-        $this->filter_where('ip_user_clients.user_id', $user_id);
-
-        return $this;
-*/
+        return UserClient::query()
+            ->where('user_id', $userId)
+            ->with(['client'])
+            ->get();
     }
 
-
-    /**
-     * Set all clients for a user.
-     *
-     * @param array $userIds Array of user IDs
-     *
-     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
-     *
-     * @legacy-function set_all_clients_user()
-     *
-     * @return void
-     */
     public function setAllClientsUser(array $userIds): void
     {
-        // TODO: Implement set all clients logic
-    }
-
-    /**
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
-     *
-     * @legacy-function get_users_all_clients()
-     */
-    public function get_users_all_clients()
-    {
-/*
-        $this->load->model('users/user');
-        $users = $this->mdl_users->where('user_all_clients', 1)->get()->result();
-
-        $new_users = [];
-        $nbUsers   = count($users);
-
-        for ($i = 0; $i < $nbUsers; $i++) {
-            $new_users[] = $users[$i]->user_id;
+        $userIds = array_values(array_filter($userIds, fn ($id) => is_numeric($id) && $id > 0));
+        if (empty($userIds)) {
+            return;
         }
 
-        $this->set_all_clients_user($new_users);
-*/
+        $clientIds = Client::query()->pluck('client_id')->all();
+        if (empty($clientIds)) {
+            return;
+        }
+
+        DB::transaction(function () use ($userIds, $clientIds) {
+            foreach ($userIds as $userId) {
+                $existing = UserClient::query()
+                    ->where('user_id', $userId)
+                    ->pluck('client_id')
+                    ->all();
+
+                $toInsert = array_diff($clientIds, $existing);
+
+                if (empty($toInsert)) {
+                    continue;
+                }
+
+                $rows = array_map(function ($clientId) use ($userId) {
+                    return [
+                        'user_id'   => (int) $userId,
+                        'client_id' => (int) $clientId,
+                    ];
+                }, $toInsert);
+
+                DB::table('ip_user_clients')->insert($rows);
+            }
+        });
     }
 
-    /**
-     * Save user client assignment.
-     *
-     * @param array $data Assignment data to save
-     *
-     * @return UserClient The saved user client assignment
-     *
-     * @throws Exception When save operation fails
-     *
-     * @legacy-function save
-     */
+    public function get_users_all_clients(): void
+    {
+        $userIds = DB::table('ip_users')
+            ->where('user_all_clients', 1)
+            ->pluck('user_id')
+            ->all();
+
+        if (empty($userIds)) {
+            return;
+        }
+
+        $this->setAllClientsUser($userIds);
+    }
+
     public function save(array $data): UserClient
     {
-        // Validate input
         $this->validate($data);
 
         try {
-            \Illuminate\Support\Facades\DB::beginTransaction();
+            DB::beginTransaction();
 
-            // If user_client_id is present, update existing assignment
-            if ( ! empty($data['user_client_id'])) {
+            if (! empty($data['user_client_id'])) {
                 $userClient = $this->findOrFail($data['user_client_id']);
-                $userClient->update($data);
+                $userClient->fill($data);
+                $userClient->save();
             } else {
-                // Create new assignment
-                $userClient = $this->create($data);
+                $userClient = UserClient::create($data);
             }
 
-            \Illuminate\Support\Facades\DB::commit();
+            DB::commit();
 
             return $userClient;
         } catch (Exception $e) {
-            \Illuminate\Support\Facades\DB::rollBack();
+            DB::rollBack();
             throw new Exception('Failed to save user client assignment: ' . $e->getMessage());
         }
     }
 
-    /**
-     * Get the model class for this service.
-     */
     protected function getModelClass(): string
     {
         return UserClient::class;
