@@ -4,6 +4,9 @@ namespace Modules\Projects\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Projects\Models\Task;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\InvoiceItem;
+use Illuminate\Support\Collection;
 
 /**
  * TaskService.
@@ -25,7 +28,6 @@ class TaskService extends BaseService
         return $this->query()->where('invoice_id', $invoiceId)->update($data);
     }
 
-
     /**
      * Legacy migration info:
      *
@@ -35,11 +37,7 @@ class TaskService extends BaseService
      */
     public function get_latest()
     {
-/*
-        $this->db->order_by('ip_tasks.task_id', 'DESC');
-
-        return $this;
-*/
+        return Task::query()->orderByDesc('task_id');
     }
 
     /**
@@ -53,18 +51,15 @@ class TaskService extends BaseService
      */
     public function by_task($match)
     {
-/*
-        $this->db->like('task_name', $match);
-        $this->db->or_like('task_description', $match);
-*/
+        return Task::query()
+            ->where('task_name', 'like', "%$match%")
+            ->orWhere('task_description', 'like', "%$match%");
     }
-
-
 
     /**
      * @param int $task_id
      *
-     * @return array
+     * @return Invoice|null
      *
      * Legacy migration info:
      *
@@ -74,30 +69,25 @@ class TaskService extends BaseService
      */
     public function get_invoice_for_task($task_id)
     {
-/*
-        if ( ! $task_id) {
-            return;
+        if (!$task_id) {
+            return null;
         }
 
-        $invoice_item = $this->db->select('ip_invoice_items.invoice_id')
-            ->from('ip_invoice_items')
-            ->where('ip_invoice_items.item_task_id', $task_id)
-            ->get()->result();
+        $invoiceItem = InvoiceItem::query()
+            ->where('item_task_id', $task_id)
+            ->first();
 
-        if (empty($invoice_item) || ! isset($invoice_item->invoice_id)) {
-            return;
+        if (!$invoiceItem) {
+            return null;
         }
 
-        $this->load->model('invoices/invoice');
-
-        return $this->mdl_invoices->get_by_id($invoice_item->invoice_id);
-*/
+        return Invoice::query()->find($invoiceItem->invoice_id);
     }
 
     /**
      * @param int $invoice_id
      *
-     * @return array
+     * @return Collection
      *
      * Legacy migration info:
      *
@@ -107,44 +97,29 @@ class TaskService extends BaseService
      */
     public function get_tasks_to_invoice($invoice_id)
     {
-/*
-        $result = [];
-
-        if ( ! $invoice_id) {
-            return $result;
+        if (!$invoice_id) {
+            return collect();
         }
 
-        // Get tasks without any project
-        $query = $this->db->select($this->table . '.*')
-            ->from($this->table)
-            ->where($this->table . '.project_id', 0)
-            ->where($this->table . '.task_status', 3)
-            ->order_by($this->table . '.task_finish_date', 'ASC')
-            ->order_by($this->table . '.task_name', 'ASC')
+        $tasks = Task::query()
+            ->where('project_id', 0)
+            ->where('task_status', 3)
+            ->orderBy('task_finish_date')
+            ->orderBy('task_name')
             ->get();
 
-        foreach ($query->result() as $row) {
-            $result[] = $row;
-        }
-
-        // Get tasks for this invoice
-        $query = $this->db->select($this->table . '.*, ip_projects.project_name')
-            ->from($this->table)
-            ->join('ip_projects', 'ip_projects.project_id = ' . $this->table . '.project_id')
-            ->join('ip_invoices', 'ip_invoices.client_id = ip_projects.client_id')
-            ->where('ip_invoices.invoice_id', $invoice_id)
-            ->where($this->table . '.task_status', 3)
-            ->order_by($this->table . '.task_finish_date', 'ASC')
-            ->order_by('ip_projects.project_name', 'ASC')
-            ->order_by($this->table . '.task_name', 'ASC')
+        $projectTasks = Task::query()
+            ->select('tasks.*', 'projects.project_name')
+            ->join('projects', 'projects.project_id', '=', 'tasks.project_id')
+            ->join('invoices', 'invoices.client_id', '=', 'projects.client_id')
+            ->where('invoices.invoice_id', $invoice_id)
+            ->where('tasks.task_status', 3)
+            ->orderBy('tasks.task_finish_date')
+            ->orderBy('projects.project_name')
+            ->orderBy('tasks.task_name')
             ->get();
 
-        foreach ($query->result() as $row) {
-            $result[] = $row;
-        }
-
-        return $result;
-*/
+        return $tasks->merge($projectTasks);
     }
 
     /**
@@ -158,21 +133,18 @@ class TaskService extends BaseService
      */
     public function update_on_invoice_delete($invoice_id)
     {
-/*
-        if ( ! $invoice_id) {
+        if (!$invoice_id) {
             return;
         }
 
-        $query = $this->db->select($this->table . '.*')
-            ->from($this->table)
-            ->join('ip_invoice_items', 'ip_invoice_items.item_task_id = ' . $this->table . '.task_id')
-            ->where('ip_invoice_items.invoice_id', $invoice_id)
+        $tasks = Task::query()
+            ->join('invoice_items', 'invoice_items.item_task_id', '=', 'tasks.task_id')
+            ->where('invoice_items.invoice_id', $invoice_id)
             ->get();
 
-        foreach ($query->result() as $task) {
+        foreach ($tasks as $task) {
             $this->update_status(3, $task->task_id);
         }
-*/
     }
 
     /**
@@ -187,12 +159,10 @@ class TaskService extends BaseService
      */
     public function update_status($new_status, $task_id)
     {
-/*
         $statuses_ok = $this->statuses();
         if (isset($statuses_ok[$new_status])) {
-            parent::save($task_id, ['task_status' => $new_status]);
+            $this->save($task_id, ['task_status' => $new_status]);
         }
-*/
     }
 
     /**
@@ -204,25 +174,13 @@ class TaskService extends BaseService
      *
      * @legacy-function statuses()
      */
-    public function statuses()
+    public function statuses(): array
     {
         return [
-            '1' => [
-                'label' => trans('not_started'),
-                'class' => 'draft',
-            ],
-            '2' => [
-                'label' => trans('in_progress'),
-                'class' => 'viewed',
-            ],
-            '3' => [
-                'label' => trans('complete'),
-                'class' => 'sent',
-            ],
-            '4' => [
-                'label' => trans('invoiced'),
-                'class' => 'paid',
-            ],
+            '1' => ['label' => trans('not_started'), 'class' => 'draft'],
+            '2' => ['label' => trans('in_progress'), 'class' => 'viewed'],
+            '3' => ['label' => trans('complete'), 'class' => 'sent'],
+            '4' => ['label' => trans('invoiced'), 'class' => 'paid'],
         ];
     }
 
@@ -237,20 +195,15 @@ class TaskService extends BaseService
      */
     public function update_on_project_delete($project_id)
     {
-/*
-        if ( ! $project_id) {
+        if (!$project_id) {
             return;
         }
 
-        $query = $this->db->select($this->table . '.*')
-            ->from($this->table)
-            ->where($this->table . '.project_id', $project_id)
-            ->get();
+        $tasks = Task::query()->where('project_id', $project_id)->get();
 
-        foreach ($query->result() as $task) {
-            parent::save($task->task_id, ['project_id' => null]);
+        foreach ($tasks as $task) {
+            $this->save($task->task_id, ['project_id' => null]);
         }
-*/
     }
 
     /**
@@ -261,7 +214,8 @@ class TaskService extends BaseService
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getAllWithRelations(array $relations = ['project', 'taxRate'], int $perPage = 15): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function getAllWithRelations(array $relations = ['project', 'taxRate'], int $perPage = 15)
+        : \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Task::query()->with($relations)
             ->orderBy('task_name')
@@ -279,13 +233,12 @@ class TaskService extends BaseService
      */
     public function canDelete(int $taskId): bool
     {
-        // Reuse existing method
         $task = Task::query()->find($taskId);
-        if ( ! $task) {
+        if (!$task) {
             return true;
         }
 
-        return ! $this->isAssignedToInvoice($taskId);
+        return !$this->isAssignedToInvoice($taskId);
     }
 
     protected function getModelClass(): string
