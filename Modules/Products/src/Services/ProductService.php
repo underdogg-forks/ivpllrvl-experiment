@@ -26,15 +26,21 @@ class ProductService extends BaseService
     }
 
     /**
+     * Filter products by family ID.
+     *
+     * @param int $familyId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
      * Legacy migration info:
      *
      * @legacy-file application/modules/products/models/Mdl_product.php
      *
      * @legacy-function by_family()
      */
-    public function byFamily($match)
+    public function byFamily(int $familyId)
     {
-        //$this->db->where('ip_products.family_id', $match);
+        return Product::query()->where('family_id', $familyId);
     }
 
     /**
@@ -48,7 +54,6 @@ class ProductService extends BaseService
      */
     public function canDelete(int $productId): bool
     {
-        // Check if product is used in any invoice items
         $itemCount = Item::query()
             ->where('item_product_id', $productId)
             ->count();
