@@ -4,9 +4,6 @@ namespace Modules\Invoices\Services;
 
 use DateInterval;
 use DateTime;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Support\SettingsHelper;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
@@ -14,9 +11,6 @@ use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Models\InvoiceTaxRate;
 use Modules\Invoices\Models\Item;
 
-/**
- *
- */
 class InvoiceService
 {
     /**
@@ -93,17 +87,19 @@ class InvoiceService
      *
      * @legacy-function get_date_due()
      */
-    public function calculateDateDue(string $invoice_date_created): string
+    public function calculateDateDue(string $invoiceDateCreated): string
     {
-        $dueAfter = (int) SettingsHelper::getSetting('invoices_due_after');
-        $dueDate  = new DateTime($invoice_date_created);
+        $dueAfter = SettingsHelper::getSetting('invoices_due_after');
+        $dueDate  = new DateTime($invoiceDateCreated);
         $dueDate->add(new DateInterval('P' . $dueAfter . 'D'));
+
         return $dueDate->format('Y-m-d');
     }
 
     public function generateInvoiceNumber(int $invoiceGroupId): string
     {
         $invoiceGroup = InvoiceGroup::findOrFail($invoiceGroupId);
+
         return app(InvoiceGroupService::class)->generateInvoiceNumber($invoiceGroup);
     }
 
@@ -136,7 +132,8 @@ class InvoiceService
     public function getInvoiceGroupId(int $invoiceId): int
     {
         $invoice = Invoice::findOrFail($invoiceId);
-        return (int) $invoice->invoice_group_id;
+
+        return $invoice->invoice_group_id;
     }
 
     /**
@@ -153,7 +150,8 @@ class InvoiceService
     public function getParentInvoiceNumber(int $parentInvoiceId): string
     {
         $parentInvoice = Invoice::findOrFail($parentInvoiceId);
-        return (string) $parentInvoice->invoice_number;
+
+        return $parentInvoice->invoice_number;
     }
 
     /**
@@ -168,15 +166,13 @@ class InvoiceService
     public function delete(int $invoiceId): ?bool
     {
         $invoice = Invoice::findOrFail($invoiceId);
+        $deleted = $invoice->delete();
 
-        return DB::transaction(function () use ($invoice, $invoiceId) {
-            $deleted = (bool) $invoice->delete();
-            InvoiceAmount::query()->where('invoice_id', $invoiceId)->delete();
-            Item::query()->where('invoice_id', $invoiceId)->delete();
-            InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->delete();
-            DB::table('ip_invoice_custom')->where('invoice_id', $invoiceId)->delete();
-            return $deleted;
-        });
+        InvoiceAmount::query()->where('invoice_id', $invoiceId)->delete();
+        Item::query()->where('invoice_id', $invoiceId)->delete();
+        InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->delete();
+
+        return $deleted;
     }
 
     /**
@@ -190,11 +186,16 @@ class InvoiceService
      */
     public function markViewed(int $invoiceId): bool
     {
-        $row = Invoice::query()->select('invoice_status_id')->where('invoice_id', $invoiceId)->first();
-        if (! $row || $row->invoice_status_id !== 2) {
+        $invoice = Invoice::query()->select('invoice_status_id')
+            ->where('invoice_id', $invoiceId)
+            ->first();
+
+        if ( ! $invoice || $invoice->invoice_status_id !== 2) {
             return false;
         }
-        return Invoice::query()->where('invoice_id', $invoiceId)->update(['invoice_status_id' => 3]) > 0;
+
+        return Invoice::query()->where('invoice_id', $invoiceId)
+            ->update(['invoice_status_id' => 3]) > 0;
     }
 
     /**
@@ -206,13 +207,19 @@ class InvoiceService
      *
      * @legacy-function mark_sent()
      */
+
     public function markSent(int $invoiceId): bool
     {
-        $row = Invoice::query()->select('invoice_status_id')->where('invoice_id', $invoiceId)->first();
-        if (! $row || $row->invoice_status_id !== 1) {
+        $invoice = Invoice::query()->select('invoice_status_id')
+            ->where('invoice_id', $invoiceId)
+            ->first();
+
+        if ( ! $invoice || $invoice->invoice_status_id !== 1) {
             return false;
         }
-        return Invoice::query()->where('invoice_id', $invoiceId)->update(['invoice_status_id' => 2]) > 0;
+
+        return Invoice::query()->where('invoice_id', $invoiceId)
+            ->update(['invoice_status_id' => 2]) > 0;
     }
 
     /**
@@ -227,12 +234,16 @@ class InvoiceService
     public function generateInvoiceNumberIfApplicable(int $invoiceId): void
     {
         $invoice = Invoice::findOrFail($invoiceId);
-        $generateForDraft = (int) SettingsHelper::getSetting('generate_invoice_number_for_draft');
-        if ($invoice->invoice_status_id !== 1 || ! empty($invoice->invoice_number) || $generateForDraft !== 0) {
+
+        $generateForDraft = SettingsHelper::getSetting('generate_invoice_number_for_draft');
+
+        if ($invoice->invoice_status_id !== 1 || ! empty($invoice->invoice_number) || $generateForDraft != 0) {
             return;
         }
-        $invoiceNumber = $this->generateInvoiceNumber((int) $invoice->invoice_group_id);
-        Invoice::query()->where('invoice_id', $invoiceId)->update(['invoice_number' => $invoiceNumber]);
+
+        $invoiceNumber = $this->generateInvoiceNumber($invoice->invoice_group_id);
+        Invoice::query()->where('invoice_id', $invoiceId)
+            ->update(['invoice_number' => $invoiceNumber]);
     }
 
     public function isOverdue(Invoice $invoice): bool
@@ -240,8 +251,10 @@ class InvoiceService
         if (in_array($invoice->invoice_status_id, [1, 4], true)) {
             return false;
         }
+
         $dueDate = new DateTime($invoice->invoice_date_due);
         $now     = new DateTime();
+
         return $now > $dueDate;
     }
 
@@ -254,12 +267,14 @@ class InvoiceService
      */
     public function getDaysOverdue(Invoice $invoice): int
     {
-        if (! $this->isOverdue($invoice)) {
+        if ( ! $this->isOverdue($invoice)) {
             return 0;
         }
+
         $dueDate = new DateTime($invoice->invoice_date_due);
         $now     = new DateTime();
-        return (int) $now->diff($dueDate)->days;
+
+        return $now->diff($dueDate)->days;
     }
 
     /**
@@ -271,8 +286,7 @@ class InvoiceService
      */
     public function getOpenInvoices()
     {
-        return Invoice::query()
-            ->where('invoice_balance', '>', 0)
+        return Invoice::query()->where('invoice_balance', '>', 0)
             ->with('client')
             ->orderBy('invoice_date_created', 'desc')
             ->get();
@@ -292,7 +306,11 @@ class InvoiceService
     public function createInvoice(array $data): Invoice
     {
         $invoice = Invoice::create($data);
-        $invoice->amounts()->create(['invoice_id' => $invoice->invoice_id]);
+
+        $invoice->amounts()->create([
+            'invoice_id' => $invoice->invoice_id,
+        ]);
+
         return $invoice;
     }
 
@@ -309,70 +327,43 @@ class InvoiceService
      *
      * @legacy-function copy_invoice()
      */
-    public function copy_invoice($source_id, $target_id, $copy_recurring_items_only = false): void
+    public function copy_invoice(int $sourceId, int $targetId, bool $copyRecurringItemsOnly = false): void
     {
-        $source = Invoice::findOrFail($source_id);
+        $sourceInvoice = Invoice::with(['items', 'taxRates', 'customFields'])->findOrFail($sourceId);
+        $targetInvoice = Invoice::findOrFail($targetId);
 
-        $global_discount = [
-            'amount'         => $source->invoice_discount_amount ?? 0.0,
-            'percent'        => $source->invoice_discount_percent ?? 0.0,
-            'item'           => 0.0,
-            'items_subtotal' => (float) Item::query()->where('invoice_id', $source_id)->sum(DB::raw('item_price * item_quantity')),
+        $globalDiscount = [
+            'amount' => $sourceInvoice->invoice_discount_amount,
+            'percent' => $sourceInvoice->invoice_discount_percent,
         ];
 
-        Invoice::query()->where('invoice_id', $target_id)->update([
-            'invoice_discount_percent' => $global_discount['percent'],
-            'invoice_discount_amount'  => $global_discount['amount'],
+        $targetInvoice->update([
+            'invoice_discount_amount' => $globalDiscount['amount'],
+            'invoice_discount_percent' => $globalDiscount['percent'],
         ]);
 
-        $items = Item::query()->where('invoice_id', $source_id)->get();
-        foreach ($items as $invoice_item) {
-            if ($copy_recurring_items_only && ! (bool) $invoice_item->item_is_recurring) {
-                continue;
+        foreach ($sourceInvoice->items as $item) {
+            if (!$copyRecurringItemsOnly || $item->item_is_recurring) {
+                $targetInvoice->items()->create($item->replicate(['invoice_id'])->toArray());
             }
-
-            Item::create([
-                'invoice_id'           => $target_id,
-                'item_tax_rate_id'     => $invoice_item->item_tax_rate_id,
-                'item_product_id'      => $invoice_item->item_product_id,
-                'item_task_id'         => $invoice_item->item_task_id,
-                'item_name'            => $invoice_item->item_name,
-                'item_description'     => $invoice_item->item_description,
-                'item_quantity'        => $invoice_item->item_quantity,
-                'item_price'           => $invoice_item->item_price,
-                'item_discount_amount' => $invoice_item->item_discount_amount,
-                'item_order'           => $invoice_item->item_order,
-                'item_is_recurring'    => $invoice_item->item_is_recurring,
-                'item_product_unit'    => $invoice_item->item_product_unit,
-                'item_product_unit_id' => $invoice_item->item_product_unit_id,
-            ]);
         }
 
-        $invoice_tax_rates = InvoiceTaxRate::query()->where('invoice_id', $source_id)->get();
-        foreach ($invoice_tax_rates as $invoice_tax_rate) {
-            InvoiceTaxRate::create([
-                'invoice_id'              => $target_id,
-                'tax_rate_id'             => $invoice_tax_rate->tax_rate_id,
-                'include_item_tax'        => $invoice_tax_rate->include_item_tax,
-                'invoice_tax_rate_amount' => $invoice_tax_rate->invoice_tax_rate_amount,
-            ]);
+        foreach ($sourceInvoice->taxRates as $taxRate) {
+            $targetInvoice->taxRates()->create($taxRate->replicate(['invoice_id'])->toArray());
         }
 
-        $custom_fields = DB::table('ip_invoice_custom')->where('invoice_id', $source_id)->get();
-        foreach ($custom_fields as $field) {
-            DB::table('ip_invoice_custom')->insert([
-                'invoice_id'                => $target_id,
-                'invoice_custom_fieldid'    => $field->invoice_custom_fieldid,
-                'invoice_custom_fieldvalue' => $field->invoice_custom_fieldvalue,
-            ]);
+        $customValues = [];
+        foreach ($sourceInvoice->customFields as $field) {
+            $customValues[$field->invoice_custom_fieldid] = $field->invoice_custom_fieldvalue;
         }
+        $targetInvoice->customFields()->sync($customValues);
     }
 
     /**
-     * Copies invoice items, tax rates, etc from source to target.
+     * Copies invoice items, tax rates, etc from source to target as credit.
      *
-     * @param int $source_id
-     * @param int $target_id
+     * @param int $sourceId
+     * @param int $targetId
      *
      * Legacy migration info:
      *
@@ -380,65 +371,44 @@ class InvoiceService
      *
      * @legacy-function copy_credit_invoice()
      */
-    public function copy_credit_invoice($source_id, $target_id)
+    public function copy_credit_invoice(int $sourceId, int $targetId): void
     {
-        $source = Invoice::findOrFail($source_id);
+        $sourceInvoice = Invoice::with(['items', 'taxRates', 'customFields'])->findOrFail($sourceId);
+        $targetInvoice = Invoice::findOrFail($targetId);
 
-        $global_discount = [
-            'amount'         => $source->invoice_discount_amount ?? 0.0,
-            'percent'        => $source->invoice_discount_percent ?? 0.0,
-            'item'           => 0.0,
-            'items_subtotal' => (float) Item::query()->where('invoice_id', $source_id)->sum(DB::raw('item_price * item_quantity')),
+        $globalDiscount = [
+            'amount' => $sourceInvoice->invoice_discount_amount,
+            'percent' => $sourceInvoice->invoice_discount_percent,
         ];
 
-        Invoice::query()->where('invoice_id', $target_id)->update([
-            'invoice_discount_percent' => $global_discount['percent'],
-            'invoice_discount_amount'  => $global_discount['amount'],
+        $targetInvoice->update([
+            'invoice_discount_amount' => $globalDiscount['amount'],
+            'invoice_discount_percent' => $globalDiscount['percent'],
         ]);
 
-        $items = Item::query()->where('invoice_id', $source_id)->get();
-        foreach ($items as $invoice_item) {
-            Item::create([
-                'invoice_id'           => $target_id,
-                'item_tax_rate_id'     => $invoice_item->item_tax_rate_id,
-                'item_product_id'      => $invoice_item->item_product_id,
-                'item_task_id'         => $invoice_item->item_task_id,
-                'item_name'            => $invoice_item->item_name,
-                'item_description'     => $invoice_item->item_description,
-                'item_quantity'        => $invoice_item->item_quantity * -1,
-                'item_price'           => $invoice_item->item_price,
-                'item_discount_amount' => $invoice_item->item_discount_amount,
-                'item_order'           => $invoice_item->item_order,
-                'item_is_recurring'    => $invoice_item->item_is_recurring,
-                'item_product_unit'    => $invoice_item->item_product_unit,
-                'item_product_unit_id' => $invoice_item->item_product_unit_id,
-            ]);
+        foreach ($sourceInvoice->items as $item) {
+            $replicatedItem = $item->replicate(['invoice_id']);
+            $replicatedItem->item_quantity = $replicatedItem->item_quantity * -1;
+            $targetInvoice->items()->create($replicatedItem->toArray());
         }
 
-        $invoice_tax_rates = InvoiceTaxRate::query()->where('invoice_id', $source_id)->get();
-        foreach ($invoice_tax_rates as $invoice_tax_rate) {
-            InvoiceTaxRate::create([
-                'invoice_id'              => $target_id,
-                'tax_rate_id'             => $invoice_tax_rate->tax_rate_id,
-                'include_item_tax'        => $invoice_tax_rate->include_item_tax,
-                'invoice_tax_rate_amount' => -1 * ($invoice_tax_rate->invoice_tax_rate_amount),
-            ]);
+        foreach ($sourceInvoice->taxRates as $taxRate) {
+            $replicatedRate = $taxRate->replicate(['invoice_id']);
+            $replicatedRate->invoice_tax_rate_amount *= -1;
+            $targetInvoice->taxRates()->create($replicatedRate->toArray());
         }
 
-        $custom_fields = DB::table('ip_invoice_custom')->where('invoice_id', $source_id)->get();
-        foreach ($custom_fields as $field) {
-            DB::table('ip_invoice_custom')->insert([
-                'invoice_id'                => $target_id,
-                'invoice_custom_fieldid'    => $field->invoice_custom_fieldid,
-                'invoice_custom_fieldvalue' => $field->invoice_custom_fieldvalue,
-            ]);
+        $customValues = [];
+        foreach ($sourceInvoice->customFields as $field) {
+            $customValues[$field->invoice_custom_fieldid] = $field->invoice_custom_fieldvalue;
         }
+        $targetInvoice->customFields()->sync($customValues);
     }
 
     /**
-     * @param $invoice
+     * @param Invoice $invoice
      *
-     * @return mixed
+     * @return Invoice
      *
      * Legacy migration info:
      *
@@ -446,80 +416,17 @@ class InvoiceService
      *
      * @legacy-function get_payments()
      */
-    public function get_payments($invoice)
+    public function get_payments(Invoice $invoice): Invoice
     {
-        $payments = DB::table('ip_payments')->where('invoice_id', $invoice->invoice_id)->get();
-        $invoice->payments = $payments->isNotEmpty() ? $payments->toArray() : null;
+        $invoice->load('payments');
+
         return $invoice;
     }
 
     /**
-     * @param $invoice_group_id
+     * @param int $id
      *
-     * @return mixed
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_invoice_number()
-     */
-    public function get_invoice_number($invoice_group_id)
-    {
-        $invoiceGroup = InvoiceGroup::findOrFail($invoice_group_id);
-        return app(InvoiceGroupService::class)->generateInvoiceNumber($invoiceGroup);
-    }
-
-    /**
-     * @return string
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_url_key()
-     */
-    public function get_url_key()
-    {
-        return bin2hex(random_bytes(16));
-    }
-
-    /**
-     * @param $invoice_id
-     *
-     * @return mixed
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_invoice_group_id()
-     */
-    public function get_invoice_group_id($invoice_id)
-    {
-        $invoice = Invoice::findOrFail($invoice_id);
-        return $invoice->invoice_group_id;
-    }
-
-    /**
-     * @param int $parent_invoice_id
-     *
-     * @return mixed
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_parent_invoice_number()
-     */
-    public function get_parent_invoice_number($parent_invoice_id)
-    {
-        $parentInvoice = Invoice::findOrFail($parent_invoice_id);
-        return $parentInvoice->invoice_number;
-    }
-
-    /**
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      *
      * Legacy migration info:
      *
@@ -527,40 +434,35 @@ class InvoiceService
      *
      * @legacy-function get_custom_values()
      */
-    public function get_custom_values($id)
+    public function get_custom_values(int $id)
     {
-        $rows = DB::table('ip_invoice_custom')->where('invoice_id', $id)->get();
-        if ($rows->isEmpty()) {
-            return [];
-        }
-        $out = [];
-        foreach ($rows as $r) {
-            $out[$r->invoice_custom_fieldid] = $r->invoice_custom_fieldvalue;
-        }
-        return $out;
+        return Invoice::findOrFail($id)->customFields;
     }
 
     /**
+     * @param string $invoiceNumber
+     *
+     * @return array
+     *
      * Legacy migration info:
      *
      * @legacy-file application/modules/invoices/models/Mdl_invoice.php
      *
      * @legacy-function get_archives()
      */
-    public function get_archives($invoice_number): array
+    public function get_archives(string $invoiceNumber): array
     {
-        $base = function_exists('uploads_archive_path') ? uploads_archive_path() : storage_path('app/uploads/archive/');
         $files = [];
 
-        if (! empty($invoice_number)) {
-            $pattern = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*_*' . $invoice_number . '*.pdf';
-            $files = glob($pattern) ?: [];
-            return $files;
+        $path = uploads_archive_path();
+
+        if (!empty($invoiceNumber)) {
+            $files = glob($path . '*_*' . $invoiceNumber . '*.pdf') ?: [];
+        } else {
+            $files = glob($path . '*.pdf') ?: [];
+            rsort($files);
         }
 
-        $pattern = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*.pdf';
-        $files = glob($pattern) ?: [];
-        rsort($files);
         return $files;
     }
 
@@ -616,19 +518,19 @@ class InvoiceService
         array $relations = ['client', 'user'],
         ?string $status = null,
         int $perPage = 15
-    ): LengthAwarePaginator {
+    ) {
         $query = Invoice::query()->with($relations);
-        if (is_string($status)) {
-            match ($status) {
-                'draft'   => $query->draft(),
-                'sent'    => $query->sent(),
-                'viewed'  => $query->viewed(),
-                'paid'    => $query->paid(),
-                'unpaid'  => $query->unpaid(),
-                'overdue' => $query->overdue(),
-                default   => null,
-            };
-        }
+
+        match ($status) {
+            'draft'   => $query->draft(),
+            'sent'    => $query->sent(),
+            'viewed'  => $query->viewed(),
+            'paid'    => $query->paid(),
+            'unpaid'  => $query->unpaid(),
+            'overdue' => $query->overdue(),
+            default   => null
+        };
+
         return $query->orderBy('invoice_date_created', 'desc')->paginate($perPage);
     }
 
@@ -645,7 +547,7 @@ class InvoiceService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByClientId(int $clientId): Collection
+    public function getByClientId(int $clientId): \Illuminate\Database\Eloquent\Collection
     {
         return Invoice::query()->where('client_id', $clientId)->get();
     }
@@ -653,7 +555,7 @@ class InvoiceService
     /**
      * Update the invoice due date.
      *
-     * @param $invoice_id
+     * @param int $invoiceId
      *
      * Legacy migration info:
      *
@@ -661,21 +563,13 @@ class InvoiceService
      *
      * @legacy-function update_invoice_due_date()
      */
-    public function update_invoice_due_date($invoice_id)
+    public function update_invoice_due_date(int $invoiceId): void
     {
-        $invoice = Invoice::find($invoice_id);
-        if (! $invoice) {
-            return;
+        $invoice = Invoice::find($invoiceId);
+
+        if (!empty($invoice) && $invoice->is_read_only != 1 && get_setting('no_update_invoice_due_date_mail') == 0) {
+            $currentDate = date_to_mysql(date(date_format_setting()));
+            $invoice->update(['invoice_date_due' => $this->calculateDateDue($currentDate)]);
         }
-        if (($invoice->is_read_only ?? 0) == 1) {
-            return;
-        }
-        $noUpdate = (int) SettingsHelper::getSetting('no_update_invoice_due_date_mail');
-        if ($noUpdate === 1) {
-            return;
-        }
-        $current_date = (new DateTime())->format('Y-m-d');
-        $newDue = $this->calculateDateDue($current_date);
-        Invoice::query()->where('invoice_id', $invoice_id)->update(['invoice_date_due' => $newDue]);
     }
 }
