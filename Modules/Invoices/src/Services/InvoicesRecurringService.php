@@ -23,6 +23,14 @@ class InvoicesRecurringService extends BaseService
         $this->update($recurringId, ['recur_status' => 0]);
     }
 
+    /**
+     * Get all recurring invoices with relationships.
+     *
+     * @param array $relations
+     * @param int   $perPage
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15)
     {
         return InvoicesRecurring::query()->with($relations)
@@ -36,34 +44,37 @@ class InvoicesRecurringService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
+     *
      * @legacy-function stop()
      */
     public function stop($invoice_recurring_id)
     {
-        $invoice = InvoicesRecurring::query()->find($invoice_recurring_id);
-        if (!$invoice) {
-            return;
-        }
-
-        $invoice->update([
-            'recur_end_date'  => now()->toDateString(),
-            'recur_next_date' => null,
-        ]);
+        InvoicesRecurring::query()
+            ->where('invoice_recurring_id', $invoice_recurring_id)
+            ->update([
+                'recur_end_date'  => now()->toDateString(),
+                'recur_next_date' => null,
+            ]);
     }
 
     /**
+     * Sets filter to only recurring invoices which should be generated now.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
      * Legacy migration info:
      *
      * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
+     *
      * @legacy-function active()
      */
     public function active()
     {
         return InvoicesRecurring::query()
-            ->where('recur_next_date', '<=', now())
+            ->where('recur_next_date', '<=', now()->toDateString())
             ->where(function ($query) {
-                $query->where('recur_end_date', '>', now())
-                      ->orWhereNull('recur_end_date');
+                $query->where('recur_end_date', '>', now()->toDateString())
+                    ->orWhereNull('recur_end_date');
             });
     }
 
@@ -73,18 +84,20 @@ class InvoicesRecurringService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
+     *
      * @legacy-function set_next_recur_date()
      */
     public function set_next_recur_date($invoice_recurring_id)
     {
-        $invoice = InvoicesRecurring::query()->find($invoice_recurring_id);
-        if (!$invoice) {
+        $recurring = InvoicesRecurring::query()->find($invoice_recurring_id);
+
+        if (!$recurring) {
             return;
         }
 
-        $invoice->update([
-            'recur_next_date' => increment_date($invoice->recur_next_date, $invoice->recur_frequency),
-        ]);
+        $recur_next_date = increment_date($recurring->recur_next_date, $recurring->recur_frequency);
+
+        $recurring->update(['recur_next_date' => $recur_next_date]);
     }
 
     protected function getModelClass(): string
