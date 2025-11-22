@@ -2,8 +2,15 @@
 
 namespace Modules\Invoices\Services;
 
+use Carbon\Carbon;
+use DateInterval;
+use DateTime;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Services\BaseService;
 use Modules\Invoices\Models\InvoicesRecurring;
+use RuntimeException;
 
 class InvoicesRecurringService extends BaseService
 {
@@ -23,86 +30,98 @@ class InvoicesRecurringService extends BaseService
         $this->update($recurringId, ['recur_status' => 0]);
     }
 
-    /**
-     * Get all recurring invoices with relationships.
-     *
-     * @param array $relations Relations to eager load
-     * @param int   $perPage   Number of items per page
-     *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15)
+    public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15): LengthAwarePaginator
     {
-        return InvoicesRecurring::query()->with($relations)
+        return InvoicesRecurring::query()
+            ->with($relations)
             ->orderBy('recur_start_date', 'desc')
             ->paginate($perPage);
     }
 
-    /**
-     * @param $invoice_recurring_id
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
-     *
-     * @legacy-function stop()
-     */
-    public function stop($invoice_recurring_id)
+    public function stop(int $invoiceRecurringId): void
     {
-/*
-        $db_array = [
-            'recur_end_date'  => date('Y-m-d'),
-            'recur_next_date' => null,
-        ];
+        $now = Carbon::today()->toDateString();
 
-        $this->db->where('invoice_recurring_id', $invoice_recurring_id);
-        $this->db->update('ip_invoices_recurring', $db_array);
-*/
+        InvoicesRecurring::query()
+            ->where('invoice_recurring_id', $invoiceRecurringId)
+            ->update([
+                'recur_end_date'  => $now,
+                'recur_next_date' => null,
+            ]);
     }
 
-    /**
-     * Sets filter to only recurring invoices which should be generated now.
-     *
-     * @return Mdl_Invoices_Recurring
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
-     *
-     * @legacy-function active()
-     */
-    public function active()
+    public function active(): Builder
     {
-/*
-        $this->filter_where('recur_next_date <= date(NOW()) AND (recur_end_date > date(NOW()) OR recur_end_date IS NULL)');
+        $today = Carbon::today()->toDateString();
 
-        return $this;
-*/
+        return InvoicesRecurring::query()
+            ->where('recur_status', 1)
+            ->whereDate('recur_next_date', '<=', $today)
+            ->where(function (Builder $q) use ($today) {
+                $q->whereDate('recur_end_date', '>', $today)
+                  ->orWhereNull('recur_end_date');
+            });
     }
 
-    /**
-     * @param $invoice_recurring_id
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
-     *
-     * @legacy-function set_next_recur_date()
-     */
-    public function set_next_recur_date($invoice_recurring_id)
+    public function set_next_recur_date(int $invoiceRecurringId): void
     {
-/*
-        $invoice_recurring = $this->where('invoice_recurring_id', $invoice_recurring_id)->get()->row();
+        $recurring = InvoicesRecurring::query()
+            ->where('invoice_recurring_id', $invoiceRecurringId)
+            ->first();
 
-        $recur_next_date = increment_date($invoice_recurring->recur_next_date, $invoice_recurring->recur_frequency);
+        if (! $recurring) {
+            return;
+        }
 
-        $db_array = [
-            'recur_next_date' => $recur_next_date,
-        ];
+        $currentNext = $recurring->recur_next_date;
+        if (empty($currentNext)) {
+            throw new RuntimeException('Recurring entry has no next date set.');
+        }
 
-        $this->db->where('invoice_recurring_id', $invoice_recurring_id);
-        $this->db->update('ip_invoices_recurring', $db_array);
-*/
+        $nextDate = $this->incrementDate((string) $currentNext, (string) $recurring->recur_frequency);
+
+        InvoicesRecurring::query()
+            ->where('invoice_recurring_id', $invoiceRecurringId)
+            ->update(['recur_next_date' => $nextDate]);
+    }
+
+    private function incrementDate(string $date, string $frequency): string
+    {
+        $dt = Carbon::parse($date);
+
+        $freq = strtolower(trim($frequency));
+
+        return match (true) {
+            $freq === 'daily' || $freq === 'day' => $dt->addDay()->toDateString(),
+            $freq === 'weekly' || $freq === 'week' => $dt->addWeek()->toDateString(),
+            $freq === 'fortnight' || $freq === 'fortnightly' || $freq === 'every 2 weeks' => $dt->addWeeks(2)->toDateString(),
+            $freq === 'monthly' || $freq === 'month' => $dt->addMonth()->toDateString(),
+            $freq === 'quarterly' || $freq === 'quarter' => $dt->addMonths(3)->toDateString(),
+            $freq === 'biannually' || $freq === 'semiannually' || $freq === 'every 6 months' => $dt->addMonths(6)->toDateString(),
+            $freq === 'yearly' || $freq === 'annual' || $freq === 'year' => $dt->addYear()->toDateString(),
+            default => $this->tryFlexibleIncrement($dt, $frequency),
+        };
+    }
+
+    private function tryFlexibleIncrement(Carbon $dt, string $frequency): string
+    {
+        $normalized = trim($frequency);
+
+        if (preg_match('/^P\d+[DWMY]$/i', $normalized)) {
+            try {
+                $interval = new DateInterval($normalized);
+                return $dt->add($interval)->toDateString();
+            } catch (\Throwable $e) {
+                // fallthrough to next attempt
+            }
+        }
+
+        try {
+            $dt->add(DateInterval::createFromDateString($normalized));
+            return $dt->toDateString();
+        } catch (\Throwable $e) {
+            throw new RuntimeException('Unsupported recur_frequency: ' . $frequency);
+        }
     }
 
     protected function getModelClass(): string
