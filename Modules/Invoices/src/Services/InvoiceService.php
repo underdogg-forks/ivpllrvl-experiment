@@ -307,6 +307,7 @@ class InvoiceService
     {
         $invoice = Invoice::create($data);
 
+        // Create invoice amount record
         $invoice->amounts()->create([
             'invoice_id' => $invoice->invoice_id,
         ]);
@@ -327,43 +328,46 @@ class InvoiceService
      *
      * @legacy-function copy_invoice()
      */
-    public function copy_invoice(int $sourceId, int $targetId, bool $copyRecurringItemsOnly = false): void
+    public function copy_invoice($source_id, $target_id, $copy_recurring_items_only = false): void
     {
-        $sourceInvoice = Invoice::with(['items', 'taxRates', 'customFields'])->findOrFail($sourceId);
-        $targetInvoice = Invoice::findOrFail($targetId);
+        $sourceInvoice = Invoice::with('items', 'taxRates', 'customFields')->findOrFail($source_id);
+        $targetInvoice = Invoice::findOrFail($target_id);
 
         $globalDiscount = [
-            'amount' => $sourceInvoice->invoice_discount_amount,
-            'percent' => $sourceInvoice->invoice_discount_percent,
+            'amount'         => $sourceInvoice->invoice_discount_amount,
+            'percent'        => $sourceInvoice->invoice_discount_percent,
+            'item'           => 0.0,
+            'items_subtotal' => $sourceInvoice->items->sum(fn($item) => $item->item_price * $item->item_quantity),
         ];
 
         $targetInvoice->update([
-            'invoice_discount_amount' => $globalDiscount['amount'],
             'invoice_discount_percent' => $globalDiscount['percent'],
+            'invoice_discount_amount'  => $globalDiscount['amount'],
         ]);
 
         foreach ($sourceInvoice->items as $item) {
-            if (!$copyRecurringItemsOnly || $item->item_is_recurring) {
-                $targetInvoice->items()->create($item->replicate(['invoice_id'])->toArray());
+            if (! $copy_recurring_items_only || $item->item_is_recurring) {
+                $item->replicate(['invoice_id'])->fill(['invoice_id' => $target_id])->save();
             }
         }
 
-        foreach ($sourceInvoice->taxRates as $taxRate) {
-            $targetInvoice->taxRates()->create($taxRate->replicate(['invoice_id'])->toArray());
+        foreach ($sourceInvoice->taxRates as $tax) {
+            $tax->replicate(['invoice_id'])->fill(['invoice_id' => $target_id])->save();
         }
 
-        $customValues = [];
+        $customData = [];
         foreach ($sourceInvoice->customFields as $field) {
-            $customValues[$field->invoice_custom_fieldid] = $field->invoice_custom_fieldvalue;
+            $customData[$field->invoice_custom_fieldid] = $field->invoice_custom_fieldvalue;
         }
-        $targetInvoice->customFields()->sync($customValues);
+
+        $targetInvoice->customFields()->sync($customData);
     }
 
     /**
-     * Copies invoice items, tax rates, etc from source to target as credit.
+     * Copies invoice items, tax rates, etc from source to target.
      *
-     * @param int $sourceId
-     * @param int $targetId
+     * @param int $source_id
+     * @param int $target_id
      *
      * Legacy migration info:
      *
@@ -371,99 +375,43 @@ class InvoiceService
      *
      * @legacy-function copy_credit_invoice()
      */
-    public function copy_credit_invoice(int $sourceId, int $targetId): void
+    public function copy_credit_invoice($source_id, $target_id)
     {
-        $sourceInvoice = Invoice::with(['items', 'taxRates', 'customFields'])->findOrFail($sourceId);
-        $targetInvoice = Invoice::findOrFail($targetId);
+        $sourceInvoice = Invoice::with('items', 'taxRates', 'customFields')->findOrFail($source_id);
+        $targetInvoice = Invoice::findOrFail($target_id);
 
         $globalDiscount = [
-            'amount' => $sourceInvoice->invoice_discount_amount,
-            'percent' => $sourceInvoice->invoice_discount_percent,
+            'amount'         => $sourceInvoice->invoice_discount_amount,
+            'percent'        => $sourceInvoice->invoice_discount_percent,
+            'item'           => 0.0,
+            'items_subtotal' => $sourceInvoice->items->sum(fn($item) => $item->item_price * $item->item_quantity),
         ];
 
         $targetInvoice->update([
-            'invoice_discount_amount' => $globalDiscount['amount'],
             'invoice_discount_percent' => $globalDiscount['percent'],
+            'invoice_discount_amount'  => $globalDiscount['amount'],
         ]);
 
         foreach ($sourceInvoice->items as $item) {
-            $replicatedItem = $item->replicate(['invoice_id']);
-            $replicatedItem->item_quantity = $replicatedItem->item_quantity * -1;
-            $targetInvoice->items()->create($replicatedItem->toArray());
+            $item->replicate(['invoice_id'])->fill([
+                'invoice_id'    => $target_id,
+                'item_quantity' => $item->item_quantity * -1
+            ])->save();
         }
 
-        foreach ($sourceInvoice->taxRates as $taxRate) {
-            $replicatedRate = $taxRate->replicate(['invoice_id']);
-            $replicatedRate->invoice_tax_rate_amount *= -1;
-            $targetInvoice->taxRates()->create($replicatedRate->toArray());
+        foreach ($sourceInvoice->taxRates as $tax) {
+            $tax->replicate(['invoice_id'])->fill([
+                'invoice_id'                  => $target_id,
+                'invoice_tax_rate_amount'     => $tax->invoice_tax_rate_amount * -1
+            ])->save();
         }
 
-        $customValues = [];
+        $customData = [];
         foreach ($sourceInvoice->customFields as $field) {
-            $customValues[$field->invoice_custom_fieldid] = $field->invoice_custom_fieldvalue;
-        }
-        $targetInvoice->customFields()->sync($customValues);
-    }
-
-    /**
-     * @param Invoice $invoice
-     *
-     * @return Invoice
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_payments()
-     */
-    public function get_payments(Invoice $invoice): Invoice
-    {
-        $invoice->load('payments');
-
-        return $invoice;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_custom_values()
-     */
-    public function get_custom_values(int $id)
-    {
-        return Invoice::findOrFail($id)->customFields;
-    }
-
-    /**
-     * @param string $invoiceNumber
-     *
-     * @return array
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
-     *
-     * @legacy-function get_archives()
-     */
-    public function get_archives(string $invoiceNumber): array
-    {
-        $files = [];
-
-        $path = uploads_archive_path();
-
-        if (!empty($invoiceNumber)) {
-            $files = glob($path . '*_*' . $invoiceNumber . '*.pdf') ?: [];
-        } else {
-            $files = glob($path . '*.pdf') ?: [];
-            rsort($files);
+            $customData[$field->invoice_custom_fieldid] = $field->invoice_custom_fieldvalue;
         }
 
-        return $files;
+        $targetInvoice->customFields()->sync($customData);
     }
 
     /**
@@ -555,7 +503,7 @@ class InvoiceService
     /**
      * Update the invoice due date.
      *
-     * @param int $invoiceId
+     * @param $invoice_id
      *
      * Legacy migration info:
      *
@@ -563,13 +511,14 @@ class InvoiceService
      *
      * @legacy-function update_invoice_due_date()
      */
-    public function update_invoice_due_date(int $invoiceId): void
+    public function update_invoice_due_date($invoice_id)
     {
-        $invoice = Invoice::find($invoiceId);
+        $invoice = Invoice::find($invoice_id);
 
-        if (!empty($invoice) && $invoice->is_read_only != 1 && get_setting('no_update_invoice_due_date_mail') == 0) {
-            $currentDate = date_to_mysql(date(date_format_setting()));
-            $invoice->update(['invoice_date_due' => $this->calculateDateDue($currentDate)]);
+        if ($invoice && $invoice->is_read_only != 1 && get_setting('no_update_invoice_due_date_mail') == 0) {
+            $current_date = date_to_mysql(date(date_format_setting()));
+            $invoice->invoice_date_due = $this->calculateDateDue($current_date);
+            $invoice->save();
         }
     }
 }
