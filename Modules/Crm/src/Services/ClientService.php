@@ -12,9 +12,19 @@ use Modules\Projects\Models\Project;
 use Modules\Quotes\Models\Quote;
 use RuntimeException;
 
+/**
+ * ClientService.
+ *
+ * Service class for managing client business logic
+ */
 class ClientService extends BaseService
 {
-    public function getActiveClients(): Collection
+    /**
+     * Get all active clients ordered by name.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getActiveClients()
     {
         return Client::query()
             ->where('client_active', 1)
@@ -22,14 +32,32 @@ class ClientService extends BaseService
             ->get();
     }
 
-    public function getAllOrderedByName(): Collection
+    /**
+     * Get all clients ordered by name.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOrderedByName()
     {
         return Client::query()
             ->orderBy('client_name')
             ->get();
     }
 
-    public function getNotAssignedToUser(int $userId): Collection
+    /**
+     * Get clients not assigned to a specific user.
+     *
+     * @param int $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function get_not_assigned_to_user()
+     */
+    public function getNotAssignedToUser(int $userId)
     {
         return Client::query()
             ->whereNotIn('client_id', function ($query) use ($userId) {
@@ -41,23 +69,48 @@ class ClientService extends BaseService
             ->get();
     }
 
-    public function remove(int $id): void
+
+    /**
+     * @param int $id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function delete()
+     */
+    public function remove($id): void
     {
-        if (! Client::query()->where('client_id', $id)->exists()) {
+        $client = Client::query()->where('client_id', $id)->first();
+        if (! $client) {
             return;
         }
 
-        if (! $this->canDelete($id)) {
+        if (! $this->canDelete((int) $id)) {
             throw new RuntimeException('Client cannot be deleted because related records exist.');
         }
 
         DB::transaction(function () use ($id) {
             Client::query()->where('client_id', $id)->delete();
-            $this->deleteOrphans($id);
+            DB::table('ip_user_clients')->where('client_id', $id)->delete();
+            DB::table('ip_contacts')->where('client_id', $id)->delete();
         });
     }
 
-    public function client_lookup(string $client_name): ?int
+    /**
+     * Returns client_id of existing client.
+     *
+     * @param $client_name
+     *
+     * @return int|null
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function client_lookup()
+     */
+    public function client_lookup($client_name)
     {
         $client = Client::query()
             ->where('client_name', $client_name)
@@ -67,14 +120,21 @@ class ClientService extends BaseService
             return (int) $client->client_id;
         }
 
-        $created = Client::query()->create([
+        $created = Client::create([
             'client_name' => $client_name,
         ]);
 
         return $created ? (int) $created->client_id : null;
     }
 
-    public function with_total(): Builder
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function with_total()
+     */
+    public function with_total()
     {
         $sub = DB::table('ip_invoice_amounts')
             ->selectRaw('COALESCE(SUM(invoice_total), 0)')
@@ -89,7 +149,14 @@ class ClientService extends BaseService
             ->selectSub($sub, 'client_invoice_total');
     }
 
-    public function with_total_paid(): Builder
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function with_total_paid()
+     */
+    public function with_total_paid()
     {
         $sub = DB::table('ip_invoice_amounts')
             ->selectRaw('COALESCE(SUM(invoice_paid), 0)')
@@ -104,7 +171,14 @@ class ClientService extends BaseService
             ->selectSub($sub, 'client_invoice_paid');
     }
 
-    public function with_total_balance(): Builder
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
+     * @legacy-function with_total_balance()
+     */
+    public function with_total_balance()
     {
         $sub = DB::table('ip_invoice_amounts')
             ->selectRaw('COALESCE(SUM(invoice_balance), 0)')
@@ -119,7 +193,17 @@ class ClientService extends BaseService
             ->selectSub($sub, 'client_invoice_balance');
     }
 
-    public function getByIds(array $ids): Collection
+
+    /**
+     * Get clients by IDs.
+     *
+     * @param array $ids Client IDs
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function getByIds
+     */
+    public function getByIds(array $ids)
     {
         if (empty($ids)) {
             return collect();
@@ -131,7 +215,16 @@ class ClientService extends BaseService
             ->get();
     }
 
-    public function getNotInIds(array $ids): Collection
+    /**
+     * Get clients not in given IDs.
+     *
+     * @param array $ids Client IDs to exclude
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function getNotInIds
+     */
+    public function getNotInIds(array $ids)
     {
         $query = Client::query()->orderBy('client_name');
 
@@ -142,6 +235,18 @@ class ClientService extends BaseService
         return $query->get();
     }
 
+    /**
+     * Check if a client can be deleted.
+     *
+     * A client cannot be deleted if it has:
+     * - Invoices
+     * - Quotes
+     * - Projects
+     *
+     * @param int $clientId
+     *
+     * @return bool
+     */
     public function canDelete(int $clientId): bool
     {
         if (Invoice::query()->where('client_id', $clientId)->exists()) {
@@ -159,6 +264,15 @@ class ClientService extends BaseService
         return true;
     }
 
+    /**
+     * Get deletion blocker details for a client.
+     *
+     * Returns an array with counts of related records.
+     *
+     * @param int $clientId
+     *
+     * @return array
+     */
     public function getDeletionBlockers(int $clientId): array
     {
         return [
@@ -171,12 +285,5 @@ class ClientService extends BaseService
     protected function getModelClass(): string
     {
         return Client::class;
-    }
-
-    private function deleteOrphans(int $clientId): void
-    {
-        DB::table('ip_user_clients')
-            ->where('client_id', $clientId)
-            ->delete();
     }
 }
