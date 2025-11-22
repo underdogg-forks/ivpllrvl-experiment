@@ -4,9 +4,9 @@ namespace Modules\Projects\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Projects\Models\Task;
-use Modules\Invoices\Models\Invoice;
+use Modules\Projects\Models\Project;
 use Modules\Invoices\Models\InvoiceItem;
-use Illuminate\Support\Collection;
+use Modules\Invoices\Models\Invoice;
 
 /**
  * TaskService.
@@ -32,12 +32,11 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function get_latest()
      */
     public function get_latest()
     {
-        return Task::query()->orderByDesc('task_id');
+        return Task::query()->orderByDesc('id');
     }
 
     /**
@@ -46,10 +45,9 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function by_task()
      */
-    public function by_task($match)
+    public function by_task(string $match)
     {
         return Task::query()
             ->where('task_name', 'like', "%$match%")
@@ -64,62 +62,54 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function get_invoice_for_task()
      */
-    public function get_invoice_for_task($task_id)
+    public function get_invoice_for_task(int $task_id)
     {
-        if (!$task_id) {
+        $item = InvoiceItem::query()->where('item_task_id', $task_id)->first();
+        if (!$item) {
             return null;
         }
-
-        $invoiceItem = InvoiceItem::query()
-            ->where('item_task_id', $task_id)
-            ->first();
-
-        if (!$invoiceItem) {
-            return null;
-        }
-
-        return Invoice::query()->find($invoiceItem->invoice_id);
+        return Invoice::query()->find($item->invoice_id);
     }
 
     /**
      * @param int $invoice_id
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      *
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function get_tasks_to_invoice()
      */
-    public function get_tasks_to_invoice($invoice_id)
+    public function get_tasks_to_invoice(int $invoice_id)
     {
+        $result = collect();
+
         if (!$invoice_id) {
-            return collect();
+            return $result;
         }
 
-        $tasks = Task::query()
+        $result = $result->merge(Task::query()
             ->where('project_id', 0)
             ->where('task_status', 3)
             ->orderBy('task_finish_date')
             ->orderBy('task_name')
-            ->get();
+            ->get());
 
-        $projectTasks = Task::query()
-            ->select('tasks.*', 'projects.project_name')
-            ->join('projects', 'projects.project_id', '=', 'tasks.project_id')
+        $tasks = Task::query()
+            ->join('projects', 'projects.id', '=', 'tasks.project_id')
             ->join('invoices', 'invoices.client_id', '=', 'projects.client_id')
-            ->where('invoices.invoice_id', $invoice_id)
+            ->where('invoices.id', $invoice_id)
             ->where('tasks.task_status', 3)
             ->orderBy('tasks.task_finish_date')
             ->orderBy('projects.project_name')
             ->orderBy('tasks.task_name')
+            ->select('tasks.*', 'projects.project_name')
             ->get();
 
-        return $tasks->merge($projectTasks);
+        return $result->merge($tasks);
     }
 
     /**
@@ -128,22 +118,17 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function update_on_invoice_delete()
      */
-    public function update_on_invoice_delete($invoice_id)
+    public function update_on_invoice_delete(int $invoice_id)
     {
-        if (!$invoice_id) {
-            return;
-        }
-
         $tasks = Task::query()
-            ->join('invoice_items', 'invoice_items.item_task_id', '=', 'tasks.task_id')
+            ->join('invoice_items', 'invoice_items.item_task_id', '=', 'tasks.id')
             ->where('invoice_items.invoice_id', $invoice_id)
             ->get();
 
         foreach ($tasks as $task) {
-            $this->update_status(3, $task->task_id);
+            $this->update_status(3, $task->id);
         }
     }
 
@@ -154,14 +139,12 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function update_status()
      */
-    public function update_status($new_status, $task_id)
+    public function update_status(int $new_status, int $task_id)
     {
-        $statuses_ok = $this->statuses();
-        if (isset($statuses_ok[$new_status])) {
-            $this->save($task_id, ['task_status' => $new_status]);
+        if (isset($this->statuses()[$new_status])) {
+            parent::save($task_id, ['task_status' => $new_status]);
         }
     }
 
@@ -171,7 +154,6 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function statuses()
      */
     public function statuses(): array
@@ -190,32 +172,25 @@ class TaskService extends BaseService
      * Legacy migration info:
      *
      * @legacy-file application/modules/tasks/models/Mdl_task.php
-     *
      * @legacy-function update_on_project_delete()
      */
-    public function update_on_project_delete($project_id)
+    public function update_on_project_delete(int $project_id)
     {
-        if (!$project_id) {
-            return;
-        }
-
         $tasks = Task::query()->where('project_id', $project_id)->get();
-
         foreach ($tasks as $task) {
-            $this->save($task->task_id, ['project_id' => null]);
+            parent::save($task->id, ['project_id' => null]);
         }
     }
 
     /**
      * Get all tasks with relationships, ordered and paginated.
      *
-     * @param array $relations Relations to eager load
-     * @param int   $perPage   Number of items per page
+     * @param array $relations
+     * @param int   $perPage
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getAllWithRelations(array $relations = ['project', 'taxRate'], int $perPage = 15)
-        : \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Task::query()->with($relations)
             ->orderBy('task_name')
@@ -237,8 +212,7 @@ class TaskService extends BaseService
         if (!$task) {
             return true;
         }
-
-        return !$this->isAssignedToInvoice($taskId);
+        return !InvoiceItem::query()->where('item_task_id', $taskId)->exists();
     }
 
     protected function getModelClass(): string
