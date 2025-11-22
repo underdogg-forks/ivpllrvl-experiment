@@ -4,10 +4,10 @@ namespace Modules\Payments\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Payments\Models\Payment;
-use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\Invoice;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Modules\Invoices\Services\InvoiceAmountService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * PaymentService.
@@ -16,56 +16,77 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
  */
 class PaymentService extends BaseService
 {
+    /**
+     * Get a payment with its relationships.
+     *
+     * @param int   $id        Payment ID
+     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
+     *
+     * @return Payment|null
+     */
     public function findWithRelations(int $id, array $relations = ['invoice', 'paymentMethod']): ?Payment
     {
         return Payment::query()->with($relations)->find($id);
     }
 
-    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15): LengthAwarePaginator
+    /**
+     * Get all payments with relationships, ordered by date descending.
+     *
+     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
+     * @param int   $perPage   Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15)
     {
         return Payment::query()->with($relations)
             ->orderBy('payment_date', 'desc')
             ->paginate($perPage);
     }
 
-    public function getByClientId(int $clientId): Collection
+    /**
+     * Get all payments for a specific client.
+     *
+     * @param int $clientId Client ID
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByClientId(int $clientId): \Illuminate\Database\Eloquent\Collection
     {
         return Payment::query()->where('client_id', $clientId)->get();
     }
 
     /**
-     * @param $amount
+     * Validate a payment amount does not exceed invoice balance.
+     *
+     * @param float $amount
+     * @param int   $invoiceId
+     * @param int|null $paymentId
      *
      * @return bool
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function validate_payment_amount()
      */
-    public function validatePaymentAmount($amount): bool
+    public function validatePaymentAmount(float $amount, int $invoiceId, ?int $paymentId = null): bool
     {
-        $amount = (float) $amount;
+        $invoice = Invoice::find($invoiceId);
 
-        $invoiceId = request()->post('invoice_id');
-        $paymentId = request()->post('payment_id');
-
-        $invoice = InvoiceAmount::query()->find($invoiceId);
-
-        if (! $invoice) {
+        if (!$invoice) {
             return false;
         }
 
-        $invoiceBalance = (float) $invoice->invoice_balance;
+        $invoiceBalance = (float) $invoice->balance;
 
         if ($paymentId) {
-            $payment = Payment::query()->find($paymentId);
-            $invoiceBalance += $payment ? (float) $payment->payment_amount : 0;
+            $existingPayment = Payment::find($paymentId);
+            if ($existingPayment) {
+                $invoiceBalance += (float) $existingPayment->amount;
+            }
         }
 
         if ($amount > $invoiceBalance) {
-            session()->flash('error', trans('payment_cannot_exceed_balance'));
+            Validator::make([], [])->after(function ($validator) {
+                $validator->errors()->add('amount', __('payment_cannot_exceed_balance'));
+            })->validate();
+
             return false;
         }
 
@@ -73,111 +94,100 @@ class PaymentService extends BaseService
     }
 
     /**
-     * @return bool|int|null
+     * Save a payment and recalculate invoice totals/status.
      *
-     * Legacy migration info:
+     * @param int|null   $id
+     * @param array|null $data
      *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function save()
+     * @return Payment|null
      */
-    public function save($id = null, $db_array = null)
+    public function save(?int $id = null, ?array $data = null): ?Payment
     {
-        $db_array = $db_array ?: $this->db_array();
+        $data = $data ?? [];
 
-        $id = parent::save($id, $db_array);
+        return DB::transaction(function () use ($id, $data) {
+            $payment = $id ? Payment::find($id) : new Payment();
+            $payment->fill($data);
+            $payment->save();
 
-        $globalDiscount = InvoiceAmount::getGlobalDiscount($db_array['invoice_id']);
-        InvoiceAmount::calculate($db_array['invoice_id'], ['item' => $globalDiscount]);
+            $invoice = Invoice::find($payment->invoice_id);
+            if ($invoice) {
+                InvoiceAmountService::recalculate($invoice->id);
 
-        $invoice = InvoiceAmount::query()->find($db_array['invoice_id']);
-        if (! $invoice) {
-            return false;
-        }
+                $paid  = $invoice->paid;
+                $total = $invoice->total;
 
-        $paid  = (float) $invoice->invoice_paid;
-        $total = (float) $invoice->invoice_total;
+                if ($paid >= $total) {
+                    $invoice->status_id = 4; // Paid
+                    $invoice->save();
+                }
+            }
 
-        if ($paid >= $total) {
-            Invoice::query()->where('invoice_id', $db_array['invoice_id'])
-                ->update(['invoice_status_id' => 4]);
-        }
-
-        InvoiceAmount::calculate($db_array['invoice_id'], ['item' => $globalDiscount]);
-
-        return $id;
-    }
-
-    /**
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function delete()
-     */
-    public function delete($id = null)
-    {
-        $payment = Payment::query()->find($id);
-        if (! $payment) {
-            return;
-        }
-
-        $invoiceId = $payment->invoice_id;
-
-        parent::delete($id);
-
-        $globalDiscount = InvoiceAmount::getGlobalDiscount($invoiceId);
-        InvoiceAmount::calculate($invoiceId, ['item' => $globalDiscount]);
-
-        $invoice = Invoice::query()->find($invoiceId);
-        if ($invoice && $invoice->invoice_status_id === 4) {
-            $invoice->update(['invoice_status_id' => 2]);
-        }
-
-        // Delete orphaned records
-        \App\Helpers\Orphan::deleteOrphans();
-    }
-
-    /**
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function prep_form()
-     */
-    public function prep_form($id = null): bool
-    {
-        if (! parent::prep_form($id)) {
-            return false;
-        }
-
-        if (! $id) {
-            parent::set_form_value('payment_date', date('Y-m-d'));
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $client_id
-     *
-     * @return $this
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function by_client()
-     */
-    public function by_client($client_id)
-    {
-        $this->query()->whereHas('invoice.client', function ($query) use ($client_id) {
-            $query->where('client_id', $client_id);
+            return $payment;
         });
-
-        return $this;
     }
 
+    /**
+     * Delete a payment and recalculate invoice totals/status.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+        return DB::transaction(function () use ($id) {
+            $payment = Payment::find($id);
+            if (!$payment) {
+                return false;
+            }
+
+            $invoiceId = $payment->invoice_id;
+            $payment->delete();
+
+            InvoiceAmountService::recalculate($invoiceId);
+
+            $invoice = Invoice::find($invoiceId);
+            if ($invoice && $invoice->status_id === 4 && $invoice->paid < $invoice->total) {
+                $invoice->status_id = 2; // Sent
+                $invoice->save();
+            }
+
+            return true;
+        });
+    }
+
+    /**
+     * Prepare a new payment form.
+     *
+     * @param int|null $id
+     *
+     * @return Payment
+     */
+    public function prep_form(?int $id = null): Payment
+    {
+        $payment = $id ? Payment::findOrFail($id) : new Payment();
+        if (!$id) {
+            $payment->payment_date = now()->toDateString();
+        }
+        return $payment;
+    }
+
+    /**
+     * Filter payments by client ID.
+     *
+     * @param int $clientId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function by_client(int $clientId)
+    {
+        return Payment::query()->whereHas('client', fn($q) => $q->where('id', $clientId));
+    }
+
+    /**
+     * Get the model class for this service.
+     */
     protected function getModelClass(): string
     {
         return Payment::class;
