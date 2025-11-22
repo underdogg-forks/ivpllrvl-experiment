@@ -12,6 +12,9 @@ use Modules\Core\Services\BaseService;
 use Modules\Invoices\Models\InvoicesRecurring;
 use RuntimeException;
 
+/**
+ * InvoicesRecurringService.
+ */
 class InvoicesRecurringService extends BaseService
 {
     public function getValidationRules(): array
@@ -30,27 +33,54 @@ class InvoicesRecurringService extends BaseService
         $this->update($recurringId, ['recur_status' => 0]);
     }
 
-    public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15): LengthAwarePaginator
+    /**
+     * Get all recurring invoices with relationships.
+     *
+     * @param array $relations Relations to eager load
+     * @param int   $perPage   Number of items per page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithRelations(array $relations = ['invoice'], int $perPage = 15)
     {
-        return InvoicesRecurring::query()
-            ->with($relations)
+        return InvoicesRecurring::query()->with($relations)
             ->orderBy('recur_start_date', 'desc')
             ->paginate($perPage);
     }
 
-    public function stop(int $invoiceRecurringId): void
+    /**
+     * @param $invoice_recurring_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
+     *
+     * @legacy-function stop()
+     */
+    public function stop($invoice_recurring_id)
     {
         $now = Carbon::today()->toDateString();
 
         InvoicesRecurring::query()
-            ->where('invoice_recurring_id', $invoiceRecurringId)
+            ->where('invoice_recurring_id', $invoice_recurring_id)
             ->update([
                 'recur_end_date'  => $now,
                 'recur_next_date' => null,
             ]);
     }
 
-    public function active(): Builder
+    /**
+     * Sets filter to only recurring invoices which should be generated now.
+     *
+     * @return Mdl_Invoices_Recurring
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
+     *
+     * @legacy-function active()
+     */
+    public function active()
     {
         $today = Carbon::today()->toDateString();
 
@@ -63,10 +93,19 @@ class InvoicesRecurringService extends BaseService
             });
     }
 
-    public function set_next_recur_date(int $invoiceRecurringId): void
+    /**
+     * @param $invoice_recurring_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice_recurring.php
+     *
+     * @legacy-function set_next_recur_date()
+     */
+    public function set_next_recur_date($invoice_recurring_id)
     {
         $recurring = InvoicesRecurring::query()
-            ->where('invoice_recurring_id', $invoiceRecurringId)
+            ->where('invoice_recurring_id', $invoice_recurring_id)
             ->first();
 
         if (! $recurring) {
@@ -81,14 +120,13 @@ class InvoicesRecurringService extends BaseService
         $nextDate = $this->incrementDate((string) $currentNext, (string) $recurring->recur_frequency);
 
         InvoicesRecurring::query()
-            ->where('invoice_recurring_id', $invoiceRecurringId)
+            ->where('invoice_recurring_id', $invoice_recurring_id)
             ->update(['recur_next_date' => $nextDate]);
     }
 
     private function incrementDate(string $date, string $frequency): string
     {
         $dt = Carbon::parse($date);
-
         $freq = strtolower(trim($frequency));
 
         return match (true) {
@@ -112,7 +150,6 @@ class InvoicesRecurringService extends BaseService
                 $interval = new DateInterval($normalized);
                 return $dt->add($interval)->toDateString();
             } catch (\Throwable $e) {
-                // fallthrough to next attempt
             }
         }
 
