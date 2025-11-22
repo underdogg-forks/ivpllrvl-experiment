@@ -2,16 +2,12 @@
 
 namespace Modules\Payments\Services;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Services\BaseService;
-use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Payments\Models\Payment;
-use InvalidArgumentException;
-use Exception;
+use Modules\Invoices\Models\InvoiceAmount;
+use Modules\Invoices\Models\Invoice;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * PaymentService.
@@ -20,41 +16,18 @@ use Exception;
  */
 class PaymentService extends BaseService
 {
-    /**
-     * Get a payment with its relationships.
-     *
-     * @param int   $id        Payment ID
-     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
-     *
-     * @return Payment|null
-     */
     public function findWithRelations(int $id, array $relations = ['invoice', 'paymentMethod']): ?Payment
     {
         return Payment::query()->with($relations)->find($id);
     }
 
-    /**
-     * Get all payments with relationships, ordered by date descending.
-     *
-     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
-     * @param int   $perPage   Number of items per page
-     *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15)
+    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15): LengthAwarePaginator
     {
         return Payment::query()->with($relations)
             ->orderBy('payment_date', 'desc')
             ->paginate($perPage);
     }
 
-    /**
-     * Get all payments for a specific client.
-     *
-     * @param int $clientId Client ID
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
     public function getByClientId(int $clientId): Collection
     {
         return Payment::query()->where('client_id', $clientId)->get();
@@ -71,11 +44,32 @@ class PaymentService extends BaseService
      *
      * @legacy-function validate_payment_amount()
      */
-    public function validatePaymentAmount($amount)
+    public function validatePaymentAmount($amount): bool
     {
-        // To preserve original signature we accept the single $amount param.
-        // If callers supply invoice_id/payment_id, they should use the other helper or we can adapt callers.
-        return false;
+        $amount = (float) $amount;
+
+        $invoiceId = request()->post('invoice_id');
+        $paymentId = request()->post('payment_id');
+
+        $invoice = InvoiceAmount::query()->find($invoiceId);
+
+        if (! $invoice) {
+            return false;
+        }
+
+        $invoiceBalance = (float) $invoice->invoice_balance;
+
+        if ($paymentId) {
+            $payment = Payment::query()->find($paymentId);
+            $invoiceBalance += $payment ? (float) $payment->payment_amount : 0;
+        }
+
+        if ($amount > $invoiceBalance) {
+            session()->flash('error', trans('payment_cannot_exceed_balance'));
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -89,33 +83,29 @@ class PaymentService extends BaseService
      */
     public function save($id = null, $db_array = null)
     {
-        $data = $db_array ?? [];
+        $db_array = $db_array ?: $this->db_array();
 
-        if (empty($data['invoice_id'])) {
-            throw new InvalidArgumentException('invoice_id is required when saving a payment.');
+        $id = parent::save($id, $db_array);
+
+        $globalDiscount = InvoiceAmount::getGlobalDiscount($db_array['invoice_id']);
+        InvoiceAmount::calculate($db_array['invoice_id'], ['item' => $globalDiscount]);
+
+        $invoice = InvoiceAmount::query()->find($db_array['invoice_id']);
+        if (! $invoice) {
+            return false;
         }
 
-        DB::beginTransaction();
+        $paid  = (float) $invoice->invoice_paid;
+        $total = (float) $invoice->invoice_total;
 
-        try {
-            if ($id !== null) {
-                $payment = Payment::query()->findOrFail($id);
-                $payment->fill($data);
-                $payment->save();
-                $savedId = $payment->payment_id;
-            } else {
-                $payment = Payment::create($data);
-                $savedId = $payment->payment_id;
-            }
-
-            $this->recalculateInvoiceAmounts((int) $data['invoice_id']);
-            DB::commit();
-
-            return $savedId;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw new Exception('Failed to save payment: ' . $e->getMessage());
+        if ($paid >= $total) {
+            Invoice::query()->where('invoice_id', $db_array['invoice_id'])
+                ->update(['invoice_status_id' => 4]);
         }
+
+        InvoiceAmount::calculate($db_array['invoice_id'], ['item' => $globalDiscount]);
+
+        return $id;
     }
 
     /**
@@ -127,29 +117,25 @@ class PaymentService extends BaseService
      */
     public function delete($id = null)
     {
-        if ($id === null) {
-            return false;
-        }
-
         $payment = Payment::query()->find($id);
         if (! $payment) {
-            return false;
+            return;
         }
 
-        $invoiceId = (int) $payment->invoice_id;
+        $invoiceId = $payment->invoice_id;
 
-        DB::beginTransaction();
+        parent::delete($id);
 
-        try {
-            $deleted = Payment::query()->where('payment_id', $id)->delete();
-            $this->recalculateInvoiceAmounts($invoiceId);
-            DB::commit();
+        $globalDiscount = InvoiceAmount::getGlobalDiscount($invoiceId);
+        InvoiceAmount::calculate($invoiceId, ['item' => $globalDiscount]);
 
-            return (bool) $deleted;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw new Exception('Failed to delete payment: ' . $e->getMessage());
+        $invoice = Invoice::query()->find($invoiceId);
+        if ($invoice && $invoice->invoice_status_id === 4) {
+            $invoice->update(['invoice_status_id' => 2]);
         }
+
+        // Delete orphaned records
+        \App\Helpers\Orphan::deleteOrphans();
     }
 
     /**
@@ -161,6 +147,14 @@ class PaymentService extends BaseService
      */
     public function prep_form($id = null): bool
     {
+        if (! parent::prep_form($id)) {
+            return false;
+        }
+
+        if (! $id) {
+            parent::set_form_value('payment_date', date('Y-m-d'));
+        }
+
         return true;
     }
 
@@ -177,44 +171,15 @@ class PaymentService extends BaseService
      */
     public function by_client($client_id)
     {
-        return Payment::query()->where('client_id', $client_id);
+        $this->query()->whereHas('invoice.client', function ($query) use ($client_id) {
+            $query->where('client_id', $client_id);
+        });
+
+        return $this;
     }
 
-    /**
-     * Get the model class for this service.
-     */
     protected function getModelClass(): string
     {
         return Payment::class;
-    }
-
-    private function recalculateInvoiceAmounts(int $invoiceId): void
-    {
-        $paid = (float) DB::table('ip_payments')
-            ->where('invoice_id', $invoiceId)
-            ->sum('payment_amount');
-
-        $amountRow = DB::table('ip_invoice_amounts')
-            ->where('invoice_id', $invoiceId)
-            ->first();
-
-        $total = $amountRow ? (float) $amountRow->invoice_total : 0.0;
-        $balance = max(0.0, $total - $paid);
-
-        if ($amountRow) {
-            DB::table('ip_invoice_amounts')
-                ->where('invoice_id', $invoiceId)
-                ->update([
-                    'invoice_paid'    => $paid,
-                    'invoice_balance' => $balance,
-                ]);
-        }
-
-        if ($total > 0) {
-            $status = $paid >= $total ? 4 : 2;
-            DB::table('ip_invoices')
-                ->where('invoice_id', $invoiceId)
-                ->update(['invoice_status_id' => $status]);
-        }
     }
 }
