@@ -22,18 +22,13 @@ class CustomFieldService extends BaseService
      */
     public static function custom_types()
     {
-/*
-        $CI = &get_instance();
-        $CI->load->model('custom_values/custom_value');
-
-        return Mdl_Custom_Values::custom_types();
-*/
+        return \Modules\Core\Models\CustomValue::custom_types();
     }
 
     /**
      * @param $table
      *
-     * @return $this
+     * @return \Illuminate\Database\Eloquent\Collection
      *
      * Legacy migration info:
      *
@@ -43,11 +38,7 @@ class CustomFieldService extends BaseService
      */
     public function get_by_table($table)
     {
-/*
-        $this->where('custom_field_table', $table);
-
-        return $this->get()->result();
-*/
+        return CustomField::query()->where('custom_field_table', $table)->get();
     }
 
     /**
@@ -59,20 +50,13 @@ class CustomFieldService extends BaseService
      */
     public function save($id = null, $db_array = null)
     {
-/*
+        $db_array = $db_array ?: $this->db_array();
+
         if ($id) {
-            // Get the original record before saving
-            $original_record = $this->get_by_id($id);
+            $original_record = CustomField::query()->find($id);
         }
 
-        // Create the record
-        $db_array = ($db_array) ? $db_array : $this->db_array();
-
-        // Save the record to ip_custom_fields
-        $id = parent::save($id, $db_array);
-
-        return $id;
-*/
+        return parent::save($id, $db_array);
     }
 
     /**
@@ -88,44 +72,32 @@ class CustomFieldService extends BaseService
      */
     public function get_positions($table_name = false)
     {
-/*
-        $this->load->model(
-            [
-                'custom_fields/mdl_client_custom',
-                'custom_fields/mdl_invoice_custom',
-                'custom_fields/mdl_payment_custom',
-                'custom_fields/mdl_quote_custom',
-                'custom_fields/mdl_user_custom',
-            ]
-        );
+        $models = [
+            'client'  => \Modules\Core\Models\ClientCustom::class,
+            'invoice' => \Modules\Core\Models\InvoiceCustom::class,
+            'payment' => \Modules\Core\Models\PaymentCustom::class,
+            'quote'   => \Modules\Core\Models\QuoteCustom::class,
+            'user'    => \Modules\Core\Models\UserCustom::class,
+        ];
 
         $p = $table_name ? 'ip_' : '';
         $s = $table_name ? '_custom' : '';
 
-        $positions = [
-            $p . 'client' . $s  => Mdl_client_custom::$positions,
-            $p . 'invoice' . $s => Mdl_invoice_custom::$positions,
-            $p . 'payment' . $s => Mdl_payment_custom::$positions,
-            $p . 'quote' . $s   => Mdl_quote_custom::$positions,
-            $p . 'user' . $s    => Mdl_user_custom::$positions,
-        ];
-
-        foreach ($positions as $key => $val) {
-            foreach ($val as $key2 => $val2) {
-                $val[$key2] = trans($val2);
+        $positions = [];
+        foreach ($models as $key => $model) {
+            $positions[$p . $key . $s] = $model::$positions;
+            foreach ($positions[$p . $key . $s] as $k => $v) {
+                $positions[$p . $key . $s][$k] = trans($v);
             }
-
-            $positions[$key] = $val;
         }
 
         return $positions;
-*/
     }
 
     /**
      * @param $column
      *
-     * @return $this
+     * @return \Modules\Core\Models\CustomField|null
      *
      * Legacy migration info:
      *
@@ -135,126 +107,13 @@ class CustomFieldService extends BaseService
      */
     public function get_by_id($column)
     {
-/*
-        $this->where('custom_field_id', $column);
-
-        return $this->get()->row();
-*/
-    }
-
-    /**
-     * Get custom tables list.
-     *
-     * @legacy-file application/modules/custom_fields/models/Mdl_custom_field.php
-     *
-     * @legacy-function custom_tables()
-     *
-     * @return array
-     */
-    public function getCustomTables(): array
-    {
-        return [
-            'ip_client_custom'  => trans('clients'),
-            'ip_invoice_custom' => trans('invoices'),
-            'ip_payment_custom' => trans('payments'),
-            'ip_quote_custom'   => trans('quotes'),
-            'ip_user_custom'    => trans('users'),
-        ];
-    }
-
-    /**
-     * Get custom field types.
-     *
-     * @return array
-     */
-    public function getCustomTypes(): array
-    {
-        return [
-            'text'     => trans('text_input'),
-            'textarea' => trans('textarea'),
-            'checkbox' => trans('checkbox'),
-            'date'     => trans('date'),
-            'select'   => trans('dropdown'),
-        ];
-    }
-
-    /**
-     * Get nice name for form element.
-     *
-     * @param string $element
-     *
-     * @return string
-     */
-    public function getNicename(string $element): string
-    {
-        $nicenames = [
-            'ip_client_custom'  => 'client',
-            'ip_invoice_custom' => 'invoice',
-            'ip_payment_custom' => 'payment',
-            'ip_quote_custom'   => 'quote',
-            'ip_user_custom'    => 'user',
-        ];
-
-        return $nicenames[$element] ?? '';
-    }
-
-    /**
-     * Get custom fields by table name.
-     *
-     * @param string $tableName
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getByTable(string $tableName): \Illuminate\Database\Eloquent\Collection
-    {
-        return CustomField::query()->where('custom_field_table', $tableName)->get();
-    }
-
-    /**
-     * Get custom fields by table name ordered by custom_field_order.
-     *
-     * @param string $tableName
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getByTableOrdered(string $tableName): \Illuminate\Database\Eloquent\Collection
-    {
-        return CustomField::query()
-            ->where('custom_field_table', $tableName)
-            ->orderBy('custom_field_order')
-            ->get();
-    }
-
-    /**
-     * Check if custom fields exist for a table.
-     *
-     * @param string $tableName
-     *
-     * @return bool
-     */
-    public function existsForTable(string $tableName): bool
-    {
-        return CustomField::query()->where('custom_field_table', $tableName)->exists();
-    }
-
-    /**
-     * Check if custom field can be deleted.
-     *
-     * @param int $id Custom field ID
-     *
-     * @return bool True if custom field can be deleted
-     */
-    public function canDelete(int $id): bool
-    {
-        $blockers = $this->getDeletionBlockers($id);
-
-        return $blockers['custom_values'] === 0;
+        return CustomField::query()->find($column);
     }
 
     /**
      * @param $id
      *
-     * @return mixed
+     * @return \Illuminate\Support\Collection|null
      *
      * Legacy migration info:
      *
@@ -264,25 +123,24 @@ class CustomFieldService extends BaseService
      */
     public function used($id = null, $get = true)
     {
-/*
-        if ( ! $id) {
-            return;
+        if (!$id) {
+            return null;
         }
 
-        $cf   = $this->get_by_id($id);
-        $base = strtr($cf->custom_field_table, ['ip_' => '']) . '_field';
+        $cf = $this->get_by_id($id);
+        $base = str_replace('ip_', '', $cf->custom_field_table) . '_field';
 
-        $this->db->from($cf->custom_field_table)
-            ->where($base . 'id', $id)
-            ->where($base . 'value IS NOT NULL', null, false)
-            ->where($base . 'value <> ""');
+        $query = \Illuminate\Support\Facades\DB::table($cf->custom_field_table)
+            ->whereNotNull($base . 'value')
+            ->where($base . 'value', '<>', '');
 
-        return $get ? $this->db->get()->result() : $this->db;
-*/
+        return $get ? $query->get() : $query;
     }
 
     /**
      * @param $id
+     *
+     * @return bool
      *
      * Legacy migration info:
      *
@@ -292,18 +150,19 @@ class CustomFieldService extends BaseService
      */
     public function delete($id): bool
     {
-/*
-        if ( ! $this->used($id)) {
+        if (!$this->used($id)->isNotEmpty()) {
             $custom_field = $this->get_by_id($id);
-            // Remove MULTIPLE|SINGLE CHOICE values
+
             if (preg_match('/CHOICE/', $custom_field->custom_field_type)) {
-                $this->load->model('custom_values/custom_value');
-                $this->mdl_custom_values->delete_all_fid($id);
+                \Modules\Core\Models\CustomValue::query()
+                    ->where('custom_values_field', $id)
+                    ->delete();
             }
 
-            // Remove reference in custom table
-            $base = strtr($custom_field->custom_field_table, ['ip_' => '']) . '_field';
-            $this->db->from($custom_field->custom_field_table)->where($base . 'id', $id)->delete($custom_field->custom_field_table);
+            $base = str_replace('ip_', '', $custom_field->custom_field_table) . '_field';
+            \Illuminate\Support\Facades\DB::table($custom_field->custom_field_table)
+                ->where($base . 'id', $id)
+                ->delete();
 
             parent::delete($id);
 
@@ -311,7 +170,6 @@ class CustomFieldService extends BaseService
         }
 
         return false;
-*/
     }
 
     /**
@@ -327,12 +185,8 @@ class CustomFieldService extends BaseService
      */
     public function by_table_name($name)
     {
-/*
-        $table = array_flip($this->custom_tables()); // get ip_*name*_custom
-        $this->by_table($table[$name]);
-
-        return $this;
-*/
+        $table = array_flip($this->getCustomTables());
+        return $this->by_table($table[$name]);
     }
 
     /**
@@ -348,17 +202,13 @@ class CustomFieldService extends BaseService
      */
     public function by_table($table)
     {
-/*
-        $this->filter_where('custom_field_table', $table);
-
-        return $this;
-*/
+        return $this->get_by_table($table);
     }
 
     /**
      * @param int    $field_id
      * @param string $custom_field_model
-     * @param int    $model_id
+     * @param object $object
      *
      * @return string
      *
@@ -370,26 +220,25 @@ class CustomFieldService extends BaseService
      */
     public function get_value_for_field($field_id, $custom_field_model, $object)
     {
-/*
-        $this->load->model('custom_fields/' . $custom_field_model);
-
-        $cf_table      = str_replace('mdl_', '', $custom_field_model);
+        $modelClass = '\\Modules\\Core\\Models\\' . str_replace('mdl_', '', $custom_field_model);
+        $cf_table = str_replace('mdl_', '', $custom_field_model);
         $cf_model_name = str_replace('_custom', '', $cf_table);
 
-        $value = $this->{$custom_field_model}
+        $value = $modelClass::query()
             ->where($cf_table . '_fieldid', $field_id)
             ->where($cf_model_name . '_id', $object->{$cf_model_name . '_id'})
-            ->get()->result();
+            ->get();
 
-        $value_key            = $cf_table . '_fieldvalue';
+        $value_key = $cf_table . '_fieldvalue';
         $value_key_serialized = $cf_table . '_fieldvalue_serialized';
 
-        if ( ! isset($value[0]->{$value_key})) {
+        if (empty($value->first()->{$value_key})) {
             return '';
         }
 
-        return is_array($value[0]->{$value_key}) ? $value[0]->{$value_key_serialized} : $value[0]->{$value_key};
-*/
+        return is_array($value->first()->{$value_key})
+            ? $value->first()->{$value_key_serialized}
+            : $value->first()->{$value_key};
     }
 
     /**
@@ -406,52 +255,41 @@ class CustomFieldService extends BaseService
      */
     public function get_values_for_fields($custom_field_model, $model_id)
     {
-/*
-        $this->load->model('custom_fields/' . $custom_field_model);
-        $this->load->model('custom_values/custom_value');
+        $modelClass = '\\Modules\\Core\\Models\\' . str_replace('mdl_', '', $custom_field_model);
+        $fields = $modelClass::query()->where($modelClass::$primaryKey, $model_id)->get();
 
-        $fields = $this->{$custom_field_model}->by_id($model_id)->get()->result();
-
-        if (empty($fields)) {
+        if ($fields->isEmpty()) {
             return [];
         }
 
-        $values       = [];
-        $custom_field = str_replace('mdl_', '', $custom_field_model);
+        $values = [];
+        $custom_field_prefix = str_replace('mdl_', '', $custom_field_model);
 
         foreach ($fields as $field) {
-            // Get the custom field value
-            $field_id_fieldlabel = $custom_field . '_fieldvalue';
+            $field_id_fieldlabel = $custom_field_prefix . '_fieldvalue';
 
-            // Check if exist !(null or '')
-            if ( ! $field->{$field_id_fieldlabel}) {
-                $values[$field->custom_field_label] = null; // $field->$field_id_fieldlabel
+            if (!$field->{$field_id_fieldlabel}) {
+                $values[$field->custom_field_label] = null;
                 continue;
             }
 
             if ($field->custom_field_type == 'MULTIPLE-CHOICE') {
-                $custom_values = $this->mdl_custom_values->get_by_ids($field->{$field_id_fieldlabel})->result();
+                $custom_values = \Modules\Core\Models\CustomValue::query()
+                    ->whereIn('custom_values_id', $field->{$field_id_fieldlabel})
+                    ->get();
 
-                if ( ! empty($custom_values)) {
-                    $key_serialized = $field_id_fieldlabel . '_serialized';
+                $field->{$field_id_fieldlabel} = [];
+                $field->{$field_id_fieldlabel . '_serialized'} = '';
 
-                    $field->{$field_id_fieldlabel} = [];
-                    $field->{$key_serialized}      = '';
-
-                    foreach ($custom_values as $custom_value) {
-                        //Fix compatibility issue with php 5.6
-                        $field->{$field_id_fieldlabel}[] = $custom_value->custom_values_value;
-
-                        // Add as serialized string
-                        $field->{$key_serialized} .= $custom_value->custom_values_value;
-                        $field->{$key_serialized} .= $custom_value === end($custom_values) ? '' : ', ';
-                    }
+                foreach ($custom_values as $custom_value) {
+                    $field->{$field_id_fieldlabel}[] = $custom_value->custom_values_value;
+                    $field->{$field_id_fieldlabel . '_serialized'} .= $custom_value->custom_values_value;
+                    $field->{$field_id_fieldlabel . '_serialized'} .= $custom_value === $custom_values->last() ? '' : ', ';
                 }
             } elseif ($field->custom_field_type == 'SINGLE-CHOICE') {
-                $custom_value = $this->mdl_custom_values->get_by_id($field->{$field_id_fieldlabel})->result();
-
-                if ( ! empty($custom_value)) {
-                    $custom_value                  = $custom_value[0];
+                $custom_value = \Modules\Core\Models\CustomValue::query()
+                    ->find($field->{$field_id_fieldlabel});
+                if ($custom_value) {
                     $field->{$field_id_fieldlabel} = $custom_value->custom_values_value;
                 }
             }
@@ -460,7 +298,6 @@ class CustomFieldService extends BaseService
         }
 
         return $values;
-*/
     }
 
     /**
@@ -476,19 +313,10 @@ class CustomFieldService extends BaseService
      */
     private function rename_column($table_name, $old_column_name, $new_column_name)
     {
-/*
-        $this->load->dbforge();
-
-        $column = [
-            $old_column_name => [
-                'name'       => $new_column_name,
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-            ],
-        ];
-
-        $this->dbforge->modify_column($table_name, $column);
-*/
+        $schema = \Illuminate\Support\Facades\Schema::connection();
+        $schema->table($table_name, function ($table) use ($old_column_name, $new_column_name) {
+            $table->renameColumn($old_column_name, $new_column_name);
+        });
     }
 
     /**
@@ -503,18 +331,10 @@ class CustomFieldService extends BaseService
      */
     private function add_column($table_name, $column_name)
     {
-/*
-        $this->load->dbforge();
-
-        $column = [
-            $column_name => [
-                'type'       => 'VARCHAR',
-                'constraint' => 256,
-            ],
-        ];
-
-        $this->dbforge->add_column($table_name, $column);
-*/
+        $schema = \Illuminate\Support\Facades\Schema::connection();
+        $schema->table($table_name, function ($table) use ($column_name) {
+            $table->string($column_name, 256)->nullable();
+        });
     }
 
     /**
