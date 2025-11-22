@@ -11,8 +11,20 @@ use Modules\Crm\Models\UserClient;
 use InvalidArgumentException;
 use Exception;
 
+/**
+ * UserClientService.
+ *
+ * Service class for managing user-client relationship business logic
+ */
 class UserClientService extends BaseService
 {
+    /**
+     * Get all user clients paginated with relationships.
+     *
+     * @param int $page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function getAllPaginated(int $page = 0): LengthAwarePaginator
     {
         $page = max(1, $page);
@@ -21,7 +33,16 @@ class UserClientService extends BaseService
             ->paginate(15, ['*'], 'page', $page);
     }
 
-    public function getByUserId(int $userId): Collection
+    /**
+     * Get user clients by user ID.
+     *
+     * @param int $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @legacy-function assignedTo
+     */
+    public function getByUserId(int $userId)
     {
         return UserClient::query()
             ->where('user_id', $userId)
@@ -29,6 +50,16 @@ class UserClientService extends BaseService
             ->get();
     }
 
+    /**
+     * Get user client by user ID and client ID.
+     *
+     * @param int $userId
+     * @param int $clientId
+     *
+     * @return UserClient|null
+     *
+     * @legacy-function getByUserAndClient
+     */
     public function getByUserAndClient(int $userId, int $clientId): ?UserClient
     {
         return UserClient::query()
@@ -37,6 +68,17 @@ class UserClientService extends BaseService
             ->first();
     }
 
+    /**
+     * Validate user client assignment.
+     *
+     * @param array $data Data to validate
+     *
+     * @return bool Returns true if validation passes
+     *
+     * @throws InvalidArgumentException When validation fails
+     *
+     * @legacy-function runValidation
+     */
     public function validate(array $data): bool
     {
         $errors = [];
@@ -90,14 +132,38 @@ class UserClientService extends BaseService
         return true;
     }
 
-    public function assigned_to(int $userId): Collection
+
+    /**
+     * @param $user_id
+     *
+     * @return $this
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
+     *
+     * @legacy-function assigned_to()
+     */
+    public function assigned_to($user_id)
     {
         return UserClient::query()
-            ->where('user_id', $userId)
-            ->with(['client'])
+            ->where('user_id', $user_id)
+            ->with('client')
             ->get();
     }
 
+
+    /**
+     * Set all clients for a user.
+     *
+     * @param array $userIds Array of user IDs
+     *
+     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
+     *
+     * @legacy-function set_all_clients_user()
+     *
+     * @return void
+     */
     public function setAllClientsUser(array $userIds): void
     {
         $userIds = array_values(array_filter($userIds, fn ($id) => is_numeric($id) && $id > 0));
@@ -135,7 +201,14 @@ class UserClientService extends BaseService
         });
     }
 
-    public function get_users_all_clients(): void
+    /**
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/user_clients/models/Mdl_user_client.php
+     *
+     * @legacy-function get_users_all_clients()
+     */
+    public function get_users_all_clients()
     {
         $userIds = DB::table('ip_users')
             ->where('user_all_clients', 1)
@@ -149,6 +222,17 @@ class UserClientService extends BaseService
         $this->setAllClientsUser($userIds);
     }
 
+    /**
+     * Save user client assignment.
+     *
+     * @param array $data Assignment data to save
+     *
+     * @return UserClient The saved user client assignment
+     *
+     * @throws Exception When save operation fails
+     *
+     * @legacy-function save
+     */
     public function save(array $data): UserClient
     {
         $this->validate($data);
@@ -173,6 +257,9 @@ class UserClientService extends BaseService
         }
     }
 
+    /**
+     * Get the model class for this service.
+     */
     protected function getModelClass(): string
     {
         return UserClient::class;
