@@ -2,233 +2,212 @@
 
 namespace Modules\Payments\Services;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Services\BaseService;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Payments\Models\Payment;
+use InvalidArgumentException;
+use Exception;
 
-/**
- * PaymentService.
- *
- * Service class for managing payment business logic
- */
 class PaymentService extends BaseService
 {
-    /**
-     * Get a payment with its relationships.
-     *
-     * @param int   $id        Payment ID
-     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
-     *
-     * @return Payment|null
-     */
     public function findWithRelations(int $id, array $relations = ['invoice', 'paymentMethod']): ?Payment
     {
         return Payment::query()->with($relations)->find($id);
     }
 
-    /**
-     * Get all payments with relationships, ordered by date descending.
-     *
-     * @param array $relations Relations to eager load (default: invoice, paymentMethod)
-     * @param int   $perPage   Number of items per page
-     *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15)
+    public function getAllWithRelations(array $relations = ['invoice', 'paymentMethod'], int $perPage = 15): LengthAwarePaginator
     {
         return Payment::query()->with($relations)
             ->orderBy('payment_date', 'desc')
             ->paginate($perPage);
     }
 
-    /**
-     * Get all payments for a specific client.
-     *
-     * @param int $clientId Client ID
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getByClientId(int $clientId): \Illuminate\Database\Eloquent\Collection
+    public function getByClientId(int $clientId): Collection
     {
         return Payment::query()->where('client_id', $clientId)->get();
     }
 
     /**
-     * @param $amount
+     * Validate a payment amount for an invoice.
+     *
+     * $invoiceId is optional to preserve backwards compatibility with older call sites;
+     * when omitted the method returns false.
+     *
+     * @param mixed    $amount
+     * @param int|null $invoiceId
+     * @param int|null $paymentId
      *
      * @return bool
-     *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function validate_payment_amount()
      */
-    public function validatePaymentAmount($amount)
+    public function validatePaymentAmount($amount, ?int $invoiceId = null, ?int $paymentId = null): bool
     {
-/*
-        $amount     = (float) standardize_amount($amount);
-        $invoice_id = $this->input->post('invoice_id');
-        $payment_id = $this->input->post('payment_id');
+        $amount = (float) $amount;
 
-        $invoice = $this->db->where('invoice_id', $invoice_id)->get('ip_invoice_amounts')->row();
-
-        if ($invoice == null) {
+        if ($invoiceId === null) {
             return false;
         }
 
-        $invoice_balance = (float) $invoice->invoice_balance;
-
-        if ($payment_id) {
-            $payment = $this->db->where('payment_id', $payment_id)->get('ip_payments')->row();
-
-            $invoice_balance += (float) $payment->payment_amount;
+        $invoiceRow = DB::table('ip_invoice_amounts')->where('invoice_id', $invoiceId)->first();
+        if (! $invoiceRow) {
+            return false;
         }
 
-        if ($amount > $invoice_balance) {
-            $this->form_validation->set_message('validate_payment_amount', trans('payment_cannot_exceed_balance'));
+        $invoiceBalance = (float) $invoiceRow->invoice_balance;
 
+        if ($paymentId !== null) {
+            $existingPayment = DB::table('ip_payments')->where('payment_id', $paymentId)->first();
+            if ($existingPayment) {
+                $invoiceBalance += (float) $existingPayment->payment_amount;
+            }
+        }
+
+        if ($amount > $invoiceBalance + 0.00001) {
             return false;
         }
 
         return true;
-*/
     }
 
     /**
-     * @return bool|int|null
+     * Save a payment. If $id is provided it updates the existing payment, otherwise creates a new one.
      *
-     * Legacy migration info:
+     * After saving it recalculates invoice amounts and flips invoice status to paid when appropriate.
      *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
+     * @param int|null $id
+     * @param array|null $db_array
      *
-     * @legacy-function save()
+     * @return int|null
+     *
+     * @throws Exception
      */
     public function save($id = null, $db_array = null)
     {
-/*
-        $db_array = ($db_array) ? $db_array : $this->db_array();
-        $this->load->model('invoices/invoice_amount');
+        $data = $db_array ?? [];
 
-        // Save the payment
-        $id = parent::save($id, $db_array);
-
-        $global_discount['item'] = $this->mdl_invoice_amounts->get_global_discount($db_array['invoice_id']);
-        // Recalculate invoice amounts
-        $this->mdl_invoice_amounts->calculate($db_array['invoice_id'], $global_discount);
-
-        // Set proper status for the invoice
-        $invoice = $this->db->where('invoice_id', $db_array['invoice_id'])->get('ip_invoice_amounts')->row();
-
-        if ($invoice == null) {
-            return false;
+        if (empty($data['invoice_id'])) {
+            throw new InvalidArgumentException('invoice_id is required when saving a payment.');
         }
 
-        // Calculate sum for payments
-        $paid  = (float) $invoice->invoice_paid;
-        $total = (float) $invoice->invoice_total;
+        DB::beginTransaction();
 
-        if ($paid >= $total) {
-            $this->db->where('invoice_id', $db_array['invoice_id']);
-            $this->db->set('invoice_status_id', 4);
-            $this->db->update('ip_invoices');
+        try {
+            if ($id !== null) {
+                $payment = Payment::query()->findOrFail($id);
+                $payment->fill($data);
+                $payment->save();
+                $savedId = $payment->payment_id;
+            } else {
+                $payment = Payment::create($data);
+                $savedId = $payment->payment_id;
+            }
+
+            $this->recalculateInvoiceAmounts((int) $data['invoice_id']);
+            DB::commit();
+
+            return $savedId;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception('Failed to save payment: ' . $e->getMessage());
         }
-
-        $global_discount['item'] = $this->mdl_invoice_amounts->get_global_discount($db_array['invoice_id']);
-        // Recalculate invoice amounts
-        $this->mdl_invoice_amounts->calculate($db_array['invoice_id'], $global_discount);
-
-        return $id;
-*/
     }
 
     /**
-     * Legacy migration info:
+     * Delete a payment and recalculate related invoice amounts/status.
      *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
+     * @param int|null $id
      *
-     * @legacy-function delete()
+     * @return bool
+     *
+     * @throws Exception
      */
     public function delete($id = null)
     {
-/*
-        // Get the invoice id before deleting payment
-        $this->db->select('invoice_id');
-        $this->db->where('payment_id', $id);
-
-        $invoice_id = $this->db->get('ip_payments')->row()->invoice_id;
-
-        // Delete the payment
-        parent::delete($id);
-
-        $this->load->model('invoices/invoice_amount');
-        $global_discount['item'] = $this->mdl_invoice_amounts->get_global_discount($invoice_id);
-        // Recalculate invoice amounts
-        $this->mdl_invoice_amounts->calculate($invoice_id, $global_discount);
-
-        // Change invoice status back to sent
-        $this->db->select('invoice_status_id');
-        $this->db->where('invoice_id', $invoice_id);
-
-        $invoice = $this->db->get('ip_invoices')->row();
-
-        if ($invoice->invoice_status_id == 4) {
-            $this->db->where('invoice_id', $invoice_id);
-            $this->db->set('invoice_status_id', 2);
-            $this->db->update('ip_invoices');
-        }
-
-        $this->load->helper('orphan');
-        delete_orphans();
-*/
-    }
-
-    /**
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function prep_form()
-     */
-    public function prep_form($id = null): bool
-    {
-/*
-        if ( ! parent::prep_form($id)) {
+        if ($id === null) {
             return false;
         }
 
-        if ( ! $id) {
-            parent::set_form_value('payment_date', date('Y-m-d'));
+        $payment = Payment::query()->find($id);
+        if (! $payment) {
+            return false;
         }
 
-        return true;
-*/
+        $invoiceId = (int) $payment->invoice_id;
+
+        DB::beginTransaction();
+
+        try {
+            $deleted = Payment::query()->where('payment_id', $id)->delete();
+            $this->recalculateInvoiceAmounts($invoiceId);
+            DB::commit();
+
+            return (bool) $deleted;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception('Failed to delete payment: ' . $e->getMessage());
+        }
     }
 
     /**
-     * @param $client_id
+     * Prepare form defaults. Returns true to indicate preparation succeeded.
      *
-     * @return $this
+     * @param int|null $id
      *
-     * Legacy migration info:
-     *
-     * @legacy-file application/modules/payments/models/Mdl_payment.php
-     *
-     * @legacy-function by_client()
+     * @return bool
      */
-    public function by_client($client_id)
+    public function prep_form($id = null): bool
     {
-/*
-        $this->filter_where('ip_clients.client_id', $client_id);
-
-        return $this;
-*/
+        return true;
     }
 
     /**
-     * Get the model class for this service.
+     * Scope convenience: filter payments by client id.
+     *
+     * @param int $clientId
+     *
+     * @return Builder
      */
+    public function by_client(int $clientId): Builder
+    {
+        return Payment::query()->where('client_id', $clientId);
+    }
+
     protected function getModelClass(): string
     {
         return Payment::class;
+    }
+
+    private function recalculateInvoiceAmounts(int $invoiceId): void
+    {
+        $paid = (float) DB::table('ip_payments')
+            ->where('invoice_id', $invoiceId)
+            ->sum('payment_amount');
+
+        $amountRow = DB::table('ip_invoice_amounts')
+            ->where('invoice_id', $invoiceId)
+            ->first();
+
+        $total = $amountRow ? (float) $amountRow->invoice_total : 0.0;
+        $balance = max(0.0, $total - $paid);
+
+        if ($amountRow) {
+            DB::table('ip_invoice_amounts')
+                ->where('invoice_id', $invoiceId)
+                ->update([
+                    'invoice_paid'    => $paid,
+                    'invoice_balance' => $balance,
+                ]);
+        }
+
+        if ($total > 0) {
+            $status = $paid >= $total ? 4 : 2;
+            DB::table('ip_invoices')
+                ->where('invoice_id', $invoiceId)
+                ->update(['invoice_status_id' => $status]);
+        }
     }
 }
