@@ -6,7 +6,6 @@ use DateInterval;
 use DateTime;
 use Modules\Core\Models\QuoteCustom;
 use Modules\Core\Support\SettingsHelper;
-use Modules\Core\Support\TranslationHelper;
 use Modules\Invoices\Models\InvoiceGroup;
 use Modules\Invoices\Services\InvoiceGroupService;
 use Modules\Quotes\Models\Quote;
@@ -37,36 +36,52 @@ class QuoteService
     {
         return [
             '1' => [
-                'label' => TranslationHelper::trans('draft'),
+                'label' => trans('draft'),
                 'class' => 'draft',
-                'href'  => 'quotes/status/draft',
+                'href'  => 'quotes.status.draft',
             ],
             '2' => [
-                'label' => TranslationHelper::trans('sent'),
+                'label' => trans('sent'),
                 'class' => 'sent',
-                'href'  => 'quotes/status/sent',
+                'href'  => 'quotes.status.sent',
             ],
             '3' => [
-                'label' => TranslationHelper::trans('viewed'),
+                'label' => trans('viewed'),
                 'class' => 'viewed',
-                'href'  => 'quotes/status/viewed',
+                'href'  => 'quotes.status.viewed',
             ],
             '4' => [
-                'label' => TranslationHelper::trans('approved'),
+                'label' => trans('approved'),
                 'class' => 'approved',
-                'href'  => 'quotes/status/approved',
+                'href'  => 'quotes.status.approved',
             ],
             '5' => [
-                'label' => TranslationHelper::trans('rejected'),
+                'label' => trans('rejected'),
                 'class' => 'rejected',
-                'href'  => 'quotes/status/rejected',
+                'href'  => 'quotes.status.rejected',
             ],
             '6' => [
-                'label' => TranslationHelper::trans('canceled'),
+                'label' => trans('canceled'),
                 'class' => 'canceled',
-                'href'  => 'quotes/status/canceled',
+                'href'  => 'quotes.status.canceled',
             ],
         ];
+    }
+
+    /**
+     * Get latest projects (ordered by descending ID).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/quotes/models/Mdl_quote.php
+     *
+     * @legacy-function get_latest()
+     */
+    public function getLatest(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Quote::query()->orderByDesc('quote_date_modified')->take(10)->get();
     }
 
     /**

@@ -26,28 +26,49 @@ class InvoiceService
         1 => [
             'label' => 'draft',
             'class' => 'draft',
-            'href'  => 'invoices/status/draft',
+            'href'  => 'invoices.status.draft',
         ],
         2 => [
             'label' => 'sent',
             'class' => 'sent',
-            'href'  => 'invoices/status/sent',
+            'href'  => 'invoices.status.sent',
         ],
         3 => [
             'label' => 'viewed',
             'class' => 'viewed',
-            'href'  => 'invoices/status/viewed',
+            'href'  => 'invoices.status.viewed',
         ],
         4 => [
             'label' => 'paid',
             'class' => 'paid',
-            'href'  => 'invoices/status/paid',
+            'href'  => 'invoices.status.paid',
         ],
     ];
 
     public function getStatuses(): array
     {
         return self::STATUSES;
+    }
+
+    /**
+     * Get latest projects (ordered by descending ID).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_invoice.php
+     *
+     * @legacy-function get_latest()
+     */
+    public function getLatest(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Invoice::query()->orderByDesc('invoice_date_modified')->take(10)->get();
+    }
+
+    public function getOverdueInvoices(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Invoice::query()->overdue()->take(10)->get();
     }
 
     public function getValidationRules(): array

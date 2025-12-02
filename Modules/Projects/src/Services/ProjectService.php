@@ -26,7 +26,7 @@ class ProjectService extends BaseService
     /**
      * Get latest projects (ordered by descending ID).
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Collection
      *
      * Legacy migration info:
      *
@@ -34,9 +34,9 @@ class ProjectService extends BaseService
      *
      * @legacy-function get_latest()
      */
-    public function getLatest()
+    public function getLatest(): \Illuminate\Database\Eloquent\Collection
     {
-        return Project::query()->orderByDesc('project_id');
+        return Project::query()->orderByDesc('project_id')->take(10)->get();
     }
 
     /**

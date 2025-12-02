@@ -514,6 +514,13 @@ if ( ! function_exists('format_currency')) {
     }
 }
 
+if ( ! function_exists('currency')) {
+    function currency($amount): string
+    {
+        return NumberHelper::format_currency($amount);
+    }
+}
+
 if ( ! function_exists('format_amount')) {
     function format_amount($amount = null)
     {

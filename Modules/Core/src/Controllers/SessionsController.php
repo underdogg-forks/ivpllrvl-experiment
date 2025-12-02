@@ -2,9 +2,12 @@
 
 namespace Modules\Core\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\SessionsService;
+use Modules\Core\Services\UserService;
 use Modules\Core\Support\SettingsHelper;
 use Modules\Core\Support\TranslationHelper;
 
@@ -21,11 +24,11 @@ class SessionsController
      * Initialize the SessionsController with dependency injection.
      *
      * @param SessionsService $sessionsService
-     * @param UsersService    $usersService
+     * @param UserService     $userService
      */
     public function __construct(
         protected SessionsService $sessionsService,
-        protected UsersService $usersService
+        protected UserService $userService
     ) {}
 
     /**
@@ -39,7 +42,7 @@ class SessionsController
      */
     public function index()
     {
-        redirect()->route('sessions/login');
+        redirect()->route('sessions.login');
     }
 
     /**
@@ -51,40 +54,45 @@ class SessionsController
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View a redirect response after form processing or the login view when displaying the form
+     * @return RedirectResponse|\Illuminate\View\View a redirect response after form processing or the login view when displaying the form
      *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function login
      */
-    public function login(Request $request)
+    public function login(Request $request): \Illuminate\View\View|RedirectResponse
     {
         $view_data = ['login_logo' => SettingsHelper::getSetting('login_logo')];
+
         if (request()->input('btn_login')) {
             DB::where('user_email', request()->input('email'));
             $query = DB::get('ip_users');
             $user  = $query->row();
             // Check if the user exists
+
             if (empty($user)) {
-                session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
-                redirect()->route('sessions/login');
-            } elseif ($user->user_active == 0) {
+                session()->flash('alert_error', trans('loginalert_user_not_found'));
+                redirect()->route('sessions.login');
+            } elseif ($user->user_active === 0) {
                 // Check if the user is marked as active (not implemented: Todo?)
-                session()->flash('alert_error', TranslationHelper::trans('loginalert_user_inactive'));
-                redirect()->route('sessions/login');
-            } elseif ($this->authenticate(request()->input('email'), request()->input('password'))) {
-                if (session('user_type') == 1) {
-                    redirect()->route('dashboard');
-                } elseif (session('user_type') == 2) {
-                    redirect()->route('guest');
+                session()->flash('alert_error', trans('loginalert_user_inactive'));
+                redirect()->route('sessions.login');
+            } elseif ($this->authenticate()) {
+                dd('temp');
+                // Redirect to the appropriate dashboard based on user type
+                if (session('user_type') === 1) {
+                    dd('yessss?');
+                    redirect()->route('dashboard.index');
+                } elseif (session('user_type') === 2) {
+                    redirect()->route('guest.index');
                 }
             } else {
-                session()->flash('alert_error', TranslationHelper::trans('loginalert_credentials_incorrect'));
-                redirect()->route('sessions/login');
+                session()->flash('alert_error', trans('loginalert_credentials_incorrect'));
+                redirect()->route('sessions.login');
             }
         }
 
-        return view('session_login', $view_data);
+        return view('core::users.session_login', $view_data);
     }
 
     /**
@@ -97,27 +105,27 @@ class SessionsController
      * @param string $email_address the user's email address used to identify the account
      * @param string $password      the plaintext password to verify for the account
      *
-     * @return bool `true` if authentication succeeds and the failure log is reset, `false` otherwise
+     * @return RedirectResponse `true` if authentication succeeds and the failure log is reset, `false` otherwise
      *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function authenticate
      */
-    public function authenticate($email_address, $password): bool
+    public function authenticate()
     {
+        $email_address = request()->input('email');
+        $password      = request()->input('password');
+
+        return redirect()->route('dashboard.index');
         //check if user is banned
-        $login_log = $this->loginLogCheck($email_address);
-        if (empty($login_log) || $login_log->log_count < 10) {
-            if ($this->sessionsService->auth($email_address, $password)) {
-                $this->loginLogReset($email_address);
+        //$login_log = $this->loginLogCheck($email_address);
+        //if (empty($login_log) || $login_log->log_count < 10) {
+        //return (bool) ($this->sessionsService->auth($email_address, $password));
+        //$this->loginLogReset($email_address);
 
-                return true;
-            }
-            //track failed attempt
-            $this->loginLogAddfailure($email_address);
-        }
-
-        return false;
+        //track failed attempt
+        //$this->loginLogAddfailure($email_address);
+        //}
     }
 
     /**
@@ -129,7 +137,7 @@ class SessionsController
      *
      * @legacy-function logout
      */
-    public function logout()
+    public function logout(): void
     {
         session()->flush();
         redirect()->route('sessions/login');
@@ -152,7 +160,7 @@ class SessionsController
      *
      * @legacy-function passwordreset
      */
-    public function passwordreset(Request $request, $token = null)
+    public function passwordreset(Request $request, $token = null): mixed
     {
         // Check if a token was provided
         if ($token) {
@@ -193,7 +201,7 @@ class SessionsController
                 redirect()->back();
             }
             // Check for the reset token
-            $user = $this->usersService->getById($user_id);
+            $user = $this->userService->getById($user_id);
             if (empty($user)) {
                 session()->flash('alert_error', TranslationHelper::trans('loginalert_user_not_found'));
                 redirect()->back();
@@ -203,7 +211,7 @@ class SessionsController
                 redirect()->back();
             }
             // Call the save_change_password() function from users model
-            $this->usersService->saveChangePassword($user_id, $new_password);
+            $this->userService->saveChangePassword($user_id, $new_password);
             // Update the user and set him active again
             $db_array = ['user_passwordreset_token' => ''];
             //delete failed attempts from login_log table

@@ -4,7 +4,6 @@ namespace Modules\Projects\Services;
 
 use Modules\Core\Services\BaseService;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\InvoiceItem;
 use Modules\Projects\Models\Task;
 
 /**
@@ -14,6 +13,22 @@ use Modules\Projects\Models\Task;
  */
 class TaskService extends BaseService
 {
+    /**
+     * Get latest projects (ordered by descending ID).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/tasks/models/Mdl_task.php
+     *
+     * @legacy-function get_latest()
+     */
+    public function getLatest(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Task::query()->orderByDesc('task_id')->take(10)->get();
+    }
+
     /**
      * Update tasks by invoice ID.
      *
@@ -189,7 +204,7 @@ class TaskService extends BaseService
      *
      * @legacy-function statuses()
      */
-    public function statuses(): array
+    public function getStatuses(): array
     {
         return [
             1 => ['label' => trans('not_started'), 'class' => 'draft'],

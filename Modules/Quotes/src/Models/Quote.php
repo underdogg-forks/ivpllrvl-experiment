@@ -3,6 +3,8 @@
 namespace Modules\Quotes\Models;
 
 use Modules\Core\Models\BaseModel;
+use Modules\Core\Models\User;
+use Modules\Invoices\Models\InvoiceGroup;
 
 /**
  * Quote Model.
@@ -82,7 +84,7 @@ class Quote extends BaseModel
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Users\Models\User', 'user_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     /**
@@ -90,7 +92,7 @@ class Quote extends BaseModel
      */
     public function invoiceGroup()
     {
-        return $this->belongsTo('Modules\Invoices\Models\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
+        return $this->belongsTo(InvoiceGroup::class, 'invoice_group_id', 'invoice_group_id');
     }
 
     /**

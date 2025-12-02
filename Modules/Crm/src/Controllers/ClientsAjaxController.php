@@ -87,7 +87,7 @@ class ClientsAjaxController
     public function getLatest(): void
     {
         // Load the model & helper
-        $this->load->model('clients/client');
+        //$this->load->model('clients/client');
 
         $response = [];
         $clients  = Client::query()

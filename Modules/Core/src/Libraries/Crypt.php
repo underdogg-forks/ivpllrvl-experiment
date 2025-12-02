@@ -28,7 +28,7 @@ class Crypt
     {
         $new_hash = crypt($password, $hash);
 
-        return $hash == $new_hash;
+        return $hash === $new_hash;
     }
 
     /**

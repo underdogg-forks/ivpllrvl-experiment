@@ -3,6 +3,7 @@
 use Illuminate\Support\Str;
 
 return [
+
     /*
     |--------------------------------------------------------------------------
     | Default Session Driver
@@ -96,7 +97,7 @@ return [
     | define the cache store which should be used to store the session data
     | between requests. This must match one of your defined cache stores.
     |
-    | Affects: "dynamodb", "memcached", "redis"
+    | Affects: "apc", "dynamodb", "memcached", "redis"
     |
     */
 
@@ -128,7 +129,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug((string) env('APP_NAME', 'laravel')) . '-session'
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
     ),
 
     /*
@@ -212,4 +213,5 @@ return [
     */
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
+
 ];

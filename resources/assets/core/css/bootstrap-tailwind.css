@@ -1,0 +1,344 @@
+/**
+ * Bootstrap-compatible classes using Tailwind CSS v4
+ *
+ * This file provides Bootstrap 3 class names but implements them using Tailwind utilities.
+ * This allows views to keep using Bootstrap classes while the actual styling comes from Tailwind.
+ */
+
+@import "tailwindcss";
+
+@layer components {
+    /* ================================
+     * BUTTONS
+     * ================================ */
+    .btn {
+        @apply inline-flex items-center justify-center cursor-pointer rounded border transition-colors duration-150 ease-in-out;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        border-width: 1px;
+        border-style: solid;
+    }
+
+    .btn-primary {
+        background-color: #337ab7;
+        color: white;
+        border-color: #2e6da4;
+    }
+
+    .btn-primary:hover {
+        background-color: #286090;
+        border-color: #204d74;
+    }
+
+    .btn-default {
+        background-color: white;
+        color: #333;
+        border-color: #ccc;
+    }
+
+    .btn-default:hover {
+        background-color: #e6e6e6;
+        border-color: #adadad;
+    }
+
+    .btn-success {
+        background-color: #5cb85c;
+        color: white;
+        border-color: #4cae4c;
+    }
+
+    .btn-success:hover {
+        background-color: #449d44;
+        border-color: #398439;
+    }
+
+    .btn-info {
+        background-color: #5bc0de;
+        color: white;
+        border-color: #46b8da;
+    }
+
+    .btn-info:hover {
+        background-color: #31b0d5;
+        border-color: #269abc;
+    }
+
+    .btn-warning {
+        background-color: #f0ad4e;
+        color: white;
+        border-color: #eea236;
+    }
+
+    .btn-warning:hover {
+        background-color: #ec971f;
+        border-color: #d58512;
+    }
+
+    .btn-danger {
+        background-color: #d9534f;
+        color: white;
+        border-color: #d43f3a;
+    }
+
+    .btn-danger:hover {
+        background-color: #c9302c;
+        border-color: #ac2925;
+    }
+
+    /* Button sizes */
+    .btn-xs {
+        padding: 0.125rem 0.5rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.625rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+
+    .btn-lg {
+        padding: 0.625rem 1rem;
+        font-size: 1.125rem;
+        line-height: 1.5rem;
+    }
+
+    .btn-block {
+        @apply w-full block;
+    }
+
+    /* ================================
+     * FORMS
+     * ================================ */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        @apply block w-full rounded border;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.25;
+        color: #555;
+        background-color: white;
+        border-color: #ccc;
+        transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #66afe9;
+        outline: none;
+        box-shadow: 0 0 8px rgba(102, 175, 233, 0.6), inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    .input-sm {
+        height: 30px;
+        padding: 0.25rem 0.625rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+
+    .input-lg {
+        height: 46px;
+        padding: 0.625rem 1rem;
+        font-size: 1.125rem;
+        line-height: 1.5rem;
+    }
+
+    .input-group {
+        @apply relative flex w-full;
+        align-items: stretch;
+    }
+
+    .input-group-addon {
+        @apply text-center rounded border;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.25;
+        color: #555;
+        background-color: #eee;
+        border-color: #ccc;
+        white-space: nowrap;
+    }
+
+    label {
+        @apply inline-block max-w-full mb-1 font-normal;
+    }
+
+    /* ================================
+     * TABLES
+     * ================================ */
+    .table {
+        @apply w-full border-collapse;
+        margin-bottom: 1.25rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        line-height: 1.25;
+        border-top: 1px solid #ddd;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid #ddd;
+        vertical-align: bottom;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .table-bordered {
+        border: 1px solid #ddd;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #ddd;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    /* ================================
+     * ALERTS
+     * ================================ */
+    .alert {
+        @apply rounded border;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.25rem;
+        border-width: 1px;
+    }
+
+    .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+
+    .alert-info {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+
+    .alert-warning {
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+    }
+
+    .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+
+    /* ================================
+     * PANELS
+     * ================================ */
+    .panel {
+        @apply rounded border bg-white;
+        margin-bottom: 1.25rem;
+        border-width: 1px;
+        border-color: #ddd;
+    }
+
+    .panel-body {
+        padding: 1rem;
+    }
+
+    .panel-heading {
+        padding: 0.625rem 1rem;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .panel-default > .panel-heading {
+        color: #333;
+        background-color: #f5f5f5;
+        border-color: #ddd;
+    }
+
+    /* ================================
+     * UTILITIES
+     * ================================ */
+    .pull-left {
+        float: left;
+    }
+
+    .pull-right {
+        float: right;
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-muted {
+        color: #777;
+    }
+
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* ================================
+     * PAGINATION
+     * ================================ */
+    .pagination {
+        @apply flex list-none rounded;
+        padding-left: 0;
+        margin-bottom: 1.25rem;
+    }
+
+    .pagination li a,
+    .pagination li span {
+        @apply relative block text-center bg-white border border-gray-300;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.25;
+        color: #337ab7;
+        text-decoration: none;
+        margin-left: -1px;
+    }
+
+    .pagination li:first-child a,
+    .pagination li:first-child span {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        margin-left: 0;
+    }
+
+    .pagination li:last-child a,
+    .pagination li:last-child span {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+    }
+
+    .pagination li a:hover {
+        background-color: #eee;
+        border-color: #ddd;
+    }
+
+    .pagination .active a {
+        z-index: 10;
+        color: white;
+        background-color: #337ab7;
+        border-color: #337ab7;
+        cursor: default;
+    }
+}

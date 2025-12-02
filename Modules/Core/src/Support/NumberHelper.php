@@ -28,11 +28,11 @@ class NumberHelper
         $decimals                  = $decimal_point ? (int) (Setting::getValue('tax_rate_decimal_places') ?? 2) : 0;
         $amount                    = (float) (is_numeric($amount) ? $amount : standardize_amount($amount));
 
-        if ($currency_symbol_placement == 'before') {
+        if ($currency_symbol_placement === 'before') {
             return $currency_symbol . number_format($amount, $decimals, $decimal_point, $thousands_separator);
         }
 
-        if ($currency_symbol_placement == 'afterspace') {
+        if ($currency_symbol_placement === 'afterspace') {
             return number_format($amount, $decimals, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
         }
 

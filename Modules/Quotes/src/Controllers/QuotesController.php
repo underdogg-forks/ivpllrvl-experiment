@@ -10,7 +10,6 @@ use Modules\Core\Support\PdfHelper;
 use Modules\Core\Support\TranslationHelper;
 use Modules\Products\Services\TaxRateService;
 use Modules\Products\Services\UnitService;
-use Modules\Quotes\Models\Quote;
 use Modules\Quotes\Services\QuoteAmountService;
 use Modules\Quotes\Services\QuoteItemService;
 use Modules\Quotes\Services\QuoteService;
@@ -61,11 +60,11 @@ class QuotesController
      *
      * @legacy-line 38
      */
-    public function status(string $status = 'all', int $page = 0)
+    public function status(string $status = 'all', int $page = 0): \Illuminate\View\View
     {
         $quotes = $this->quoteService->getAllWithRelations(['client', 'user'], $status, 15);
 
-        return view('quotes::index', [
+        return view('quotes::quotes.index', [
             'quotes'             => $quotes,
             'status'             => $status,
             'filter_display'     => true,
@@ -186,7 +185,7 @@ class QuotesController
      *
      * @legacy-line 201
      */
-    public function generatePdf(int $quote_id, bool $stream = true, ?string $quote_template = null)
+    public function generatePdf(int $quote_id, bool $stream = true, ?string $quote_template = null): mixed
     {
         // Mark quote as sent if configured
         if (config('invoiceplane.mark_quotes_sent_pdf', false)) {

@@ -300,14 +300,14 @@ class CronControllerTest extends TestCase
     }
 
     /**
-     * Test recur method logs debug information when IP_DEBUG is enabled.
+     * Test recur method logs debug information when config('app.debug') is enabled.
      *
      * Verifies debug logging functionality
      */
     #[Test]
     public function it_logs_debug_information_when_debug_mode_is_enabled(): void
     {
-        /* Arrange - would enable IP_DEBUG */
+        /* Arrange - would enable config('app.debug') */
         /* Act - would process recurring invoices */
         /* Assert - would verify debug logs were created */
 

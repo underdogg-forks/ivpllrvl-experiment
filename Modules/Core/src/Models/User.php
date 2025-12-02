@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Models;
 
+use Illuminate\Support\Str;
+
 /**
  * User Model.
  *
@@ -150,5 +152,13 @@ class User extends BaseModel
     public function scopeAdmin($query)
     {
         return $query->where('user_type', 1);
+    }
+
+    public function initials(): string
+    {
+        return Str::of($this->name)
+            ->explode(' ')
+            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->implode('');
     }
 }

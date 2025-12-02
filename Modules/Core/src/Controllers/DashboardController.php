@@ -52,13 +52,13 @@ class DashboardController
         $quote_overview_period   = SettingsHelper::getSetting('quote_overview_period');
         $invoice_overview_period = SettingsHelper::getSetting('invoice_overview_period');
 
-        return view('core::dashboard_index', [
+        return view('core::dashboard.index', [
             'invoice_status_totals' => $this->invoiceAmountService->getStatusTotals($invoice_overview_period),
             'quote_status_totals'   => $this->quoteAmountService->getStatusTotals($quote_overview_period),
             'invoice_status_period' => str_replace('-', '_', $invoice_overview_period),
             'quote_status_period'   => str_replace('-', '_', $quote_overview_period),
-            'invoices'              => $this->invoiceService->getLatest(10),
-            'quotes'                => $this->quoteService->getLatest(10),
+            'invoices'              => $this->invoiceService->getLatest(),
+            'quotes'                => $this->quoteService->getLatest(),
             'invoice_statuses'      => $this->invoiceService->getStatuses(),
             'quote_statuses'        => $this->quoteService->getStatuses(),
             'overdue_invoices'      => $this->invoiceService->getOverdueInvoices(),

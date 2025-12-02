@@ -117,8 +117,8 @@ class EchoHelper
      */
     public static function _theme_asset($asset): void
     {
-        $asset = IP_DEBUG ? strtr($asset, ['.min.' => '.']) : $asset;
-        echo base_url() . 'assets/' . get_setting('system_theme', 'invoiceplane');
+        $asset = config('app.debug') ? strtr($asset, ['.min.' => '.']) : $asset;
+        echo config('app.url') . 'assets/' . get_setting('system_theme', 'invoiceplane');
         echo '/' . $asset . '?v=' . get_setting('current_version');
     }
 
@@ -133,7 +133,7 @@ class EchoHelper
      */
     public static function _core_asset($asset): void
     {
-        $asset = IP_DEBUG ? strtr($asset, ['.min.' => '.']) : $asset;
-        echo base_url() . 'assets/core/' . $asset . '?v=' . get_setting('current_version');
+        $asset = config('app.debug') ? strtr($asset, ['.min.' => '.']) : $asset;
+        echo config('app.url') . 'assets/core/' . $asset . '?v=' . get_setting('current_version');
     }
 }

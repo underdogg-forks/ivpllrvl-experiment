@@ -287,8 +287,9 @@ class InvoiceAmountService
         }
 
         foreach ($results as $result) {
-            $resultArray = (array) $result;
-            $statusId    = $resultArray['invoice_status_id'];
+            $resultArray = $result->toArray();
+
+            $statusId = $resultArray['invoice_status_id'];
             if (isset($return[$statusId])) {
                 $return[$statusId] = array_merge($return[$statusId], $resultArray);
             }

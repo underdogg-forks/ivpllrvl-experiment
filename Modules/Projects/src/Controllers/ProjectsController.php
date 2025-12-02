@@ -87,8 +87,10 @@ class ProjectsController
      *
      * @legacy-function view
      */
-    public function view(int $projectId): \Illuminate\View\View
+    public function view(): \Illuminate\View\View
     {
+        $projectId = request()->get('id');
+
         $project = $this->projectService->find($projectId);
 
         // Early return with 404 if not found

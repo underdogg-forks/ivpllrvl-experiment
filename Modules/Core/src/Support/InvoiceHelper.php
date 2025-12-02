@@ -19,7 +19,7 @@ class InvoiceHelper
         // TODO: Migrate remaining CodeIgniter dependencies to Laravel
 
         if ($bridge->settings()->setting('invoice_logo')) {
-            return '<img src="' . base_url() . 'uploads/' . $bridge->settings()->setting('invoice_logo') . '">';
+            return '<img src="' . config('app.url') . 'uploads/' . $bridge->settings()->setting('invoice_logo') . '">';
         }
 
         return '';

@@ -12,7 +12,7 @@
             }
             var curr_components = curr.split(".");
             var check_components = check.split(".");
-            
+
             var len = Math.min(curr_components.length, check_components.length);
             for (var i = 0; i < len; i++) {
                 // curr bigger than check
@@ -40,7 +40,7 @@
             'url': 'https://ids.invoiceplane.com/updatecheck?cv=' + ip_version,
             'dataType': 'json',
             success: function(data) {
-                <?php echo IP_DEBUG ? 'console.log(data);' : ''; ?>
+                <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
                 var updatecheck = data.current_version;
                 // Compare each versions and replace the placeholder with a download button
                 // or info label after 2 seconds
@@ -61,7 +61,7 @@
                     'url': 'https://ids.invoiceplane.org/updatecheck?cv=' + ip_version,
                     'dataType': 'json',
                     success: function(data) {
-                        <?php echo IP_DEBUG ? 'console.log(data);' : ''; ?>
+                        <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
                         var updatecheck = data.current_version;
                         // Compare each versions and replace the placeholder with a download button
                         // or info label after 2 seconds
@@ -78,7 +78,7 @@
                         }, checktime);
                     },
                     error: function(data) {
-                        <?php echo IP_DEBUG ? 'console.log(data);' : ''; ?>
+                        <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
                         $('#updatecheck-loading').addClass('hidden');
                         $('#updatecheck-failed').removeClass('hidden');
                     },
@@ -90,7 +90,7 @@
             'url': 'https://ids.invoiceplane.com/get_news',
             'dataType': 'json',
             'success': function(data) {
-                <?php echo IP_DEBUG ? 'console.log(data);' : ''; ?>
+                <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
                 setTimeout(function() {
                     $('#ipnews-loading').addClass('hidden');
                     data.forEach(function(news) {
@@ -109,7 +109,7 @@
                     'url': 'https://ids.invoiceplane.org/get_news',
                     'dataType': 'json',
                     'success': function(data) {
-                        <?php echo IP_DEBUG ? 'console.log(data);' : ''; ?>
+                        <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
                         setTimeout(function() {
                             $('#ipnews-loading').addClass('hidden');
                             data.forEach(function(news) {
@@ -124,7 +124,7 @@
                         }, checktime);
                     },
                     'error': function(data) {
-                        <?php echo IP_DEBUG ? 'console.log(data);' : ''; ?>
+                        <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
                         $('#ipnews-loading').addClass('hidden');
                         $('#ipnews-failed').removeClass('hidden');
                     },

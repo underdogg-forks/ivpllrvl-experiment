@@ -3,6 +3,7 @@
 namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
+use Modules\Core\Models\User;
 
 /**
  * Invoice Model.
@@ -82,7 +83,7 @@ class Invoice extends BaseModel
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Users\Models\User', 'user_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     /**
@@ -90,7 +91,7 @@ class Invoice extends BaseModel
      */
     public function invoiceGroup()
     {
-        return $this->belongsTo('Modules\Invoices\Models\InvoiceGroup', 'invoice_group_id', 'invoice_group_id');
+        return $this->belongsTo(InvoiceGroup::class, 'invoice_group_id', 'invoice_group_id');
     }
 
     /**
@@ -193,7 +194,7 @@ class Invoice extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeOverdue($query)
+    public function scopeOverdue($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereNotIn('invoice_status_id', [1, 4])
             ->whereRaw('DATEDIFF(NOW(), invoice_date_due) > 0');
