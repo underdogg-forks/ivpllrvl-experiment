@@ -243,7 +243,7 @@ echo $legacy_calculation ? $modal_add_invoice_tax : ''; // Legacy calculation ha
 ?>
 <div id="headerbar">
     <h1 class="headerbar-title">
-        <span data-toggle="tooltip" data-placement="bottom" title="<?php _trans('invoicing'); ?>: <?php _htmlsc(PHP_EOL . format_user($invoice->user_id)); ?>">
+        <span data-toggle="tooltip" data-placement="bottom" title="{{ trans('invoicing') }}: <?php _htmlsc(PHP_EOL . format_user($invoice->user_id)); ?>">
             <?php echo trans('invoice') . ' ' . ($invoice->invoice_number ? '#' . $invoice->invoice_number : trans('id') . ': ' . $invoice->invoice_id); ?>
         </span>
 <?php
@@ -262,7 +262,7 @@ if ($change_user) {
 
         <span id="invoice_change_user" class="fa fa-fw fa-edit text-<?php echo $its_mine ? 'muted' : 'danger'; ?> cursor-pointer"
               data-toggle="tooltip" data-placement="bottom"
-              title="<?php _trans('change_user'); ?>"></span>
+              title="{{ trans('change_user') }}"></span>
 <?php
         } // End if draft
 } // End if change_user
@@ -273,7 +273,7 @@ if ($change_user) {
 
         <div class="options btn-group btn-group-sm">
             <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-caret-down no-margin"></i> <?php _trans('options'); ?>
+                <i class="fa fa-caret-down no-margin"></i> {{ trans('options') }}
             </a>
             <ul class="dropdown-menu">
 <?php
@@ -281,7 +281,7 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
     ?>
                 <li>
                     <a href="#add-invoice-tax" data-toggle="modal">
-                        <i class="fa fa-plus fa-margin"></i> <?php _trans('add_invoice_tax'); ?>
+                        <i class="fa fa-plus fa-margin"></i> {{ trans('add_invoice_tax') }}
                     </a>
                 </li>
 <?php
@@ -290,7 +290,7 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
                 <li>
                     <a href="#" id="btn_create_credit"
                        data-invoice-id="<?php echo $invoice_id; ?>">
-                        <i class="fa fa-minus fa-margin"></i> <?php _trans('create_credit_invoice'); ?>
+                        <i class="fa fa-minus fa-margin"></i> {{ trans('create_credit_invoice') }}
                     </a>
                 </li>
 <?php
@@ -303,7 +303,7 @@ if ($invoice->invoice_balance != 0) {
                        data-invoice-payment-method="<?php echo $invoice->payment_method; ?>"
                        data-payment-cf-exist="<?php echo $payment_cf_exist ?? ''; ?>">
                         <i class="fa fa-credit-card fa-margin"></i>
-                        <?php _trans('enter_payment'); ?>
+                        {{ trans('enter_payment') }}
                     </a>
                 </li>
 <?php
@@ -313,7 +313,7 @@ if ($invoice->invoice_balance != 0) {
                     <a href="#" id="btn_generate_pdf"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-print fa-margin"></i>
-                        <?php _trans('download_pdf'); ?>
+                        {{ trans('download_pdf') }}
                     </a>
                 </li>
 <?php
@@ -324,7 +324,7 @@ if ($einvoice->user) {
                     <a href="#" id="btn_generate_xml"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-file-code-o fa-margin"></i>
-                        <?php _trans('download_xml'); ?>
+                        {{ trans('download_xml') }}
                     </a>
                 </li>
 <?php
@@ -333,7 +333,7 @@ if ($einvoice->user) {
                 <li>
                     <a href="<?php echo site_url('mailer/invoice/' . $invoice->invoice_id); ?>">
                         <i class="fa fa-send fa-margin"></i>
-                        <?php _trans('send_email'); ?>
+                        {{ trans('send_email') }}
                     </a>
                 </li>
                 <li class="divider"></li>
@@ -341,7 +341,7 @@ if ($einvoice->user) {
                     <a href="#" id="btn_create_recurring"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-refresh fa-margin"></i>
-                        <?php _trans('create_recurring'); ?>
+                        {{ trans('create_recurring') }}
                     </a>
                 </li>
                 <li>
@@ -349,7 +349,7 @@ if ($einvoice->user) {
                        data-invoice-id="<?php echo $invoice_id; ?>"
                        data-client-id="<?php echo $invoice->client_id; ?>">
                         <i class="fa fa-copy fa-margin"></i>
-                        <?php _trans('copy_invoice'); ?>
+                        {{ trans('copy_invoice') }}
                     </a>
                 </li>
 <?php
@@ -358,7 +358,7 @@ if ($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_del
                 <li>
                     <a href="#delete-invoice" data-toggle="modal">
                         <i class="fa fa-trash-o fa-margin"></i>
-                        <?php _trans('delete'); ?>
+                        {{ trans('delete') }}
                     </a>
                 </li>
 <?php
@@ -371,7 +371,7 @@ if ($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_del
 if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
     ?>
         <a href="#" class="btn btn-sm btn-success ajax-loader" id="btn_save_invoice">
-            <i class="fa fa-check"></i> <?php _trans('save'); ?>
+            <i class="fa fa-check"></i> {{ trans('save') }}
         </a>
 <?php
 } //End if
@@ -383,14 +383,14 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 if ($invoice->invoice_is_recurring) {
     ?>
         <span class="label label-info">
-            <i class="fa fa-refresh"></i> <?php _trans('recurring'); ?>
+            <i class="fa fa-refresh"></i> {{ trans('recurring') }}
         </span>
 <?php
 }
 if ($invoice->is_read_only == 1) {
     ?>
         <span class="label label-danger">
-            <i class="fa fa-read-only"></i> <?php _trans('read_only'); ?>
+            <i class="fa fa-read-only"></i> {{ trans('read_only') }}
         </span>
 <?php
 }
@@ -416,7 +416,7 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
     ?>
                         <span id="invoice_change_client" class="fa fa-edit cursor-pointer small"
                               data-toggle="tooltip" data-placement="bottom"
-                              title="<?php _trans('change_client'); ?>"></span>
+                              title="{{ trans('change_client') }}"></span>
 <?php
 } // End if
 ?>
@@ -429,10 +429,10 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
                     <hr>
 <?php endif; ?>
 <?php if ($invoice->client_phone) : ?>
-                    <div><?php _trans('phone'); ?>:&nbsp;<?php _htmlsc($invoice->client_phone); ?></div>
+                    <div>{{ trans('phone') }}:&nbsp;<?php _htmlsc($invoice->client_phone); ?></div>
 <?php endif; ?>
 <?php if ($invoice->client_email) : ?>
-                    <div><?php _trans('email'); ?>:&nbsp;<?php _auto_link($invoice->client_email); ?></div>
+                    <div>{{ trans('email') }}:&nbsp;<?php _auto_link($invoice->client_email); ?></div>
 <?php endif; ?>
 
                 </div>
@@ -488,12 +488,12 @@ if ($einvoice->name) {
 <?php
 }
 ?>
-                                    <label for="invoice_number"><?php _trans('invoice'); ?> #</label>
+                                    <label for="invoice_number">{{ trans('invoice') }} #</label>
                                     <input type="text" id="invoice_number" class="form-control"
 <?php if ($invoice->invoice_number) : ?>
                                            value="<?php echo $invoice->invoice_number; ?>"
 <?php else : ?>
-                                           placeholder="<?php _trans('not_set'); ?>"
+                                           placeholder="{{ trans('not_set') }}"
 <?php endif; ?>
                                            <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>
                                     >
@@ -501,7 +501,7 @@ if ($einvoice->name) {
                                 </div>
 
                                 <div class="invoice-properties has-feedback">
-                                    <label><?php _trans('date'); ?></label>
+                                    <label>{{ trans('date') }}</label>
 
                                     <div class="input-group">
                                         <input name="invoice_date_created" id="invoice_date_created"
@@ -513,7 +513,7 @@ if ($einvoice->name) {
                                 </div>
 
                                 <div class="invoice-properties has-feedback">
-                                    <label><?php _trans('due_date'); ?></label>
+                                    <label>{{ trans('due_date') }}</label>
 
                                     <div class="input-group">
                                         <input name="invoice_date_due" id="invoice_date_due"
@@ -552,12 +552,12 @@ foreach ($invoice_statuses as $key => $status) {
                                 </div>
 
                                 <div class="invoice-properties">
-                                    <label><?php _trans('payment_method'); ?></label>
+                                    <label>{{ trans('payment_method') }}</label>
                                     <select name="payment_method" id="payment_method"
                                             class="form-control simple-select"
                                             <?php echo ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : ''; ?>
                                     >
-                                        <option value="0"><?php _trans('select_payment_method'); ?></option>
+                                        <option value="0">{{ trans('select_payment_method') }}</option>
 <?php
 foreach ($payment_methods as $payment_method) {
     ?>
@@ -572,7 +572,7 @@ foreach ($payment_methods as $payment_method) {
                                 </div>
 
                                 <div class="invoice-properties">
-                                    <label><?php _trans('invoice_password'); ?></label>
+                                    <label>{{ trans('invoice_password') }}</label>
                                     <input type="text" id="invoice_password" class="form-control"
                                            value="<?php _htmlsc($invoice->invoice_password); ?>"
                                            <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>>
@@ -598,7 +598,7 @@ if ($invoice->invoice_status_id != 1) {
     ?>
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <label for="invoice-guest-url"><?php _trans('guest_url'); ?></label>
+                                    <label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                                     <div class="input-group">
                                         <input type="text" id="invoice-guest-url" readonly class="form-control"
                                                value="<?php echo site_url('guest/view/invoice/' . $invoice->invoice_url_key) ?>">
@@ -630,7 +630,7 @@ if ($invoice->invoice_status_id != 1) {
 
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading">
-                            <?php _trans('invoice_terms'); ?>
+                            {{ trans('invoice_terms') }}
                         </div>
                         <div class="panel-body">
                             <textarea id="invoice_terms" name="invoice_terms" class="form-control" rows="3"
@@ -658,7 +658,7 @@ if ($default_custom) {
                     <hr>
 
                     <div class="panel panel-default">
-                        <div class="panel-heading"><?php _trans('custom_fields'); ?></div>
+                        <div class="panel-heading">{{ trans('custom_fields') }}</div>
                         <div class="panel-body">
                             <div class="row">
 <?php

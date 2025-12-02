@@ -3,7 +3,7 @@
     <?php _csrf_field(); ?>
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?php _trans('payment_method_form'); ?></h1>
+        <h1 class="headerbar-title">{{ trans('payment_method_form') }}</h1>
         <?php $this->layout->load_view('layout/header_buttons'); ?>
     </div>
 
@@ -22,7 +22,7 @@
         <div class="form-group">
             <div class="col-xs-12 col-sm-2 text-right text-left-xs">
                 <label for="payment_method_name" class="control-label">
-                    <?php _trans('payment_method'); ?>:
+                    {{ trans('payment_method') }}:
                 </label>
             </div>
             <div class="col-xs-12 col-sm-6">

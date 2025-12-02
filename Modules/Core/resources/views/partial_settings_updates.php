@@ -138,7 +138,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <?php _trans('updatecheck'); ?>
+            {{ trans('updatecheck') }}
         </div>
         <div class="panel-body">
 
@@ -147,19 +147,19 @@
             </div>
             <div id="updatecheck-results">
                 <div id="updatecheck-loading" class="btn btn-default btn-sm disabled">
-                    <i class="fa fa-circle-o-notch fa-spin"></i> <?php _trans('checking_for_updates'); ?>
+                    <i class="fa fa-circle-o-notch fa-spin"></i> {{ trans('checking_for_updates') }}
                 </div>
 
                 <div id="updatecheck-no-updates" class="btn btn-default btn-sm disabled hidden">
-                    <?php _trans('no_updates_available'); ?>
+                    {{ trans('no_updates_available') }}
                 </div>
 
                 <div id="updatecheck-failed" class="btn btn-danger btn-sm disabled hidden">
-                    <?php _trans('updatecheck_failed'); ?>
+                    {{ trans('updatecheck_failed') }}
                 </div>
 
                 <a href="" id="updatecheck-updates-available" class="btn btn-success btn-sm hidden" target="_blank">
-                    <?php _trans('updates_available'); ?>
+                    {{ trans('updates_available') }}
                 </a>
             </div>
 
@@ -168,13 +168,13 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <?php _trans('invoiceplane_news'); ?>
+            {{ trans('invoiceplane_news') }}
         </div>
         <div class="panel-body">
 
             <div id="ipnews-results">
                 <div id="ipnews-loading" class="btn btn-default btn-sm disabled">
-                    <i class="fa fa-circle-o-notch fa-spin"></i> <?php _trans('checking_for_news'); ?>
+                    <i class="fa fa-circle-o-notch fa-spin"></i> {{ trans('checking_for_news') }}
                 </div>
 
                 <div id="ipnews-container"></div>

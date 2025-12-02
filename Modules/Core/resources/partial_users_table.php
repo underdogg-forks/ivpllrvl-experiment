@@ -3,10 +3,10 @@
 
             <thead>
             <tr>
-                <th><?php _trans('name'); ?></th>
-                <th><?php _trans('user_type'); ?></th>
-                <th><?php _trans('email_address'); ?></th>
-                <th><?php _trans('options'); ?></th>
+                <th>{{ trans('name') }}</th>
+                <th>{{ trans('user_type') }}</th>
+                <th>{{ trans('email_address') }}</th>
+                <th>{{ trans('options') }}</th>
             </tr>
             </thead>
 
@@ -25,19 +25,19 @@ foreach ($users as $user) {
             ?>
                         <a href="<?php echo site_url('user_clients/user/' . $user->user_id); ?>"
                            class="btn btn-default">
-                            <i class="fa fa-list fa-margin"></i> <?php _trans('assigned_clients'); ?>
+                            <i class="fa fa-list fa-margin"></i> {{ trans('assigned_clients') }}
                         </a>
 <?php
         } // Endif
     ?>
                             <a class="btn btn-default dropdown-toggle"
                                data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="<?php echo site_url('users/form/' . $user->user_id); ?>">
-                                        <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                        <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                     </a>
                                 </li>
 <?php
@@ -48,8 +48,8 @@ foreach ($users as $user) {
                                               method="POST">
                                             <?php _csrf_field(); ?>
                                             <button type="submit" class="dropdown-button"
-                                                    onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                                                <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                                    onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                                                <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                             </button>
                                         </form>
                                     </li>
@@ -62,7 +62,7 @@ foreach ($users as $user) {
                 </tr>
 <?php
 } // End foreach
-                ?>
+?>
             </tbody>
         </table>
     </div>

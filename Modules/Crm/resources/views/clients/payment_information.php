@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 
 <!--[if lt IE 7]>
-<html class="no-js ie6 oldie" lang="<?php _trans('cldr'); ?>"> <![endif]-->
+<html class="no-js ie6 oldie" lang="{{ trans('cldr') }}"> <![endif]-->
 <!--[if IE 7]>
-<html class="no-js ie7 oldie" lang="<?php _trans('cldr'); ?>"> <![endif]-->
+<html class="no-js ie7 oldie" lang="{{ trans('cldr') }}"> <![endif]-->
 <!--[if IE 8]>
-<html class="no-js ie8 oldie" lang="<?php _trans('cldr'); ?>"> <![endif]-->
+<html class="no-js ie8 oldie" lang="{{ trans('cldr') }}"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="<?php _trans('cldr'); ?>"> <!--<![endif]-->
+<html class="no-js" lang="{{ trans('cldr') }}"> <!--<![endif]-->
 
 <head>
     <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?></title>
@@ -43,13 +43,13 @@
     <div class="container">
 
         <div class="navbar-brand">
-            <?php _trans('online_payment_for_invoice'); ?> #<?php echo $invoice->invoice_number; ?>
+            {{ trans('online_payment_for_invoice') }} #<?php echo $invoice->invoice_number; ?>
         </div>
 
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <a target="_blank" href="<?php echo site_url('guest/view/generate_invoice_pdf/' . $invoice->invoice_url_key); ?>">
-                    <i class="fa fa-print"></i> <?php _trans('download_pdf'); ?>
+                    <i class="fa fa-print"></i> {{ trans('download_pdf') }}
                 </a>
             </li>
         </ul>
@@ -65,10 +65,10 @@
             <br>
 <?php
             $logo = invoice_logo();
-if ($logo) {
-    echo $logo . '<br><br>';
-}
-?>
+    if ($logo) {
+        echo $logo . '<br><br>';
+    }
+    ?>
 
             <div class="form-group">
                 <?php echo $this->layout->load_view('layout/alerts', ['without_margin' => true]); ?>
@@ -120,7 +120,7 @@ if ($payment_method) {
                                         </tr>
 <?php
 }
-?>
+    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -130,12 +130,12 @@ if ( ! empty($invoice->invoice_terms)) {
     ?>
                         <div class="col-xs-12 text-muted">
                             <br>
-                            <h4><?php _trans('terms'); ?></h4>
+                            <h4>{{ trans('terms') }}</h4>
                             <div><?php _htmlsc(nl2br($invoice->invoice_terms)); ?></div>
                         </div>
 <?php
 }
-?>
+    ?>
                     </div>
 
                 </div>
@@ -157,7 +157,7 @@ if ($payment_provider == null && ! $disable_form) {
                 </ul>
 <?php
 }
-?>
+    ?>
         </div>
     </div>
 

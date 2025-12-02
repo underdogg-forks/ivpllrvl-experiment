@@ -1,6 +1,6 @@
 <div id="headerbar">
 
-    <h1 class="headerbar-title"><?php _trans('invoices'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('invoices') }}</h1>
 
     <div class="headerbar-item pull-right">
         <?php echo pager(site_url('guest/invoices/status/' . $this->uri->segment(4)), $invoices); ?>
@@ -10,19 +10,19 @@
         <div class="btn-group btn-group-sm index-options">
             <a href="<?php echo site_url('guest/invoices/status/open'); ?>"
                class="btn <?php echo $status == 'open' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('open'); ?>
+                {{ trans('open') }}
             </a>
             <a href="<?php echo site_url('guest/invoices/status/overdue'); ?>"
                class="btn <?php echo $status == 'overdue' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('overdue'); ?>
+                {{ trans('overdue') }}
             </a>
             <a href="<?php echo site_url('guest/invoices/status/paid'); ?>"
                class="btn  <?php echo $status == 'paid' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('paid'); ?>
+                {{ trans('paid') }}
             </a>
             <a href="<?php echo site_url('guest/invoices/status/all'); ?>"
                class="btn  <?php echo $status == 'all' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('all'); ?>
+                {{ trans('all') }}
             </a>
         </div>
     </div>

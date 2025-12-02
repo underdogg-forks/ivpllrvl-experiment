@@ -3,7 +3,7 @@
 namespace Modules\Products\Tests\Feature;
 
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Products\Controllers\ProductsController;
 use Modules\Products\Models\Product;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -65,7 +65,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
             'product_price' => 75.00,
         ]);
 
-        Item::factory()->create([
+        InvoiceItem::factory()->create([
             'invoice_id'      => $invoice->invoice_id,
             'item_product_id' => $product->product_id,
             'item_name'       => 'Invoice Item',
@@ -101,7 +101,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         $product = Product::factory()->create();
 
         // Create 3 invoice items
-        Item::factory()->count(3)->create([
+        InvoiceItem::factory()->count(3)->create([
             'invoice_id'      => $invoice->invoice_id,
             'item_product_id' => $product->product_id,
         ]);
@@ -136,7 +136,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         $product = Product::factory()->create();
 
-        Item::factory()->create([
+        InvoiceItem::factory()->create([
             'invoice_id'      => $invoice->invoice_id,
             'item_product_id' => $product->product_id,
         ]);
@@ -165,7 +165,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         // Create 2 different invoices, each with an item referencing the product
         for ($i = 0; $i < 2; $i++) {
             $invoice = Invoice::factory()->create();
-            Item::factory()->create([
+            InvoiceItem::factory()->create([
                 'invoice_id'      => $invoice->invoice_id,
                 'item_product_id' => $product->product_id,
             ]);
@@ -233,7 +233,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         $invoice = Invoice::factory()->create();
         $product = Product::factory()->create();
 
-        $item = Item::factory()->create([
+        $item = InvoiceItem::factory()->create([
             'invoice_id'      => $invoice->invoice_id,
             'item_product_id' => $product->product_id,
         ]);

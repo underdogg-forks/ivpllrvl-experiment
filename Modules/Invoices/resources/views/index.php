@@ -1,14 +1,14 @@
 <div id="headerbar">
 
-    <h1 class="headerbar-title"><?php _trans('invoices'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('invoices') }}</h1>
 
     <div class="headerbar-item pull-right">
         <button type="button" class="btn btn-default btn-sm submenu-toggle hidden-lg"
                 data-toggle="collapse" data-target="#ip-submenu-collapse">
-            <i class="fa fa-bars"></i> <?php _trans('submenu'); ?>
+            <i class="fa fa-bars"></i> {{ trans('submenu') }}
         </button>
         <a class="create-invoice btn btn-sm btn-primary" href="#">
-            <i class="fa fa-plus"></i> <?php _trans('new'); ?>
+            <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
 
@@ -20,27 +20,27 @@
         <div class="btn-group btn-group-sm index-options">
             <a href="<?php echo site_url('invoices/status/all'); ?>"
                class="btn <?php echo $status == 'all' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('all'); ?>
+                {{ trans('all') }}
             </a>
             <a href="<?php echo site_url('invoices/status/draft'); ?>"
                class="btn <?php echo $status == 'draft' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('draft'); ?>
+                {{ trans('draft') }}
             </a>
             <a href="<?php echo site_url('invoices/status/sent'); ?>"
                class="btn <?php echo $status == 'sent' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('sent'); ?>
+                {{ trans('sent') }}
             </a>
             <a href="<?php echo site_url('invoices/status/viewed'); ?>"
                class="btn <?php echo $status == 'viewed' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('viewed'); ?>
+                {{ trans('viewed') }}
             </a>
             <a href="<?php echo site_url('invoices/status/paid'); ?>"
                class="btn <?php echo $status == 'paid' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('paid'); ?>
+                {{ trans('paid') }}
             </a>
             <a href="<?php echo site_url('invoices/status/overdue'); ?>"
                class="btn <?php echo $status == 'overdue' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('overdue'); ?>
+                {{ trans('overdue') }}
             </a>
         </div>
     </div>
@@ -58,27 +58,27 @@
             <div class="btn-group btn-group-sm index-options">
                 <a href="<?php echo site_url('invoices/status/all'); ?>"
                    class="btn <?php echo $status == 'all' ? 'btn-primary' : 'btn-default' ?>">
-                    <?php _trans('all'); ?>
+                    {{ trans('all') }}
                 </a>
                 <a href="<?php echo site_url('invoices/status/draft'); ?>"
                    class="btn  <?php echo $status == 'draft' ? 'btn-primary' : 'btn-default' ?>">
-                    <?php _trans('draft'); ?>
+                    {{ trans('draft') }}
                 </a>
                 <a href="<?php echo site_url('invoices/status/sent'); ?>"
                    class="btn  <?php echo $status == 'sent' ? 'btn-primary' : 'btn-default' ?>">
-                    <?php _trans('sent'); ?>
+                    {{ trans('sent') }}
                 </a>
                 <a href="<?php echo site_url('invoices/status/viewed'); ?>"
                    class="btn  <?php echo $status == 'viewed' ? 'btn-primary' : 'btn-default' ?>">
-                    <?php _trans('viewed'); ?>
+                    {{ trans('viewed') }}
                 </a>
                 <a href="<?php echo site_url('invoices/status/paid'); ?>"
                    class="btn  <?php echo $status == 'paid' ? 'btn-primary' : 'btn-default' ?>">
-                    <?php _trans('paid'); ?>
+                    {{ trans('paid') }}
                 </a>
                 <a href="<?php echo site_url('invoices/status/overdue'); ?>"
                    class="btn  <?php echo $status == 'overdue' ? 'btn-primary' : 'btn-default' ?>">
-                    <?php _trans('overdue'); ?>
+                    {{ trans('overdue') }}
                 </a>
             </div>
         </div>

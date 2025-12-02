@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php _trans('cldr'); ?>">
+<html lang="{{ trans('cldr') }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -7,7 +7,7 @@
 
     <title>
         <?php echo get_setting('custom_title', 'InvoicePlane', true); ?>
-        - <?php _trans('quote'); ?> <?php echo $quote->quote_number; ?>
+        - {{ trans('quote') }} <?php echo $quote->quote_number; ?>
     </title>
 
     <link rel="icon" href="<?php _core_asset('img/favicon.png'); ?>" type="image/png">
@@ -22,28 +22,28 @@
 
             <div class="webpreview-header">
 
-                <h2><?php _trans('quote'); ?>&nbsp;<?php echo $quote->quote_number; ?></h2>
+                <h2>{{ trans('quote') }}&nbsp;<?php echo $quote->quote_number; ?></h2>
 
                 <div class="btn-group">
 <?php if (isset($_SESSION['user_id'], $_SESSION['user_type'])) { ?>
                     <a href="<?php echo site_url($_SESSION['user_type'] > 1 ? 'guest' : ''); ?>"
-                       class="btn btn-default" title="<?php _trans('dashboard'); ?>">
-                        <i class="fa fa-dashboard"></i> <?php _trans('dashboard'); ?>
+                       class="btn btn-default" title="{{ trans('dashboard') }}">
+                        <i class="fa fa-dashboard"></i> {{ trans('dashboard') }}
                     </a>
 <?php } ?>
 <?php if (in_array($quote->quote_status_id, [2, 3])) { ?>
                     <a href="<?php echo site_url('guest/view/approve_quote/' . $quote_url_key); ?>"
                        class="btn btn-success">
-                        <i class="fa fa-check"></i><?php _trans('approve_this_quote'); ?>
+                        <i class="fa fa-check"></i>{{ trans('approve_this_quote') }}
                     </a>
                     <a href="<?php echo site_url('guest/view/reject_quote/' . $quote_url_key); ?>"
                        class="btn btn-danger">
-                        <i class="fa fa-times-circle"></i><?php _trans('reject_this_quote'); ?>
+                        <i class="fa fa-times-circle"></i>{{ trans('reject_this_quote') }}
                     </a>
 <?php } ?>
                     <a href="<?php echo site_url('guest/view/generate_quote_pdf/' . $quote_url_key); ?>"
                        class="btn btn-primary">
-                        <i class="fa fa-print"></i> <?php _trans('download_pdf'); ?>
+                        <i class="fa fa-print"></i> {{ trans('download_pdf') }}
                     </a>
                 </div>
 
@@ -61,7 +61,7 @@ if ($flash_message) {
 } else {
     echo '<br>';
 }
-?>
+        ?>
 
             <div class="quote">
 
@@ -69,43 +69,43 @@ if ($flash_message) {
 if ($logo = invoice_logo()) {
     echo $logo . '<br><br>';
 }
-?>
+        ?>
 
                 <div class="row">
                     <div class="col-xs-12 col-md-6 col-lg-5">
 
                         <h4><?php _htmlsc(format_client($quote)); ?></h4>
                         <p><?php
-                            if ($quote->user_vat_id) {
-                                echo lang('vat_id_short') . ': ' . $quote->user_vat_id . '<br>';
-                            }
-if ($quote->user_tax_code) {
-    echo lang('tax_code_short') . ': ' . $quote->user_tax_code . '<br>';
-}
-if ($quote->user_address_1) {
-    echo htmlsc($quote->user_address_1) . '<br>';
-}
-if ($quote->user_address_2) {
-    echo htmlsc($quote->user_address_2) . '<br>';
-}
-if ($quote->user_city) {
-    echo htmlsc($quote->user_city) . ' ';
-}
-if ($quote->user_state) {
-    echo htmlsc($quote->user_state) . ' ';
-}
-if ($quote->user_zip) {
-    echo htmlsc($quote->user_zip) . '<br>';
-}
-if ($quote->user_phone) {
-    _trans('phone_abbr');
-    echo ': ' . htmlsc($quote->user_phone) . '<br>';
-}
-if ($quote->user_fax) {
-    _trans('fax_abbr');
-    echo ': ' . htmlsc($quote->user_fax);
-}
-?></p>
+                                    if ($quote->user_vat_id) {
+                                        echo lang('vat_id_short') . ': ' . $quote->user_vat_id . '<br>';
+                                    }
+        if ($quote->user_tax_code) {
+            echo lang('tax_code_short') . ': ' . $quote->user_tax_code . '<br>';
+        }
+        if ($quote->user_address_1) {
+            echo htmlsc($quote->user_address_1) . '<br>';
+        }
+        if ($quote->user_address_2) {
+            echo htmlsc($quote->user_address_2) . '<br>';
+        }
+        if ($quote->user_city) {
+            echo htmlsc($quote->user_city) . ' ';
+        }
+        if ($quote->user_state) {
+            echo htmlsc($quote->user_state) . ' ';
+        }
+        if ($quote->user_zip) {
+            echo htmlsc($quote->user_zip) . '<br>';
+        }
+        if ($quote->user_phone) {
+            _trans('phone_abbr');
+            echo ': ' . htmlsc($quote->user_phone) . '<br>';
+        }
+        if ($quote->user_fax) {
+            _trans('fax_abbr');
+            echo ': ' . htmlsc($quote->user_fax);
+        }
+        ?></p>
 
                     </div>
                     <div class="col-lg-2"></div>
@@ -117,47 +117,47 @@ if ($quote->client_vat_id) {
     _trans('vat_id_short');
     echo ': ' . $quote->client_vat_id . '<br>';
 }
-if ($quote->client_tax_code) {
-    _trans('tax_code_short');
-    echo ': ' . $quote->client_tax_code . '<br>';
-}
-if ($quote->client_address_1) {
-    echo htmlsc($quote->client_address_1) . '<br>';
-}
-if ($quote->client_address_2) {
-    echo htmlsc($quote->client_address_2) . '<br>';
-}
-if ($quote->client_city) {
-    echo htmlsc($quote->client_city) . ' ';
-}
-if ($quote->client_state) {
-    echo htmlsc($quote->client_state) . ' ';
-}
-if ($quote->client_zip) {
-    echo htmlsc($quote->client_zip) . '<br>';
-}
-if ($quote->client_phone) {
-    _trans('phone_abbr');
-    echo ': ' . htmlsc($quote->client_phone) . '<br>';
-}
-?></p>
+        if ($quote->client_tax_code) {
+            _trans('tax_code_short');
+            echo ': ' . $quote->client_tax_code . '<br>';
+        }
+        if ($quote->client_address_1) {
+            echo htmlsc($quote->client_address_1) . '<br>';
+        }
+        if ($quote->client_address_2) {
+            echo htmlsc($quote->client_address_2) . '<br>';
+        }
+        if ($quote->client_city) {
+            echo htmlsc($quote->client_city) . ' ';
+        }
+        if ($quote->client_state) {
+            echo htmlsc($quote->client_state) . ' ';
+        }
+        if ($quote->client_zip) {
+            echo htmlsc($quote->client_zip) . '<br>';
+        }
+        if ($quote->client_phone) {
+            _trans('phone_abbr');
+            echo ': ' . htmlsc($quote->client_phone) . '<br>';
+        }
+        ?></p>
 
                         <br>
 
                         <table class="table table-condensed">
                             <tbody>
                                 <tr>
-                                    <td><?php _trans('quote_date'); ?></td>
+                                    <td>{{ trans('quote_date') }}</td>
                                     <td style="text-align:right;"><?php echo date_from_mysql($quote->quote_date_created); ?></td>
                                 </tr>
                                 <tr class="<?php echo $is_expired ? 'overdue' : '' ?>">
-                                    <td><?php _trans('expires'); ?></td>
+                                    <td>{{ trans('expires') }}</td>
                                     <td class="amount">
                                         <?php echo date_from_mysql($quote->quote_date_expires); ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><?php _trans('total'); ?></td>
+                                    <td>{{ trans('total') }}</td>
                                     <td class="amount"><?php echo format_currency($quote->quote_total); ?></td>
                                 </tr>
                             </tbody>
@@ -173,14 +173,14 @@ if ($quote->client_phone) {
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th><?php _trans('item'); ?></th>
-                                    <th><?php _trans('description'); ?></th>
-                                    <th class="amount"><?php _trans('qty'); ?></th>
-                                    <th class="amount"><?php _trans('price'); ?></th>
+                                    <th>{{ trans('item') }}</th>
+                                    <th>{{ trans('description') }}</th>
+                                    <th class="amount">{{ trans('qty') }}</th>
+                                    <th class="amount">{{ trans('price') }}</th>
 <?php if ($show_item_discounts) {?>
-                                        <th class="amount"><?php _trans('discount'); ?></th>
+                                        <th class="amount">{{ trans('discount') }}</th>
 <?php } ?>
-                                    <th class="amount"><?php _trans('total'); ?></th>
+                                    <th class="amount">{{ trans('total') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -205,32 +205,32 @@ foreach ($items as $item) {
                                 </tr>
 <?php
 }
-?>
+        ?>
 
 <?php
-$colspan = $show_item_discounts ? 4 : 3;
-if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
-    if ( ! $legacy_calculation) {
-        ?>
+        $colspan = $show_item_discounts ? 4 : 3;
+        if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
+            if ( ! $legacy_calculation) {
+                ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
-                                    <td class="amount"><?php _trans('discount'); ?></td>
+                                    <td class="amount">{{ trans('discount') }}</td>
                                     <td class="amount"><?php
-                                                if ($quote->quote_discount_percent > 0) {
-                                                    echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
-                                                } else {
-                                                    echo format_currency($quote->quote_discount_amount);
-                                                }
-        ?></td>
+                                                        if ($quote->quote_discount_percent > 0) {
+                                                            echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
+                                                        } else {
+                                                            echo format_currency($quote->quote_discount_amount);
+                                                        }
+                ?></td>
                                 </tr>
 <?php
-    }
-}
-?>
+            }
+        }
+        ?>
 
                                 <tr>
                                     <td colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('subtotal'); ?>:</td>
+                                    <td class="amount">{{ trans('subtotal') }}:</td>
                                     <td class="amount"><?php echo format_currency($quote->quote_item_subtotal); ?></td>
                                 </tr>
 
@@ -239,12 +239,12 @@ if ($quote->quote_item_tax_total > 0) {
     ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('item_tax'); ?></td>
+                                    <td class="amount">{{ trans('item_tax') }}</td>
                                     <td class="amount"><?php echo format_currency($quote->quote_item_tax_total); ?></td>
                                 </tr>
 <?php
 }
-?>
+        ?>
 
 <?php
 foreach ($quote_tax_rates as $quote_tax_rate) {
@@ -258,7 +258,7 @@ foreach ($quote_tax_rates as $quote_tax_rate) {
                                 </tr>
 <?php
 }
-?>
+        ?>
 
 <?php
 if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
@@ -266,7 +266,7 @@ if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
         ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
-                                    <td class="amount"><?php _trans('discount'); ?></td>
+                                    <td class="amount">{{ trans('discount') }}</td>
                                     <td class="amount"><?php
                                                 if ($quote->quote_discount_percent > 0) {
                                                     echo format_amount($quote->quote_discount_percent) . '&nbsp;%';
@@ -278,11 +278,11 @@ if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
 <?php
     }
 }
-?>
+        ?>
 
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('total'); ?></td>
+                                    <td class="amount">{{ trans('total') }}</td>
                                     <td class="amount"><?php echo format_currency($quote->quote_total) ?></td>
                                 </tr>
                             </tbody>
@@ -295,18 +295,18 @@ if ($quote?->quote_discount_percent > 0 || $quote?->quote_discount_amount > 0) {
 if ($quote->notes) {
     ?>
                         <div class="col-xs-12 col-md-6">
-                            <h4><?php _trans('notes'); ?></h4>
+                            <h4>{{ trans('notes') }}</h4>
                             <p><?php echo nl2br(htmlsc($quote->notes)); ?></p>
                         </div>
 <?php
 }
-?>
+        ?>
 
 <?php
 if (count($attachments) > 0) {
     ?>
                         <div class="col-xs-12 col-md-6">
-                            <h4><?php _trans('attachments'); ?></h4>
+                            <h4>{{ trans('attachments') }}</h4>
                             <div class="table-responsive">
                                 <table class="table table-condensed">
 <?php
@@ -329,7 +329,7 @@ if (count($attachments) > 0) {
                         </div>
 <?php
 }
-?>
+        ?>
 
                     </div>
 

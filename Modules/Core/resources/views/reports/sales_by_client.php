@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="<?php _trans('cldr'); ?>">
+<html lang="{{ trans('cldr') }}">
 <head>
-    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - <?php _trans('sales_by_client'); ?></title>
+    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - {{ trans('sales_by_client') }}</title>
     <link rel="stylesheet" href="<?php _theme_asset('css/reports.css'); ?>" type="text/css">
 </head>
 <body>
 
-    <h3 class="report_title"><?php _trans('sales_by_client'); ?><br><small><?php echo $from_date . ' - ' . $to_date ?></small></h3>
+    <h3 class="report_title">{{ trans('sales_by_client') }}<br><small><?php echo $from_date . ' - ' . $to_date ?></small></h3>
 
     <table>
         <tr>
-            <th><?php _trans('client'); ?></th>
-            <th class="amount"><?php _trans('invoice_count'); ?></th>
-            <th class="amount"><?php _trans('sales'); ?></th>
-            <th class="amount"><?php _trans('sales_with_tax'); ?></th>
+            <th>{{ trans('client') }}</th>
+            <th class="amount">{{ trans('invoice_count') }}</th>
+            <th class="amount">{{ trans('sales') }}</th>
+            <th class="amount">{{ trans('sales_with_tax') }}</th>
         </tr>
 <?php
 foreach ($results as $result) {
@@ -26,7 +26,7 @@ foreach ($results as $result) {
         </tr>
 <?php
 }
-?>
+    ?>
     </table>
 
 </body>

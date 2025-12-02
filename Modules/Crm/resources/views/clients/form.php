@@ -9,7 +9,7 @@
     <?php _csrf_field(); ?>
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?php _trans('projects_form'); ?></h1>
+        <h1 class="headerbar-title">{{ trans('projects_form') }}</h1>
         <?php $this->layout->load_view('layout/header_buttons'); ?>
     </div>
 
@@ -18,15 +18,15 @@
         <?php $this->layout->load_view('layout/alerts'); ?>
 
         <div class="form-group">
-            <label for="project_name"><?php _trans('project_name'); ?></label>
+            <label for="project_name">{{ trans('project_name') }}</label>
             <input type="text" name="project_name" id="project_name" class="form-control"
                    value="<?php echo $this->mdl_projects->form_value('project_name', true); ?>" required>
         </div>
 
         <div class="form-group has-feedback">
-            <label for="client_id"><?php _trans('client'); ?></label>
+            <label for="client_id">{{ trans('client') }}</label>
             <div class="input-group">
-                <span id="toggle_permissive_search_clients" class="input-group-addon" title="<?php _trans('enable_permissive_search_clients'); ?>" style="cursor:pointer;">
+                <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
                     <i class="fa fa-toggle-<?php echo get_setting('enable_permissive_search_clients') ? 'on' : 'off' ?> fa-fw" ></i>
                 </span>
                 <select name="client_id" id="client_id" class="client-id-select form-control" autofocus="autofocus">

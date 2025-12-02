@@ -3,13 +3,13 @@
 
                 <thead>
                 <tr>
-                    <th><?php _trans('id'); ?></th>
-                    <th><?php _trans('invoice'); ?></th>
-                    <th><?php _trans('transaction_successful'); ?></th>
-                    <th><?php _trans('payment_date'); ?></th>
-                    <th><?php _trans('payment_provider'); ?></th>
-                    <th><?php _trans('provider_response'); ?></th>
-                    <th><?php _trans('transaction_reference'); ?></th>
+                    <th>{{ trans('id') }}</th>
+                    <th>{{ trans('invoice') }}</th>
+                    <th>{{ trans('transaction_successful') }}</th>
+                    <th>{{ trans('payment_date') }}</th>
+                    <th>{{ trans('payment_provider') }}</th>
+                    <th>{{ trans('provider_response') }}</th>
+                    <th>{{ trans('transaction_reference') }}</th>
                 </tr>
                 </thead>
 
@@ -21,7 +21,7 @@ foreach ($payment_logs as $log) {
                         <td><?php echo $log->merchant_response_id; ?></td>
                         <td>
                             <a href="<?php echo site_url('invoices/view/' . $log->invoice_id); ?>"
-                               title="<?php _trans('invoice'); ?>">
+                               title="{{ trans('invoice') }}">
                                 <?php echo $log->invoice_number ? $log->invoice_number : $log->invoice_id; ?>
                             </a>
                         </td>
@@ -37,7 +37,7 @@ foreach ($payment_logs as $log) {
                     </tr>
 <?php
 } // End foreach
-                    ?>
+?>
                 </tbody>
 
             </table>

@@ -177,7 +177,7 @@ class CustomValuesHelper
                     <select id="custom<?php echo $custom_field->custom_field_id; ?>"
                             name="custom[<?php echo $custom_field->custom_field_id; ?>]"
                             class="form-control simple-select">
-                        <option value="" <?php check_select('', $fieldValue); ?>><?php _trans('none'); ?></option>
+                        <option value="" <?php check_select('', $fieldValue); ?>>{{ trans('none') }}</option>
     <?php
                 foreach ($choices as $val) {
                     ?>
@@ -216,9 +216,9 @@ class CustomValuesHelper
                     <select id="custom<?php echo $custom_field->custom_field_id; ?>"
                             name="custom[<?php echo $custom_field->custom_field_id; ?>]"
                             class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                        <option value="" <?php check_select($fieldValue, ''); ?>><?php _trans('none'); ?></option>
-                        <option value="0" <?php check_select($fieldValue, '0'); ?>><?php _trans('false'); ?></option>
-                        <option value="1" <?php check_select($fieldValue, '1'); ?>><?php _trans('true'); ?></option>
+                        <option value="" <?php check_select($fieldValue, ''); ?>>{{ trans('none') }}</option>
+                        <option value="0" <?php check_select($fieldValue, '0'); ?>>{{ trans('false') }}</option>
+                        <option value="1" <?php check_select($fieldValue, '1'); ?>>{{ trans('true') }}</option>
                     </select>
     <?php
                 break;

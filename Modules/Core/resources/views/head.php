@@ -30,7 +30,7 @@
     Dropzone.autoDiscover = false;
 
     <?php if (trans('cldr') != 'en') { ?>
-    $.fn.select2.defaults.set('language', '<?php _trans('cldr'); ?>');
+    $.fn.select2.defaults.set('language', '{{ trans('cldr') }}');
     <?php } ?>
 
     $(function () {
@@ -41,7 +41,7 @@
             $(this).datepicker({
                 autoclose: true,
                 format: '<?php echo date_format_datepicker(); ?>',
-                language: '<?php _trans('cldr'); ?>',
+                language: '{{ trans('cldr') }}',
                 weekStart: '<?php echo get_setting('first_day_of_week'); ?>',
                 todayHighlight: true,
                 todayBtn: 'linked'

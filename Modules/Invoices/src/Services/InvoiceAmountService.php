@@ -5,8 +5,8 @@ namespace Modules\Invoices\Services;
 use Illuminate\Support\Collection;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item;
 use Modules\Invoices\Models\ItemAmount;
 use Modules\Payments\Models\Payment;
 
@@ -45,7 +45,7 @@ class InvoiceAmountService
         $decimalPlaces = (int) get_setting('tax_rate_decimal_places');
 
         // Get all item IDs for this invoice
-        $itemIds = Item::query()->where('invoice_id', $invoiceId)->pluck('item_id');
+        $itemIds = InvoiceItem::query()->where('invoice_id', $invoiceId)->pluck('item_id');
 
         // Get the basic totals from invoice item amounts using Eloquent
         $invoiceAmounts = ItemAmount::query()->whereIn('item_id', $itemIds)
@@ -139,7 +139,7 @@ class InvoiceAmountService
     public function getGlobalDiscount(int $invoiceId): float
     {
         // Get all item IDs for this invoice
-        $itemIds = Item::query()->where('invoice_id', $invoiceId)->pluck('item_id');
+        $itemIds = InvoiceItem::query()->where('invoice_id', $invoiceId)->pluck('item_id');
 
         // Calculate global discount using Eloquent
         $result = ItemAmount::query()->whereIn('item_id', $itemIds)

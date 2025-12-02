@@ -43,7 +43,7 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('create_quote'); ?></h4>
+            <h4 class="panel-title">{{ trans('create_quote') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -51,9 +51,9 @@
                    value="<?php echo get_setting('enable_permissive_search_clients'); ?>">
 
             <div class="form-group has-feedback">
-                <label for="create_quote_client_id"><?php _trans('client'); ?></label>
+                <label for="create_quote_client_id">{{ trans('client') }}</label>
                 <div class="input-group">
-                    <span id="toggle_permissive_search_clients" class="input-group-addon" title="<?php _trans('enable_permissive_search_clients'); ?>" style="cursor:pointer;">
+                    <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
                         <i class="fa fa-toggle-<?php echo get_setting('enable_permissive_search_clients') ? 'on' : 'off' ?> fa-fw" ></i>
                     </span>
                     <select name="client_id" id="create_quote_client_id" class="client-id-select form-control"
@@ -67,7 +67,7 @@
 
             <div class="form-group has-feedback">
                 <label for="quote_date_created">
-                    <?php _trans('quote_date'); ?>
+                    {{ trans('quote_date') }}
                 </label>
 
                 <div class="input-group">
@@ -81,14 +81,14 @@
             </div>
 
             <div class="form-group">
-                <label for="quote_password"><?php _trans('quote_password'); ?></label>
+                <label for="quote_password">{{ trans('quote_password') }}</label>
                 <input type="text" name="quote_password" id="quote_password" class="form-control"
                        value="<?php echo get_setting('quote_pre_password') ? '' : get_setting('quote_pre_password') ?>"
                        autocomplete="off">
             </div>
 
             <div class="form-group">
-                <label for="invoice_group_id"><?php _trans('invoice_group'); ?>: </label>
+                <label for="invoice_group_id">{{ trans('invoice_group') }}: </label>
                 <select name="invoice_group_id" id="invoice_group_id"
                     class="form-control simple-select" data-minimum-results-for-search="Infinity" required>
                     <?php foreach ($invoice_groups as $invoice_group) { ?>
@@ -105,10 +105,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success ajax-loader" id="quote_create_confirm" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('submit'); ?>
+                    <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

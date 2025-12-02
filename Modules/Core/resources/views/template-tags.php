@@ -1,83 +1,83 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><?php _trans('email_template_tags'); ?></div>
+    <div class="panel-heading">{{ trans('email_template_tags') }}</div>
     <div class="panel-body">
 
-        <p class="small"><?php _trans('email_template_tags_instructions'); ?></p>
+        <p class="small">{{ trans('email_template_tags_instructions') }}</p>
 
         <div class="form-group">
-            <label for="tags_client"><?php _trans('client'); ?></label>
+            <label for="tags_client">{{ trans('client') }}</label>
             <select id="tags_client" class="tag-select form-control">
                 <option value="{{{client_name}}}">
-                    <?php _trans('client_name'); ?>
+                    {{ trans('client_name') }}
                 </option>
                 <option value="{{{client_surname}}}">
-                    <?php _trans('client_surname'); ?>
+                    {{ trans('client_surname') }}
                 </option>
-                <optgroup label="<?php _trans('address'); ?>">
+                <optgroup label="{{ trans('address') }}">
                     <option value="{{{client_address_1}}}">
-                        <?php _trans('street_address'); ?>
+                        {{ trans('street_address') }}
                     </option>
                     <option value="{{{client_address_2}}}">
-                        <?php _trans('street_address_2'); ?>
+                        {{ trans('street_address_2') }}
                     </option>
                     <option value="{{{client_city}}}">
-                        <?php _trans('city'); ?>
+                        {{ trans('city') }}
                     </option>
                     <option value="{{{client_state}}}">
-                        <?php _trans('state'); ?>
+                        {{ trans('state') }}
                     </option>
                     <option value="{{{client_zip}}}">
-                        <?php _trans('zip'); ?>
+                        {{ trans('zip') }}
                     </option>
                     <option value="{{{client_country}}}">
-                        <?php _trans('country'); ?>
+                        {{ trans('country') }}
                     </option>
                 </optgroup>
-                <optgroup label="<?php _trans('contact_information'); ?>">
+                <optgroup label="{{ trans('contact_information') }}">
                     <option value="{{{client_phone}}}">
-                        <?php _trans('phone'); ?>
+                        {{ trans('phone') }}
                     </option>
                     <option value="{{{client_fax}}}">
-                        <?php _trans('fax'); ?>
+                        {{ trans('fax') }}
                     </option>
                     <option value="{{{client_mobile}}}">
-                        <?php _trans('mobile'); ?>
+                        {{ trans('mobile') }}
                     </option>
                     <option value="{{{client_email}}}">
-                        <?php _trans('email'); ?>
+                        {{ trans('email') }}
                     </option>
                     <option value="{{{client_web}}}">
-                        <?php _trans('web_address'); ?>
+                        {{ trans('web_address') }}
                     </option>
                 </optgroup>
-                <optgroup label="<?php _trans('tax_information'); ?>">
+                <optgroup label="{{ trans('tax_information') }}">
                     <option value="{{{client_vat_id}}}">
-                        <?php _trans('vat_id'); ?>
+                        {{ trans('vat_id') }}
                     </option>
                     <option value="{{{client_tax_code}}}">
-                        <?php _trans('tax_code'); ?>
+                        {{ trans('tax_code') }}
                     </option>
                 </optgroup>
 <?php
 $sumex = get_setting('sumex') == '1';
-    if ($sumex) {
-        ?>
-                <optgroup label="<?php _trans('sumex_information'); ?>">
+if ($sumex) {
+    ?>
+                <optgroup label="{{ trans('sumex_information') }}">
                     <option value="{{{client_avs}}}">
-                        <?php _trans('sumex_ssn'); ?>
+                        {{ trans('sumex_ssn') }}
                     </option>
                     <option value="{{{client_insurednumber}}}">
-                        <?php _trans('sumex_insurednumber'); ?>
+                        {{ trans('sumex_insurednumber') }}
                     </option>
                     <option value="{{{client_weka}}}">
-                        <?php _trans('sumex_veka'); ?>
+                        {{ trans('sumex_veka') }}
                     </option>
                 </optgroup>
 <?php
-    }
-    if ($custom_fields['ip_client_custom']) {
-        ?>
-                <optgroup label="<?php _trans('custom_fields'); ?>">
+}
+if ($custom_fields['ip_client_custom']) {
+    ?>
+                <optgroup label="{{ trans('custom_fields') }}">
                     <?php foreach ($custom_fields['ip_client_custom'] as $custom) { ?>
                         <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
                             <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
@@ -85,68 +85,68 @@ $sumex = get_setting('sumex') == '1';
                     <?php } ?>
                 </optgroup>
 <?php
-    }
-    ?>
+}
+?>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="tags_user"><?php _trans('user'); ?></label>
+            <label for="tags_user">{{ trans('user') }}</label>
             <select id="tags_user" class="tag-select form-control">
                 <option value="{{{user_name}}}">
-                    <?php _trans('name'); ?>
+                    {{ trans('name') }}
                 </option>
                 <option value="{{{user_company}}}">
-                    <?php _trans('company'); ?>
+                    {{ trans('company') }}
                 </option>
-                <optgroup label="<?php _trans('address'); ?>">
+                <optgroup label="{{ trans('address') }}">
                     <option value="{{{user_address_1}}}">
-                        <?php _trans('street_address'); ?>
+                        {{ trans('street_address') }}
                     </option>
                     <option value="{{{user_address_2}}}">
-                        <?php _trans('street_address_2'); ?>
+                        {{ trans('street_address_2') }}
                     </option>
                     <option value="{{{user_city}}}">
-                        <?php _trans('city'); ?>
+                        {{ trans('city') }}
                     </option>
                     <option value="{{{user_state}}}">
-                        <?php _trans('state'); ?>
+                        {{ trans('state') }}
                     </option>
                     <option value="{{{user_zip}}}">
-                        <?php _trans('zip'); ?>
+                        {{ trans('zip') }}
                     </option>
                     <option value="{{{user_country}}}">
-                        <?php _trans('country'); ?>
+                        {{ trans('country') }}
                     </option>
                 </optgroup>
-                <optgroup label="<?php _trans('contact_information'); ?>">
+                <optgroup label="{{ trans('contact_information') }}">
                     <option value="{{{user_phone}}}">
-                        <?php _trans('phone'); ?>
+                        {{ trans('phone') }}
                     </option>
                     <option value="{{{user_fax}}}">
-                        <?php _trans('fax'); ?>
+                        {{ trans('fax') }}
                     </option>
                     <option value="{{{user_mobile}}}">
-                        <?php _trans('mobile'); ?>
+                        {{ trans('mobile') }}
                     </option>
                     <option value="{{{user_email}}}">
-                        <?php _trans('email'); ?>
+                        {{ trans('email') }}
                     </option>
                     <option value="{{{user_web}}}">
-                        <?php _trans('web_address'); ?>
+                        {{ trans('web_address') }}
                     </option>
                 </optgroup>
-                <optgroup label="<?php _trans('tax_information'); ?>">
+                <optgroup label="{{ trans('tax_information') }}">
                     <option value="{{{user_vat_id}}}">
-                        <?php _trans('vat_id'); ?>
+                        {{ trans('vat_id') }}
                     </option>
                     <option value="{{{user_tax_code}}}">
-                        <?php _trans('tax_code'); ?>
+                        {{ trans('tax_code') }}
                     </option>
                 </optgroup>
-                <optgroup label="<?php _trans('bank_information'); ?>">
+                <optgroup label="{{ trans('bank_information') }}">
                     <option value="{{{user_bank}}}">
-                        <?php _trans('bank'); ?>
+                        {{ trans('bank') }}
                     </option>
                     <option value="{{{user_iban}}}">
                         IBAN
@@ -158,22 +158,22 @@ $sumex = get_setting('sumex') == '1';
 <?php
 if ($sumex) {
     ?>
-                <optgroup label="<?php _trans('sumex_information'); ?>">
+                <optgroup label="{{ trans('sumex_information') }}">
                     <option value="{{{user_subscribernumber}}}">
-                        <?php _trans('user_subscriber_number'); ?>
+                        {{ trans('user_subscriber_number') }}
                     </option>
                     <option value="{{{user_gln}}}">
-                        <?php _trans('gln'); ?>
+                        {{ trans('gln') }}
                     </option>
                     <option value="{{{user_rcc}}}">
-                        <?php _trans('sumex_rcc'); ?>
+                        {{ trans('sumex_rcc') }}
                     </option>
                 </optgroup>
 <?php
 }
-    if ($custom_fields['ip_user_custom']) {
-        ?>
-                <optgroup label="<?php _trans('custom_fields'); ?>">
+if ($custom_fields['ip_user_custom']) {
+    ?>
+                <optgroup label="{{ trans('custom_fields') }}">
                     <?php foreach ($custom_fields['ip_user_custom'] as $custom) { ?>
                         <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
                             <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
@@ -181,52 +181,52 @@ if ($sumex) {
                     <?php } ?>
                 </optgroup>
 <?php
-    }
-    ?>
+}
+?>
             </select>
         </div>
 
         <?php $this->layout->load_view('email_templates/template-tags-invoices'); ?>
 
         <div class="form-group">
-            <label for="tags_quote"><?php _trans('quotes'); ?></label>
+            <label for="tags_quote">{{ trans('quotes') }}</label>
             <select id="tags_quote" class="tag-select form-control">
                 <option value="{{{quote_number}}}">
-                    <?php _trans('id'); ?>
+                    {{ trans('id') }}
                 </option>
-                <optgroup label="<?php _trans('quote_dates'); ?>">
+                <optgroup label="{{ trans('quote_dates') }}">
                     <option value="{{{quote_date_created}}}">
-                        <?php _trans('quote_date'); ?>
+                        {{ trans('quote_date') }}
                     </option>
                     <option value="{{{quote_date_expires}}}">
-                        <?php _trans('expires'); ?>
+                        {{ trans('expires') }}
                     </option>
                 </optgroup>
-                <optgroup label="<?php _trans('quote_amounts'); ?>">
+                <optgroup label="{{ trans('quote_amounts') }}">
                     <option value="{{{quote_item_subtotal}}}">
-                        <?php _trans('subtotal'); ?>
+                        {{ trans('subtotal') }}
                     </option>
                     <option value="{{{quote_tax_total}}}">
-                        <?php _trans('quote_tax'); ?>
+                        {{ trans('quote_tax') }}
                     </option>
                     <option value="{{{quote_item_discount}}}">
-                        <?php _trans('discount'); ?>
+                        {{ trans('discount') }}
                     </option>
                     <option value="{{{quote_total}}}">
-                        <?php _trans('total'); ?>
+                        {{ trans('total') }}
                     </option>
                 </optgroup>
 
-                <optgroup label="<?php _trans('extra_information'); ?>">
+                <optgroup label="{{ trans('extra_information') }}">
                     <option value="{{{quote_guest_url}}}">
-                        <?php _trans('guest_url'); ?>
+                        {{ trans('guest_url') }}
                     </option>
                 </optgroup>
 <?php
 if ($custom_fields['ip_quote_custom']) {
     ?>
 
-                <optgroup label="<?php _trans('custom_fields'); ?>">
+                <optgroup label="{{ trans('custom_fields') }}">
                     <?php foreach ($custom_fields['ip_quote_custom'] as $custom) { ?>
                         <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
                             <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
@@ -235,40 +235,40 @@ if ($custom_fields['ip_quote_custom']) {
                 </optgroup>
 <?php
 }
-    ?>
+?>
             </select>
         </div>
 <?php
 if ($sumex) {
     ?>
         <div class="form-group">
-            <label for="tags_sumex"><?php _trans('invoice_sumex'); ?></label>
+            <label for="tags_sumex">{{ trans('invoice_sumex') }}</label>
             <select id="tags_sumex" class="tag-select form-control">
                 <option value="{{{sumex_reason}}}">
-                    <?php _trans('reason'); ?>
+                    {{ trans('reason') }}
                 </option>
                 <option value="{{{sumex_diagnosis}}}">
-                    <?php _trans('invoice_sumex_diagnosis'); ?>
+                    {{ trans('invoice_sumex_diagnosis') }}
                 </option>
                 <option value="{{{sumex_observations}}}">
-                    <?php _trans('sumex_observations'); ?>
+                    {{ trans('sumex_observations') }}
                 </option>
                 <option value="{{{sumex_treatmentstart}}}">
-                    <?php _trans('treatment_start'); ?>
+                    {{ trans('treatment_start') }}
                 </option>
                 <option value="{{{sumex_treatmentend}}}">
-                    <?php _trans('treatment_end'); ?>
+                    {{ trans('treatment_end') }}
                 </option>
                 <option value="{{{sumex_casedate}}}">
-                    <?php _trans('case_date'); ?>
+                    {{ trans('case_date') }}
                 </option>
                 <option value="{{{sumex_casenumber}}}">
-                    <?php _trans('case_number'); ?>
+                    {{ trans('case_number') }}
                 </option>
             </select>
         </div>
 <?php
 }
-    ?>
+?>
     </div>
 </div>

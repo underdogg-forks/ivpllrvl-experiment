@@ -28,12 +28,12 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('add_client'); ?></h4>
+            <h4 class="panel-title">{{ trans('add_client') }}</h4>
         </div>
         <div class="modal-body">
 
             <div class="form-group">
-                <label for="client_id"><?php _trans('client'); ?></label>
+                <label for="client_id">{{ trans('client') }}</label>
                 <select name="client_id" id="client_id" class="form-control simple-select" autofocus="autofocus">
 <?php
                     foreach ($clients as $client) {
@@ -48,10 +48,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success" id="btn_user_client" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('submit'); ?>
+                    <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

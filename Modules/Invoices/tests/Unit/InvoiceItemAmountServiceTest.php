@@ -4,7 +4,7 @@ namespace Modules\Invoices\Tests\Unit;
 
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Models\Setting;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\ItemAmount;
 use Modules\Invoices\Services\InvoiceItemAmountService;
 use Modules\Products\Models\TaxRate;
@@ -44,7 +44,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
             'tax_rate_percent' => 10,
         ]);
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => $taxRate->tax_rate_id,
             'item_name'            => 'Test Item',
@@ -73,7 +73,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         $this->markTestIncomplete();
         Setting::setValue('legacy_calculation', '1');
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Test Item',
@@ -102,7 +102,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         $this->markTestIncomplete();
         Setting::setValue('legacy_calculation', '0');
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Test Item',
@@ -133,7 +133,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         $this->markTestIncomplete();
         Setting::setValue('legacy_calculation', '0');
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Test Item',
@@ -168,7 +168,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
             'tax_rate_percent' => 20,
         ]);
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => $taxRate->tax_rate_id,
             'item_name'            => 'Test Item',
@@ -199,7 +199,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         $this->markTestIncomplete();
         Setting::setValue('legacy_calculation', '1');
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Test Item',
@@ -235,7 +235,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         $this->markTestIncomplete();
         Setting::setValue('legacy_calculation', '0');
 
-        $item1 = Item::query()->create([
+        $item1 = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Item 1',
@@ -245,7 +245,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
             'item_discount_amount' => 0,
         ]);
 
-        $item2 = Item::query()->create([
+        $item2 = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Item 2',
@@ -273,7 +273,7 @@ class InvoiceItemAmountServiceTest extends AbstractServiceTestCase
         $this->markTestIncomplete();
         Setting::setValue('legacy_calculation', '1');
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => 1,
             'item_tax_rate_id'     => null,
             'item_name'            => 'Test Item',

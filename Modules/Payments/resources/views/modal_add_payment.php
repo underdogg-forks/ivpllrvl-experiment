@@ -51,7 +51,7 @@
         <div class="modal-header">
             <a data-dismiss="modal" class="close"><i class="fa fa-close"></i></a>
 
-            <h3><?php _trans('enter_payment'); ?></h3>
+            <h3>{{ trans('enter_payment') }}</h3>
         </div>
 
         <div class="modal-body">
@@ -60,7 +60,7 @@
                 <input type="hidden" name="invoice_id" id="invoice_id" value="<?php echo $invoice_id; ?>">
 
                 <div class="form-group">
-                    <label for="payment_amount"><?php _trans('amount'); ?></label>
+                    <label for="payment_amount">{{ trans('amount') }}</label>
 
                     <div class="controls">
                         <input type="text" name="payment_amount" id="payment_amount" class="form-control"
@@ -70,7 +70,7 @@
 
                 <div class="form-group has-feedback">
 
-                    <label class="payment_date"><?php _trans('payment_date'); ?></label>
+                    <label class="payment_date">{{ trans('payment_date') }}</label>
 
                     <div class="input-group">
                         <input name="payment_date" id="payment_date"
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="payment_method_id"><?php _trans('payment_method'); ?></label>
+                    <label for="payment_method_id">{{ trans('payment_method') }}</label>
 
                     <div class="controls">
 <?php
@@ -98,7 +98,7 @@ if ($this->mdl_payments->form_value('payment_method_id')) {
             ?>
                         <select name="payment_method_id" id="payment_method_id" class="form-control simple-select"
                                 <?php echo empty($invoice_payment_method) ? '' : 'disabled="disabled"'; ?>>
-                            <option value=""><?php _trans('none'); ?></option>
+                            <option value="">{{ trans('none') }}</option>
 <?php
 foreach ($payment_methods as $payment_method) {
     ?>
@@ -114,7 +114,7 @@ foreach ($payment_methods as $payment_method) {
                 </div>
 
                 <div class="form-group">
-                    <label for="payment_note"><?php _trans('note'); ?></label>
+                    <label for="payment_note">{{ trans('note') }}</label>
 
                     <div class="controls">
                         <textarea name="payment_note" id="payment_note" class="form-control"></textarea>
@@ -131,11 +131,11 @@ foreach ($payment_methods as $payment_method) {
             <div class="btn-group">
                 <button class="btn btn-success" id="btn_modal_payment_submit" type="button">
                     <i class="fa fa-check"></i>
-                    <?php _trans('submit'); ?>
+                    {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
-                    <?php _trans('cancel'); ?>
+                    {{ trans('cancel') }}
                 </button>
             </div>
         </div>

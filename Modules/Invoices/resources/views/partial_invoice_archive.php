@@ -3,8 +3,8 @@
 
         <thead>
         <tr>
-            <th><?php _trans('invoice'); ?></th>
-            <th><?php _trans('created'); ?></th>
+            <th>{{ trans('invoice') }}</th>
+            <th>{{ trans('created') }}</th>
         </tr>
         </thead>
 
@@ -14,7 +14,7 @@
             <tr>
                 <td>
                     <a href="<?php echo site_url('invoices/download/' . basename($invoice)); ?>"
-                       title="<?php _trans('invoice'); ?>">
+                       title="{{ trans('invoice') }}">
                         <?php echo basename($invoice); ?>
                     </a>
                 </td>

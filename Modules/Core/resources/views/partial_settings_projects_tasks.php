@@ -3,7 +3,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('projects'); ?>
+                {{ trans('projects') }}
             </div>
             <div class="panel-body">
 
@@ -12,15 +12,15 @@
 
                         <div class="form-group">
                             <label for="settings[projects_enabled]">
-                                <?php _trans('enable_projects'); ?>
+                                {{ trans('enable_projects') }}
                             </label>
                             <select name="settings[projects_enabled]" class="form-control simple-select"
                                 id="settings[projects_enabled]" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?php _trans('no'); ?>
+                                    {{ trans('no') }}
                                 </option>
                                 <option value="1" <?php check_select(get_setting('projects_enabled'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
                         </div>
@@ -30,7 +30,7 @@
 
                         <div class="form-group">
                             <label for="settings[default_hourly_rate]">
-                                <?php _trans('default_hourly_rate'); ?>
+                                {{ trans('default_hourly_rate') }}
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[default_hourly_rate]" id="settings[default_hourly_rate]"

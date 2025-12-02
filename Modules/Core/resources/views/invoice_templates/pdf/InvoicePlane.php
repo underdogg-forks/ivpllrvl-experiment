@@ -37,10 +37,10 @@ switch ($invoice_mode) {
 }
 
 ?><!DOCTYPE html>
-<html lang="<?php _trans('cldr'); ?>">
+<html lang="{{ trans('cldr') }}">
 <head>
     <meta charset="utf-8">
-    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - <?php _trans('invoice'); ?></title>
+    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - {{ trans('invoice') }}</title>
     <link rel="stylesheet" href="<?php _theme_asset('css/templates.css'); ?>" type="text/css">
     <link rel="stylesheet" href="<?php _core_asset('css/custom-pdf.css'); ?>" type="text/css">
 </head>
@@ -147,22 +147,22 @@ if ($invoice->user_fax) {
                 <td rowspan="<?php echo $payment_method ? 5 : 4 ?>" style="width:40%;text-align:left;"><?php echo $stamp ?></td>
             </tr>
             <tr>
-                <td><?php _trans('invoice_date'); ?>:</td>
+                <td>{{ trans('invoice_date') }}:</td>
                 <td><?php echo date_from_mysql($invoice->invoice_date_created, true); ?></td>
             </tr>
             <tr>
-                <td<?php echo $text_class_date ?>><?php _trans('due_date'); ?>:</td>
+                <td<?php echo $text_class_date ?>>{{ trans('due_date') }}:</td>
                 <td<?php echo $text_class_date ?>><?php echo date_from_mysql($invoice->invoice_date_due, true); ?></td>
             </tr>
             <tr>
-                <td<?php echo $text_class_balance ?>><?php _trans('amount_due'); ?>:</td>
+                <td<?php echo $text_class_balance ?>>{{ trans('amount_due') }}:</td>
                 <td<?php echo $text_class_balance ?>><?php echo format_currency($invoice->invoice_balance); ?></td>
             </tr>
 <?php
 if ($payment_method) {
     ?>
             <tr>
-                <td><?php _trans('payment_method'); ?>:</td>
+                <td>{{ trans('payment_method') }}:</td>
                 <td><?php _htmlsc($payment_method->payment_method_name); ?></td>
             </tr>
 <?php
@@ -176,18 +176,18 @@ if ($payment_method) {
     <table class="item-table">
         <thead>
         <tr>
-            <th class="item-name"><?php _trans('item'); ?></th>
-            <th class="item-desc"><?php _trans('description'); ?></th>
-            <th class="item-amount text-right"><?php _trans('qty'); ?></th>
-            <th class="item-price text-right"><?php _trans('price'); ?></th>
+            <th class="item-name">{{ trans('item') }}</th>
+            <th class="item-desc">{{ trans('description') }}</th>
+            <th class="item-amount text-right">{{ trans('qty') }}</th>
+            <th class="item-price text-right">{{ trans('price') }}</th>
 <?php
 if ($show_item_discounts) {
     ?>
-            <th class="item-discount text-right"><?php _trans('discount'); ?></th>
+            <th class="item-discount text-right">{{ trans('discount') }}</th>
 <?php
 }
 ?>
-            <th class="item-total text-right"><?php _trans('total'); ?></th>
+            <th class="item-total text-right">{{ trans('total') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -239,7 +239,7 @@ if ($add_table_and_head_for_sums) {
         <tr>
             <th colspan="<?php echo $colspan ?>">&nbsp;</th>
             <th class="text-right">
-                <?php _trans('total'); ?>
+                {{ trans('total') }}
             </th>
         </tr>
         </thead>
@@ -257,7 +257,7 @@ if ( ! $legacy_calculation) {
 
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <?php _trans('subtotal'); ?>
+                {{ trans('subtotal') }}
             </td>
             <td class="text-right"><?php echo format_currency($invoice->invoice_item_subtotal); ?></td>
         </tr>
@@ -267,7 +267,7 @@ if ($invoice->invoice_item_tax_total > 0) {
     ?>
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <?php _trans('item_tax'); ?>
+                {{ trans('item_tax') }}
             </td>
             <td class="text-right">
                 <?php echo format_currency($invoice->invoice_item_tax_total); ?>
@@ -300,7 +300,7 @@ if ($legacy_calculation) {
 
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <b><?php _trans('total'); ?></b>
+                <b>{{ trans('total') }}</b>
             </td>
             <td class="text-right">
                 <b><?php echo format_currency($invoice->invoice_total); ?></b>
@@ -308,7 +308,7 @@ if ($legacy_calculation) {
         </tr>
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <?php _trans('paid'); ?>
+                {{ trans('paid') }}
             </td>
             <td class="text-right">
                 <?php echo format_currency($invoice->invoice_paid); ?>
@@ -316,7 +316,7 @@ if ($legacy_calculation) {
         </tr>
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <b><?php _trans('balance'); ?></b>
+                <b>{{ trans('balance') }}</b>
             </td>
             <td class="text-right <?php echo $text_class ?>">
                 <b><?php echo format_currency($invoice->invoice_balance); ?></b>
@@ -332,19 +332,19 @@ if ($show_qrcode) {
         <tr>
             <td>
                 <div>
-                    <strong><?php _trans('qr_code_settings_recipient'); ?>:</strong>
+                    <strong>{{ trans('qr_code_settings_recipient') }}:</strong>
                     <?php echo $invoice->user_company ?: get_setting('qr_code_recipient'); ?>
                 </div>
                 <div>
-                    <strong><?php _trans('qr_code_settings_iban'); ?>:</strong>
+                    <strong>{{ trans('qr_code_settings_iban') }}:</strong>
                     <?php echo $invoice->user_iban ?: get_setting('qr_code_iban'); ?>
                 </div>
                 <div>
-                    <strong><?php _trans('qr_code_settings_bic'); ?>:</strong>
+                    <strong>{{ trans('qr_code_settings_bic') }}:</strong>
                     <?php echo $invoice->user_bic ?: get_setting('qr_code_bic'); ?>
                 </div>
                 <div>
-                    <strong><?php _trans('qr_code_settings_remittance_text'); ?>:</strong>
+                    <strong>{{ trans('qr_code_settings_remittance_text') }}:</strong>
                     <?php echo parse_template($invoice, $invoice->user_remittance_text ?: get_setting('qr_code_remittance_text')); ?>
                 </div>
             </td>
@@ -364,7 +364,7 @@ if ($show_qrcode) {
 if ($invoice->invoice_terms) {
     ?>
     <div class="notes">
-        <b><?php _trans('terms'); ?></b><br/>
+        <b>{{ trans('terms') }}</b><br/>
         <?php echo nl2br(htmlsc($invoice->invoice_terms)); ?>
     </div>
 <?php

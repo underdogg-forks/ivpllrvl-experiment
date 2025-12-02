@@ -5,7 +5,7 @@ namespace Modules\Invoices\Tests\Unit;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Models\Setting;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\ItemAmount;
 use Modules\Invoices\Services\InvoiceItemService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -82,7 +82,7 @@ class InvoiceItemServiceTest extends AbstractServiceTestCase
 
         $item = $this->service->saveItem(null, $data, $invoice->invoice_id);
 
-        $this->assertInstanceOf(Item::class, $item);
+        $this->assertInstanceOf(InvoiceItem::class, $item);
         $this->assertEquals('Test Item', $item->item_name);
         $this->assertEquals(2, $item->item_quantity);
         $this->assertEquals(100, $item->item_price);
@@ -109,7 +109,7 @@ class InvoiceItemServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-item-002',
         ]);
 
-        $existingItem = Item::query()->create([
+        $existingItem = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_name'            => 'Original Name',
             'item_description'     => 'Original Description',
@@ -158,7 +158,7 @@ class InvoiceItemServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-item-003',
         ]);
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_name'            => 'Item to Delete',
             'item_description'     => 'Description',
@@ -179,7 +179,7 @@ class InvoiceItemServiceTest extends AbstractServiceTestCase
         $result = $this->service->deleteItem($item->item_id);
 
         $this->assertTrue($result);
-        $this->assertNull(Item::query()->find($item->item_id));
+        $this->assertNull(InvoiceItem::query()->find($item->item_id));
         $this->assertNull(ItemAmount::query()->where('item_id', $item->item_id)->first());
     }
 
@@ -213,7 +213,7 @@ class InvoiceItemServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-item-004',
         ]);
 
-        $item1 = Item::query()->create([
+        $item1 = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_name'            => 'Item 1',
             'item_quantity'        => 2,
@@ -222,7 +222,7 @@ class InvoiceItemServiceTest extends AbstractServiceTestCase
             'item_discount_amount' => 0,
         ]);
 
-        $item2 = Item::query()->create([
+        $item2 = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_name'            => 'Item 2',
             'item_quantity'        => 1,

@@ -6,9 +6,9 @@
 
             <?php _csrf_field(); ?>
 
-            <legend><?php _trans('setup_prerequisites'); ?></legend>
+            <legend>{{ trans('setup_prerequisites') }}</legend>
 
-            <p><?php _trans('setup_prerequisites_message'); ?></p>
+            <p>{{ trans('setup_prerequisites_message') }}</p>
 
 <?php
 foreach ($basics as $basic) {
@@ -35,11 +35,11 @@ foreach ($basics as $basic) {
 
 <?php if ($errors) { ?>
             <a href="javascript:history.go(0)" class="btn btn-danger">
-                <?php _trans('try_again'); ?>
+                {{ trans('try_again') }}
             </a>
 <?php } else { ?>
             <input class="btn btn-success" type="submit" name="btn_continue"
-                   value="<?php _trans('continue'); ?>">
+                   value="{{ trans('continue') }}">
 <?php } ?>
 
         </form>

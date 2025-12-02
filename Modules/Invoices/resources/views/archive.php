@@ -1,6 +1,6 @@
 <div id="headerbar">
 
-    <h1 class="headerbar-title"><?php _trans('invoice_archive'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('invoice_archive') }}</h1>
 
 </div>
 

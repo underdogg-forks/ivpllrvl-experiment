@@ -201,7 +201,7 @@ echo $legacy_calculation ? $modal_add_invoice_tax : ''; // Legacy calculation ha
 
 <div id="headerbar">
     <h1 class="headerbar-title">
-        <span data-toggle="tooltip" data-placement="bottom" title="<?php _trans('invoicing'); ?>: <?php _htmlsc(PHP_EOL . format_user($invoice->user_id)); ?>">
+        <span data-toggle="tooltip" data-placement="bottom" title="{{ trans('invoicing') }}: <?php _htmlsc(PHP_EOL . format_user($invoice->user_id)); ?>">
             <?php echo trans('invoice') . ' ' . ($invoice->invoice_number ? '#' . $invoice->invoice_number : trans('id') . ': ' . $invoice->invoice_id); ?>
         </span>
 <?php
@@ -220,7 +220,7 @@ if ($change_user) {
 
         <span id="invoice_change_user" class="fa fa-fw fa-edit text-<?php echo $its_mine ? 'muted' : 'danger'; ?> cursor-pointer"
               data-toggle="tooltip" data-placement="bottom"
-              title="<?php _trans('change_user'); ?>"></span>
+              title="{{ trans('change_user') }}"></span>
 <?php
         } // End if draft
 } // End if change_user
@@ -232,7 +232,7 @@ if ($change_user) {
         <div class="options btn-group pull-left">
             <a class="btn btn-sm btn-default dropdown-toggle"
                data-toggle="dropdown" href="#">
-                <i class="fa fa-caret-down no-margin"></i> <?php _trans('options'); ?>
+                <i class="fa fa-caret-down no-margin"></i> {{ trans('options') }}
             </a>
             <ul class="dropdown-menu">
 <?php
@@ -240,7 +240,7 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
     ?>
                 <li>
                     <a href="#add-invoice-tax" data-toggle="modal">
-                        <i class="fa fa-plus fa-margin"></i> <?php _trans('add_invoice_tax'); ?>
+                        <i class="fa fa-plus fa-margin"></i> {{ trans('add_invoice_tax') }}
                     </a>
                 </li>
 <?php
@@ -248,7 +248,7 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
 ?>
                 <li>
                     <a href="#" id="btn_create_credit" data-invoice-id="<?php echo $invoice_id; ?>">
-                        <i class="fa fa-minus fa-margin"></i> <?php _trans('create_credit_invoice'); ?>
+                        <i class="fa fa-minus fa-margin"></i> {{ trans('create_credit_invoice') }}
                     </a>
                 </li>
 <?php
@@ -261,7 +261,7 @@ if ($invoice->invoice_balance != 0) {
                        data-invoice-payment-method="<?php echo $invoice->payment_method; ?>"
                        data-payment-cf-exist="<?php echo $payment_cf_exist ?? ''; ?>">
                         <i class="fa fa-credit-card fa-margin"></i>
-                        <?php _trans('enter_payment'); ?>
+                        {{ trans('enter_payment') }}
                     </a>
                 </li>
 <?php
@@ -271,20 +271,20 @@ if ($invoice->invoice_balance != 0) {
                     <a href="#" id="btn_generate_pdf"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-file-text fa-margin"></i>
-                        <?php _trans('generate_copy'); ?>
+                        {{ trans('generate_copy') }}
                     </a>
                 </li>
                 <li>
                     <a href="#" id="btn_sumex"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-user-md fa-margin"></i>
-                        <?php _trans('generate_sumex'); ?>
+                        {{ trans('generate_sumex') }}
                     </a>
                 </li>
                 <li>
                     <a href="<?php echo site_url('mailer/invoice/' . $invoice->invoice_id); ?>">
                         <i class="fa fa-send fa-margin"></i>
-                        <?php _trans('send_email'); ?>
+                        {{ trans('send_email') }}
                     </a>
                 </li>
                 <li class="divider"></li>
@@ -292,14 +292,14 @@ if ($invoice->invoice_balance != 0) {
                     <a href="#" id="btn_create_recurring"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-repeat fa-margin"></i>
-                        <?php _trans('create_recurring'); ?>
+                        {{ trans('create_recurring') }}
                     </a>
                 </li>
                 <li>
                     <a href="#" id="btn_copy_invoice"
                        data-invoice-id="<?php echo $invoice_id; ?>">
                         <i class="fa fa-copy fa-margin"></i>
-                        <?php _trans('copy_invoice'); ?>
+                        {{ trans('copy_invoice') }}
                     </a>
                 </li>
 <?php
@@ -308,7 +308,7 @@ if ($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_del
                 <li>
                     <a href="#delete-invoice" data-toggle="modal">
                         <i class="fa fa-trash-o fa-margin"></i>
-                        <?php _trans('delete'); ?>
+                        {{ trans('delete') }}
                     </a>
                 </li>
 <?php
@@ -321,7 +321,7 @@ if ($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_del
 if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
     ?>
         <a href="#" class="btn btn-sm btn-success ajax-loader" id="btn_save_invoice">
-            <i class="fa fa-check"></i> <?php _trans('save'); ?>
+            <i class="fa fa-check"></i> {{ trans('save') }}
         </a>
 <?php
 }
@@ -332,13 +332,13 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 <?php
 if ($invoice->invoice_is_recurring) {
     ?>
-        <span class="label label-info"><?php _trans('recurring'); ?></span>
+        <span class="label label-info">{{ trans('recurring') }}</span>
 <?php
 }
 if ($invoice->is_read_only == 1) {
     ?>
         <span class="label label-danger">
-            <i class="fa fa-read-only"></i> <?php _trans('read_only'); ?>
+            <i class="fa fa-read-only"></i> {{ trans('read_only') }}
         </span>
 <?php
 }
@@ -380,19 +380,19 @@ if ($invoice->invoice_status_id == 1) {
                             <hr>
 <?php endif; ?>
 <?php if ($invoice->client_phone) : ?>
-                            <div><?php _trans('phone'); ?>:&nbsp;<?php _htmlsc($invoice->client_phone); ?></div>
+                            <div>{{ trans('phone') }}:&nbsp;<?php _htmlsc($invoice->client_phone); ?></div>
 <?php endif; ?>
 <?php if ($invoice->client_email) : ?>
-                            <div><?php _trans('email'); ?>:&nbsp;<?php _auto_link($invoice->client_email); ?></div>
+                            <div>{{ trans('email') }}:&nbsp;<?php _auto_link($invoice->client_email); ?></div>
 <?php endif; ?>
 <?php if ($invoice->client_birthdate || $invoice->client_gender) : ?>
                             <hr>
 <?php endif; ?>
 <?php if ($invoice->client_birthdate) : ?>
-                            <div><?php _trans('birthdate'); ?>:&nbsp;<?php echo format_date($invoice->client_birthdate); ?></div>
+                            <div>{{ trans('birthdate') }}:&nbsp;<?php echo format_date($invoice->client_birthdate); ?></div>
 <?php endif; ?>
 <?php if ($invoice->client_gender) : ?>
-                            <div><?php _trans('birthdate'); ?>:&nbsp;<?php echo format_gender($invoice->client_gender); ?></div>
+                            <div>{{ trans('birthdate') }}:&nbsp;<?php echo format_gender($invoice->client_gender); ?></div>
 <?php endif; ?>
                     </div>
                     <div class="col-md-6">
@@ -402,14 +402,14 @@ $invoice->sumex_treatmentstart = $invoice->sumex_treatmentstart == '0000-00-00' 
 $invoice->sumex_treatmentend   = $invoice->sumex_treatmentend == '0000-00-00' ? date('y-m-d') : $invoice->sumex_treatmentend;
 $invoice->sumex_casedate       = $invoice->sumex_casedate == '0000-00-00' ? date('y-m-d') : $invoice->sumex_casedate;
 ?>
-                        <h3><?php _trans('treatment'); ?></h3>
+                        <h3>{{ trans('treatment') }}</h3>
                         <br>
                         <div class="col-xs-12 col-md-8">
                             <table class="items table">
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon"><?php _trans('start'); ?></span>
+                                            <span class="input-group-addon">{{ trans('start') }}</span>
                                             <input id="invoice_sumex_treatmentstart" name="sumex_treatmentstart"
                                                    class="form-control datepicker"
                                                    value="<?php echo date_from_mysql($invoice->sumex_treatmentstart); ?>"
@@ -420,7 +420,7 @@ $invoice->sumex_casedate       = $invoice->sumex_casedate == '0000-00-00' ? date
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon"><?php _trans('end'); ?></span>
+                                            <span class="input-group-addon">{{ trans('end') }}</span>
                                             <input id="invoice_sumex_treatmentend" name="sumex_treatmentend"
                                                    class="form-control datepicker"
                                                    value="<?php echo date_from_mysql($invoice->sumex_treatmentend); ?>"
@@ -431,7 +431,7 @@ $invoice->sumex_casedate       = $invoice->sumex_casedate == '0000-00-00' ? date
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon"><?php _trans('reason'); ?></span>
+                                            <span class="input-group-addon">{{ trans('reason') }}</span>
                                             <select name="invoice_sumex_reason" id="invoice_sumex_reason"
                                                     class="form-control simple-select">
 <?php
@@ -459,7 +459,7 @@ foreach ($reasons as $key => $reason) {
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon"><?php _trans('case_date'); ?></span>
+                                            <span class="input-group-addon">{{ trans('case_date') }}</span>
                                             <input id="invoice_sumex_casedate" name="sumex_casedate"
                                                    class="form-control datepicker"
                                                    value="<?php echo date_from_mysql($invoice->sumex_casedate); ?>"
@@ -470,7 +470,7 @@ foreach ($reasons as $key => $reason) {
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon"><?php _trans('case_number'); ?></span>
+                                            <span class="input-group-addon">{{ trans('case_number') }}</span>
                                             <input id="invoice_sumex_casenumber" name="sumex_casenumber"
                                                    class="form-control"
                                                    value="<?php _htmle($invoice->sumex_casenumber); ?>"
@@ -481,7 +481,7 @@ foreach ($reasons as $key => $reason) {
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon"><?php _trans('invoice_sumex_diagnosis'); ?></span>
+                                            <span class="input-group-addon">{{ trans('invoice_sumex_diagnosis') }}</span>
                                             <input id="invoice_sumex_diagnosis" name="invoice_sumex_diagnosis"
                                                    class="form-control"
                                                    value="<?php _htmle($invoice->sumex_diagnosis); ?>"
@@ -542,20 +542,20 @@ foreach ($invoice_statuses as $key => $status) {
                                 </div>
 
                                 <div class="invoice-properties">
-                                    <label><?php _trans('invoice'); ?> #</label>
+                                    <label>{{ trans('invoice') }} #</label>
                                     <input type="text" id="invoice_number"
                                            class="form-control"
                                         <?php if ($invoice->invoice_number) : ?>
                                             value="<?php echo $invoice->invoice_number; ?>"
                                         <?php else : ?>
-                                            placeholder="<?php _trans('not_set'); ?>"
+                                            placeholder="{{ trans('not_set') }}"
                                         <?php endif; ?>
                                         <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>
                                     >
                                 </div>
 
                                 <div class="invoice-properties has-feedback">
-                                    <label><?php _trans('date'); ?></label>
+                                    <label>{{ trans('date') }}</label>
 
                                     <div class="input-group">
                                         <input name="invoice_date_created" id="invoice_date_created"
@@ -570,7 +570,7 @@ foreach ($invoice_statuses as $key => $status) {
                                 </div>
 
                                 <div class="invoice-properties has-feedback">
-                                    <label><?php _trans('due_date'); ?></label>
+                                    <label>{{ trans('due_date') }}</label>
 
                                     <div class="input-group">
                                         <input name="invoice_date_due" id="invoice_date_due"
@@ -586,12 +586,12 @@ foreach ($invoice_statuses as $key => $status) {
                                 </div>
 
                                 <div class="invoice-properties">
-                                    <label><?php _trans('payment_method'); ?></label>
+                                    <label>{{ trans('payment_method') }}</label>
                                     <select name="payment_method" id="payment_method"
                                             class="form-control simple-select"
                                             <?php echo ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : ''; ?>
                                     >
-                                        <option value="0"><?php _trans('select_payment_method'); ?></option>
+                                        <option value="0">{{ trans('select_payment_method') }}</option>
 <?php
 foreach ($payment_methods as $payment_method) {
     ?>
@@ -606,7 +606,7 @@ foreach ($payment_methods as $payment_method) {
                                 </div>
 
                                 <div class="invoice-properties">
-                                    <label><?php _trans('invoice_password'); ?></label>
+                                    <label>{{ trans('invoice_password') }}</label>
                                     <input type="text" id="invoice_password" class="form-control"
                                            value="<?php _htmlsc($invoice->invoice_password); ?>"
                                            <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>>
@@ -631,7 +631,7 @@ if ($invoice->invoice_status_id != 1) {
     ?>
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <label for="invoice-guest-url"><?php _trans('guest_url'); ?></label>
+                                    <label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                                     <div class="input-group">
                                         <input type="text" id="invoice-guest-url" readonly class="form-control"
                                                value="<?php echo site_url('guest/view/invoice/' . $invoice->invoice_url_key) ?>">
@@ -661,7 +661,7 @@ if ($invoice->invoice_status_id != 1) {
 
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading">
-                            <?php _trans('sumex_observations'); ?>
+                            {{ trans('sumex_observations') }}
                         </div>
                         <div class="panel-body">
                             <textarea id="invoice_sumex_observations" name="invoice_sumex_observations" class="form-control" rows="3"
@@ -676,7 +676,7 @@ if ($invoice->invoice_status_id != 1) {
 
                     <div class="panel panel-default no-margin">
                         <div class="panel-heading">
-                            <?php _trans('invoice_terms'); ?>
+                            {{ trans('invoice_terms') }}
                         </div>
                         <div class="panel-body">
                             <textarea id="invoice_terms" name="invoice_terms" class="form-control" rows="3"
@@ -706,7 +706,7 @@ if ($default_custom) {
                     <hr>
 
                     <div class="panel panel-default">
-                        <div class="panel-heading"><?php _trans('custom_fields'); ?></div>
+                        <div class="panel-heading">{{ trans('custom_fields') }}</div>
                         <div class="panel-body">
                             <div class="row">
 <?php

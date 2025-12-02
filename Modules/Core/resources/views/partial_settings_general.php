@@ -13,7 +13,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('general'); ?>
+                {{ trans('general') }}
             </div>
             <div class="panel-body">
 
@@ -21,7 +21,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_language]">
-                                <?php _trans('language'); ?>
+                                {{ trans('language') }}
                             </label>
                             <select name="settings[default_language]" id="settings[default_language]"
                                 class="form-control simple-select">
@@ -39,7 +39,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[system_theme]">
-                                <?php _trans('theme'); ?>
+                                {{ trans('theme') }}
                             </label>
                             <select name="settings[system_theme]" id="settings[system_theme]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
@@ -57,7 +57,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[first_day_of_week]">
-                                <?php _trans('first_day_of_week'); ?>
+                                {{ trans('first_day_of_week') }}
                             </label>
                             <select name="settings[first_day_of_week]" id="settings[first_day_of_week]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
@@ -74,7 +74,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[date_format]">
-                                <?php _trans('date_format'); ?>
+                                {{ trans('date_format') }}
                             </label>
                             <select name="settings[date_format]" id="settings[date_format]"
                                 class="form-control simple-select">
@@ -94,11 +94,11 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_country]">
-                                <?php _trans('default_country'); ?>
+                                {{ trans('default_country') }}
                             </label>
                             <select name="settings[default_country]" id="settings[default_country]"
                                 class="form-control simple-select">
-                                <option value=""><?php _trans('none'); ?></option>
+                                <option value="">{{ trans('none') }}</option>
                                 <?php foreach ($countries as $cldr => $country) { ?>
                                     <option value="<?php echo $cldr; ?>" <?php check_select(get_setting('default_country'), $cldr); ?>>
                                         <?php echo $country ?>
@@ -111,7 +111,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="default_list_limit">
-                                <?php _trans('default_list_limit'); ?>
+                                {{ trans('default_list_limit') }}
                             </label>
                             <input type="number" name="settings[default_list_limit]" id="default_list_limit"
                                 class="form-control" minlength="1" min="1" required
@@ -126,7 +126,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('amount_settings'); ?>
+                {{ trans('amount_settings') }}
             </div>
             <div class="panel-body">
 
@@ -134,7 +134,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_symbol]">
-                                <?php _trans('currency_symbol'); ?>
+                                {{ trans('currency_symbol') }}
                             </label>
                             <input type="text" name="settings[currency_symbol]" id="settings[currency_symbol]"
                                 class="form-control"
@@ -145,18 +145,18 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_symbol_placement]">
-                                <?php _trans('currency_symbol_placement'); ?>
+                                {{ trans('currency_symbol_placement') }}
                             </label>
                             <select name="settings[currency_symbol_placement]" id="settings[currency_symbol_placement]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="before" <?php check_select(get_setting('currency_symbol_placement'), 'before'); ?>>
-                                    <?php _trans('before_amount'); ?>
+                                    {{ trans('before_amount') }}
                                 </option>
                                 <option value="after" <?php check_select(get_setting('currency_symbol_placement'), 'after'); ?>>
-                                    <?php _trans('after_amount'); ?>
+                                    {{ trans('after_amount') }}
                                 </option>
                                 <option value="afterspace" <?php check_select(get_setting('currency_symbol_placement'), 'afterspace'); ?>>
-                                    <?php _trans('after_amount_space'); ?>
+                                    {{ trans('after_amount_space') }}
                                 </option>
                             </select>
                         </div>
@@ -167,7 +167,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[currency_code]">
-                                <?php _trans('currency_code'); ?>
+                                {{ trans('currency_code') }}
                             </label>
                             <select name="settings[currency_code]"
                                 id="settings[currency_code]"
@@ -185,7 +185,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="tax_rate_decimal_places">
-                                <?php _trans('tax_rate_decimal_places'); ?>
+                                {{ trans('tax_rate_decimal_places') }}
                             </label>
                             <select name="settings[tax_rate_decimal_places]" class="form-control simple-select"
                                 id="tax_rate_decimal_places" data-minimum-results-for-search="Infinity">
@@ -196,7 +196,7 @@
                                     3
                                 </option>
                             </select>
-                            <p class="help-block"><?php _trans('tax_rate_decimal_places_hint'); ?></p>
+                            <p class="help-block">{{ trans('tax_rate_decimal_places_hint') }}</p>
 
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[number_format]">
-                                <?php _trans('number_format'); ?>
+                                {{ trans('number_format') }}
                             </label>
                             <select name="settings[number_format]" id="settings[number_format]"
                                 class="form-control simple-select"
@@ -224,7 +224,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_item_decimals]">
-                                <?php _trans('default_item_decimals'); ?>
+                                {{ trans('default_item_decimals') }}
                             </label>
                             <?php $current_default_item_decimals = get_setting('default_item_decimals'); ?>
                             <select name="settings[default_item_decimals]" id="settings[default_item_decimals]"
@@ -249,7 +249,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('dashboard'); ?>
+                {{ trans('dashboard') }}
             </div>
             <div class="panel-body">
 
@@ -257,27 +257,27 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[quote_overview_period]">
-                                <?php _trans('quote_overview_period'); ?>
+                                {{ trans('quote_overview_period') }}
                             </label>
                             <select name="settings[quote_overview_period]" id="settings[quote_overview_period]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="this-month" <?php check_select(get_setting('quote_overview_period'), 'this-month'); ?>>
-                                    <?php _trans('this_month'); ?>
+                                    {{ trans('this_month') }}
                                 </option>
                                 <option value="last-month" <?php check_select(get_setting('quote_overview_period'), 'last-month'); ?>>
-                                    <?php _trans('last_month'); ?>
+                                    {{ trans('last_month') }}
                                 </option>
                                 <option value="this-quarter" <?php check_select(get_setting('quote_overview_period'), 'this-quarter'); ?>>
-                                    <?php _trans('this_quarter'); ?>
+                                    {{ trans('this_quarter') }}
                                 </option>
                                 <option value="last-quarter" <?php check_select(get_setting('quote_overview_period'), 'last-quarter'); ?>>
-                                    <?php _trans('last_quarter'); ?>
+                                    {{ trans('last_quarter') }}
                                 </option>
                                 <option value="this-year" <?php check_select(get_setting('quote_overview_period'), 'this-year'); ?>>
-                                    <?php _trans('this_year'); ?>
+                                    {{ trans('this_year') }}
                                 </option>
                                 <option value="last-year" <?php check_select(get_setting('quote_overview_period'), 'last-year'); ?>>
-                                    <?php _trans('last_year'); ?>
+                                    {{ trans('last_year') }}
                                 </option>
                             </select>
                         </div>
@@ -286,27 +286,27 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[invoice_overview_period]">
-                                <?php _trans('invoice_overview_period'); ?>
+                                {{ trans('invoice_overview_period') }}
                             </label>
                             <select name="settings[invoice_overview_period]" id="settings[invoice_overview_period]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="this-month" <?php check_select(get_setting('invoice_overview_period'), 'this-month'); ?>>
-                                    <?php _trans('this_month'); ?>
+                                    {{ trans('this_month') }}
                                 </option>
                                 <option value="last-month" <?php check_select(get_setting('invoice_overview_period'), 'last-month'); ?>>
-                                    <?php _trans('last_month'); ?>
+                                    {{ trans('last_month') }}
                                 </option>
                                 <option value="this-quarter" <?php check_select(get_setting('invoice_overview_period'), 'this-quarter'); ?>>
-                                    <?php _trans('this_quarter'); ?>
+                                    {{ trans('this_quarter') }}
                                 </option>
                                 <option value="last-quarter" <?php check_select(get_setting('invoice_overview_period'), 'last-quarter'); ?>>
-                                    <?php _trans('last_quarter'); ?>
+                                    {{ trans('last_quarter') }}
                                 </option>
                                 <option value="this-year" <?php check_select(get_setting('invoice_overview_period'), 'this-year'); ?>>
-                                    <?php _trans('this_year'); ?>
+                                    {{ trans('this_year') }}
                                 </option>
                                 <option value="last-year" <?php check_select(get_setting('invoice_overview_period'), 'last-year'); ?>>
-                                    <?php _trans('last_year'); ?>
+                                    {{ trans('last_year') }}
                                 </option>
                             </select>
                         </div>
@@ -317,15 +317,15 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="disable_quickactions">
-                                <?php _trans('disable_quickactions'); ?>
+                                {{ trans('disable_quickactions') }}
                             </label>
                             <select name="settings[disable_quickactions]" class="form-control simple-select"
                                 id="disable_quickactions" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?php _trans('no'); ?>
+                                    {{ trans('no') }}
                                 </option>
                                 <option value="1" <?php check_select(get_setting('disable_quickactions'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
                         </div>
@@ -337,7 +337,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('interface'); ?>
+                {{ trans('interface') }}
             </div>
             <div class="panel-body">
 
@@ -345,15 +345,15 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="disable_sidebar">
-                                <?php _trans('disable_sidebar'); ?>
+                                {{ trans('disable_sidebar') }}
                             </label>
                             <select name="settings[disable_sidebar]" class="form-control simple-select"
                                 id="disable_sidebar" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?php _trans('no'); ?>
+                                    {{ trans('no') }}
                                 </option>
                                 <option value="1" <?php check_select(get_setting('disable_sidebar'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
                         </div>
@@ -362,7 +362,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[custom_title]">
-                                <?php _trans('custom_title'); ?>
+                                {{ trans('custom_title') }}
                             </label>
                             <input type="text" name="settings[custom_title]" id="settings[custom_title]"
                                 class="form-control"
@@ -375,18 +375,18 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="monospace_amounts">
-                                <?php _trans('monospaced_font_for_amounts'); ?>
+                                {{ trans('monospaced_font_for_amounts') }}
                             </label>
                             <select name="settings[monospace_amounts]" class="form-control simple-select"
                                 id="monospace_amounts" data-minimum-results-for-search="Infinity">
-                                <option value="0"><?php _trans('no'); ?></option>
+                                <option value="0">{{ trans('no') }}</option>
                                 <option value="1" <?php check_select(get_setting('monospace_amounts'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
 
                             <p class="help-block">
-                                <?php _trans('example'); ?>:
+                                {{ trans('example') }}:
                                 <span style="font-family: Monaco, Lucida Console, monospace">
                                     <?php echo format_currency(123456.78); ?>
                                 </span>
@@ -396,7 +396,7 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="login_logo">
-                                <?php _trans('login_logo'); ?>
+                                {{ trans('login_logo') }}
                             </label>
                             <?php if (get_setting('login_logo')) { ?>
                                 <br/>
@@ -413,13 +413,13 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[reports_in_new_tab]">
-                                <?php _trans('open_reports_in_new_tab'); ?>
+                                {{ trans('open_reports_in_new_tab') }}
                             </label>
                             <select name="settings[reports_in_new_tab]" id="settings[reports_in_new_tab]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <option value="0"><?php _trans('no'); ?></option>
+                                <option value="0">{{ trans('no') }}</option>
                                 <option value="1" <?php check_select(get_setting('reports_in_new_tab'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
                         </div>
@@ -427,15 +427,15 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[show_responsive_itemlist]">
-                                <?php _trans('show_responsive_itemlist'); ?>
+                                {{ trans('show_responsive_itemlist') }}
                             </label>
                             <select name="settings[show_responsive_itemlist]" id="settings[show_responsive_itemlist]"
                                     class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="0">
-                                    <?php _trans('no'); ?>
+                                    {{ trans('no') }}
                                 </option>
                                 <option value="1" <?php check_select(get_setting('show_responsive_itemlist'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
                         </div>
@@ -447,7 +447,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('system_settings'); ?>
+                {{ trans('system_settings') }}
             </div>
             <div class="panel-body">
 
@@ -456,17 +456,17 @@
 
                         <div class="form-group">
                             <label for="settings[bcc_mails_to_admin]">
-                                <?php _trans('bcc_mails_to_admin'); ?>
+                                {{ trans('bcc_mails_to_admin') }}
                             </label>
                             <select name="settings[bcc_mails_to_admin]" id="settings[bcc_mails_to_admin]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <option value="0"><?php _trans('no'); ?></option>
+                                <option value="0">{{ trans('no') }}</option>
                                 <option value="1" <?php check_select(get_setting('bcc_mails_to_admin'), '1'); ?>>
-                                    <?php _trans('yes'); ?>
+                                    {{ trans('yes') }}
                                 </option>
                             </select>
 
-                            <p class="help-block"><?php _trans('bcc_mails_to_admin_hint'); ?></p>
+                            <p class="help-block">{{ trans('bcc_mails_to_admin_hint') }}</p>
                         </div>
 
                     </div>
@@ -474,14 +474,14 @@
 
                         <div class="form-group">
                             <label for="cron_key">
-                                <?php _trans('cron_key'); ?>
+                                {{ trans('cron_key') }}
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[cron_key]" id="cron_key" class="form-control" readonly
                                     value="<?php echo get_setting('cron_key'); ?>">
                                 <div class="input-group-btn">
                                     <button id="btn_generate_cron_key" type="button" class="btn btn-primary btn-block">
-                                        <i class="fa fa-recycle fa-margin"></i> <?php _trans('generate'); ?>
+                                        <i class="fa fa-recycle fa-margin"></i> {{ trans('generate') }}
                                     </button>
                                 </div>
                             </div>

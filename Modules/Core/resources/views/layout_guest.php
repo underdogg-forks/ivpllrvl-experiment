@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 
 <!--[if lt IE 7]>
-<html class="no-js ie6 oldie" lang="<?php _trans('cldr'); ?>"> <![endif]-->
+<html class="no-js ie6 oldie" lang="{{ trans('cldr') }}"> <![endif]-->
 <!--[if IE 7]>
-<html class="no-js ie7 oldie" lang="<?php _trans('cldr'); ?>"> <![endif]-->
+<html class="no-js ie7 oldie" lang="{{ trans('cldr') }}"> <![endif]-->
 <!--[if IE 8]>
-<html class="no-js ie8 oldie" lang="<?php _trans('cldr'); ?>"> <![endif]-->
+<html class="no-js ie8 oldie" lang="{{ trans('cldr') }}"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="<?php _trans('cldr'); ?>"> <!--<![endif]-->
+<html class="no-js" lang="{{ trans('cldr') }}"> <!--<![endif]-->
 
 <head>
     <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?></title>
@@ -61,8 +61,8 @@
                 <li>
                     <a href="<?php echo site_url('sessions/logout'); ?>"
                        class="tip icon logout" data-placement="bottom"
-                       title="<?php _trans('logout'); ?>">
-                        <span class="visible-xs">&nbsp;<?php _trans('logout'); ?></span>
+                       title="{{ trans('logout') }}">
+                        <span class="visible-xs">&nbsp;{{ trans('logout') }}</span>
                         <i class="fa fa-power-off"></i>
                     </a>
                 </li>
@@ -76,26 +76,26 @@
     <div class="sidebar hidden-xs<?php echo get_setting('disable_sidebar') == 1 ? ' hidden' : ''; ?>">
         <ul>
             <li>
-                <a href="<?php echo site_url('guest'); ?>" title="<?php _trans('dashboard'); ?>" class="tip"
+                <a href="<?php echo site_url('guest'); ?>" title="{{ trans('dashboard') }}" class="tip"
                    data-placement="right">
                     <i class="fa fa-dashboard"></i>
                 </a>
             </li>
             <li>
-                <a href="<?php echo site_url('guest/quotes/index'); ?>" title="<?php _trans('quotes'); ?>"
+                <a href="<?php echo site_url('guest/quotes/index'); ?>" title="{{ trans('quotes') }}"
                    class="tip"
                    data-placement="right">
                     <i class="fa fa-file"></i>
                 </a>
             </li>
             <li>
-                <a href="<?php echo site_url('guest/invoices/index'); ?>" title="<?php _trans('invoices'); ?>"
+                <a href="<?php echo site_url('guest/invoices/index'); ?>" title="{{ trans('invoices') }}"
                    class="tip" data-placement="right">
                     <i class="fa fa-file-text"></i>
                 </a>
             </li>
             <li>
-                <a href="<?php echo site_url('guest/payments/index'); ?>" title="<?php _trans('payments'); ?>"
+                <a href="<?php echo site_url('guest/payments/index'); ?>" title="{{ trans('payments') }}"
                    class="tip" data-placement="right">
                     <i class="fa fa-money"></i>
                 </a>

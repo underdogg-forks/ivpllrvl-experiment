@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('version_history'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('version_history') }}</h1>
 
     <div class="headerbar-item pull-right">
         <?php echo pager(site_url('settings/versions/index'), $versions); ?>
@@ -13,9 +13,9 @@
 
             <thead>
             <tr>
-                <th><?php _trans('date_applied'); ?></th>
-                <th><?php _trans('sql_file'); ?></th>
-                <th><?php _trans('errors'); ?></th>
+                <th>{{ trans('date_applied') }}</th>
+                <th>{{ trans('sql_file') }}</th>
+                <th>{{ trans('errors') }}</th>
             </tr>
             </thead>
 

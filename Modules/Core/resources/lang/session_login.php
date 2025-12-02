@@ -54,26 +54,26 @@ if ($login_logo) {
             <?php _csrf_field(); ?>
 
             <div class="form-group">
-                <label for="email" class="control-label"><?php _trans('email'); ?></label>
+                <label for="email" class="control-label">{{ trans('email') }}</label>
                 <input type="email" name="email" id="email" class="form-control"
-                       placeholder="<?php _trans('email'); ?>" required autofocus
+                       placeholder="{{ trans('email') }}" required autofocus
                 >
             </div>
 
             <div class="form-group">
-                <label for="password" class="control-label"><?php _trans('password'); ?></label>
+                <label for="password" class="control-label">{{ trans('password') }}</label>
                 <input type="password" name="password" id="password" class="form-control"
-                       placeholder="<?php _trans('password'); ?>" required
+                       placeholder="{{ trans('password') }}" required
                 >
             </div>
 
             <input type="hidden" name="btn_login" value="true">
 
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-unlock fa-margin"></i> <?php _trans('login'); ?>
+                <i class="fa fa-unlock fa-margin"></i> {{ trans('login') }}
             </button>
             <a href="<?php echo site_url('sessions/passwordreset'); ?>" class="btn btn-default">
-                <?php _trans('forgot_your_password'); ?>
+                {{ trans('forgot_your_password') }}
             </a>
 
         </form>

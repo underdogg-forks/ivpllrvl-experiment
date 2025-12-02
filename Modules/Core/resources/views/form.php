@@ -3,7 +3,7 @@
     <?php _csrf_field(); ?>
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?php _trans('email_template_form'); ?></h1>
+        <h1 class="headerbar-title">{{ trans('email_template_form') }}</h1>
         <?php $this->layout->load_view('layout/header_buttons'); ?>
     </div>
 
@@ -17,26 +17,26 @@
             <div class="col-xs-12 col-md-8 col-md-offset-2">
 
                 <div class="form-group">
-                    <label for="email_template_title" class="control-label"><?php _trans('title'); ?></label>
+                    <label for="email_template_title" class="control-label">{{ trans('title') }}</label>
                     <input type="text" name="email_template_title" id="email_template_title"
                            value="<?php echo $this->mdl_email_templates->form_value('email_template_title', true); ?>"
                            class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email_template_type" class="control-label"><?php _trans('type'); ?></label>
+                    <label for="email_template_type" class="control-label">{{ trans('type') }}</label>
                     <div class="radio">
                         <label>
                             <input type="radio" name="email_template_type" id="email_template_type_invoice"
                                    value="invoice" checked>
-                            <?php _trans('invoice'); ?>
+                            {{ trans('invoice') }}
                         </label>
                     </div>
                     <div class="radio">
                         <label>
                             <input type="radio" name="email_template_type" id="email_template_type_quote"
                                    value="quote">
-                            <?php _trans('quote'); ?>
+                            {{ trans('quote') }}
                         </label>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
 
                 <div class="form-group">
                     <label for="email_template_from_name" class="control-label">
-                        <?php _trans('from_name'); ?>
+                        {{ trans('from_name') }}
                     </label>
                     <input type="text" name="email_template_from_name" id="email_template_from_name"
                            class="form-control taggable"
@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     <label for="email_template_from_email" class="control-label">
-                        <?php _trans('from_email'); ?>
+                        {{ trans('from_email') }}
                     </label>
                     <input type="text" name="email_template_from_email" id="email_template_from_email"
                            class="form-control taggable"
@@ -62,20 +62,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email_template_cc" class="control-label"><?php _trans('cc'); ?></label>
+                    <label for="email_template_cc" class="control-label">{{ trans('cc') }}</label>
                     <input type="text" name="email_template_cc" id="email_template_cc" class="form-control taggable"
                            value="<?php echo $this->mdl_email_templates->form_value('email_template_cc', true); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="email_template_bcc" class="control-label"><?php _trans('bcc'); ?>: </label>
+                    <label for="email_template_bcc" class="control-label">{{ trans('bcc') }}: </label>
                     <input type="text" name="email_template_bcc" id="email_template_bcc" class="form-control taggable"
                            value="<?php echo $this->mdl_email_templates->form_value('email_template_bcc', true); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email_template_subject" class="control-label">
-                        <?php _trans('subject'); ?>
+                        {{ trans('subject') }}
                     </label>
                     <input type="text" name="email_template_subject" id="email_template_subject"
                            class="form-control taggable"
@@ -84,13 +84,13 @@
 
                 <div class="form-group">
                     <label for="email_template_pdf_template" class="control-label">
-                        <?php _trans('pdf_template'); ?>:
+                        {{ trans('pdf_template') }}:
                     </label>
                     <select name="email_template_pdf_template" id="email_template_pdf_template"
                             class="form-control simple-select">
-                        <option value=""><?php _trans('none'); ?></option>
+                        <option value="">{{ trans('none') }}</option>
 
-                        <optgroup label="<?php _trans('invoices'); ?>">
+                        <optgroup label="{{ trans('invoices') }}">
 <?php
 foreach ($invoice_templates as $template) {
     ?>
@@ -103,7 +103,7 @@ foreach ($invoice_templates as $template) {
     ?>
                         </optgroup>
 
-                        <optgroup label="<?php _trans('quotes'); ?>">
+                        <optgroup label="{{ trans('quotes') }}">
 <?php
 foreach ($quote_templates as $template) {
     ?>
@@ -124,7 +124,7 @@ foreach ($quote_templates as $template) {
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
-                            <label for="email_template_body"><?php _trans('body'); ?></label>
+                            <label for="email_template_body">{{ trans('body') }}</label>
 
                             <br>
 
@@ -171,7 +171,7 @@ foreach ($quote_templates as $template) {
 
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <?php _trans('preview'); ?>
+                                    {{ trans('preview') }}
                                     <span id="email-template-preview-reload" class="pull-right cursor-pointer">
                                         <i class="fa fa-refresh"></i>
                                     </span>

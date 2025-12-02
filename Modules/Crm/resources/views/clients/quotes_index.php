@@ -1,6 +1,6 @@
 <div id="headerbar">
 
-    <h1 class="headerbar-title"><?php _trans('quotes'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('quotes') }}</h1>
 
     <div class="headerbar-item pull-right">
         <?php echo pager(site_url('guest/quotes/status/' . $this->uri->segment(3)), $quotes); ?>
@@ -10,23 +10,23 @@
         <div class="btn-group btn-group-sm index-options">
             <a href="<?php echo site_url('guest/quotes/status/open'); ?>"
                class="btn <?php echo $status == 'open' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('open'); ?>
+                {{ trans('open') }}
             </a>
             <a href="<?php echo site_url('guest/quotes/status/approved'); ?>"
                class="btn  <?php echo $status == 'approved' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('approved'); ?>
+                {{ trans('approved') }}
             </a>
             <a href="<?php echo site_url('guest/quotes/status/rejected'); ?>"
                class="btn  <?php echo $status == 'rejected' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('rejected'); ?>
+                {{ trans('rejected') }}
             </a>
             <a href="<?php echo site_url('guest/quotes/status/viewed'); ?>"
                class="btn  <?php echo $status == 'viewed' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('viewed'); ?>
+                {{ trans('viewed') }}
             </a>
             <a href="<?php echo site_url('guest/quotes/status/all'); ?>"
                class="btn  <?php echo $status == 'all' ? 'btn-primary' : 'btn-default' ?>">
-                <?php _trans('all'); ?>
+                {{ trans('all') }}
             </a>
         </div>
     </div>

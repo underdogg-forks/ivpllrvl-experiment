@@ -11,81 +11,77 @@ class DropzoneHelper
      *
      * @param bool $read_only Whether to display in read-only mode
      */
-    public static function _dropzone_html($read_only = true): void
+    public static function _dropzone_html(bool $read_only = true): string
     {
-        ?>
-        <div class="panel panel-default no-margin">
-            <div class="panel-heading"><?php _trans('attachments'); ?></div>
+        $hideClass = $read_only ? ' hide' : '';
+        $disabled  = $read_only ? 'disabled' : '';
 
-            <div class="panel-body clearfix">
-                <button
-                    type="button"
-                    class="btn btn-sm btn-default fileinput-button<?php echo $read_only ? ' hide' : ''; ?>"
-                    <?php echo $read_only ? 'disabled="disabled"' : ''; ?>
-                >
-                    <i class="fa fa-plus"></i> <?php _trans('add_files'); ?>
-                </button>
-                <?php if ( ! $read_only): ?>
-                    <button type="button" class="btn btn-sm btn-danger removeAllFiles-button pull-right hidden">
-                        <i class="fa fa-trash-o"></i> <?php _trans('delete_attachments'); ?>
-                    </button>
-                <?php endif; ?>
+        return <<<BLADE
+<div class="panel panel-default no-margin">
+    <div class="panel-heading">{{ trans('attachments') }}</div>
 
-                <div class="row">
-                    <div id="actions" class="col-xs-12">
-                        <div class="col-xs-12 col-md-6 col-lg-7"></div>
-                        <div class="col-xs-12 col-md-6 col-lg-5">
-                            <div class="fileupload-process">
-                                <div id="total-progress" class="progress progress-striped active"
-                                     role="progressbar"
-                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                    <div class="progress-bar progress-bar-success" style="width:0%;"
-                                         data-dz-uploadprogress>
-                                    </div>
-                                </div>
+    <div class="panel-body clearfix">
+        <button type="button" class="btn btn-sm btn-default fileinput-button{$hideClass}" {$disabled}>
+            <i class="fa fa-plus"></i> {{ trans('add_files') }}
+        </button>
+
+        @unless(\$read_only)
+            <button type="button" class="btn btn-sm btn-danger removeAllFiles-button pull-right hidden">
+                <i class="fa fa-trash-o"></i> {{ trans('delete_attachments') }}
+            </button>
+        @endunless
+
+        <div class="row">
+            <div id="actions" class="col-xs-12">
+                <div class="col-xs-12 col-md-6 col-lg-7"></div>
+                <div class="col-xs-12 col-md-6 col-lg-5">
+                    <div class="fileupload-process">
+                        <div id="total-progress" class="progress progress-striped active"
+                             role="progressbar"
+                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="previews" class="table table-condensed files no-margin">
+                    <div id="template" class="row file-row">
+                        <div class="col-xs-3 col-md-4">
+                            <span class="preview pull-left"><img data-dz-thumbnail/></span>
+                        </div>
+                        <div class="col-xs-5 col-md-4">
+                            <p class="size pull-left" data-dz-size></p>
+                            <div class="progress progress-striped active pull-right" role="progressbar"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100" aria-valuenow="0">
+                                <div class="progress-bar progress-bar-success" style="width:0%" data-dz-uploadprogress></div>
                             </div>
                         </div>
-
-                        <div id="previews" class="table table-condensed files no-margin">
-                            <div id="template" class="row file-row">
-                                <div class="col-xs-3 col-md-4">
-                                    <span class="preview pull-left"><img data-dz-thumbnail/></span>
-                                </div>
-                                <div class="col-xs-5 col-md-4">
-                                    <p class="size pull-left" data-dz-size></p>
-                                    <div class="progress progress-striped active pull-right" role="progressbar"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100" aria-valuenow="0">
-                                        <div class="progress-bar progress-bar-success" style="width:0%"
-                                             data-dz-uploadprogress>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-4 col-md-4">
-                                    <div class="pull-right btn-group">
-                                        <button data-dz-download class="btn btn-sm btn-primary">
-                                            <i class="fa fa-download"></i>
-                                            <span><?php _trans('download'); ?></span>
-                                        </button>
-                                        <?php if ( ! $read_only): ?>
-                                            <button data-dz-remove class="btn btn-sm btn-danger delete">
-                                                <i class="fa fa-trash-o"></i>
-                                                <span><?php _trans('delete'); ?></span>
-                                            </button>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-8">
-                                    <p class="name pull-left" data-dz-name></p>
-                                    <strong class="error text-danger pull-right" data-dz-errormessage></strong>
-                                </div>
+                        <div class="col-xs-4 col-md-4">
+                            <div class="pull-right btn-group">
+                                <button data-dz-download class="btn btn-sm btn-primary">
+                                    <i class="fa fa-download"></i>
+                                    <span>{{ trans('download') }}</span>
+                                </button>
+                                @unless(\$read_only)
+                                    <button data-dz-remove class="btn btn-sm btn-danger delete">
+                                        <i class="fa fa-trash-o"></i>
+                                        <span>{{ trans('delete') }}</span>
+                                    </button>
+                                @endunless
                             </div>
+                        </div>
+                        <div class="col-xs-12 col-md-8">
+                            <p class="name pull-left" data-dz-name></p>
+                            <strong class="error text-danger pull-right" data-dz-errormessage></strong>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <?php
+    </div>
+</div>
+BLADE;
     }
 
     /**
@@ -100,7 +96,7 @@ class DropzoneHelper
      */
     public static function _dropzone_script($url_key = null, $client_id = 1, $site_url = '', $acceptedExts = null): void
     {
-        $site_url = site_url(empty($site_url) ? 'upload/' : (mb_rtrim($site_url, '/') . '/'));
+        $site_url = url(mb_rtrim($site_url ?? 'upload', '/') . '/');
 
         $content_types = [];
         if ($acceptedExts === null) {
@@ -158,7 +154,7 @@ class DropzoneHelper
                         fileIcon = 'file-presentation';
                         break;
                 }
-                return '<?php echo base_url('assets/core/img/file-icons/'); ?>' + fileIcon + '.svg';
+                return asset('assets/core/img/file-icons/') . $fileIcon . '.svg';
             }
 
             function sanitizeName(filename) {
@@ -179,10 +175,10 @@ class DropzoneHelper
                 thumbnailHeight: 80,
                 parallelUploads: 20,
                 uploadMultiple: false,
-                dictFileTooBig: `<?php _trans('upload_dz_invalid_file_size'); ?>`,
-                dictFileSizeUnits: {<?php _trans('upload_dz_size_units'); ?>},
-                dictRemoveFileConfirmation: `<?php _trans('delete_attachment_warning'); ?>`,
-                dictInvalidFileType: `<?php _trans('upload_dz_invalid_file_type'); ?>`,
+                dictFileTooBig: `{{ trans('upload_dz_invalid_file_size') }}`,
+                dictFileSizeUnits: {{{ trans('upload_dz_size_units') }}},
+                dictRemoveFileConfirmation: `{{ trans('delete_attachment_warning') }}`,
+                dictInvalidFileType: `{{ trans('upload_dz_invalid_file_type') }}`,
                 acceptedFiles: acceptedExts,
                 previewTemplate: previewTemplate,
                 autoQueue: true,
@@ -204,12 +200,12 @@ class DropzoneHelper
 
             myDropzone.on('complete', function (file) {
                 if (file.xhr && file.xhr.responseURL.match(/sessions\/login/) !== null) {
-                    this.emit('error', file, `<?php _trans('upload_dz_disconnected'); ?>`);
+                    this.emit('error', file, `{{ trans('upload_dz_disconnected') }}`);
                 }
             });
 
             myDropzone.on('error', function (file, message) {
-                <?php echo (IP_DEBUG ? 'console.log("dropzone error", file, message, this);' : '') . PHP_EOL; ?>
+                <?php echo (config('app.debug') ? 'console.log("dropzone error", file, message, this);' : '') . PHP_EOL; ?>
                 alert(file.name + "\n\n" + message + (file.accepted ? '' : "\n\n(📎👌: " + this.options.acceptedFiles.replace(/\./g, ' ').trim() + ')'));
                 file.previewElement.remove();
                 this.files.pop();
@@ -227,7 +223,7 @@ class DropzoneHelper
 
             <?php if ($acceptedExts !== false): ?>
             myDropzone.on('sending', function (file, xhr, formData) {
-                formData.append('<?php echo config_item('csrf_token_name'); ?>', Cookies.get('<?php echo config_item('csrf_cookie_name'); ?>'));
+                formData.append('_token', '{{ csrf_token() }}');
                 document.querySelector('#total-progress').style.opacity = '1';
             });
 
@@ -256,7 +252,7 @@ class DropzoneHelper
                 })
                     .done(function (response) {
                         if (response.match(/DOCTYPE/i) !== null) {
-                            alert(sanitizeName(val.name) + "\n\n" + `<?php _trans('upload_dz_disconnected'); ?>`);
+                            alert(sanitizeName(val.name) + "\n\n" + `{{ trans('upload_dz_disconnected') }}`);
                             displayExistingFile(val);
                             return;
                         }
@@ -271,7 +267,7 @@ class DropzoneHelper
             removeAllFilesButton.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                confirm(`<?php _trans('delete_attachments_warning'); ?>`) && myDropzone.removeAllFiles();
+                confirm(`{{ trans('delete_attachments_warning') }}`) && myDropzone.removeAllFiles();
             });
 
             function removeAllFilesButtonShow(show) {

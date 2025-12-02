@@ -3,7 +3,7 @@
 namespace Modules\Products\Services;
 
 use Modules\Core\Services\BaseService;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Products\Models\Product;
 
 /**
@@ -54,7 +54,7 @@ class ProductService extends BaseService
      */
     public function canDelete(int $productId): bool
     {
-        $itemCount = Item::query()
+        $itemCount = InvoiceItem::query()
             ->where('item_product_id', $productId)
             ->count();
 
@@ -70,7 +70,7 @@ class ProductService extends BaseService
      */
     public function getInvoiceItemCount(int $productId): int
     {
-        return Item::query()
+        return InvoiceItem::query()
             ->where('item_product_id', $productId)
             ->count();
     }

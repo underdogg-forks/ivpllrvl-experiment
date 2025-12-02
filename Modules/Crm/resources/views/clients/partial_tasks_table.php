@@ -3,12 +3,12 @@
 
             <thead>
             <tr>
-                <th><?php _trans('status'); ?></th>
-                <th><?php _trans('task_name'); ?></th>
-                <th><?php _trans('task_finish_date'); ?></th>
-                <th><?php _trans('project'); ?></th>
-                <th class="amount last"><?php _trans('task_price'); ?></th>
-                <th><?php _trans('options'); ?></th>
+                <th>{{ trans('status') }}</th>
+                <th>{{ trans('task_name') }}</th>
+                <th>{{ trans('task_finish_date') }}</th>
+                <th>{{ trans('project') }}</th>
+                <th class="amount last">{{ trans('task_price') }}</th>
+                <th>{{ trans('options') }}</th>
             </tr>
             </thead>
 
@@ -39,13 +39,13 @@ foreach ($tasks as $task) {
                         <div class="options btn-group">
                             <a class="btn btn-default btn-sm dropdown-toggle"
                                data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="<?php echo site_url('tasks/form/' . $task->task_id); ?>"
-                                       title="<?php _trans('edit'); ?>">
-                                        <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                       title="{{ trans('edit') }}">
+                                        <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                     </a>
                                 </li>
 <?php
@@ -57,7 +57,7 @@ foreach ($tasks as $task) {
                                         <?php _csrf_field(); ?>
                                         <button type="submit" class="dropdown-button"
                                                 onclick="return confirm('<?php echo $task->task_status == 4 ? trans('alert_task_delete') : trans('delete_record_warning') ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                            <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                         </button>
                                     </form>
                                 </li>
@@ -71,7 +71,7 @@ foreach ($tasks as $task) {
                 </tr>
 <?php
 }
-                ?>
+?>
             </tbody>
 
         </table>

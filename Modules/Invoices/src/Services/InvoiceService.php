@@ -8,8 +8,8 @@ use Modules\Core\Support\SettingsHelper;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
 use Modules\Invoices\Models\InvoiceGroup;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item;
 
 class InvoiceService
 {
@@ -190,7 +190,7 @@ class InvoiceService
         $deleted = $invoice->delete();
 
         InvoiceAmount::query()->where('invoice_id', $invoiceId)->delete();
-        Item::query()->where('invoice_id', $invoiceId)->delete();
+        InvoiceItem::query()->where('invoice_id', $invoiceId)->delete();
         InvoiceTaxRate::query()->where('invoice_id', $invoiceId)->delete();
 
         return $deleted;

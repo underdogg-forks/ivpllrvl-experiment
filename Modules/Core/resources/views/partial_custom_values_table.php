@@ -4,13 +4,13 @@
 
         <thead>
         <tr>
-            <th><?php _trans('id'); ?></th>
-            <th><?php _trans('field'); ?></th>
-            <th><?php _trans('elements'); ?></th>
-            <th><?php _trans('table'); ?></th>
-            <th><?php _trans('position'); ?></th>
-            <th><?php _trans('type'); ?></th>
-            <th><?php _trans('options'); ?></th>
+            <th>{{ trans('id') }}</th>
+            <th>{{ trans('field') }}</th>
+            <th>{{ trans('elements') }}</th>
+            <th>{{ trans('table') }}</th>
+            <th>{{ trans('position') }}</th>
+            <th>{{ trans('type') }}</th>
+            <th>{{ trans('options') }}</th>
         </tr>
         </thead>
 
@@ -31,12 +31,12 @@ foreach ($custom_values as $custom_values) {
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                            <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?php echo site_url('custom_values/field/' . $custom_values->custom_field_id); ?>">
-                                    <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?> (<?php _trans('values'); ?>)
+                                    <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }} ({{ trans('values') }})
                                 </a>
                             </li>
                             <li>
@@ -44,8 +44,8 @@ foreach ($custom_values as $custom_values) {
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                            onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </li>
@@ -55,7 +55,7 @@ foreach ($custom_values as $custom_values) {
             </tr>
 <?php
 }
-            ?>
+?>
         </tbody>
     </table>
 </div>

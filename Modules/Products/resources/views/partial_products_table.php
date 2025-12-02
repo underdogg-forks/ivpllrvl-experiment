@@ -3,22 +3,22 @@
 
             <thead>
             <tr>
-                <th><?php _trans('family'); ?></th>
-                <th><?php _trans('product_sku'); ?></th>
-                <th><?php _trans('product_name'); ?></th>
-                <th><?php _trans('product_description'); ?></th>
-                <th class="amount last"><?php _trans('product_price'); ?></th>
-                <th><?php _trans('product_unit'); ?></th>
-                <th><?php _trans('tax_rate'); ?></th>
+                <th>{{ trans('family') }}</th>
+                <th>{{ trans('product_sku') }}</th>
+                <th>{{ trans('product_name') }}</th>
+                <th>{{ trans('product_description') }}</th>
+                <th class="amount last">{{ trans('product_price') }}</th>
+                <th>{{ trans('product_unit') }}</th>
+                <th>{{ trans('tax_rate') }}</th>
 <?php
 $sumex_active = get_setting('sumex') == '1';
-                if ($sumex_active) {
-                    ?>
-                <th><?php _trans('product_tariff'); ?></th>
+if ($sumex_active) {
+    ?>
+                <th>{{ trans('product_tariff') }}</th>
 <?php
-                }
-                ?>
-                <th><?php _trans('options'); ?></th>
+}
+?>
+                <th>{{ trans('options') }}</th>
             </tr>
             </thead>
 
@@ -45,12 +45,12 @@ foreach ($products as $product) {
                         <div class="options btn-group">
                             <a class="btn btn-default btn-sm dropdown-toggle"
                                data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="<?php echo site_url('products/form/' . $product->product_id); ?>">
-                                        <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                        <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                     </a>
                                 </li>
                                 <li>
@@ -58,8 +58,8 @@ foreach ($products as $product) {
                                           method="POST">
                                         <?php _csrf_field(); ?>
                                         <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                                onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                                            <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                         </button>
                                     </form>
                                 </li>
@@ -69,7 +69,7 @@ foreach ($products as $product) {
                 </tr>
 <?php
 } // End foreach
-                ?>
+?>
             </tbody>
 
         </table>

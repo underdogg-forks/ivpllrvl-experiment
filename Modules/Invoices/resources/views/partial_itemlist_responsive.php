@@ -9,10 +9,10 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                 <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
                     <div class="row">
                         <div class="col-xs-12 col-sm-1">
-                            <button type="button" class="btn btn-link up" title="<?php _trans('move_up'); ?>">
+                            <button type="button" class="btn btn-link up" title="{{ trans('move_up') }}">
                                 <i class="fa fa-chevron-up"></i>
                             </button>
-                            <button type="button" class="btn btn-link down" title="<?php _trans('move_down'); ?>">
+                            <button type="button" class="btn btn-link down" title="{{ trans('move_down') }}">
                                 <i class="fa fa-chevron-down"></i>
                             </button>
 <?php
@@ -23,26 +23,26 @@ if ($invoice->invoice_is_recurring) {
 <?php
 }
 ?>
-                            <button type="button" class="btn_delete_item btn btn-link btn-sm" title="<?php _trans('delete'); ?>">
+                            <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}">
                                 <i class="fa fa-trash-o text-danger"></i>
                             </button>
                         </div>
 
                         <div class="col-xs-12 col-sm-11">
                             <div class="input-group">
-                                <label for="item_name" class="input-group-addon ig-addon-aligned"><?php _trans('item'); ?></label>
+                                <label for="item_name" class="input-group-addon ig-addon-aligned">{{ trans('item') }}</label>
                                 <input type="text" name="item_name" id="item_name" class="form-control" value="">
                             </div>
                             <div class="input-group">
 <?php
 if ($invoice->sumex_id == '') {
     ?>
-                                <label for="item_description" class="input-group-addon ig-addon-aligned"><?php _trans('description'); ?></label>
+                                <label for="item_description" class="input-group-addon ig-addon-aligned">{{ trans('description') }}</label>
                                 <textarea name="item_description" id="item_description" class="form-control"></textarea>
 <?php
 } else {
     ?>
-                                <label for="item_date" class="input-group-addon ig-addon-aligned"><?php _trans('date'); ?></label>
+                                <label for="item_date" class="input-group-addon ig-addon-aligned">{{ trans('date') }}</label>
                                 <input type="text" name="item_date" id="item_date" class="form-control datepicker"
                                        value="<?php echo format_date(date('y-m-d')); ?>"<?php echo $invoice_disabled; ?>>
 <?php
@@ -57,13 +57,13 @@ if ($invoice->sumex_id == '') {
                     <div class="row">
                         <div class="col-xs-12 col-lg-6">
                             <div class="input-group">
-                                <label for="item_quantity" class="input-group-addon ig-addon-aligned"><?php _trans('quantity'); ?></label>
+                                <label for="item_quantity" class="input-group-addon ig-addon-aligned">{{ trans('quantity') }}</label>
                                 <input type="text" name="item_quantity" id="item_quantity" class="form-control" value="">
                             </div>
                             <div class="input-group">
-                                <label for="item_product_unit_id" class="input-group-addon ig-addon-aligned"><?php _trans('product_unit'); ?></label>
+                                <label for="item_product_unit_id" class="input-group-addon ig-addon-aligned">{{ trans('product_unit') }}</label>
                                 <select name="item_product_unit_id" id="item_product_unit_id" class="form-control">
-                                    <option value="0"><?php _trans('none'); ?></option>
+                                    <option value="0">{{ trans('none') }}</option>
 <?php
 foreach ($units as $unit) {
     ?>
@@ -76,7 +76,7 @@ foreach ($units as $unit) {
                                 </select>
                             </div>
                             <div class="input-group">
-                                <label for="item_price" class="input-group-addon ig-addon-aligned"><?php _trans('price'); ?></label>
+                                <label for="item_price" class="input-group-addon ig-addon-aligned">{{ trans('price') }}</label>
                                 <input type="text" name="item_price" id="item_price" class="form-control" value="">
                                 <div class="input-group-addon"><?php echo get_setting('currency_symbol'); ?></div>
                             </div>
@@ -86,9 +86,9 @@ if ( ! $legacy_calculation) {
 }
 ?>
                             <div class="input-group">
-                                <label for="item_tax_rate_id" class="input-group-addon ig-addon-aligned"><?php _trans('tax_rate'); ?></label>
+                                <label for="item_tax_rate_id" class="input-group-addon ig-addon-aligned">{{ trans('tax_rate') }}</label>
                                 <select name="item_tax_rate_id" id="item_tax_rate_id" class="form-control">
-                                    <option value="0"><?php _trans('none'); ?></option>
+                                    <option value="0">{{ trans('none') }}</option>
 <?php
 foreach ($tax_rates as $tax_rate) {
     ?>
@@ -116,7 +116,7 @@ if ($legacy_calculation) {
                         <div class="col-xs-12 col-md-6 text-right">
                             <div class="row mb-1">
                                 <div class="col-xs-9 col-sm-8">
-                                    <?php _trans('subtotal'); ?>:
+                                    {{ trans('subtotal') }}:
                                 </div>
                                 <div class="col-xs-3 col-sm-4">
                                     <span name="subtotal"></span>
@@ -129,7 +129,7 @@ if ( ! $legacy_calculation) {
 ?>
                             <div class="row mb-1">
                                 <div class="col-xs-9 col-sm-8">
-                                    <?php _trans('tax'); ?>:
+                                    {{ trans('tax') }}:
                                 </div>
                                 <div class="col-xs-3 col-sm-4">
                                     <span name="item_tax_total"></span>
@@ -143,7 +143,7 @@ if ($legacy_calculation) {
                             <div class="row mb-1">
                                 <strong>
                                     <div class="col-xs-9 col-sm-8">
-                                        <?php _trans('total'); ?>:
+                                        {{ trans('total') }}:
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <span name="item_total"></span>
@@ -164,10 +164,10 @@ foreach ($items as $item) {
                 <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
                     <div class="row">
                         <div class="col-xs-12 col-sm-1">
-                            <button type="button" class="btn btn-link up" title="<?php _trans('move_up'); ?>"<?php echo $invoice_disabled; ?>>
+                            <button type="button" class="btn btn-link up" title="{{ trans('move_up') }}"<?php echo $invoice_disabled; ?>>
                                 <i class="fa fa-chevron-up"></i>
                             </button>
-                            <button type="button" class="btn btn-link down" title="<?php _trans('move_down'); ?>"<?php echo $invoice_disabled; ?>>
+                            <button type="button" class="btn btn-link down" title="{{ trans('move_down') }}"<?php echo $invoice_disabled; ?>>
                                 <i class="fa fa-chevron-down"></i>
                             </button>
 <?php
@@ -188,7 +188,7 @@ foreach ($items as $item) {
         }
     if ($invoice->is_read_only != 1) {
         ?>
-                            <button type="button" class="btn_delete_item btn btn-link" title="<?php _trans('delete'); ?>" data-item-id="<?php echo $item->item_id; ?>">
+                            <button type="button" class="btn_delete_item btn btn-link" title="{{ trans('delete') }}" data-item-id="<?php echo $item->item_id; ?>">
                                 <i class="fa fa-trash-o text-danger"></i>
                             </button>
 <?php
@@ -205,7 +205,7 @@ foreach ($items as $item) {
                             <input type="hidden" name="item_product_id" value="<?php echo $item->item_product_id; ?>">
 
                             <div class="input-group">
-                                <label for="item_name_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('item'); ?></label>
+                                <label for="item_name_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('item') }}</label>
                                 <input type="text" name="item_name" id="item_name_<?php echo $item->item_id; ?>" class="form-control" value="<?php echo _htmlsc($item->item_name); ?>"<?php echo $invoice_disabled; ?>>
                             </div>
 
@@ -213,12 +213,12 @@ foreach ($items as $item) {
 <?php
     if ($invoice->sumex_id == '') {
         ?>
-                                <label for="item_description_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('description'); ?></label>
+                                <label for="item_description_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('description') }}</label>
                                 <textarea name="item_description" id="item_description_<?php echo $item->item_id; ?>" class="form-control"<?php echo $invoice_disabled; ?>><?php _htmlsc($item->item_description); ?></textarea>
 <?php
     } else {
         ?>
-                                <label for="item_date_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('date'); ?></label>
+                                <label for="item_date_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('date') }}</label>
                                 <input type="text" name="item_date" id="item_date_<?php echo $item->item_id; ?>" class="form-control datepicker" value="<?php echo format_date($item->item_date); ?>"<?php echo $invoice_disabled; ?>>
 <?php
     }
@@ -232,13 +232,13 @@ foreach ($items as $item) {
                     <div class="row">
                         <div class="col-xs-12 col-lg-6">
                             <div class="input-group">
-                                <label for="item_quantity_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('quantity'); ?></label>
+                                <label for="item_quantity_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('quantity') }}</label>
                                 <input type="text" name="item_quantity" id="item_quantity_<?php echo $item->item_id; ?>" class="form-control" value="<?php echo format_quantity($item->item_quantity); ?>"<?php echo $invoice_disabled; ?>>
                             </div>
                             <div class="input-group">
-                                <label for="item_product_unit_id_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('product_unit'); ?></label>
+                                <label for="item_product_unit_id_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('product_unit') }}</label>
                                 <select name="item_product_unit_id" id="item_product_unit_id_<?php echo $item->item_id; ?>" class="form-control"<?php echo $invoice_disabled; ?>>
-                                    <option value="0"><?php _trans('none'); ?></option>
+                                    <option value="0">{{ trans('none') }}</option>
 <?php
         foreach ($units as $unit) {
             ?>
@@ -252,7 +252,7 @@ foreach ($items as $item) {
                                 </select>
                             </div>
                             <div class="input-group">
-                                <label for="item_price_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('price'); ?></label>
+                                <label for="item_price_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('price') }}</label>
                                 <input type="text" name="item_price" id="item_price_<?php echo $item->item_id; ?>" class="form-control"
                                        value="<?php echo format_amount($item->item_price); ?>"<?php echo $invoice_disabled; ?>>
                                 <div class="input-group-addon"><?php echo get_setting('currency_symbol'); ?></div>
@@ -263,9 +263,9 @@ foreach ($items as $item) {
         }
     ?>
                             <div class="input-group">
-                                <label for="item_tax_rate_id_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned"><?php _trans('tax_rate'); ?></label>
+                                <label for="item_tax_rate_id_<?php echo $item->item_id; ?>" class="input-group-addon ig-addon-aligned">{{ trans('tax_rate') }}</label>
                                 <select name="item_tax_rate_id" id="item_tax_rate_id_<?php echo $item->item_id; ?>" class="form-control"<?php echo $invoice_disabled; ?>>
-                                    <option value="0"><?php _trans('none'); ?></option>
+                                    <option value="0">{{ trans('none') }}</option>
 <?php
         foreach ($tax_rates as $tax_rate) {
             ?>
@@ -287,7 +287,7 @@ foreach ($items as $item) {
                             <div class="col-xs-12 col-md-6 text-right">
                                 <div class="row mb-1">
                                     <div class="col-xs-9 col-sm-8">
-                                        <?php _trans('subtotal'); ?>:
+                                        {{ trans('subtotal') }}:
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <?php echo format_currency($item->item_subtotal); ?>
@@ -300,7 +300,7 @@ foreach ($items as $item) {
     ?>
                                 <div class="row mb-1">
                                     <div class="col-xs-9 col-sm-8">
-                                        <?php _trans('tax'); ?>:
+                                        {{ trans('tax') }}:
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <?php echo format_currency($item->item_tax_total); ?>
@@ -313,7 +313,7 @@ foreach ($items as $item) {
     ?>
                                 <div class="row mb-1">
                                     <div class="col-xs-9 col-sm-8">
-                                        <b><?php _trans('total'); ?>:</b>
+                                        <b>{{ trans('total') }}:</b>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <b><?php echo format_currency($item->item_total); ?></b>
@@ -339,14 +339,14 @@ foreach ($items as $item) {
 if ($invoice->is_read_only != 1) {
     ?>
             <a href="javascript:void(0);" class="btn_add_row btn btn-sm btn-default">
-                <i class="fa fa-plus"></i> <?php _trans('add_new_row'); ?>
+                <i class="fa fa-plus"></i> {{ trans('add_new_row') }}
             </a>
             <a href="javascript:void(0);" class="btn_add_product btn btn-sm btn-default">
                 <i class="fa fa-database"></i>
-                <?php _trans('add_product'); ?>
+                {{ trans('add_product') }}
             </a>
             <a href="javascript:void(0);" class="btn_add_task btn btn-sm btn-default<?php echo get_setting('projects_enabled') == 1 ? '' : ' hidden'; ?>">
-                <i class="fa fa-database"></i> <?php _trans('add_task'); ?>
+                <i class="fa fa-database"></i> {{ trans('add_task') }}
             </a>
 <?php
 }
@@ -364,19 +364,19 @@ if ( ! $legacy_calculation) {
 }
 ?>
             <tr>
-                <td style="width: 40%;"><?php _trans('subtotal'); ?></td>
+                <td style="width: 40%;">{{ trans('subtotal') }}</td>
                 <td style="width: 60%;"
                 class="amount"><?php echo format_currency($invoice->invoice_item_subtotal); ?></td>
             </tr>
             <tr>
-                <td><?php _trans('item_tax'); ?></td>
+                <td>{{ trans('item_tax') }}</td>
                 <td class="amount"><?php echo format_currency($invoice->invoice_item_tax_total); ?></td>
             </tr>
 <?php
 if ($legacy_calculation) {
     ?>
             <tr>
-                <td><?php _trans('invoice_tax'); ?></td>
+                <td>{{ trans('invoice_tax') }}</td>
                 <td>
 <?php
         if ($invoice_tax_rates) {
@@ -390,7 +390,7 @@ if ($legacy_calculation) {
                     <span class="text-muted">
                         <?php echo htmlsc($invoice_tax_rate->invoice_tax_rate_name) . ' ' . format_amount($invoice_tax_rate->invoice_tax_rate_percent) ?>
                     </span>
-                    <button type="submit" class="btn btn-xs btn-link" onclick="var Y=confirm('<?php _trans('delete_tax_warning'); ?>');if(Y)show_loader();return Y;">
+                    <button type="submit" class="btn btn-xs btn-link" onclick="var Y=confirm('{{ trans('delete_tax_warning') }}');if(Y)show_loader();return Y;">
                         <i class="fa fa-trash-o"></i>
                     </button>
                 </form>
@@ -407,15 +407,15 @@ if ($legacy_calculation) {
 }
 ?>
             <tr>
-                <td><?php _trans('total'); ?></td>
+                <td>{{ trans('total') }}</td>
                 <td class="amount"><b><?php echo format_currency($invoice->invoice_total); ?></b></td>
             </tr>
             <tr>
-                <td><?php _trans('paid'); ?></td>
+                <td>{{ trans('paid') }}</td>
                 <td class="amount"><b><?php echo format_currency($invoice->invoice_paid); ?></b></td>
             </tr>
             <tr>
-                <td><b><?php _trans('balance'); ?></b></td>
+                <td><b>{{ trans('balance') }}</b></td>
                 <td class="amount"><b><?php echo format_currency($invoice->invoice_balance); ?></b></td>
             </tr>
         </table>

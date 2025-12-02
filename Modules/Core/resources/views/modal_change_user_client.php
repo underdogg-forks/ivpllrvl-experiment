@@ -57,7 +57,7 @@ $permissive = get_setting('enable_permissive_search_' . $who . 's');
                 <label for="change_<?php echo $who; ?>_id"><?php _trans($who); ?></label>
                 <div class="input-group">
                     <span id="toggle_permissive_search_<?php echo $who; ?>s" class="input-group-addon"
-                          title="<?php _trans('enable_permissive_search_' . $who . 's'); ?>" style="cursor:pointer;">
+                          title="{{ trans('enable_permissive_search_' . $who . 's') }}" style="cursor:pointer;">
                         <i class="fa fa-toggle-<?php echo $permissive ? 'on' : 'off' ?> fa-fw"></i>
                     </span>
                     <select name="<?php echo $who; ?>_id" id="change_<?php echo $who; ?>_id" class="<?php echo $who; ?>-id-select form-control"
@@ -85,10 +85,10 @@ if ($who_id) {
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success ajax_loader" id="<?php echo $who; ?>_change_confirm" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('submit'); ?>
+                    <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

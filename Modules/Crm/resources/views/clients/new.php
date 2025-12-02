@@ -21,7 +21,7 @@
     <?php _csrf_field(); ?>
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?php _trans('assign_client'); ?></h1>
+        <h1 class="headerbar-title">{{ trans('assign_client') }}</h1>
         <?php $this->layout->load_view('layout/header_buttons'); ?>
     </div>
 
@@ -52,7 +52,7 @@
                         </div>
 
                         <div id="list_client">
-                            <label for="client_id"><?php _trans('client'); ?></label>
+                            <label for="client_id">{{ trans('client') }}</label>
                             <select name="client_id" id="client_id" class="form-control simple-select"
                                     autofocus="autofocus" required>
 <?php

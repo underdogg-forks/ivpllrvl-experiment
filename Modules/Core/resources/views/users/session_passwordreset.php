@@ -10,7 +10,7 @@
 <html class="no-js" lang="en"> <!--<![endif]-->
 
 <head>
-    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - <?php _trans('password_reset'); ?></title>
+    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - {{ trans('password_reset') }}</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -26,7 +26,7 @@
 <body>
 
 <noscript>
-    <div class="alert alert-danger no-margin"><?php _trans('please_enable_js'); ?></div>
+    <div class="alert alert-danger no-margin">{{ trans('please_enable_js') }}</div>
 </noscript>
 
 <br>
@@ -38,26 +38,26 @@
 
         <div class="row"><?php $this->layout->load_view('layout/alerts'); ?></div>
 
-        <h3><?php _trans('password_reset'); ?></h3>
+        <h3>{{ trans('password_reset') }}</h3>
 
         <br/>
 
-        <p><?php _trans('password_reset_info'); ?></p>
+        <p>{{ trans('password_reset_info') }}</p>
 
         <form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 
             <?php _csrf_field(); ?>
 
             <div class="form-group">
-                <label for="email" class="hidden"><?php _trans('email'); ?></label>
+                <label for="email" class="hidden">{{ trans('email') }}</label>
                 <input type="text" name="email" id="email" class="form-control"
-                       placeholder="<?php _trans('email'); ?>" required autofocus>
+                       placeholder="{{ trans('email') }}" required autofocus>
             </div>
 
             <input type="hidden" name="btn_reset" value="true">
 
             <button type="submit" class="btn btn-danger">
-                <i class="fa fa-key fa-margin"></i> <?php _trans('reset_password'); ?>
+                <i class="fa fa-key fa-margin"></i> {{ trans('reset_password') }}
             </button>
 
         </form>

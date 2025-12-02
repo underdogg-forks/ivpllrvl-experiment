@@ -14,7 +14,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?php _trans('online_payments'); ?>
+                {{ trans('online_payments') }}
             </div>
             <div class="panel-body">
 
@@ -24,17 +24,17 @@
                             <input type="hidden" name="settings[enable_online_payments]" value="0">
                             <input type="checkbox" name="settings[enable_online_payments]" value="1"
                                 <?php check_select(get_setting('enable_online_payments'), 1, '==', true) ?>>
-                            <?php _trans('enable_online_payments'); ?>
+                            {{ trans('enable_online_payments') }}
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="online-payment-select">
-                        <?php _trans('add_payment_provider'); ?>
+                        {{ trans('add_payment_provider') }}
                     </label>
                     <select id="online-payment-select" class="form-control">
-                        <option value=""><?php _trans('none'); ?></option>
+                        <option value="">{{ trans('none') }}</option>
                         <?php foreach ($gateway_drivers as $driver => $fields) {
                             $d = mb_strtolower($driver);
                             ?>
@@ -64,7 +64,7 @@
                                 <input type="checkbox" name="settings[gateway_<?php echo $d; ?>_enabled]" value="1"
                                     id="settings[gateway_<?php echo $d; ?>_enabled]"
                                     <?php check_select(get_setting('gateway_' . $d . '_enabled'), 1, '==', true) ?>>
-                                <?php _trans('enabled'); ?>
+                                {{ trans('enabled') }}
                             </label>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
 
                     <div class="form-group">
                         <label for="settings[gateway_<?php echo $d; ?>_currency]">
-                            <?php _trans('currency'); ?>
+                            {{ trans('currency') }}
                         </label>
                         <select name="settings[gateway_<?php echo $d; ?>_currency]"
                             id="settings[gateway_<?php echo $d; ?>_currency]"
@@ -128,12 +128,12 @@
 
                     <div class="form-group">
                         <label for="settings[gateway_<?php echo $d; ?>_payment_method]">
-                            <?php _trans('online_payment_method'); ?>
+                            {{ trans('online_payment_method') }}
                         </label>
                         <select name="settings[gateway_<?php echo $d; ?>_payment_method]"
                             id="settings[gateway_<?php echo $d; ?>_payment_method]"
                             class="form-control simple-select">
-                            <option value=""><?php _trans('none'); ?></option>
+                            <option value="">{{ trans('none') }}</option>
                             <?php foreach ($payment_methods as $payment_method) { ?>
                                 <option value="<?php echo $payment_method->payment_method_id; ?>"
                                     <?php check_select(get_setting('gateway_' . $d . '_payment_method'), $payment_method->payment_method_id) ?>>

@@ -2,9 +2,9 @@
     <table class="table table-hover table-striped">
         <thead>
         <tr>
-            <th><?php _trans('active'); ?></th>
-            <th><?php _trans('client_name'); ?></th>
-            <th><?php _trans('email_address'); ?></th>
+            <th>{{ trans('active') }}</th>
+            <th>{{ trans('client_name') }}</th>
+            <th>{{ trans('email_address') }}</th>
 <?php
 if ($einvoicing) {
     ?>
@@ -12,17 +12,17 @@ if ($einvoicing) {
             <th><?php echo ' e-' . trans('invoicing') . ' ' . trans('active'); ?></th>
 <?php
 }
-            ?>
-            <th><?php _trans('phone_number'); ?></th>
-            <th class="amount last"><?php _trans('balance'); ?></th>
-            <th><?php _trans('options'); ?></th>
+?>
+            <th>{{ trans('phone_number') }}</th>
+            <th class="amount last">{{ trans('balance') }}</th>
+            <th>{{ trans('options') }}</th>
         </tr>
         </thead>
         <tbody>
 <?php
-            $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit text-warning']; // e-invoice
-            foreach ($records as $client) {
-                ?>
+$class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit text-warning']; // e-invoice
+foreach ($records as $client) {
+    ?>
             <tr>
                 <td>
                     <?php echo ($client->client_active) ? '<span class="label active">' . trans('yes') . '</span>' : '<span class="label inactive">' . trans('no') . '</span>'; ?>
@@ -48,35 +48,35 @@ if ($einvoicing) {
                 </td>
 <?php
 }
-                ?>
+    ?>
                 <td><?php _htmlsc($client->client_phone ? $client->client_phone : ($client->client_mobile ? $client->client_mobile : '')); ?></td>
                 <td class="amount last"><?php echo format_currency($client->client_invoice_balance); ?></td>
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                            <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?php echo site_url('clients/view/' . $client->client_id); ?>">
-                                    <i class="fa fa-eye fa-margin"></i> <?php _trans('view'); ?>
+                                    <i class="fa fa-eye fa-margin"></i> {{ trans('view') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo site_url('clients/form/' . $client->client_id); ?>">
-                                    <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="client-create-quote"
                                    data-client-id="<?php echo $client->client_id; ?>">
-                                    <i class="fa fa-file fa-margin"></i> <?php _trans('create_quote'); ?>
+                                    <i class="fa fa-file fa-margin"></i> {{ trans('create_quote') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="client-create-invoice"
                                    data-client-id="<?php echo $client->client_id; ?>">
-                                    <i class="fa fa-file-text fa-margin"></i> <?php _trans('create_invoice'); ?>
+                                    <i class="fa fa-file-text fa-margin"></i> {{ trans('create_invoice') }}
                                 </a>
                             </li>
                             <li>
@@ -84,8 +84,8 @@ if ($einvoicing) {
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?php _trans('delete_client_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                            onclick="return confirm('{{ trans('delete_client_warning') }}');">
+                                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </li>
@@ -94,8 +94,8 @@ if ($einvoicing) {
                 </td>
             </tr>
 <?php
-            } // End foreach
-            ?>
+} // End foreach
+?>
         </tbody>
     </table>
 </div>

@@ -4,10 +4,10 @@ $add_table_and_head_for_sums = 1; // Set to 0/false/null/'', return to original 
 // edit if you know what you're doing
 $colspan = $show_item_discounts ? 5 : 4;
 ?><!DOCTYPE html>
-<html lang="<?php _trans('cldr'); ?>">
+<html lang="{{ trans('cldr') }}">
 <head>
     <meta charset="utf-8">
-    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - <?php _trans('quote'); ?></title>
+    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - {{ trans('quote') }}</title>
     <link rel="stylesheet" href="<?php _theme_asset('css/templates.css'); ?>" type="text/css">
     <link rel="stylesheet" href="<?php _core_asset('css/custom-pdf.css'); ?>" type="text/css">
 </head>
@@ -110,37 +110,37 @@ if ($quote->user_fax) {
     <div class="invoice-details clearfix">
         <table>
             <tr>
-                <td><?php _trans('quote_date'); ?>:</td>
+                <td>{{ trans('quote_date') }}:</td>
                 <td><?php echo date_from_mysql($quote->quote_date_created, true); ?></td>
             </tr>
             <tr>
-                <td><?php _trans('expires'); ?>:</td>
+                <td>{{ trans('expires') }}:</td>
                 <td><?php echo date_from_mysql($quote->quote_date_expires, true); ?></td>
             </tr>
             <tr>
-                <td><?php _trans('total'); ?>:</td>
+                <td>{{ trans('total') }}:</td>
                 <td><?php echo format_currency($quote->quote_total); ?></td>
             </tr>
         </table>
     </div>
 
-    <h1 class="invoice-title"><?php _trans('quote'); ?> <?php _htmlsc($quote->quote_number); ?></h1>
+    <h1 class="invoice-title">{{ trans('quote') }} <?php _htmlsc($quote->quote_number); ?></h1>
 
     <table class="item-table">
         <thead>
         <tr>
-            <th class="item-name"><?php _trans('item'); ?></th>
-            <th class="item-desc"><?php _trans('description'); ?></th>
-            <th class="item-amount text-right"><?php _trans('qty'); ?></th>
-            <th class="item-price text-right"><?php _trans('price'); ?></th>
+            <th class="item-name">{{ trans('item') }}</th>
+            <th class="item-desc">{{ trans('description') }}</th>
+            <th class="item-amount text-right">{{ trans('qty') }}</th>
+            <th class="item-price text-right">{{ trans('price') }}</th>
 <?php
 if ($show_item_discounts) {
     ?>
-            <th class="item-discount text-right"><?php _trans('discount'); ?></th>
+            <th class="item-discount text-right">{{ trans('discount') }}</th>
 <?php
 }
 ?>
-            <th class="item-total text-right"><?php _trans('total'); ?></th>
+            <th class="item-total text-right">{{ trans('total') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -195,7 +195,7 @@ if ($add_table_and_head_for_sums) {
         <tr>
             <th colspan="<?php echo $colspan ?>">&nbsp;</th>
             <th class="text-right">
-                <?php _trans('total'); ?>
+                {{ trans('total') }}
             </th>
         </tr>
         </thead>
@@ -212,7 +212,7 @@ if ( ! $legacy_calculation) {
 
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <?php _trans('subtotal'); ?>
+                {{ trans('subtotal') }}
             </td>
             <td class="text-right"><?php echo format_currency($quote->quote_item_subtotal); ?></td>
         </tr>
@@ -222,7 +222,7 @@ if ($quote->quote_item_tax_total > 0) {
     ?>
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <?php _trans('item_tax'); ?>
+                {{ trans('item_tax') }}
             </td>
             <td class="text-right">
                 <?php echo format_currency($quote->quote_item_tax_total); ?>
@@ -255,7 +255,7 @@ if ($legacy_calculation) {
 
         <tr>
             <td class="text-right" colspan="<?php echo $colspan ?>">
-                <b><?php _trans('total'); ?></b>
+                <b>{{ trans('total') }}</b>
             </td>
             <td class="text-right">
                 <b><?php echo format_currency($quote->quote_total); ?></b>
@@ -270,7 +270,7 @@ if ($legacy_calculation) {
 if ($quote->notes) {
     ?>
     <div class="notes">
-        <b><?php _trans('notes'); ?></b><br/>
+        <b>{{ trans('notes') }}</b><br/>
         <?php echo nl2br(htmlsc($quote->notes)); ?>
     </div>
 <?php

@@ -16,7 +16,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('clients'); ?></span>
+                        <span class="hidden-md">{{ trans('clients') }}</span>
                         <i class="visible-md-inline fa fa-users"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -28,11 +28,11 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('quotes'); ?></span>
+                        <span class="hidden-md">{{ trans('quotes') }}</span>
                         <i class="visible-md-inline fa fa-file"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="create-quote"><?php _trans('create_quote'); ?></a></li>
+                        <li><a href="#" class="create-quote">{{ trans('create_quote') }}</a></li>
                         <li><?php echo anchor('quotes/index', trans('view_quotes')); ?></li>
                     </ul>
                 </li>
@@ -40,11 +40,11 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('invoices'); ?></span>
+                        <span class="hidden-md">{{ trans('invoices') }}</span>
                         <i class="visible-md-inline fa fa-file-text"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="create-invoice"><?php _trans('create_invoice'); ?></a></li>
+                        <li><a href="#" class="create-invoice">{{ trans('create_invoice') }}</a></li>
                         <li><?php echo anchor('invoices/index', trans('view_invoices')); ?></li>
                         <li><?php echo anchor('invoices/recurring/index', trans('view_recurring_invoices')); ?></li>
                     </ul>
@@ -53,7 +53,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('payments'); ?></span>
+                        <span class="hidden-md">{{ trans('payments') }}</span>
                         <i class="visible-md-inline fa fa-credit-card"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -66,7 +66,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('products'); ?></span>
+                        <span class="hidden-md">{{ trans('products') }}</span>
                         <i class="visible-md-inline fa fa-database"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -80,7 +80,7 @@
                 <li class="dropdown<?php echo get_setting('projects_enabled') == 1 ? '' : ' hidden'; ?>">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('tasks'); ?></span>
+                        <span class="hidden-md">{{ trans('tasks') }}</span>
                         <i class="visible-md-inline fa fa-check-square-o"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -95,7 +95,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-caret-down"></i> &nbsp;
-                        <span class="hidden-md"><?php _trans('reports'); ?></span>
+                        <span class="hidden-md">{{ trans('reports') }}</span>
                         <i class="visible-md-inline fa fa-bar-chart"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -122,19 +122,19 @@
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="https://wiki.invoiceplane.com/" target="_blank"
-                       class="tip icon" title="<?php _trans('documentation'); ?>"
+                       class="tip icon" title="{{ trans('documentation') }}"
                        data-placement="bottom">
                         <i class="fa fa-question-circle"></i>
-                        <span class="visible-xs">&nbsp;<?php _trans('documentation'); ?></span>
+                        <span class="visible-xs">&nbsp;{{ trans('documentation') }}</span>
                     </a>
                 </li>
 
                 <li class="dropdown">
                     <a href="#" class="tip icon dropdown-toggle" data-toggle="dropdown"
-                       title="<?php _trans('settings'); ?>"
+                       title="{{ trans('settings') }}"
                        data-placement="bottom">
                         <i class="fa fa-cogs"></i>
-                        <span class="visible-xs">&nbsp;<?php _trans('settings'); ?></span>
+                        <span class="visible-xs">&nbsp;{{ trans('settings') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><?php echo anchor('custom_fields/index', trans('custom_fields')); ?></li>
@@ -174,9 +174,9 @@
                 <li>
                     <a href="<?php echo site_url('sessions/logout'); ?>"
                        class="tip icon logout" data-placement="bottom"
-                       title="<?php _trans('logout'); ?>">
+                       title="{{ trans('logout') }}">
                         <i class="fa fa-power-off"></i>
-                        <span class="visible-xs">&nbsp;<?php _trans('logout'); ?></span>
+                        <span class="visible-xs">&nbsp;{{ trans('logout') }}</span>
                     </a>
                 </li>
             </ul>

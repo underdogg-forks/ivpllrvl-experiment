@@ -10,7 +10,7 @@ if ($invoice_tax_rates) {
 }
 ?>
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('invoice'); ?> #<?php echo $invoice->invoice_number; ?></h1>
+    <h1 class="headerbar-title">{{ trans('invoice') }} #<?php echo $invoice->invoice_number; ?></h1>
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
@@ -26,14 +26,14 @@ if ($invoice->invoice_balance == 0 || $invoice->invoice_status_id >= 4) {
             <a href="<?php echo site_url('guest/payment_information/form/' . $invoice->invoice_url_key); ?>"
                class="btn btn-primary">
                 <i class="fa fa-credit-card"></i>
-                <?php _trans('pay_now'); ?>
+                {{ trans('pay_now') }}
             </a>
 <?php
 }
 ?>
             <a href="<?php echo site_url('guest/invoices/generate_pdf/' . $invoice->invoice_id); ?>"
                class="btn btn-default" id="btn_generate_pdf" target="_blank">
-                <i class="fa fa-print"></i> <?php _trans('download_pdf'); ?>
+                <i class="fa fa-print"></i> {{ trans('download_pdf') }}
             </a>
         </div>
 
@@ -62,12 +62,12 @@ if ($invoice->invoice_balance == 0 || $invoice->invoice_status_id >= 4) {
 <?php
 if ($invoice->client_phone) {
     ?>
-                        <br><span><strong><?php _trans('phone'); ?>:</strong> <?php _htmlsc($invoice->client_phone); ?></span>
+                        <br><span><strong>{{ trans('phone') }}:</strong> <?php _htmlsc($invoice->client_phone); ?></span>
 <?php
 }
 if ($invoice->client_email) {
     ?>
-                        <br><span><strong><?php _trans('email'); ?>:</strong> <?php _htmlsc($invoice->client_email); ?></span>
+                        <br><span><strong>{{ trans('email') }}:</strong> <?php _htmlsc($invoice->client_email); ?></span>
 <?php
 }
 ?>
@@ -78,15 +78,15 @@ if ($invoice->client_email) {
 
                     <table class="table table-bordered">
                         <tr>
-                            <td><?php _trans('invoice'); ?> #</td>
+                            <td>{{ trans('invoice') }} #</td>
                             <td><?php echo $invoice->invoice_number; ?></td>
                         </tr>
                         <tr>
-                            <td><?php _trans('date'); ?></td>
+                            <td>{{ trans('date') }}</td>
                             <td><?php echo date_from_mysql($invoice->invoice_date_created); ?></td>
                         </tr>
                         <tr class="<?php echo ($invoice->invoice_status_id != 4 && $invoice->invoice_date_due < date('Y-m-d')) ? 'font-overdue' : ''; ?>">
-                            <td><?php _trans('due_date'); ?></td>
+                            <td>{{ trans('due_date') }}</td>
                             <td><?php echo date_from_mysql($invoice->invoice_date_due); ?></td>
                         </tr>
                     </table>
@@ -101,7 +101,7 @@ if ($invoice->client_email) {
                     <thead>
                     <tr>
                         <th></th>
-                        <th><?php _trans('item'); ?> / <?php echo lang('description'); ?></th>
+                        <th>{{ trans('item') }} / <?php echo lang('description'); ?></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -115,24 +115,24 @@ foreach ($items as $i => $item) {
                             <td rowspan="2" style="width:20px;" class="text-center"><?php echo 1 + $i; ?></td>
                             <td><?php _htmlsc($item->item_name); ?></td>
                             <td>
-                                <span class="pull-left"><?php _trans('quantity'); ?></span>
+                                <span class="pull-left">{{ trans('quantity') }}</span>
                                 <span class="pull-right amount"><?php echo format_quantity($item->item_quantity) . ' invoices_view.php' . htmlsc($item->item_product_unit); ?></span>
                             </td>
                             <td>
-                                <span class="pull-left"><?php _trans('price'); ?></span>
+                                <span class="pull-left">{{ trans('price') }}</span>
                                 <span class="pull-right amount"><?php echo format_currency($item->item_price); ?></span>
                             </td>
                             <td>
-                                <span class="pull-left"><?php _trans('subtotal'); ?></span>
+                                <span class="pull-left">{{ trans('subtotal') }}</span>
                                 <span class="pull-right amount"><?php echo format_currency($item->item_subtotal); ?></span>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-muted"><?php echo nl2br(htmlsc($item->item_description)); ?></td>
                             <td>
-                                <span class="pull-left"><?php _trans('discount'); ?></span>
+                                <span class="pull-left">{{ trans('discount') }}</span>
                                 <span class="pull-right amount">
-                                    <span data-toggle="tooltip" data-placement="bottom" title="<?php _trans('item_discount'); ?>">
+                                    <span data-toggle="tooltip" data-placement="bottom" title="{{ trans('item_discount') }}">
                                         <?php echo format_currency($item->item_discount); ?>
                                     </span>
 <?php
@@ -140,10 +140,10 @@ foreach ($items as $i => $item) {
         $item_global_discount = $legacy_calculation ? 0 : $item->item_subtotal - ($item->item_total - $item->item_tax_total + $item->item_discount);
     if ($item_global_discount) {
         ?>
-                                    <span data-toggle="tooltip" data-placement="bottom" title="<?php _trans('global_discount'); ?>">
+                                    <span data-toggle="tooltip" data-placement="bottom" title="{{ trans('global_discount') }}">
                                         + <?php echo format_currency($item_global_discount); ?>
                                     </span>
-                                    <span data-toggle="tooltip" data-placement="bottom" title="<?php _trans('discount'); ?> (<?php _trans('subtotal'); ?>)">
+                                    <span data-toggle="tooltip" data-placement="bottom" title="{{ trans('discount') }} ({{ trans('subtotal') }})">
                                         = <?php echo format_currency($item_global_discount + $item->item_discount); ?>
                                     </span>
 <?php
@@ -152,14 +152,14 @@ foreach ($items as $i => $item) {
                                 </span>
                             </td>
                             <td>
-                                <span class="pull-left"><?php _trans('tax'); ?></span>
+                                <span class="pull-left">{{ trans('tax') }}</span>
                                 <span class="pull-right amount"><?php
                                         echo $item->item_tax_rate_percent ? $item->item_tax_rate_name . ' (' . format_amount($item->item_tax_rate_percent) . '%): ' : '';
     echo format_currency($item->item_tax_total);
     ?></span>
                             </td>
                             <td>
-                                <span class="pull-left"><?php _trans('total'); ?></span>
+                                <span class="pull-left">{{ trans('total') }}</span>
                                 <span class="pull-right amount"><?php echo format_currency($item->item_total); ?></span>
                             </td>
                         </tr>
@@ -175,19 +175,19 @@ foreach ($items as $i => $item) {
                     <thead>
                     <tr>
 <?php if ( ! $legacy_calculation) { ?>
-                        <th class="text-right"><?php _trans('global_discount'); ?></th>
+                        <th class="text-right">{{ trans('global_discount') }}</th>
 <?php } ?>
-                        <th class="text-right"><?php _trans('subtotal'); ?></th>
-                        <th class="text-right"><?php _trans('item_tax'); ?></th>
+                        <th class="text-right">{{ trans('subtotal') }}</th>
+                        <th class="text-right">{{ trans('item_tax') }}</th>
 <?php if ($invoice_tax_rates) { ?>
-                        <th class="text-right"><?php _trans('invoice_tax'); ?></th>
+                        <th class="text-right">{{ trans('invoice_tax') }}</th>
 <?php } ?>
 <?php if ($legacy_calculation) { ?>
-                        <th class="text-right"><?php _trans('global_discount'); ?></th>
+                        <th class="text-right">{{ trans('global_discount') }}</th>
 <?php } ?>
-                        <th class="text-right"><?php _trans('total'); ?></th>
-                        <th class="text-right"><?php _trans('paid'); ?></th>
-                        <th class="text-right"><?php _trans('balance'); ?></th>
+                        <th class="text-right">{{ trans('total') }}</th>
+                        <th class="text-right">{{ trans('paid') }}</th>
+                        <th class="text-right">{{ trans('balance') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -220,7 +220,7 @@ foreach ($items as $i => $item) {
 if ($invoice->invoice_terms) {
     ?>
             <div class="col-xs-12 col-md-6">
-                <strong><?php _trans('invoice_terms'); ?></strong><br/>
+                <strong>{{ trans('invoice_terms') }}</strong><br/>
                 <?php echo nl2br(htmlsc($invoice->invoice_terms)); ?>
             </div>
 <?php

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Models\Setting;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Services\InvoiceService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -213,7 +213,7 @@ class InvoiceServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-del-001',
         ]);
 
-        Item::query()->create([
+        InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_name'            => 'Test Item',
             'item_quantity'        => 1,
@@ -235,7 +235,7 @@ class InvoiceServiceTest extends AbstractServiceTestCase
 
         $this->assertTrue($result);
         $this->assertNull(Invoice::query()->find($invoice->invoice_id));
-        $this->assertEquals(0, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
+        $this->assertEquals(0, InvoiceItem::query()->where('invoice_id', $invoice->invoice_id)->count());
         $this->assertEquals(0, InvoiceAmount::query()->where('invoice_id', $invoice->invoice_id)->count());
     }
 

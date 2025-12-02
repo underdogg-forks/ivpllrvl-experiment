@@ -161,15 +161,17 @@ class InvoicesController
      *
      * @legacy-line 120
      */
-    public function view(int $invoiceId): View
+    public function view(): View
     {
+        $invoiceId = request()->get('id');
+
         $invoice = $this->invoiceService->findWithRelationsOrFail(
             $invoiceId,
             ['client', 'user', 'invoiceGroup', 'items', 'taxRates', 'payments']
         );
 
         // Get custom fields and values
-        $customFields = $this->customFieldService->getByTable('ip_invoice_custom');
+        $customFields = $this->customFieldService->get_by_table('ip_invoice_custom');
         $customValues = [];
 
         foreach ($customFields as $customField) {
@@ -180,7 +182,7 @@ class InvoicesController
         }
 
         // Check for payment custom fields
-        $paymentCfExist = $this->customFieldService->existsForTable('ip_payment_custom') ? 'yes' : 'no';
+        $paymentCfExist = $this->customFieldService->get_by_table('ip_payment_custom') ? 'yes' : 'no';
 
         // Get items
         $items = $this->invoiceItemService->getItemsByInvoiceId($invoiceId);

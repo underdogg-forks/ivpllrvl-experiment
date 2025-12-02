@@ -3,8 +3,8 @@
 namespace Modules\Products\Services;
 
 use Modules\Core\Services\BaseService;
+use Modules\Invoices\Models\InvoiceItem as InvoiceItem;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item as InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
 use Modules\Quotes\Models\QuoteItem;

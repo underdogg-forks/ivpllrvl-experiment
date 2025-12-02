@@ -2,7 +2,7 @@
 
 namespace Modules\Products\Tests\Feature;
 
-use Modules\Invoices\Models\Item as InvoiceItem;
+use Modules\Invoices\Models\InvoiceItem as InvoiceItem;
 use Modules\Products\Controllers\UnitsController;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\Unit;

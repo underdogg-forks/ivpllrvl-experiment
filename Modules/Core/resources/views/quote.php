@@ -33,17 +33,17 @@
     <?php _csrf_field(); ?>
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?php _trans('email_quote'); ?></h1>
+        <h1 class="headerbar-title">{{ trans('email_quote') }}</h1>
 
         <div class="headerbar-item pull-right">
             <div class="btn-group btn-group-sm">
                 <button class="btn btn-primary ajax-loader" name="btn_send" value="1">
                     <i class="fa fa-send"></i>
-                    <?php _trans('send'); ?>
+                    {{ trans('send') }}
                 </button>
                 <button class="btn btn-danger" name="btn_cancel" id="btn_cancel" value="1">
                     <i class="fa fa-times"></i>
-                    <?php _trans('cancel'); ?>
+                    {{ trans('cancel') }}
                 </button>
             </div>
         </div>
@@ -57,7 +57,7 @@
                 <?php $this->layout->load_view('layout/alerts'); ?>
 
                 <div class="form-group">
-                    <label for="to_email"><?php _trans('to_email'); ?></label>
+                    <label for="to_email">{{ trans('to_email') }}</label>
                     <input type="email" multiple name="to_email" id="to_email" class="form-control" required
                            value="<?php echo $quote->client_email; ?>">
                 </div>
@@ -65,9 +65,9 @@
                 <hr>
 
                 <div class="form-group">
-                    <label for="email_template"><?php _trans('email_template'); ?></label>
+                    <label for="email_template">{{ trans('email_template') }}</label>
                     <select name="email_template" id="email_template" class="form-control simple-select">
-                        <option value=""><?php _trans('none'); ?></option>
+                        <option value="">{{ trans('none') }}</option>
 <?php
 foreach ($email_templates as $email_template) {
     ?>
@@ -82,37 +82,37 @@ foreach ($email_templates as $email_template) {
                 </div>
 
                 <div class="form-group">
-                    <label for="from_name"><?php _trans('from_name'); ?></label>
+                    <label for="from_name">{{ trans('from_name') }}</label>
                     <input type="text" name="from_name" id="from_name" class="form-control"
                            value="<?php _htmlsc($quote->user_name); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="from_email"><?php _trans('from_email'); ?></label>
+                    <label for="from_email">{{ trans('from_email') }}</label>
                     <input type="text" name="from_email" id="from_email" class="form-control" required
                            value="<?php echo $quote->user_email; ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="cc"><?php _trans('cc'); ?></label>
+                    <label for="cc">{{ trans('cc') }}</label>
                     <input type="text" name="cc" id="cc" value="" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="bcc"><?php _trans('bcc'); ?></label>
+                    <label for="bcc">{{ trans('bcc') }}</label>
                     <input type="text" name="bcc" id="bcc" value="" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="subject"><?php _trans('subject'); ?></label>
+                    <label for="subject">{{ trans('subject') }}</label>
                     <input type="text" name="subject" id="subject" class="form-control"
-                           value="<?php _trans('quote'); ?> #<?php echo $quote->quote_number; ?>">
+                           value="{{ trans('quote') }} #<?php echo $quote->quote_number; ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="pdf_template"><?php _trans('pdf_template'); ?></label>
+                    <label for="pdf_template">{{ trans('pdf_template') }}</label>
                     <select name="pdf_template" id="pdf_template" class="form-control simple-select">
-                        <option value=""><?php _trans('none'); ?></option>
+                        <option value="">{{ trans('none') }}</option>
 <?php
 foreach ($pdf_templates as $pdf_template) {
     ?>
@@ -132,7 +132,7 @@ foreach ($pdf_templates as $pdf_template) {
                     <div class="col-xs-12 col-md-6">
 
                         <div class="form-group">
-                            <label for="body"><?php _trans('body'); ?></label>
+                            <label for="body">{{ trans('body') }}</label>
 
                             <br>
 
@@ -175,7 +175,7 @@ foreach ($pdf_templates as $pdf_template) {
 
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <?php _trans('preview'); ?>
+                                    {{ trans('preview') }}
                                     <div id="email-template-preview-reload" class="pull-right cursor-pointer">
                                         <i class="fa fa-refresh"></i>
                                     </div>
@@ -208,7 +208,7 @@ foreach ($pdf_templates as $pdf_template) {
                 </div>
 
                 <div class="form-group">
-                    <label for="quote-guest-url"><?php _trans('guest_url'); ?></label>
+                    <label for="quote-guest-url">{{ trans('guest_url') }}</label>
                     <div class="input-group">
                         <input type="text" id="quote-guest-url" readonly class="form-control"
                                value="<?php echo site_url('guest/view/quote/' . $quote->quote_url_key); ?>">

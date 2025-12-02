@@ -34,7 +34,7 @@ class CustomValueService extends BaseService
      */
     public function getByFieldId(int $customFieldId)
     {
-        return CustomValue::query()->where('custom_field_id', $customFieldId)->get();
+        return CustomValue::query()->where('custom_values_field', $customFieldId)->get();
     }
 
     /**

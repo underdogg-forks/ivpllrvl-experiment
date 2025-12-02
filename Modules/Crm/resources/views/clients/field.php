@@ -1,13 +1,13 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('assigned_clients'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('assigned_clients') }}</h1>
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
             <a class="btn btn-default" href="<?php echo site_url('users'); ?>">
-                <i class="fa fa-arrow-left"></i> <?php _trans('back'); ?>
+                <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
             <a class="btn btn-primary" href="<?php echo site_url('user_clients/create/' . $id); ?>">
-                <i class="fa fa-plus"></i> <?php _trans('new'); ?>
+                <i class="fa fa-plus"></i> {{ trans('new') }}
             </a>
         </div>
     </div>
@@ -31,8 +31,8 @@
 
                             <thead>
                             <tr>
-                                <th><?php _trans('client'); ?></th>
-                                <th><?php _trans('options'); ?></th>
+                                <th>{{ trans('client') }}</th>
+                                <th>{{ trans('options') }}</th>
                             </tr>
                             </thead>
 
@@ -50,8 +50,8 @@
                                             method="POST">
                                             <?php _csrf_field(); ?>
                                             <button type="submit" class="btn btn-default btn-sm"
-                                                    onclick="return confirm('<?php _trans('delete_user_client_warning'); ?>');">
-                                                <i class="fa fa-trash-o fa-margin"></i> <?php _trans('remove'); ?>
+                                                    onclick="return confirm('{{ trans('delete_user_client_warning') }}');">
+                                                <i class="fa fa-trash-o fa-margin"></i> {{ trans('remove') }}
                                             </button>
                                         </form>
                                     </td>

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Models\Setting;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceAmount;
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\ItemAmount;
 use Modules\Invoices\Services\InvoiceAmountService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -52,7 +52,7 @@ class InvoiceAmountServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-1000',
         ]);
 
-        $firstItem = Item::query()->create([
+        $firstItem = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_tax_rate_id'     => null,
             'item_product_id'      => null,
@@ -66,7 +66,7 @@ class InvoiceAmountServiceTest extends AbstractServiceTestCase
             'item_product_unit_id' => null,
         ]);
 
-        $secondItem = Item::query()->create([
+        $secondItem = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_tax_rate_id'     => null,
             'item_product_id'      => null,
@@ -137,7 +137,7 @@ class InvoiceAmountServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-1001',
         ]);
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_tax_rate_id'     => null,
             'item_product_id'      => null,
@@ -194,7 +194,7 @@ class InvoiceAmountServiceTest extends AbstractServiceTestCase
             'invoice_url_key'          => 'key-1002',
         ]);
 
-        $item = Item::query()->create([
+        $item = InvoiceItem::query()->create([
             'invoice_id'           => $invoice->invoice_id,
             'item_tax_rate_id'     => null,
             'item_product_id'      => null,

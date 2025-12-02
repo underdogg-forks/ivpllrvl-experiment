@@ -3,14 +3,14 @@
 
         <thead>
         <tr>
-            <th><?php _trans('payment_date'); ?></th>
-            <th><?php _trans('invoice_date'); ?></th>
-            <th><?php _trans('invoice'); ?></th>
-            <th><?php _trans('client'); ?></th>
-            <th class="amount last"><?php _trans('amount'); ?></th>
-            <th><?php _trans('payment_method'); ?></th>
-            <th><?php _trans('note'); ?></th>
-            <th><?php _trans('options'); ?></th>
+            <th>{{ trans('payment_date') }}</th>
+            <th>{{ trans('invoice_date') }}</th>
+            <th>{{ trans('invoice') }}</th>
+            <th>{{ trans('client') }}</th>
+            <th class="amount last">{{ trans('amount') }}</th>
+            <th>{{ trans('payment_method') }}</th>
+            <th>{{ trans('note') }}</th>
+            <th>{{ trans('options') }}</th>
         </tr>
         </thead>
 
@@ -24,7 +24,7 @@ foreach ($payments as $payment) {
                 <td><?php echo anchor('invoices/view/' . $payment->invoice_id, $payment->invoice_number); ?></td>
                 <td>
                     <a href="<?php echo site_url('clients/view/' . $payment->client_id); ?>"
-                       title="<?php _trans('view_client'); ?>">
+                       title="{{ trans('view_client') }}">
                         <?php _htmlsc(format_client($payment)); ?>
                     </a>
                 </td>
@@ -34,13 +34,13 @@ foreach ($payments as $payment) {
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                            <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?php echo site_url('payments/form/' . $payment->payment_id); ?>">
                                     <i class="fa fa-edit fa-margin"></i>
-                                    <?php _trans('edit'); ?>
+                                    {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
@@ -48,8 +48,8 @@ foreach ($payments as $payment) {
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                            onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </li>
@@ -59,7 +59,7 @@ foreach ($payments as $payment) {
             </tr>
 <?php
 } // End foreach
-            ?>
+?>
         </tbody>
 
     </table>

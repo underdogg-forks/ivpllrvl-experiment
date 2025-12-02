@@ -6,9 +6,9 @@ use Modules\Core\Models\User;
 use Modules\Crm\Models\Client;
 use Modules\Invoices\Controllers\InvoicesAjaxController;
 use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\InvoicesRecurring;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -140,7 +140,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        $this->assertEquals(2, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
+        $this->assertEquals(2, InvoiceItem::query()->where('invoice_id', $invoice->invoice_id)->count());
 
         // Verify invoice data was saved
         $invoice->refresh();
@@ -169,7 +169,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create(['invoice_number' => 'INV-OLD']);
-        $item    = Item::factory()->create([
+        $item    = InvoiceItem::factory()->create([
             'invoice_id'    => $invoice->invoice_id,
             'item_name'     => 'Old Item',
             'item_quantity' => 1,
@@ -441,7 +441,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
-        $item    = Item::factory()->create(['invoice_id' => $invoice->invoice_id]);
+        $item    = InvoiceItem::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /**
          * {
@@ -461,7 +461,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        $this->assertNull(Item::find($item->item_id));
+        $this->assertNull(InvoiceItem::find($item->item_id));
     }
 
     /**
@@ -508,7 +508,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->draft()->create();
-        $item    = Item::factory()->create([
+        $item    = InvoiceItem::factory()->create([
             'invoice_id' => $invoice->invoice_id,
             'item_name'  => 'Test Item',
             'item_price' => 100.00,
@@ -565,7 +565,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $user          = User::factory()->create();
         $client        = Client::factory()->create();
         $sourceInvoice = Invoice::factory()->draft()->create();
-        Item::factory()->count(3)->create(['invoice_id' => $sourceInvoice->invoice_id]);
+        InvoiceItem::factory()->count(3)->create(['invoice_id' => $sourceInvoice->invoice_id]);
 
         /**
          * {
@@ -596,7 +596,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $newInvoice = Invoice::find($data['invoice_id']);
         $this->assertNotNull($newInvoice);
         $this->assertEquals($client->client_id, $newInvoice->client_id);
-        $this->assertEquals(3, Item::query()->where('invoice_id', $newInvoice->invoice_id)->count());
+        $this->assertEquals(3, InvoiceItem::query()->where('invoice_id', $newInvoice->invoice_id)->count());
     }
 
     /**
@@ -812,7 +812,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         /** Arrange */
         $user          = User::factory()->create();
         $sourceInvoice = Invoice::factory()->paid()->create();
-        Item::factory()->count(2)->create(['invoice_id' => $sourceInvoice->invoice_id]);
+        InvoiceItem::factory()->count(2)->create(['invoice_id' => $sourceInvoice->invoice_id]);
 
         /**
          * {
@@ -1038,7 +1038,7 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $response->assertOk();
         $data = $response->json();
         $this->assertEquals(1, $data['success']);
-        $savedItem = Item::query()->where('invoice_id', $invoice->invoice_id)->first();
+        $savedItem = InvoiceItem::query()->where('invoice_id', $invoice->invoice_id)->first();
         $this->assertEquals('Consulting Services', $savedItem->item_name);
         $this->assertEquals('Full project consultation', $savedItem->item_description);
         $this->assertEquals(10, $savedItem->item_quantity);
@@ -1115,6 +1115,6 @@ class InvoicesAjaxControllerTest extends FeatureTestCase
         $invoice->refresh();
         $this->assertEquals(30.00, $invoice->invoice_discount_amount);
         /* Verify items were created */
-        $this->assertEquals(2, Item::query()->where('invoice_id', $invoice->invoice_id)->count());
+        $this->assertEquals(2, InvoiceItem::query()->where('invoice_id', $invoice->invoice_id)->count());
     }
 }

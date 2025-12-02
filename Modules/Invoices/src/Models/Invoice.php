@@ -4,6 +4,7 @@ namespace Modules\Invoices\Models;
 
 use Modules\Core\Models\BaseModel;
 use Modules\Core\Models\User;
+use Modules\Payments\Models\Payment;
 
 /**
  * Invoice Model.
@@ -107,7 +108,7 @@ class Invoice extends BaseModel
      */
     public function items()
     {
-        return $this->hasMany('Modules\Invoices\Models\InvoiceItem', 'invoice_id', 'invoice_id');
+        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'invoice_id');
     }
 
     /**
@@ -124,6 +125,14 @@ class Invoice extends BaseModel
     public function quote()
     {
         return $this->hasOne('Modules\Quotes\Models\Quote', 'invoice_id', 'invoice_id');
+    }
+
+    /**
+     * Get the quote associated with this invoice.
+     */
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Payment::class, 'invoice_id', 'invoice_id');
     }
 
     /**

@@ -7,15 +7,15 @@
 
             <?php _csrf_field(); ?>
 
-            <legend><?php _trans('setup_install_tables'); ?></legend>
+            <legend>{{ trans('setup_install_tables') }}</legend>
 
             <?php if ($errors) { ?>
-                <p><?php _trans('setup_tables_errors'); ?></p>
+                <p>{{ trans('setup_tables_errors') }}</p>
 
                 <?php foreach ($errors as $error) { ?>
                     <p>
                         <span class="label label-important">
-                            <?php _trans('failure'); ?>
+                            {{ trans('failure') }}
                         </span>
                         <?php echo $error; ?>
                     </p>
@@ -24,16 +24,16 @@
             <?php } else { ?>
                 <p>
                     <i class="fa fa-check text-success fa-margin"></i>
-                    <?php _trans('setup_tables_success'); ?>
+                    {{ trans('setup_tables_success') }}
                 </p>
             <?php } ?>
 
             <?php if ($errors) { ?>
                 <input type="submit" class="btn btn-primary" name="btn_try_again"
-                       value="<?php _trans('try_again'); ?>">
+                       value="{{ trans('try_again') }}">
             <?php } else { ?>
                 <input type="submit" class="btn btn-success" name="btn_continue"
-                       value="<?php _trans('continue'); ?>">
+                       value="{{ trans('continue') }}">
             <?php } ?>
 
         </form>

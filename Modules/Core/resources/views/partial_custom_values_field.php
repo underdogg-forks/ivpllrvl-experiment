@@ -2,9 +2,9 @@
 
                     <thead>
                         <tr>
-                            <th><?php _trans('id'); ?></th>
-                            <th><?php _trans('label'); ?></th>
-                            <th><?php _trans('options'); ?></th>
+                            <th>{{ trans('id') }}</th>
+                            <th>{{ trans('label') }}</th>
+                            <th>{{ trans('options') }}</th>
                         </tr>
                     </thead>
 
@@ -19,12 +19,12 @@ foreach ($elements as $element) {
                                 <div class="options btn-group">
                                     <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                                        href="#">
-                                        <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                        <i class="fa fa-cog"></i> {{ trans('options') }}
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="<?php echo site_url('custom_values/edit/' . $element->custom_values_id); ?>">
-                                                <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                                <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                             </a>
                                         </li>
                                         <li>
@@ -33,8 +33,8 @@ foreach ($elements as $element) {
                                                 <?php _csrf_field(); ?>
                                                 <input type="hidden" name="custom_field_id" value="<?php echo $id; ?>">
                                                 <button type="submit" class="dropdown-button"
-                                                        onclick="return confirm(`<?php _trans('delete_record_warning'); ?>`);">
-                                                    <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                                        onclick="return confirm(`{{ trans('delete_record_warning') }}`);">
+                                                    <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                                 </button>
                                             </form>
                                         </li>
@@ -44,7 +44,7 @@ foreach ($elements as $element) {
                         </tr>
 <?php
 }
-                            ?>
+?>
                     </tbody>
 
                 </table>

@@ -3,12 +3,9 @@
 namespace Modules\Invoices\Controllers;
 
 use Modules\Core\Models\InvoiceCustom;
-use Modules\Core\Models\User;
 use Modules\Core\Services\UserService;
-use Modules\Crm\Models\Client;
 use Modules\Crm\Services\ClientService;
 use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Models\Item;
 use Modules\Invoices\Services\InvoiceItemService;
 use Modules\Invoices\Services\InvoiceService;
 use Modules\Invoices\Services\InvoicesRecurringService;

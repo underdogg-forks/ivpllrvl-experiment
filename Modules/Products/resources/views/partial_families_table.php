@@ -3,8 +3,8 @@
 
             <thead>
             <tr>
-                <th><?php _trans('family_name'); ?></th>
-                <th><?php _trans('options'); ?></th>
+                <th>{{ trans('family_name') }}</th>
+                <th>{{ trans('options') }}</th>
             </tr>
             </thead>
 
@@ -18,12 +18,12 @@ foreach ($families as $family) {
                         <div class="options btn-group">
                             <a class="btn btn-default btn-sm dropdown-toggle"
                                data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="<?php echo site_url('families/form/' . $family->family_id); ?>">
-                                        <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                        <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                     </a>
                                 </li>
                                 <li>
@@ -31,8 +31,8 @@ foreach ($families as $family) {
                                           method="POST">
                                         <?php _csrf_field(); ?>
                                         <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                                onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                                            <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                         </button>
                                     </form>
                                 </li>
@@ -42,7 +42,7 @@ foreach ($families as $family) {
                 </tr>
 <?php
 }
-                ?>
+?>
             </tbody>
 
         </table>

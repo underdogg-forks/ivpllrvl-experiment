@@ -2,7 +2,7 @@
 
 namespace Modules\Products\Tests\Unit;
 
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Services\ProductService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -63,7 +63,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         ]);
 
         // Create an invoice item that references this product
-        Item::factory()->create([
+        InvoiceItem::factory()->create([
             'item_product_id' => $product->product_id,
             'item_name'       => 'Invoice Item',
             'item_price'      => 150.00,
@@ -92,7 +92,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         ]);
 
         // Create multiple invoice items referencing this product
-        Item::factory()->count(3)->create([
+        InvoiceItem::factory()->count(3)->create([
             'item_product_id' => $product->product_id,
             'item_price'      => 200.00,
             'item_quantity'   => 1,
@@ -116,7 +116,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         /** Arrange */
         $product = Product::factory()->create();
 
-        Item::factory()->create([
+        InvoiceItem::factory()->create([
             'item_product_id' => $product->product_id,
         ]);
 
@@ -141,7 +141,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         $product = Product::factory()->create();
 
         // Create 5 invoice items
-        Item::factory()->count(5)->create([
+        InvoiceItem::factory()->count(5)->create([
             'item_product_id' => $product->product_id,
         ]);
 
@@ -186,7 +186,7 @@ class ProductDeletionValidationTest extends AbstractServiceTestCase
         $product = Product::factory()->create();
 
         // Even if invoice is archived/old, item still references product
-        Item::factory()->create([
+        InvoiceItem::factory()->create([
             'item_product_id' => $product->product_id,
             // Invoice could be old/archived, but relationship still exists
         ]);

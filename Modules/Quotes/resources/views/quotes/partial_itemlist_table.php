@@ -5,20 +5,20 @@
         <thead style="display:none">
         <tr>
             <th></th>
-            <th><?php _trans('item'); ?></th>
+            <th>{{ trans('item') }}</th>
 <!--
-            <th><?php _trans('description'); ?></th>
+            <th>{{ trans('description') }}</th>
 -->
-            <th class="amount"><?php _trans('quantity'); ?></th>
-            <th class="amount"><?php _trans('price'); ?></th>
+            <th class="amount">{{ trans('quantity') }}</th>
+            <th class="amount">{{ trans('price') }}</th>
             <?php echo $legacy_calculation ? '' : '<th class="amount">' . trans('item_discount') . '</th>' ?>
-            <th class="amount"><?php _trans('tax_rate'); ?></th>
+            <th class="amount">{{ trans('tax_rate') }}</th>
             <?php echo $legacy_calculation ? '<th class="amount">' . trans('item_discount') . '</th>' : '' ?>
 <!--
-            <th class="amount"><?php _trans('subtotal'); ?></th>
-            <th class="amount"><?php _trans('tax'); ?></th>
+            <th class="amount">{{ trans('subtotal') }}</th>
+            <th class="amount">{{ trans('tax') }}</th>
 -->
-            <th class="amount"><?php _trans('total'); ?></th>
+            <th class="amount">{{ trans('total') }}</th>
             <th></th>
         </tr>
         </thead>
@@ -32,19 +32,19 @@
                 <input type="hidden" name="item_product_id" value="">
 
                 <div class="input-group">
-                    <span class="input-group-addon"><?php _trans('item'); ?></span>
+                    <span class="input-group-addon">{{ trans('item') }}</span>
                     <input type="text" name="item_name" class="form-control" value="">
                 </div>
             </td>
             <td class="td-amount td-quantity">
                 <div class="input-group">
-                    <span class="input-group-addon"><?php _trans('quantity'); ?></span>
+                    <span class="input-group-addon">{{ trans('quantity') }}</span>
                     <input type="text" name="item_quantity" class="form-control amount" value="">
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
-                    <span class="input-group-addon"><?php _trans('price'); ?></span>
+                    <span class="input-group-addon">{{ trans('price') }}</span>
                     <input type="text" name="item_price" class="form-control amount" value="">
                     <div class="input-group-addon"><?php echo get_setting('currency_symbol'); ?></div>
                 </div>
@@ -56,9 +56,9 @@ if ( ! $legacy_calculation) {
             ?>
             <td class="td-amount">
                 <div class="input-group">
-                    <span class="input-group-addon"><?php _trans('tax_rate'); ?></span>
+                    <span class="input-group-addon">{{ trans('tax_rate') }}</span>
                     <select name="item_tax_rate_id" class="form-control">
-                        <option value="0"><?php _trans('none'); ?></option>
+                        <option value="0">{{ trans('none') }}</option>
                         <?php foreach ($tax_rates as $tax_rate) { ?>
                             <option value="<?php echo $tax_rate->tax_rate_id; ?>">
                                 <?php echo format_amount($tax_rate->tax_rate_percent) . '% - ' . $tax_rate->tax_rate_name; ?>
@@ -73,7 +73,7 @@ if ($legacy_calculation) {
 }
             ?>
             <td class="td-icon text-right td-vert-middle">
-                <button type="button" class="btn_delete_item btn btn-link btn-sm" title="<?php _trans('delete'); ?>">
+                <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}">
                     <i class="fa fa-trash-o text-danger"></i>
                 </button>
             </td>
@@ -81,16 +81,16 @@ if ($legacy_calculation) {
         <tr>
             <td class="td-textarea">
                 <div class="input-group">
-                    <span class="input-group-addon"><?php _trans('description'); ?></span>
+                    <span class="input-group-addon">{{ trans('description') }}</span>
                     <textarea name="item_description" class="form-control"></textarea>
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
-                    <span class="input-group-addon"><?php _trans('product_unit'); ?></span>
+                    <span class="input-group-addon">{{ trans('product_unit') }}</span>
                     <select name="item_product_unit_id"
                             class="form-control">
-                        <option value="0"><?php _trans('none'); ?></option>
+                        <option value="0">{{ trans('none') }}</option>
                         <?php foreach ($units as $unit) { ?>
                             <option value="<?php echo $unit->unit_id; ?>">
                                 <?php echo htmlsc($unit->unit_name) . 'partial_itemlist_table.php/' . htmlsc($unit->unit_name_plrl); ?>
@@ -100,7 +100,7 @@ if ($legacy_calculation) {
                 </div>
             </td>
             <td class="td-amount td-vert-middle">
-                <span><?php _trans('subtotal'); ?></span><br/>
+                <span>{{ trans('subtotal') }}</span><br/>
                 <span name="subtotal" class="amount"></span>
             </td>
 <?php
@@ -109,7 +109,7 @@ if ( ! $legacy_calculation) {
 }
             ?>
             <td class="td-amount td-vert-middle">
-                <span><?php _trans('tax'); ?></span><br/>
+                <span>{{ trans('tax') }}</span><br/>
                 <span name="item_tax_total" class="amount"></span>
             </td>
 <?php
@@ -118,7 +118,7 @@ if ($legacy_calculation) {
 }
             ?>
             <td class="td-amount td-vert-middle">
-                <span><?php _trans('total'); ?></span><br/>
+                <span>{{ trans('total') }}</span><br/>
                 <span name="item_total" class="amount"></span>
             </td>
         </tr>
@@ -136,21 +136,21 @@ foreach ($items as $item) {
                     <input type="hidden" name="item_product_id" value="<?php echo $item->item_product_id; ?>">
 
                     <div class="input-group">
-                        <span class="input-group-addon"><?php _trans('item'); ?></span>
+                        <span class="input-group-addon">{{ trans('item') }}</span>
                         <input type="text" name="item_name" class="form-control"
                                value="<?php _htmlsc($item->item_name); ?>">
                     </div>
                 </td>
                 <td class="td-amount td-quantity">
                     <div class="input-group">
-                        <span class="input-group-addon"><?php _trans('quantity'); ?></span>
+                        <span class="input-group-addon">{{ trans('quantity') }}</span>
                         <input type="text" name="item_quantity" class="form-control amount"
                                value="<?php echo format_quantity($item->item_quantity); ?>">
                     </div>
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
-                        <span class="input-group-addon"><?php _trans('price'); ?></span>
+                        <span class="input-group-addon">{{ trans('price') }}</span>
                         <input type="text" name="item_price" class="form-control amount"
                                value="<?php echo format_amount($item->item_price); ?>">
                         <div class="input-group-addon"><?php echo get_setting('currency_symbol'); ?></div>
@@ -163,9 +163,9 @@ foreach ($items as $item) {
     ?>
                 <td class="td-amount">
                     <div class="input-group">
-                        <span class="input-group-addon"><?php _trans('tax_rate'); ?></span>
+                        <span class="input-group-addon">{{ trans('tax_rate') }}</span>
                         <select name="item_tax_rate_id" class="form-control">
-                            <option value="0"><?php _trans('none'); ?></option>
+                            <option value="0">{{ trans('none') }}</option>
 <?php
         foreach ($tax_rates as $tax_rate) {
             $is_selected = ($item->item_tax_rate_id == $tax_rate->tax_rate_id) ? ' selected="selected"' : '';
@@ -185,7 +185,7 @@ foreach ($items as $item) {
         }
     ?>
                 <td class="td-icon text-right td-vert-middle">
-                    <button type="button" class="btn_delete_item btn btn-link btn-sm" title="<?php _trans('delete'); ?>"
+                    <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}"
                             data-item-id="<?php echo $item->item_id; ?>">
                         <i class="fa fa-trash-o text-danger"></i>
                     </button>
@@ -194,17 +194,17 @@ foreach ($items as $item) {
             <tr>
                 <td class="td-textarea">
                     <div class="input-group">
-                        <span class="input-group-addon"><?php _trans('description'); ?></span>
+                        <span class="input-group-addon">{{ trans('description') }}</span>
                         <textarea name="item_description" class="form-control"
                         ><?php echo htmlsc($item->item_description); ?></textarea>
                     </div>
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
-                        <span class="input-group-addon"><?php _trans('product_unit'); ?></span>
+                        <span class="input-group-addon">{{ trans('product_unit') }}</span>
                         <select name="item_product_unit_id"
                                 class="form-control">
-                            <option value="0"><?php _trans('none'); ?></option>
+                            <option value="0">{{ trans('none') }}</option>
 <?php
         foreach ($units as $unit) {
             ?>
@@ -219,7 +219,7 @@ foreach ($items as $item) {
                     </div>
                 </td>
                 <td class="td-amount td-vert-middle">
-                    <span><?php _trans('subtotal'); ?></span><br/>
+                    <span>{{ trans('subtotal') }}</span><br/>
                     <span name="subtotal" class="amount">
                         <?php echo format_currency($item->item_subtotal); ?>
                     </span>
@@ -230,7 +230,7 @@ foreach ($items as $item) {
         }
     ?>
                 <td class="td-amount td-vert-middle">
-                    <span><?php _trans('tax'); ?></span><br/>
+                    <span>{{ trans('tax') }}</span><br/>
                     <span name="item_tax_total" class="amount">
                         <?php echo format_currency($item->item_tax_total); ?>
                     </span>
@@ -241,7 +241,7 @@ foreach ($items as $item) {
         }
     ?>
                 <td class="td-amount td-vert-middle">
-                    <span><?php _trans('total'); ?></span><br/>
+                    <span>{{ trans('total') }}</span><br/>
                     <span name="item_total" class="amount">
                         <?php echo format_currency($item->item_total); ?>
                     </span>
@@ -262,11 +262,11 @@ foreach ($items as $item) {
         <div class="btn-group">
             <a href="javascript:void(0);" class="btn_add_row btn btn-sm btn-default">
                 <i class="fa fa-plus"></i>
-                <?php _trans('add_new_row'); ?>
+                {{ trans('add_new_row') }}
             </a>
             <a href="javascript:void(0);" class="btn_add_product btn btn-sm btn-default">
                 <i class="fa fa-database"></i>
-                <?php _trans('add_product'); ?>
+                {{ trans('add_product') }}
             </a>
         </div>
     </div>
@@ -281,18 +281,18 @@ if ( ! $legacy_calculation) {
 }
             ?>
             <tr>
-                <td style="width: 40%;"><?php _trans('subtotal'); ?></td>
+                <td style="width: 40%;">{{ trans('subtotal') }}</td>
                 <td style="width: 60%;" class="amount"><?php echo format_currency($quote->quote_item_subtotal); ?></td>
             </tr>
             <tr>
-                <td><?php _trans('item_tax'); ?></td>
+                <td>{{ trans('item_tax') }}</td>
                 <td class="amount"><?php echo format_currency($quote->quote_item_tax_total); ?></td>
             </tr>
 <?php
 if ($legacy_calculation) {
     ?>
             <tr>
-                <td><?php _trans('quote_tax'); ?></td>
+                <td>{{ trans('quote_tax') }}</td>
                 <td>
 <?php
         if ($quote_tax_rates) {
@@ -301,7 +301,7 @@ if ($legacy_calculation) {
                     <form method="POST" class="form-inline"
                           action="<?php echo site_url('quotes/delete_quote_tax/' . $quote->quote_id . '/' . $quote_tax_rate->quote_tax_rate_id) ?>">
                         <?php _csrf_field(); ?>
-                        <button type="submit" class="btn btn-xs btn-link" onclick="var Y=confirm('<?php _trans('delete_tax_warning'); ?>');if(Y)show_loader();return Y;">
+                        <button type="submit" class="btn btn-xs btn-link" onclick="var Y=confirm('{{ trans('delete_tax_warning') }}');if(Y)show_loader();return Y;">
                             <i class="fa fa-trash-o"></i>
                         </button>
                         <span class="text-muted">
@@ -324,7 +324,7 @@ if ($legacy_calculation) {
 }
             ?>
             <tr>
-                <td><b><?php _trans('total'); ?></b></td>
+                <td><b>{{ trans('total') }}</b></td>
                 <td class="amount"><b><?php echo format_currency($quote->quote_total); ?></b></td>
             </tr>
         </table>

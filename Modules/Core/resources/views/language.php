@@ -7,9 +7,9 @@
 
             <?php _csrf_field(); ?>
 
-            <legend><?php _trans('setup_choose_language'); ?></legend>
+            <legend>{{ trans('setup_choose_language') }}</legend>
 
-            <p><?php _trans('setup_choose_language_message'); ?></p>
+            <p>{{ trans('setup_choose_language_message') }}</p>
 
             <select name="ip_lang" class="form-control simple-select">
 <?php
@@ -25,7 +25,7 @@ foreach ($languages as $language) {
 
             <br/>
 
-            <input class="btn btn-success" type="submit" name="btn_continue" value="<?php _trans('continue'); ?>">
+            <input class="btn btn-success" type="submit" name="btn_continue" value="{{ trans('continue') }}">
 
         </form>
 

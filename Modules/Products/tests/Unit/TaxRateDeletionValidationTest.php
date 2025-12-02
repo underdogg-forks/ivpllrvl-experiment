@@ -2,8 +2,8 @@
 
 namespace Modules\Products\Tests\Unit;
 
+use Modules\Invoices\Models\InvoiceItem as InvoiceItem;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item as InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
 use Modules\Products\Services\TaxRateService;

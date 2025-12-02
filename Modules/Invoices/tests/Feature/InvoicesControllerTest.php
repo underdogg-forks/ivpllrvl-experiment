@@ -6,8 +6,8 @@ use Modules\Core\Models\User;
 use Modules\Crm\Models\Task;
 use Modules\Invoices\Controllers\InvoicesController;
 use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\InvoiceTaxRate;
-use Modules\Invoices\Models\Item;
 use Modules\Products\Models\TaxRate;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -125,7 +125,7 @@ class InvoicesControllerTest extends FeatureTestCase
         /** Arrange */
         $user    = User::factory()->create();
         $invoice = Invoice::factory()->create();
-        Item::factory()->count(3)->create(['invoice_id' => $invoice->invoice_id]);
+        InvoiceItem::factory()->count(3)->create(['invoice_id' => $invoice->invoice_id]);
 
         /* Act */
         $this->actingAs($user);

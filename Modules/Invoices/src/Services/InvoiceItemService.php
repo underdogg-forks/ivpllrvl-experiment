@@ -2,7 +2,7 @@
 
 namespace Modules\Invoices\Services;
 
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\ItemAmount;
 
 class InvoiceItemService
@@ -31,15 +31,15 @@ class InvoiceItemService
      *
      * @legacy-function save()
      */
-    public function save(?int $itemId, array $data, int $invoiceId, array &$globalDiscount = []): Item
+    public function save(?int $itemId, array $data, int $invoiceId, array &$globalDiscount = []): InvoiceItem
     {
         $payload = array_merge($data, ['invoice_id' => $invoiceId]);
 
         if ($itemId) {
-            $item = Item::findOrFail($itemId);
+            $item = InvoiceItem::findOrFail($itemId);
             $item->update($payload);
         } else {
-            $item = Item::create($payload);
+            $item = InvoiceItem::create($payload);
         }
 
         app(InvoiceItemAmountService::class)->calculate($item->item_id, $globalDiscount);
@@ -59,7 +59,7 @@ class InvoiceItemService
      */
     public function delete(int $itemId): bool
     {
-        $item = Item::find($itemId);
+        $item = InvoiceItem::find($itemId);
 
         if ( ! $item) {
             return false;
@@ -94,7 +94,7 @@ class InvoiceItemService
     public function getItemsSubtotal(int $invoiceId): float
     {
         // Get all item IDs for this invoice
-        $itemIds = Item::query()->where('invoice_id', $invoiceId)
+        $itemIds = InvoiceItem::query()->where('invoice_id', $invoiceId)
             ->pluck('item_id');
 
         // Sum the subtotals from invoice_item_amounts
@@ -113,7 +113,7 @@ class InvoiceItemService
      */
     public function getItemsByInvoiceId(int $invoiceId)
     {
-        return Item::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
+        return InvoiceItem::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
     }
 
     /**
@@ -122,11 +122,11 @@ class InvoiceItemService
      * @param int $invoiceId
      * @param int $itemId
      *
-     * @return Item|null
+     * @return InvoiceItem|null
      */
-    public function findByInvoiceAndItemId(int $invoiceId, int $itemId): ?Item
+    public function findByInvoiceAndItemId(int $invoiceId, int $itemId): ?InvoiceItem
     {
-        return Item::query()->where('invoice_id', $invoiceId)
+        return InvoiceItem::query()->where('invoice_id', $invoiceId)
             ->where('item_id', $itemId)
             ->first();
     }

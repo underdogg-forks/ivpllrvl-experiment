@@ -30,16 +30,16 @@
 
         <div class="form-group">
             <label for="client_start_einvoicing">
-                <?php _trans('einvoicing_start'); ?>
+                {{ trans('einvoicing_start') }}
             </label>
             <select name="client_start_einvoicing" class="form-control simple-select"
                 id="client_start_einvoicing" data-minimum-results-for-search="Infinity">
                 <?php $active = ($this->mdl_clients->form_value('client_einvoicing_version') == '') ? '0' : '1'; ?>
                 <option value="0" <?php check_select($active, '0'); ?>>
-                    <?php _trans('no'); ?>
+                    {{ trans('no') }}
                 </option>
                 <option value="1" <?php check_select($active, '1'); ?>>
-                    <?php _trans('yes'); ?>
+                    {{ trans('yes') }}
                 </option>
             </select>
 <?php
@@ -49,7 +49,7 @@ $client_einvoicing_version = $this->mdl_clients->form_value('client_einvoicing_v
 if ($req_einvoicing->users[$_SESSION['user_id']]->show_table > 0) {
     $disabled = ' disabled="disabled"';
     ?>
-            <p class="help-block"><?php _trans('einvoicing_start_hint'); ?></p>
+            <p class="help-block">{{ trans('einvoicing_start_hint') }}</p>
 <?php
 }
 ?>
@@ -64,7 +64,7 @@ if ($req_einvoicing->users[$_SESSION['user_id']]->show_table > 0) {
                 <label for="client_einvoicing_version"><?php echo 'UBL / CII ' . trans('version'); ?></label>
 
                 <select name="client_einvoicing_version" id="client_einvoicing_version" class="form-control simple-select"<?php echo $disabled; ?>>
-                    <option value=""><?php _trans('none'); ?></option>
+                    <option value="">{{ trans('none') }}</option>
 <?php
 foreach ($xml_templates as $xml_key => $xml_template) {
     ?>
@@ -101,14 +101,14 @@ foreach ($req_einvoicing->users as $user_id => $user) {
                     <table class="table table-hover table-condensed table-bordered no-margin">
                         <thead class="text-center">
                             <tr>
-                                <th><?php _trans('required_fields'); ?></th>
-                                <th class="text-center" style="min-width:20%;"><?php _trans('client'); ?></th>
+                                <th>{{ trans('required_fields') }}</th>
+                                <th class="text-center" style="min-width:20%;">{{ trans('client') }}</th>
                                 <th class="text-center" style="min-width:20%;"><?php echo $user_link; ?></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th colspan="3" class="text-center alert-<?php echo $me ? 'danger' : 'warning'; ?>" title="<?php _trans('username'); ?>">
+                                <th colspan="3" class="text-center alert-<?php echo $me ? 'danger' : 'warning'; ?>" title="{{ trans('username') }}">
                                     <small class="te te-1 dib"><i class="fa fa-fw fa-user"></i><?php _htmlsc($user->user_name); ?></small>
                                 </th>
                             </tr>

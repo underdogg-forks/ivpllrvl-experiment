@@ -3,11 +3,11 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('delete_invoice'); ?></h4>
+            <h4 class="panel-title">{{ trans('delete_invoice') }}</h4>
         </div>
         <div class="modal-body">
 
-            <div class="alert alert-danger"><?php _trans('delete_invoice_warning'); ?></div>
+            <div class="alert alert-danger">{{ trans('delete_invoice_warning') }}</div>
 
         </div>
         <div class="modal-footer">
@@ -21,7 +21,7 @@
                         <i class="fa fa-trash-o fa-margin"></i> <?php echo trans('confirm_deletion') ?>
                     </button>
                     <a href="#" class="btn btn-default" data-dismiss="modal">
-                        <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                        <i class="fa fa-times"></i> {{ trans('cancel') }}
                     </a>
                 </div>
             </form>

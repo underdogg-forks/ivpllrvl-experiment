@@ -10,7 +10,7 @@ use Modules\Core\Models\BaseModel;
  * Eloquent model for managing ip_invoice_items
  * Migrated from CodeIgniter model
  */
-class Item extends BaseModel
+class InvoiceItem extends BaseModel
 {
     /**
      * Indicates if the model should be timestamped.

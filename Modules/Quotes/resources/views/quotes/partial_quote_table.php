@@ -3,26 +3,26 @@
 
         <thead>
         <tr>
-            <th><?php _trans('status'); ?></th>
-            <th><?php _trans('quote'); ?></th>
-            <th><?php _trans('created'); ?></th>
-            <th><?php _trans('due_date'); ?></th>
-            <th><?php _trans('client_name'); ?></th>
-            <th class="amount last"><?php _trans('amount'); ?></th>
-            <th><?php _trans('options'); ?></th>
+            <th>{{ trans('status') }}</th>
+            <th>{{ trans('quote') }}</th>
+            <th>{{ trans('created') }}</th>
+            <th>{{ trans('due_date') }}</th>
+            <th>{{ trans('client_name') }}</th>
+            <th class="amount last">{{ trans('amount') }}</th>
+            <th>{{ trans('options') }}</th>
         </tr>
         </thead>
 
         <tbody>
 <?php
-$quote_idx                    = 1;
-            $quote_count      = count($quotes);
-            $quote_list_split = $quote_count > 3 ? $quote_count / 2 : 9999;
+$quote_idx        = 1;
+$quote_count      = count($quotes);
+$quote_list_split = $quote_count > 3 ? $quote_count / 2 : 9999;
 
-            foreach ($quotes as $quote) {
-                // Convert the dropdown menu to a dropup if quote is after the invoice split
-                $dropup = $quote_idx > $quote_list_split;
-                ?>
+foreach ($quotes as $quote) {
+    // Convert the dropdown menu to a dropup if quote is after the invoice split
+    $dropup = $quote_idx > $quote_list_split;
+    ?>
             <tr>
                 <td>
                     <span class="label <?php echo $quote_statuses[$quote->quote_status_id]['class']; ?>">
@@ -31,7 +31,7 @@ $quote_idx                    = 1;
                 </td>
                 <td>
                     <a href="<?php echo site_url('quotes/view/' . $quote->quote_id); ?>"
-                       title="<?php _trans('edit'); ?>">
+                       title="{{ trans('edit') }}">
                         <?php echo $quote->quote_number ? $quote->quote_number : $quote->quote_id; ?>
                     </a>
                 </td>
@@ -43,7 +43,7 @@ $quote_idx                    = 1;
                 </td>
                 <td>
                     <a href="<?php echo site_url('clients/view/' . $quote->client_id); ?>"
-                       title="<?php _trans('view_client'); ?>">
+                       title="{{ trans('view_client') }}">
                         <?php _htmlsc(format_client($quote)); ?>
                     </a>
                 </td>
@@ -54,23 +54,23 @@ $quote_idx                    = 1;
                     <div class="options btn-group<?php echo $dropup ? ' dropup' : ''; ?>">
                         <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
                            href="#">
-                            <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                            <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<?php echo site_url('quotes/view/' . $quote->quote_id); ?>">
-                                    <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo site_url('quotes/generate_pdf/' . $quote->quote_id); ?>"
                                    target="_blank">
-                                    <i class="fa fa-print fa-margin"></i> <?php _trans('download_pdf'); ?>
+                                    <i class="fa fa-print fa-margin"></i> {{ trans('download_pdf') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo site_url('mailer/quote/' . $quote->quote_id); ?>">
-                                    <i class="fa fa-send fa-margin"></i> <?php _trans('send_email'); ?>
+                                    <i class="fa fa-send fa-margin"></i> {{ trans('send_email') }}
                                 </a>
                             </li>
                             <li>
@@ -78,8 +78,8 @@ $quote_idx                    = 1;
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?php _trans('delete_quote_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                            onclick="return confirm('{{ trans('delete_quote_warning') }}');">
+                                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </li>
@@ -88,9 +88,9 @@ $quote_idx                    = 1;
                 </td>
             </tr>
 <?php
-                    $quote_idx++;
-            } // End foreach
-            ?>
+        $quote_idx++;
+} // End foreach
+?>
         </tbody>
 
     </table>

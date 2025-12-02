@@ -22,7 +22,7 @@ if ($custom_field_usage) {
                     <h5 class="panel-title" role="button" data-toggle="collapse" aria-expanded="true" style="padding:1rem 8px"
                         data-parent="#accordion<?php echo $what; ?>" href="#collapse<?php echo $what; ?>" aria-controls="collapse<?php echo $what; ?>">
                         <i class="more-less fa pull-right fa-chevron-down"></i>
-                        <?php _trans('custom_used_in'); ?>
+                        {{ trans('custom_used_in') }}
                     </h5>
                 </div>
                 <div id="collapse<?php echo $what; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $what; ?>">

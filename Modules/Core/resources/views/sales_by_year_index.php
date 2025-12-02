@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('sales_by_date'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('sales_by_date') }}</h1>
 </div>
 
 <div id="content">
@@ -13,7 +13,7 @@
 
                 <div class="panel-heading">
                     <i class="fa fa-print fa-margin"></i>
-                    <?php _trans('report_options'); ?>
+                    {{ trans('report_options') }}
                 </div>
 
                 <div class="panel-body">
@@ -25,7 +25,7 @@
 
                         <div class="form-group has-feedback">
                             <label for="from_date">
-                                <?php _trans('from_date'); ?>
+                                {{ trans('from_date') }}
                             </label>
 
                             <div class="input-group">
@@ -38,7 +38,7 @@
 
                         <div class="form-group has-feedback">
                             <label for="to_date">
-                                <?php _trans('to_date'); ?>
+                                {{ trans('to_date') }}
                             </label>
 
                             <div class="input-group">
@@ -53,7 +53,7 @@
                         <div class="clearfix">
                             <div class="col-xs-12 col-md-2" style="margin-right:10px; padding-left:0px;">
                                 <label for="minQuantity">
-                                    <?php _trans('min_quantity'); ?>
+                                    {{ trans('min_quantity') }}
                                 </label>
 
                                 <div>
@@ -64,7 +64,7 @@
 
                             <div class="col-xs-12 col-md-2" style=padding-left:0px;>
                                 <label for="maxQuantity">
-                                    <?php _trans('max_quantity'); ?>
+                                    {{ trans('max_quantity') }}
                                 </label>
 
                                 <div>
@@ -78,13 +78,13 @@
                             <div class="checkbox">
                                 <label for="checkboxTax">
                                     <input type="checkbox" id="checkboxTax" name="checkboxTax">
-                                    <?php _trans('values_with_taxes'); ?>
+                                    {{ trans('values_with_taxes') }}
                                 </label>
                             </div>
                         </div>
 
                         <input type="submit" class="btn btn-success" name="btn_submit"
-                               value="<?php _trans('run_report'); ?>">
+                               value="{{ trans('run_report') }}">
 
                     </form>
                 </div>

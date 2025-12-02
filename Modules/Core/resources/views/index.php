@@ -1,9 +1,9 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('import_data'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('import_data') }}</h1>
 
     <div class="headerbar-item pull-right">
         <a class="btn btn-sm btn-primary" href="<?php echo site_url('import/form'); ?>">
-            <i class="fa fa-plus"></i> <?php _trans('new'); ?>
+            <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
 
@@ -22,13 +22,13 @@
 
             <thead>
             <tr>
-                <th><?php _trans('id'); ?></th>
-                <th><?php _trans('date'); ?></th>
-                <th><?php _trans('clients'); ?></th>
-                <th><?php _trans('invoices'); ?></th>
-                <th><?php _trans('invoice_items'); ?></th>
-                <th><?php _trans('payments'); ?></th>
-                <th><?php _trans('options'); ?></th>
+                <th>{{ trans('id') }}</th>
+                <th>{{ trans('date') }}</th>
+                <th>{{ trans('clients') }}</th>
+                <th>{{ trans('invoices') }}</th>
+                <th>{{ trans('invoice_items') }}</th>
+                <th>{{ trans('payments') }}</th>
+                <th>{{ trans('options') }}</th>
             </tr>
             </thead>
 
@@ -46,7 +46,7 @@ foreach ($imports as $import) {
                     <td>
                         <div class="options btn-group btn-group-sm">
                             <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
@@ -54,8 +54,8 @@ foreach ($imports as $import) {
                                           method="POST">
                                         <?php _csrf_field(); ?>
                                         <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                                onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                                            <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                         </button>
                                     </form>
                                 </li>
@@ -65,7 +65,7 @@ foreach ($imports as $import) {
                 </tr>
 <?php
 }
-    ?>
+        ?>
             </tbody>
 
         </table>

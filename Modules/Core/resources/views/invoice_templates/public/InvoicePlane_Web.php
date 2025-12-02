@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php _trans('cldr'); ?>">
+<html lang="{{ trans('cldr') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,7 +7,7 @@
 
     <title>
         <?php echo get_setting('custom_title', 'InvoicePlane', true); ?>
-        - <?php _trans('invoice'); ?> <?php echo $invoice->invoice_number; ?>
+        - {{ trans('invoice') }} <?php echo $invoice->invoice_number; ?>
     </title>
 
     <link rel="icon" href="<?php _core_asset('img/favicon.png'); ?>" type="image/png">
@@ -21,33 +21,33 @@
 
             <div class="webpreview-header">
 
-                <h2><?php _trans('invoice'); ?>&nbsp;<?php echo $invoice->invoice_number; ?></h2>
+                <h2>{{ trans('invoice') }}&nbsp;<?php echo $invoice->invoice_number; ?></h2>
 
                 <div class="btn-group">
 <?php
 if (isset($_SESSION['user_id'], $_SESSION['user_type'])) {
     ?>
                     <a href="<?php echo site_url($_SESSION['user_type'] > 1 ? 'guest' : ''); ?>"
-                       class="btn btn-default" title="<?php _trans('dashboard'); ?>">
-                        <i class="fa fa-dashboard"></i> <?php _trans('dashboard'); ?>
+                       class="btn btn-default" title="{{ trans('dashboard') }}">
+                        <i class="fa fa-dashboard"></i> {{ trans('dashboard') }}
                     </a>
 <?php
 }
-?>
+        ?>
                     <a href="<?php echo site_url('guest/view/generate_' . ($invoice->sumex_id == null ? 'invoice' : 'sumex') . '_pdf/' . $invoice_url_key); ?>"
                        class="btn btn-primary">
-                        <i class="fa fa-print"></i> <?php _trans('download_pdf'); ?>
+                        <i class="fa fa-print"></i> {{ trans('download_pdf') }}
                     </a>
 <?php
 if (get_setting('enable_online_payments') == 1 && $invoice->invoice_balance > 0) {
     ?>
                     <a href="<?php echo site_url('guest/payment_information/form/' . $invoice_url_key); ?>"
                        class="btn btn-success">
-                        <i class="fa fa-credit-card"></i> <?php _trans('pay_now'); ?>
+                        <i class="fa fa-credit-card"></i> {{ trans('pay_now') }}
                     </a>
 <?php
 }
-?>
+        ?>
                 </div>
 
             </div>
@@ -59,47 +59,47 @@ if (get_setting('enable_online_payments') == 1 && $invoice->invoice_balance > 0)
             <div class="invoice">
 
 <?php
-$logo = invoice_logo();
-if ($logo) {
-    echo $logo . '<br><br>';
-}
-?>
+        $logo = invoice_logo();
+        if ($logo) {
+            echo $logo . '<br><br>';
+        }
+        ?>
 
                 <div class="row">
                     <div class="col-xs-12 col-md-6 col-lg-5">
 
                         <h4><?php _htmlsc($invoice->user_name); ?></h4>
                         <p><?php
-                            if ($invoice->user_vat_id) {
-                                echo trans('vat_id_short') . ': ' . $invoice->user_vat_id . '<br>';
-                            }
-if ($invoice->user_tax_code) {
-    echo trans('tax_code_short') . ': ' . $invoice->user_tax_code . '<br>';
-}
-if ($invoice->user_address_1) {
-    echo htmlsc($invoice->user_address_1) . '<br>';
-}
-if ($invoice->user_address_2) {
-    echo htmlsc($invoice->user_address_2) . '<br>';
-}
-if ($invoice->user_city) {
-    echo htmlsc($invoice->user_city) . ' ';
-}
-if ($invoice->user_state) {
-    echo htmlsc($invoice->user_state) . ' ';
-}
-if ($invoice->user_zip) {
-    echo htmlsc($invoice->user_zip) . '<br>';
-}
-if ($invoice->user_phone) {
-    _trans('phone_abbr');
-    echo ': ' . htmlsc($invoice->user_phone) . '<br>';
-}
-if ($invoice->user_fax) {
-    _trans('fax_abbr');
-    echo ': ' . htmlsc($invoice->user_fax);
-}
-?></p>
+                                    if ($invoice->user_vat_id) {
+                                        echo trans('vat_id_short') . ': ' . $invoice->user_vat_id . '<br>';
+                                    }
+        if ($invoice->user_tax_code) {
+            echo trans('tax_code_short') . ': ' . $invoice->user_tax_code . '<br>';
+        }
+        if ($invoice->user_address_1) {
+            echo htmlsc($invoice->user_address_1) . '<br>';
+        }
+        if ($invoice->user_address_2) {
+            echo htmlsc($invoice->user_address_2) . '<br>';
+        }
+        if ($invoice->user_city) {
+            echo htmlsc($invoice->user_city) . ' ';
+        }
+        if ($invoice->user_state) {
+            echo htmlsc($invoice->user_state) . ' ';
+        }
+        if ($invoice->user_zip) {
+            echo htmlsc($invoice->user_zip) . '<br>';
+        }
+        if ($invoice->user_phone) {
+            _trans('phone_abbr');
+            echo ': ' . htmlsc($invoice->user_phone) . '<br>';
+        }
+        if ($invoice->user_fax) {
+            _trans('fax_abbr');
+            echo ': ' . htmlsc($invoice->user_fax);
+        }
+        ?></p>
 
                     </div>
                     <div class="col-lg-2"></div>
@@ -107,62 +107,62 @@ if ($invoice->user_fax) {
 
                         <h4><?php _htmlsc(format_client($invoice)); ?></h4>
                         <p><?php
-    if ($invoice->client_vat_id) {
-        _trans('vat_id_short');
-        echo ': ' . $invoice->client_vat_id . '<br>';
-    }
-if ($invoice->client_tax_code) {
-    _trans('tax_code_short');
-    echo ': ' . $invoice->client_tax_code . '<br>';
-}
-if ($invoice->client_address_1) {
-    echo htmlsc($invoice->client_address_1) . '<br>';
-}
-if ($invoice->client_address_2) {
-    echo htmlsc($invoice->client_address_2) . '<br>';
-}
-if ($invoice->client_city) {
-    echo htmlsc($invoice->client_city) . ' ';
-}
-if ($invoice->client_state) {
-    echo htmlsc($invoice->client_state) . ' ';
-}
-if ($invoice->client_zip) {
-    echo htmlsc($invoice->client_zip) . '<br>';
-}
-if ($invoice->client_phone) {
-    echo trans('phone_abbr') . ': ' . htmlsc($invoice->client_phone) . '<br>';
-}
-?></p>
+            if ($invoice->client_vat_id) {
+                _trans('vat_id_short');
+                echo ': ' . $invoice->client_vat_id . '<br>';
+            }
+        if ($invoice->client_tax_code) {
+            _trans('tax_code_short');
+            echo ': ' . $invoice->client_tax_code . '<br>';
+        }
+        if ($invoice->client_address_1) {
+            echo htmlsc($invoice->client_address_1) . '<br>';
+        }
+        if ($invoice->client_address_2) {
+            echo htmlsc($invoice->client_address_2) . '<br>';
+        }
+        if ($invoice->client_city) {
+            echo htmlsc($invoice->client_city) . ' ';
+        }
+        if ($invoice->client_state) {
+            echo htmlsc($invoice->client_state) . ' ';
+        }
+        if ($invoice->client_zip) {
+            echo htmlsc($invoice->client_zip) . '<br>';
+        }
+        if ($invoice->client_phone) {
+            echo trans('phone_abbr') . ': ' . htmlsc($invoice->client_phone) . '<br>';
+        }
+        ?></p>
 
                         <br>
 
                         <table class="table table-condensed">
                             <tbody>
                                 <tr>
-                                    <td><?php _trans('invoice_date'); ?></td>
+                                    <td>{{ trans('invoice_date') }}</td>
                                     <td style="text-align:right;"><?php echo date_from_mysql($invoice->invoice_date_created); ?></td>
                                 </tr>
                                 <tr class="<?php echo $is_overdue ? 'overdue' : '' ?>">
-                                    <td><?php _trans('due_date'); ?></td>
+                                    <td>{{ trans('due_date') }}</td>
                                     <td class="amount">
                                         <?php echo date_from_mysql($invoice->invoice_date_due); ?>
                                     </td>
                                 </tr>
                                 <tr class="<?php echo $is_overdue ? 'overdue' : '' ?>">
-                                    <td><?php _trans('amount_due'); ?></td>
+                                    <td>{{ trans('amount_due') }}</td>
                                     <td style="text-align:right;"><?php echo format_currency($invoice->invoice_balance); ?></td>
                                 </tr>
 <?php
 if ($payment_method) {
     ?>
                                 <tr>
-                                    <td><?php _trans('payment_method'); ?></td>
+                                    <td>{{ trans('payment_method') }}</td>
                                     <td><?php _htmlsc($payment_method->payment_method_name); ?></td>
                                 </tr>
 <?php
 }
-?>
+        ?>
                             </tbody>
                         </table>
 
@@ -176,18 +176,18 @@ if ($payment_method) {
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th><?php _trans('item'); ?></th>
-                                    <th><?php _trans('description'); ?></th>
-                                    <th class="amount"><?php _trans('qty'); ?></th>
-                                    <th class="amount"><?php _trans('price'); ?></th>
+                                    <th>{{ trans('item') }}</th>
+                                    <th>{{ trans('description') }}</th>
+                                    <th class="amount">{{ trans('qty') }}</th>
+                                    <th class="amount">{{ trans('price') }}</th>
                                     <?php
-                                    if ($show_item_discounts) {
-                                        ?>
-                                        <th class="amount"><?php _trans('discount'); ?></th>
+                                            if ($show_item_discounts) {
+                                                ?>
+                                        <th class="amount">{{ trans('discount') }}</th>
                                         <?php
-                                    }
-?>
-                                    <th class="amount"><?php _trans('total'); ?></th>
+                                            }
+        ?>
+                                    <th class="amount">{{ trans('total') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -216,32 +216,32 @@ foreach ($items as $item) {
                                 </tr>
 <?php
 } // End foreach
-?>
+        ?>
 
 <?php
-$colspan = $show_item_discounts ? 4 : 3;
-if ($invoice?->invoice_discount_percent > 0 || $invoice?->invoice_discount_amount > 0) {
-    if ( ! $legacy_calculation) {
-        ?>
+        $colspan = $show_item_discounts ? 4 : 3;
+        if ($invoice?->invoice_discount_percent > 0 || $invoice?->invoice_discount_amount > 0) {
+            if ( ! $legacy_calculation) {
+                ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('discount'); ?></td>
+                                    <td class="amount">{{ trans('discount') }}</td>
                                     <td class="amount"><?php
-                                                if ($invoice->invoice_discount_percent > 0) {
-                                                    echo format_amount($invoice->invoice_discount_percent) . '&nbsp;%';
-                                                } else {
-                                                    echo format_currency($invoice->invoice_discount_amount);
-                                                }
-        ?></td>
+                                                        if ($invoice->invoice_discount_percent > 0) {
+                                                            echo format_amount($invoice->invoice_discount_percent) . '&nbsp;%';
+                                                        } else {
+                                                            echo format_currency($invoice->invoice_discount_amount);
+                                                        }
+                ?></td>
                                 </tr>
 <?php
-    }
-}
-?>
+            }
+        }
+        ?>
 
                                 <tr>
                                     <td colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('subtotal'); ?>:</td>
+                                    <td class="amount">{{ trans('subtotal') }}:</td>
                                     <td class="amount"><?php echo format_currency($invoice->invoice_item_subtotal); ?></td>
                                 </tr>
 
@@ -250,12 +250,12 @@ if ($invoice->invoice_item_tax_total > 0) {
     ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('item_tax'); ?></td>
+                                    <td class="amount">{{ trans('item_tax') }}</td>
                                     <td class="amount"><?php echo format_currency($invoice->invoice_item_tax_total); ?></td>
                                 </tr>
 <?php
 }
-?>
+        ?>
 
 <?php
 foreach ($invoice_tax_rates as $invoice_tax_rate) {
@@ -269,7 +269,7 @@ foreach ($invoice_tax_rates as $invoice_tax_rate) {
                                 </tr>
 <?php
 }
-?>
+        ?>
 
 <?php
 if ($invoice?->invoice_discount_percent > 0 || $invoice?->invoice_discount_amount > 0) {
@@ -277,7 +277,7 @@ if ($invoice?->invoice_discount_percent > 0 || $invoice?->invoice_discount_amoun
         ?>
                                 <tr>
                                     <td class="no-bottom-border" colspan="4"></td>
-                                    <td class="amount"><?php _trans('discount'); ?></td>
+                                    <td class="amount">{{ trans('discount') }}</td>
                                     <td class="amount"><?php
                                                 if ($invoice->invoice_discount_percent > 0) {
                                                     echo format_amount($invoice->invoice_discount_percent) . '&nbsp;%';
@@ -289,22 +289,22 @@ if ($invoice?->invoice_discount_percent > 0 || $invoice?->invoice_discount_amoun
 <?php
     }
 }
-?>
+        ?>
 
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('total'); ?>:</td>
+                                    <td class="amount">{{ trans('total') }}:</td>
                                     <td class="amount"><?php echo format_currency($invoice->invoice_total); ?></td>
                                 </tr>
 
                                 <tr>
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('paid'); ?></td>
+                                    <td class="amount">{{ trans('paid') }}</td>
                                     <td class="amount"><?php echo format_currency($invoice->invoice_paid) ?></td>
                                 </tr>
                                 <tr class="<?php echo ($invoice->invoice_balance > 0) ? 'overdue' : 'text-success'; ?>">
                                     <td class="no-bottom-border" colspan="<?php echo $colspan; ?>"></td>
-                                    <td class="amount"><?php _trans('balance'); ?></td>
+                                    <td class="amount">{{ trans('balance') }}</td>
                                     <td class="amount">
                                         <b><?php echo format_currency($invoice->invoice_balance) ?></b>
                                     </td>
@@ -331,19 +331,19 @@ if (get_setting('qr_code') && $invoice->invoice_balance > 0) {
                         <tr>
                             <td>
                                 <div>
-                                    <strong><?php _trans('qr_code_settings_recipient'); ?>:</strong>
+                                    <strong>{{ trans('qr_code_settings_recipient') }}:</strong>
                                     <?php echo $invoice->user_company ?: get_setting('qr_code_recipient'); ?>
                                 </div>
                                 <div>
-                                    <strong><?php _trans('qr_code_settings_iban'); ?>:</strong>
+                                    <strong>{{ trans('qr_code_settings_iban') }}:</strong>
                                     <?php echo $invoice->user_iban ?: get_setting('qr_code_iban'); ?>
                                 </div>
                                 <div>
-                                    <strong><?php _trans('qr_code_settings_bic'); ?>:</strong>
+                                    <strong>{{ trans('qr_code_settings_bic') }}:</strong>
                                     <?php echo $invoice->user_bic ?: get_setting('qr_code_bic'); ?>
                                 </div>
                                 <div>
-                                    <strong><?php _trans('qr_code_settings_remittance_text'); ?>:</strong>
+                                    <strong>{{ trans('qr_code_settings_remittance_text') }}:</strong>
                                     <?php echo parse_template($invoice, $invoice->user_remittance_text ?: get_setting('qr_code_remittance_text')); ?>
                                 </div>
                             </td>
@@ -357,7 +357,7 @@ if (get_setting('qr_code') && $invoice->invoice_balance > 0) {
                 <hr>
 <?php
 }
-?>
+        ?>
 
                 <div class="row">
 
@@ -365,18 +365,18 @@ if (get_setting('qr_code') && $invoice->invoice_balance > 0) {
 if ($invoice->invoice_terms) {
     ?>
                     <div class="col-xs-12 col-md-6">
-                        <h4><?php _trans('terms'); ?></h4>
+                        <h4>{{ trans('terms') }}</h4>
                         <p><?php echo nl2br(htmlsc($invoice->invoice_terms)); ?></p>
                     </div>
 <?php
 }
-?>
+        ?>
 
 <?php
 if (count($attachments) > 0) {
     ?>
                     <div class="col-xs-12 col-md-6">
-                        <h4><?php _trans('attachments'); ?></h4>
+                        <h4>{{ trans('attachments') }}</h4>
                         <div class="table-responsive">
                             <table class="table table-condensed">
 <?php
@@ -399,7 +399,7 @@ if (count($attachments) > 0) {
                     </div>
 <?php
 }
-?>
+        ?>
 
                 </div>
 

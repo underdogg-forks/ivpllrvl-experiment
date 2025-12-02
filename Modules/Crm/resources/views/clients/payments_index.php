@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('payments'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('payments') }}</h1>
 
     <div class="headerbar-item pull-right">
         <?php echo pager(site_url('guest/payments/index'), $payments); ?>
@@ -17,11 +17,11 @@
 
                 <thead>
                 <tr>
-                    <th><?php _trans('date'); ?></th>
-                    <th><?php _trans('invoice'); ?></th>
-                    <th><?php _trans('amount'); ?></th>
-                    <th><?php _trans('payment_method'); ?></th>
-                    <th><?php _trans('note'); ?></th>
+                    <th>{{ trans('date') }}</th>
+                    <th>{{ trans('invoice') }}</th>
+                    <th>{{ trans('amount') }}</th>
+                    <th>{{ trans('payment_method') }}</th>
+                    <th>{{ trans('note') }}</th>
                 </tr>
                 </thead>
 

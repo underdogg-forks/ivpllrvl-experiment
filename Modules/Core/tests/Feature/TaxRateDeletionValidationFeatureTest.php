@@ -3,7 +3,7 @@
 namespace Modules\Core\Tests\Feature;
 
 use Modules\Core\Controllers\TaxRatesController;
-use Modules\Invoices\Models\Item as InvoiceItem;
+use Modules\Invoices\Models\InvoiceItem as InvoiceItem;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\TaxRate;
 use Modules\Quotes\Models\QuoteItem;

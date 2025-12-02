@@ -65,6 +65,6 @@ class ItemAmount extends BaseModel
      */
     public function item()
     {
-        return $this->belongsTo('Modules\Invoices\Models\Item', 'item_id', 'item_id');
+        return $this->belongsTo('Modules\Invoices\Models\InvoiceItem', 'item_id', 'item_id');
     }
 }

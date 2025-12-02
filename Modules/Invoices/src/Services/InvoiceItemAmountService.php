@@ -2,7 +2,7 @@
 
 namespace Modules\Invoices\Services;
 
-use Modules\Invoices\Models\Item;
+use Modules\Invoices\Models\InvoiceItem;
 use Modules\Invoices\Models\ItemAmount;
 
 class InvoiceItemAmountService
@@ -25,7 +25,7 @@ class InvoiceItemAmountService
      */
     public function calculate(int $itemId, array &$globalDiscount = []): void
     {
-        $item = Item::query()->with('taxRate')->findOrFail($itemId);
+        $item = InvoiceItem::query()->with('taxRate')->findOrFail($itemId);
 
         $itemSubtotal = $item->item_quantity * $item->item_price;
 

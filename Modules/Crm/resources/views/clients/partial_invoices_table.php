@@ -3,13 +3,13 @@
 
                 <thead>
                     <tr>
-                        <th><?php _trans('invoice'); ?></th>
-                        <th><?php _trans('created'); ?></th>
-                        <th><?php _trans('due_date'); ?></th>
-                        <th><?php _trans('client_name'); ?></th>
-                        <th><?php _trans('amount'); ?></th>
-                        <th><?php _trans('balance'); ?></th>
-                        <th><?php _trans('options'); ?></th>
+                        <th>{{ trans('invoice') }}</th>
+                        <th>{{ trans('created') }}</th>
+                        <th>{{ trans('due_date') }}</th>
+                        <th>{{ trans('client_name') }}</th>
+                        <th>{{ trans('amount') }}</th>
+                        <th>{{ trans('balance') }}</th>
+                        <th>{{ trans('options') }}</th>
                     </tr>
                 </thead>
 
@@ -32,17 +32,17 @@ foreach ($invoices as $invoice) {
                         <td>
                             <div class="options btn-group btn-group-sm">
                                 <a class="btn btn-default" href="<?php echo site_url('guest/invoices/view/' . $invoice->invoice_id); ?>">
-                                    <i class="fa fa-eye"></i> <?php _trans('view'); ?>
+                                    <i class="fa fa-eye"></i> {{ trans('view') }}
                                 </a>
                                 <a class="btn btn-default" target="_blank" href="<?php echo site_url('guest/invoices/generate_pdf/' . $invoice->invoice_id); ?>">
-                                    <i class="fa fa-print"></i> <?php _trans('pdf'); ?>
+                                    <i class="fa fa-print"></i> {{ trans('pdf') }}
                                 </a>
 <?php
         // fix 404 when balance = 0.00
         if ($enable_online_payments && $invoice->invoice_balance > 0 && $invoice->invoice_status_id != 4) {
             ?>
                                 <a class="btn btn-primary" href="<?php echo site_url('guest/payment_information/form/' . $invoice->invoice_url_key); ?>">
-                                    <i class="fa fa-credit-card"></i> <?php _trans('pay_now'); ?>
+                                    <i class="fa fa-credit-card"></i> {{ trans('pay_now') }}
                                 </a>
 <?php
         } elseif ($invoice->invoice_balance == 0) {
@@ -59,7 +59,7 @@ foreach ($invoices as $invoice) {
                     </tr>
 <?php
 } // End foreach
-                        ?>
+?>
                 </tbody>
 
             </table>

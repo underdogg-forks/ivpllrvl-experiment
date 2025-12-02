@@ -5,7 +5,7 @@
     <?php _csrf_field(); ?>
 
     <div id="headerbar">
-        <h1 class="headerbar-title"><?php _trans('change_password'); ?></h1>
+        <h1 class="headerbar-title">{{ trans('change_password') }}</h1>
         <?php echo $this->layout->load_view('layout/header_buttons'); ?>
     </div>
 
@@ -18,13 +18,13 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <?php _trans('change_password'); ?>
+                        {{ trans('change_password') }}
                     </div>
 
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="user_password">
-                                <?php _trans('password'); ?>
+                                {{ trans('password') }}
                             </label>
                             <input type="password" name="user_password" id="user_password"
                                    class="form-control passwordmeter-input" required>
@@ -40,7 +40,7 @@
 
                         <div class="form-group">
                             <label for="user_passwordv">
-                                <?php _trans('verify_password'); ?>
+                                {{ trans('verify_password') }}
                             </label>
                             <input type="password" name="user_passwordv" id="user_passwordv"
                                    class="form-control" required>

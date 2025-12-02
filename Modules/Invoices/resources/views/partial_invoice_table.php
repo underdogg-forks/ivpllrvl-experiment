@@ -3,44 +3,44 @@
 
         <thead>
         <tr>
-            <th><?php _trans('status'); ?></th>
-            <th><?php _trans('invoice'); ?></th>
-            <th><?php _trans('created'); ?></th>
-            <th><?php _trans('due_date'); ?></th>
-            <th><?php _trans('client_name'); ?></th>
-            <th class="amount"><?php _trans('amount'); ?></th>
-            <th class="amount last"><?php _trans('balance'); ?></th>
-            <th><?php _trans('options'); ?></th>
+            <th>{{ trans('status') }}</th>
+            <th>{{ trans('invoice') }}</th>
+            <th>{{ trans('created') }}</th>
+            <th>{{ trans('due_date') }}</th>
+            <th>{{ trans('client_name') }}</th>
+            <th class="amount">{{ trans('amount') }}</th>
+            <th class="amount last">{{ trans('balance') }}</th>
+            <th>{{ trans('options') }}</th>
         </tr>
         </thead>
 
         <tbody>
 <?php
-$invoice_idx                    = 1;
-            $invoice_count      = count($invoices);
-            $invoice_list_split = $invoice_count > 3 ? $invoice_count / 2 : 9999;
-            foreach ($invoices as $invoice) {
-                // Disable read-only if not applicable
-                if ($this->config->item('disable_read_only') == true) {
-                    $invoice->is_read_only = 0;
-                }
-                // Convert the dropdown menu to a dropup if invoice is after the invoice split
-                $dropup = $invoice_idx > $invoice_list_split;
-                ?>
+$invoice_idx        = 1;
+$invoice_count      = count($invoices);
+$invoice_list_split = $invoice_count > 3 ? $invoice_count / 2 : 9999;
+foreach ($invoices as $invoice) {
+    // Disable read-only if not applicable
+    if ($this->config->item('disable_read_only') == true) {
+        $invoice->is_read_only = 0;
+    }
+    // Convert the dropdown menu to a dropup if invoice is after the invoice split
+    $dropup = $invoice_idx > $invoice_list_split;
+    ?>
             <tr>
                 <td>
                     <span class="label <?php echo $invoice_statuses[$invoice->invoice_status_id]['class']; ?>">
                         <?php echo $invoice_statuses[$invoice->invoice_status_id]['label'];
-                if ($invoice->invoice_sign == '-1') {?>&nbsp;<i class="fa fa-credit-invoice" title="<?php _trans('credit_invoice'); ?>"></i><?php }
-                if ($invoice->is_read_only) {?>&nbsp;<i class="fa fa-read-only" title="<?php _trans('read_only'); ?>"></i><?php }
-                if ($invoice->invoice_is_recurring) {?>&nbsp;<i class="fa fa-refresh" title="<?php _trans('recurring'); ?>"></i><?php }
-                ?>
+    if ($invoice->invoice_sign == '-1') {?>&nbsp;<i class="fa fa-credit-invoice" title="{{ trans('credit_invoice') }}"></i><?php }
+    if ($invoice->is_read_only) {?>&nbsp;<i class="fa fa-read-only" title="{{ trans('read_only') }}"></i><?php }
+    if ($invoice->invoice_is_recurring) {?>&nbsp;<i class="fa fa-refresh" title="{{ trans('recurring') }}"></i><?php }
+    ?>
                     </span>
                 </td>
 
                 <td>
                     <a href="<?php echo site_url('invoices/view/' . $invoice->invoice_id); ?>"
-                       title="<?php _trans('edit'); ?>">
+                       title="{{ trans('edit') }}">
                         <?php echo $invoice->invoice_number ? $invoice->invoice_number : $invoice->invoice_id; ?>
                     </a>
                 </td>
@@ -57,7 +57,7 @@ $invoice_idx                    = 1;
 
                 <td>
                     <a href="<?php echo site_url('clients/view/' . $invoice->client_id); ?>"
-                       title="<?php _trans('view_client'); ?>">
+                       title="{{ trans('view_client') }}">
                         <?php _htmlsc(format_client($invoice)); ?>
                     </a>
                 </td>
@@ -73,7 +73,7 @@ $invoice_idx                    = 1;
                 <td>
                     <div class="options btn-group<?php echo $dropup ? ' dropup' : ''; ?>">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                            <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">
 <?php
@@ -81,21 +81,21 @@ $invoice_idx                    = 1;
         ?>
                             <li>
                                 <a href="<?php echo site_url('invoices/view/' . $invoice->invoice_id); ?>">
-                                    <i class="fa fa-edit fa-margin"></i> <?php _trans('edit'); ?>
+                                    <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
 <?php
     }
-                ?>
+    ?>
                             <li>
                                 <a href="<?php echo site_url('invoices/generate_pdf/' . $invoice->invoice_id); ?>"
                                    target="_blank">
-                                    <i class="fa fa-print fa-margin"></i> <?php _trans('download_pdf'); ?>
+                                    <i class="fa fa-print fa-margin"></i> {{ trans('download_pdf') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo site_url('mailer/invoice/' . $invoice->invoice_id); ?>">
-                                    <i class="fa fa-send fa-margin"></i> <?php _trans('send_email'); ?>
+                                    <i class="fa fa-send fa-margin"></i> {{ trans('send_email') }}
                                 </a>
                             </li>
                             <li>
@@ -104,36 +104,36 @@ $invoice_idx                    = 1;
                                    data-invoice-balance="<?php echo $invoice->invoice_balance; ?>"
                                    data-invoice-payment-method="<?php echo $invoice->payment_method; ?>">
                                     <i class="fa fa-money fa-margin"></i>
-                                    <?php _trans('enter_payment'); ?>
+                                    {{ trans('enter_payment') }}
                                 </a>
                             </li>
 <?php
-                    if (
-                        $invoice->invoice_status_id == 1
-                        || ($this->config->item('enable_invoice_deletion') === true && $invoice->is_read_only != 1)
-                    ) {
-                        ?>
+        if (
+            $invoice->invoice_status_id == 1
+            || ($this->config->item('enable_invoice_deletion') === true && $invoice->is_read_only != 1)
+        ) {
+            ?>
                             <li>
                                 <form action="<?php echo site_url('invoices/delete/' . $invoice->invoice_id); ?>"
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"
-                                            onclick="return confirm('<?php _trans('delete_invoice_warning'); ?>');">
-                                        <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                            onclick="return confirm('{{ trans('delete_invoice_warning') }}');">
+                                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </li>
 <?php
-                    }
-                ?>
+        }
+    ?>
                         </ul>
                     </div>
                 </td>
             </tr>
 <?php
-                    $invoice_idx++;
-            } // End foreach invoices
-            ?>
+        $invoice_idx++;
+} // End foreach invoices
+?>
         </tbody>
 
     </table>

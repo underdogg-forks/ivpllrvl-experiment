@@ -43,7 +43,7 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('quote_to_invoice'); ?></h4>
+            <h4 class="panel-title">{{ trans('quote_to_invoice') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -54,7 +54,7 @@
 
             <div class="form-group has-feedback">
                 <label for="invoice_date_created">
-                    <?php _trans('invoice_date'); ?>
+                    {{ trans('invoice_date') }}
                 </label>
 
                 <div class="input-group">
@@ -67,7 +67,7 @@
             </div>
 
             <div class="form-group">
-                <label for="invoice_password"><?php _trans('invoice_password'); ?></label>
+                <label for="invoice_password">{{ trans('invoice_password') }}</label>
                 <input type="text" name="invoice_password" id="invoice_password" class="form-control"
                        value="<?php echo get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') ?>"
                        autocomplete="off">
@@ -75,7 +75,7 @@
 
             <div class="form-group">
                 <label for="invoice_group_id">
-                    <?php _trans('invoice_group'); ?>
+                    {{ trans('invoice_group') }}
                 </label>
                 <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
                     <?php foreach ($invoice_groups as $invoice_group) { ?>
@@ -91,10 +91,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success" id="quote_to_invoice_confirm" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('submit'); ?>
+                    <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

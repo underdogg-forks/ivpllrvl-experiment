@@ -36,7 +36,7 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('create_credit_invoice'); ?></h4>
+            <h4 class="panel-title">{{ trans('create_credit_invoice') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -54,7 +54,7 @@
             echo $credit_date; ?>">
 
             <div class="form-group">
-                <label for="invoice_password"><?php _trans('invoice_password'); ?></label>
+                <label for="invoice_password">{{ trans('invoice_password') }}</label>
                 <input type="text" name="invoice_password" id="invoice_password" class="form-control"
                        value="<?php echo get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password'); ?>"
                        style="margin: 0 auto;" autocomplete="off">
@@ -74,7 +74,7 @@
                 </select>
             </div>
 
-            <p><strong><?php _trans('credit_invoice_details'); ?></strong></p>
+            <p><strong>{{ trans('credit_invoice_details') }}</strong></p>
 
             <ul>
                 <li><?php echo trans('client') . ': ' . htmlsc($invoice->client_name); ?></li>
@@ -83,7 +83,7 @@
             </ul>
 
             <div class="alert alert-danger no-margin">
-                <?php _trans('create_credit_invoice_alert'); ?>
+                {{ trans('create_credit_invoice_alert') }}
             </div>
 
         </div>
@@ -91,10 +91,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success" id="create-credit-confirm" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('confirm'); ?>
+                    <i class="fa fa-check"></i> {{ trans('confirm') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

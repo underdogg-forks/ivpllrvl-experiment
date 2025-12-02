@@ -4,15 +4,15 @@
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
             <a href="<?php echo site_url('tasks/form/'); ?>" class="btn btn-default">
-                <i class="fa fa-check-square-o fa-margin"></i><?php _trans('new_task'); ?>
+                <i class="fa fa-check-square-o fa-margin"></i>{{ trans('new_task') }}
             </a>
             <a href="<?php echo site_url('projects/form/' . $project->project_id); ?>" class="btn btn-default">
-                <i class="fa fa-edit"></i> <?php _trans('edit'); ?>
+                <i class="fa fa-edit"></i> {{ trans('edit') }}
             </a>
             <a class="btn btn-danger"
                href="<?php echo site_url('projects/delete/' . $project->project_id); ?>"
-               onclick="return confirm('<?php _trans('delete_record_warning'); ?>');">
-                <i class="fa fa-trash-o"></i> <?php _trans('delete'); ?>
+               onclick="return confirm('{{ trans('delete_record_warning') }}');">
+                <i class="fa fa-trash-o"></i> {{ trans('delete') }}
             </a>
         </div>
     </div>
@@ -38,7 +38,7 @@ if ( ! empty($project->client_name)) {
 <?php
 } else {
     ?>
-            <div class="alert alert-info"><?php _trans('alert_no_client_assigned'); ?></div>
+            <div class="alert alert-info">{{ trans('alert_no_client_assigned') }}</div>
 <?php
 }
     ?>
@@ -47,7 +47,7 @@ if ( ! empty($project->client_name)) {
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <?php _trans('tasks'); ?>
+                    {{ trans('tasks') }}
                 </div>
                 <div class="panel-body no-padding">
 
@@ -56,10 +56,10 @@ if ( ! empty($project->client_name)) {
 
                             <thead>
                             <tr>
-                                <th><?php _trans('task_name'); ?></th>
-                                <th><?php _trans('status'); ?></th>
-                                <th><?php _trans('task_finish_date'); ?></th>
-                                <th><?php _trans('project'); ?></th>
+                                <th>{{ trans('task_name') }}</th>
+                                <th>{{ trans('status') }}</th>
+                                <th>{{ trans('task_finish_date') }}</th>
+                                <th>{{ trans('project') }}</th>
                             </tr>
                             </thead>
 

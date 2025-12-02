@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('payment_logs'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('payment_logs') }}</h1>
 
     <div class="headerbar-item pull-right">
         <?php echo pager(site_url('payments/online_logs'), $payment_logs); ?>

@@ -47,7 +47,7 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('copy_invoice'); ?></h4>
+            <h4 class="panel-title">{{ trans('copy_invoice') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -58,9 +58,9 @@
                    value="<?php echo get_setting('enable_permissive_search_clients'); ?>">
 
             <div class="form-group has-feedback">
-                <label for="client_id"><?php _trans('client'); ?></label>
+                <label for="client_id">{{ trans('client') }}</label>
                 <div class="input-group">
-                    <span id="toggle_permissive_search_clients" class="input-group-addon" title="<?php _trans('enable_permissive_search_clients'); ?>" style="cursor:pointer;">
+                    <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
                         <i class="fa fa-toggle-<?php echo get_setting('enable_permissive_search_clients') ? 'on' : 'off' ?> fa-fw" ></i>
                     </span>
                     <select name="client_id" id="client_id" class="client-id-select form-control" autofocus="autofocus" required="required">
@@ -72,7 +72,7 @@
             </div>
 
             <div class="form-group has-feedback">
-                <label for="invoice_date_created_modal"><?php _trans('invoice_date'); ?>: </label>
+                <label for="invoice_date_created_modal">{{ trans('invoice_date') }}: </label>
 
                 <div class="input-group">
                     <input name="invoice_date_created_modal" id="invoice_date_created_modal" class="form-control datepicker"
@@ -84,14 +84,14 @@
             </div>
 
             <div class="form-group">
-                <label for="invoice_password"><?php _trans('invoice_password'); ?></label>
+                <label for="invoice_password">{{ trans('invoice_password') }}</label>
                 <input type="text" name="invoice_password" id="invoice_password" class="form-control"
                        value="<?php echo get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') ?>"
                        style="margin: 0 auto;" autocomplete="off">
             </div>
 
             <div class="form-group">
-                <label for="invoice_group_id"><?php _trans('invoice_group'); ?>: </label>
+                <label for="invoice_group_id">{{ trans('invoice_group') }}: </label>
                 <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
                     <?php foreach ($invoice_groups as $invoice_group) { ?>
                         <option value="<?php echo $invoice_group->invoice_group_id; ?>"
@@ -107,10 +107,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success" id="copy_invoice_confirm" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('submit'); ?>
+                    <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

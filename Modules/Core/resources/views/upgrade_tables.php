@@ -7,11 +7,11 @@
 
             <?php _csrf_field(); ?>
 
-            <legend><?php _trans('setup_upgrade_tables'); ?></legend>
+            <legend>{{ trans('setup_upgrade_tables') }}</legend>
 
             <?php if ($errors) { ?>
                 <p>
-                    <?php _trans('setup_upgrade_message'); ?>
+                    {{ trans('setup_upgrade_message') }}
                 </p>
 
                 <?php foreach ($errors as $error) { ?>
@@ -24,16 +24,16 @@
             <?php } else { ?>
                 <p>
                     <i class="fa fa-check text-success fa-margin"></i>
-                    <?php _trans('setup_upgrade_success'); ?>
+                    {{ trans('setup_upgrade_success') }}
                 </p>
             <?php } ?>
 
             <?php if ($errors) { ?>
                 <input type="submit" class="btn btn-danger" name="btn_try_again"
-                       value="<?php _trans('try_again'); ?>">
+                       value="{{ trans('try_again') }}">
             <?php } else { ?>
                 <input type="submit" class="btn btn-success" name="btn_continue"
-                       value="<?php _trans('continue'); ?>">
+                       value="{{ trans('continue') }}">
             <?php } ?>
 
         </form>

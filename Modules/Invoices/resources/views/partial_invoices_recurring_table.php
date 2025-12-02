@@ -3,14 +3,14 @@
 
                 <thead>
                 <tr>
-                    <th><?php _trans('status'); ?></th>
-                    <th><?php _trans('base_invoice'); ?></th>
-                    <th><?php _trans('client'); ?></th>
-                    <th><?php _trans('start_date'); ?></th>
-                    <th><?php _trans('end_date'); ?></th>
-                    <th><?php _trans('every'); ?></th>
-                    <th><?php _trans('next_date'); ?></th>
-                    <th><?php _trans('options'); ?></th>
+                    <th>{{ trans('status') }}</th>
+                    <th>{{ trans('base_invoice') }}</th>
+                    <th>{{ trans('client') }}</th>
+                    <th>{{ trans('start_date') }}</th>
+                    <th>{{ trans('end_date') }}</th>
+                    <th>{{ trans('every') }}</th>
+                    <th>{{ trans('next_date') }}</th>
+                    <th>{{ trans('options') }}</th>
                 </tr>
                 </thead>
 
@@ -37,12 +37,12 @@ foreach ($recurring_invoices as $invoice) {
                         <td>
                             <div class="options btn-group">
                                 <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-cog"></i> <?php _trans('options'); ?>
+                                    <i class="fa fa-cog"></i> {{ trans('options') }}
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="<?php echo site_url('invoices/recurring/stop/' . $invoice->invoice_recurring_id); ?>">
-                                            <i class="fa fa-ban fa-margin"></i> <?php _trans('stop'); ?>
+                                            <i class="fa fa-ban fa-margin"></i> {{ trans('stop') }}
                                         </a>
                                     </li>
                                     <li>
@@ -50,8 +50,8 @@ foreach ($recurring_invoices as $invoice) {
                                               method="POST">
                                             <?php _csrf_field(); ?>
                                             <button type="submit" class="dropdown-button"
-                                                    onclick="return confirm('<?php _trans('delete_invoice_warning'); ?>');">
-                                                <i class="fa fa-trash-o fa-margin"></i> <?php _trans('delete'); ?>
+                                                    onclick="return confirm('{{ trans('delete_invoice_warning') }}');">
+                                                <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                             </button>
                                         </form>
                                     </li>
@@ -61,7 +61,7 @@ foreach ($recurring_invoices as $invoice) {
                     </tr>
 <?php
 }
-                    ?>
+?>
                 </tbody>
 
             </table>

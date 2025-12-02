@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('recurring_invoices'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('recurring_invoices') }}</h1>
 
     <div class="headerbar-item pull-right">
         <?php echo pager(site_url('invoices/recurring/index'), $invoices); ?>

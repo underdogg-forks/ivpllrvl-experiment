@@ -54,12 +54,12 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title"><?php _trans('create_recurring'); ?></h4>
+            <h4 class="panel-title">{{ trans('create_recurring') }}</h4>
         </div>
         <div class="modal-body">
 
             <div class="form-group">
-                <label for="recur_frequency"><?php _trans('every'); ?></label>
+                <label for="recur_frequency">{{ trans('every') }}</label>
                 <select name="recur_frequency" id="recur_frequency" class="form-control simple-select">
                     <?php foreach ($recur_frequencies as $key => $lang) { ?>
                         <option value="<?php echo $key; ?>">
@@ -70,7 +70,7 @@
             </div>
 
             <div class="form-group has-feedback">
-                <label for="recur_start_date"><?php _trans('start_date'); ?></label>
+                <label for="recur_start_date">{{ trans('start_date') }}</label>
                 <div class="input-group">
                     <input name="recur_start_date" id="recur_start_date"
                            class="form-control datepicker">
@@ -81,7 +81,7 @@
             </div>
 
             <div class="form-group has-feedback">
-                <label for="recur_end_date"><?php _trans('end_date'); ?> (<?php echo trans('optional'); ?>)</label>
+                <label for="recur_end_date">{{ trans('end_date') }} (<?php echo trans('optional'); ?>)</label>
 
                 <div class="input-group">
                     <input name="recur_end_date" id="recur_end_date"
@@ -97,10 +97,10 @@
         <div class="modal-footer">
             <div class="btn-group">
                 <button class="btn btn-success" id="create_recurring_confirm" type="button">
-                    <i class="fa fa-check"></i> <?php _trans('submit'); ?>
+                    <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
                 <button class="btn btn-danger" type="button" data-dismiss="modal">
-                    <i class="fa fa-times"></i> <?php _trans('cancel'); ?>
+                    <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
         </div>

@@ -1,9 +1,9 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('products'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('products') }}</h1>
 
     <div class="headerbar-item pull-right">
         <a class="btn btn-sm btn-primary" href="<?php echo site_url('products/form'); ?>">
-            <i class="fa fa-plus"></i> <?php _trans('new'); ?>
+            <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
 

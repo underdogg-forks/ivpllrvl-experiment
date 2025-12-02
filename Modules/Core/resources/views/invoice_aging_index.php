@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title"><?php _trans('invoice_aging'); ?></h1>
+    <h1 class="headerbar-title">{{ trans('invoice_aging') }}</h1>
 </div>
 
 <div id="content">
@@ -13,7 +13,7 @@
 
                 <div class="panel-heading">
                     <i class="fa fa-print"></i>
-                    <?php _trans('report_options'); ?>
+                    {{ trans('report_options') }}
                 </div>
 
                 <div class="panel-body">
@@ -23,7 +23,7 @@
                         <?php _csrf_field(); ?>
 
                         <input type="submit" class="btn btn-success"
-                               name="btn_submit" value="<?php _trans('run_report'); ?>">
+                               name="btn_submit" value="{{ trans('run_report') }}">
 
                     </form>
                 </div>
