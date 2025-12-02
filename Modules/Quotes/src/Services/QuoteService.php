@@ -154,7 +154,6 @@ class QuoteService
      *
      * @legacy-file application/modules/quotes/models/Mdl_quote.php
      *
-     *
      * @return void
      */
     public function copyQuote(int $sourceId, int $targetId): void
@@ -282,7 +281,6 @@ class QuoteService
      *
      * @legacy-file application/modules/quotes/models/Mdl_quote.php
      *
-     *
      * @return int
      */
     public function getInvoiceGroupId(int $quoteId): int
@@ -316,7 +314,7 @@ class QuoteService
         QuoteTaxRate::query()->where('quote_id', $quoteId)->delete();
         QuoteCustom::query()->where('quote_id', $quoteId)->delete();
 
-	//delete_orphans()
+        //delete_orphans()
 
         return $deleted;
     }

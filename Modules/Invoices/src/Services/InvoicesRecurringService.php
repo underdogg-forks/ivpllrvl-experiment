@@ -2,9 +2,9 @@
 
 namespace Modules\Invoices\Services;
 
+use DateTime;
 use Modules\Core\Services\BaseService;
 use Modules\Invoices\Models\InvoicesRecurring;
-use DateTime;
 
 class InvoicesRecurringService extends BaseService
 {
@@ -98,20 +98,20 @@ class InvoicesRecurringService extends BaseService
     }
 
     /**
-     * Increment a date string by a frequency string (legacy helper replacement)
+     * Increment a date string by a frequency string (legacy helper replacement).
      */
     protected function incrementDate(string $date, string $frequency): string
     {
         $dt = new DateTime($date);
 
         match ($frequency) {
-            'daily'   => $dt->modify('+1 day'),
-            'weekly'  => $dt->modify('+1 week'),
-            'biweekly'=> $dt->modify('+2 weeks'),
-            'monthly' => $dt->modify('+1 month'),
-            'quarterly'=> $dt->modify('+3 months'),
-            'yearly'  => $dt->modify('+1 year'),
-            default   => $dt,
+            'daily'     => $dt->modify('+1 day'),
+            'weekly'    => $dt->modify('+1 week'),
+            'biweekly'  => $dt->modify('+2 weeks'),
+            'monthly'   => $dt->modify('+1 month'),
+            'quarterly' => $dt->modify('+3 months'),
+            'yearly'    => $dt->modify('+1 year'),
+            default     => $dt,
         };
 
         return $dt->format('Y-m-d');

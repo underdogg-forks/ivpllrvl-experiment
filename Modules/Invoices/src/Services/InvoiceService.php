@@ -207,7 +207,6 @@ class InvoiceService
      *
      * @legacy-function mark_sent()
      */
-
     public function markSent(int $invoiceId): bool
     {
         $invoice = Invoice::query()->select('invoice_status_id')
@@ -337,7 +336,7 @@ class InvoiceService
             'amount'         => $sourceInvoice->invoice_discount_amount,
             'percent'        => $sourceInvoice->invoice_discount_percent,
             'item'           => 0.0,
-            'items_subtotal' => $sourceInvoice->items->sum(fn($item) => $item->item_price * $item->item_quantity),
+            'items_subtotal' => $sourceInvoice->items->sum(fn ($item) => $item->item_price * $item->item_quantity),
         ];
 
         $targetInvoice->update([
@@ -346,7 +345,7 @@ class InvoiceService
         ]);
 
         foreach ($sourceInvoice->items as $item) {
-            if (! $copy_recurring_items_only || $item->item_is_recurring) {
+            if ( ! $copy_recurring_items_only || $item->item_is_recurring) {
                 $item->replicate(['invoice_id'])->fill(['invoice_id' => $target_id])->save();
             }
         }
@@ -384,7 +383,7 @@ class InvoiceService
             'amount'         => $sourceInvoice->invoice_discount_amount,
             'percent'        => $sourceInvoice->invoice_discount_percent,
             'item'           => 0.0,
-            'items_subtotal' => $sourceInvoice->items->sum(fn($item) => $item->item_price * $item->item_quantity),
+            'items_subtotal' => $sourceInvoice->items->sum(fn ($item) => $item->item_price * $item->item_quantity),
         ];
 
         $targetInvoice->update([
@@ -395,14 +394,14 @@ class InvoiceService
         foreach ($sourceInvoice->items as $item) {
             $item->replicate(['invoice_id'])->fill([
                 'invoice_id'    => $target_id,
-                'item_quantity' => $item->item_quantity * -1
+                'item_quantity' => $item->item_quantity * -1,
             ])->save();
         }
 
         foreach ($sourceInvoice->taxRates as $tax) {
             $tax->replicate(['invoice_id'])->fill([
-                'invoice_id'                  => $target_id,
-                'invoice_tax_rate_amount'     => $tax->invoice_tax_rate_amount * -1
+                'invoice_id'              => $target_id,
+                'invoice_tax_rate_amount' => $tax->invoice_tax_rate_amount * -1,
             ])->save();
         }
 
@@ -516,7 +515,7 @@ class InvoiceService
         $invoice = Invoice::find($invoice_id);
 
         if ($invoice && $invoice->is_read_only != 1 && get_setting('no_update_invoice_due_date_mail') == 0) {
-            $current_date = date_to_mysql(date(date_format_setting()));
+            $current_date              = date_to_mysql(date(date_format_setting()));
             $invoice->invoice_date_due = $this->calculateDateDue($current_date);
             $invoice->save();
         }

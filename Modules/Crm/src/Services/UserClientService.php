@@ -2,14 +2,13 @@
 
 namespace Modules\Crm\Services;
 
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Modules\Core\Services\BaseService;
 use Modules\Crm\Models\Client;
 use Modules\Crm\Models\UserClient;
-use InvalidArgumentException;
-use Exception;
 
 /**
  * UserClientService.
@@ -28,6 +27,7 @@ class UserClientService extends BaseService
     public function getAllPaginated(int $page = 0): LengthAwarePaginator
     {
         $page = max(1, $page);
+
         return UserClient::query()
             ->with(['user', 'client'])
             ->paginate(15, ['*'], 'page', $page);
@@ -91,32 +91,32 @@ class UserClientService extends BaseService
             $errors[] = 'Client ID is required and must be a valid integer';
         }
 
-        if (! empty($data['user_id']) && is_numeric($data['user_id'])) {
+        if ( ! empty($data['user_id']) && is_numeric($data['user_id'])) {
             $userExists = DB::table('ip_users')
                 ->where('user_id', $data['user_id'])
                 ->exists();
 
-            if (! $userExists) {
+            if ( ! $userExists) {
                 $errors[] = 'User with ID ' . $data['user_id'] . ' does not exist';
             }
         }
 
-        if (! empty($data['client_id']) && is_numeric($data['client_id'])) {
+        if ( ! empty($data['client_id']) && is_numeric($data['client_id'])) {
             $clientExists = DB::table('ip_clients')
                 ->where('client_id', $data['client_id'])
                 ->exists();
 
-            if (! $clientExists) {
+            if ( ! $clientExists) {
                 $errors[] = 'Client with ID ' . $data['client_id'] . ' does not exist';
             }
         }
 
-        if (! empty($data['user_id']) && ! empty($data['client_id'])) {
+        if ( ! empty($data['user_id']) && ! empty($data['client_id'])) {
             $existingAssignment = UserClient::query()
                 ->where('user_id', $data['user_id'])
                 ->where('client_id', $data['client_id']);
 
-            if (! empty($data['user_client_id'])) {
+            if ( ! empty($data['user_client_id'])) {
                 $existingAssignment->where('user_client_id', '!=', $data['user_client_id']);
             }
 
@@ -125,13 +125,12 @@ class UserClientService extends BaseService
             }
         }
 
-        if (! empty($errors)) {
+        if ( ! empty($errors)) {
             throw new InvalidArgumentException('Validation failed: ' . implode(', ', $errors));
         }
 
         return true;
     }
-
 
     /**
      * @param $user_id
@@ -151,7 +150,6 @@ class UserClientService extends BaseService
             ->with('client')
             ->get();
     }
-
 
     /**
      * Set all clients for a user.
@@ -240,7 +238,7 @@ class UserClientService extends BaseService
         try {
             DB::beginTransaction();
 
-            if (! empty($data['user_client_id'])) {
+            if ( ! empty($data['user_client_id'])) {
                 $userClient = $this->findOrFail($data['user_client_id']);
                 $userClient->fill($data);
                 $userClient->save();

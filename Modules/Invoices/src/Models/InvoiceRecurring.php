@@ -1,13 +1,8 @@
 <?php
 
-namespace App\Modules\Invoices\src\Models;
+namespace Modules\Invoices\Models;
 
-use App\Modules\Invoices\Models\AllowDynamicProperties;
-
-use function App\Modules\Invoices\Models\date_to_mysql;
-use function App\Modules\Invoices\Models\increment_date;
-
-use Mdl_Invoices_Recurring;
+use AllowDynamicProperties;
 use Modules\Core\Models\BaseModel;
 
 #[AllowDynamicProperties]

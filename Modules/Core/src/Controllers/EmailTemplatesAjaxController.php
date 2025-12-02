@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Modules\Core\src\Controllers;
+namespace Modules\Core\Controllers;
 
-use App\Modules\EmailTemplates\Controllers\AllowDynamicProperties;
-use Modules\Core\Controllers\AdminController;
+use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
 class EmailTemplatesAjaxController extends AdminController

@@ -2,12 +2,12 @@
 
 namespace Modules\Payments\Services;
 
-use Modules\Core\Services\BaseService;
-use Modules\Payments\Models\Payment;
-use Modules\Invoices\Models\Invoice;
-use Modules\Invoices\Services\InvoiceAmountService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Modules\Core\Services\BaseService;
+use Modules\Invoices\Models\Invoice;
+use Modules\Invoices\Services\InvoiceAmountService;
+use Modules\Payments\Models\Payment;
 
 /**
  * PaymentService.
@@ -59,8 +59,8 @@ class PaymentService extends BaseService
     /**
      * Validate a payment amount does not exceed invoice balance.
      *
-     * @param float $amount
-     * @param int   $invoiceId
+     * @param float    $amount
+     * @param int      $invoiceId
      * @param int|null $paymentId
      *
      * @return bool
@@ -69,7 +69,7 @@ class PaymentService extends BaseService
     {
         $invoice = Invoice::find($invoiceId);
 
-        if (!$invoice) {
+        if ( ! $invoice) {
             return false;
         }
 
@@ -103,7 +103,7 @@ class PaymentService extends BaseService
      */
     public function save(?int $id = null, ?array $data = null): ?Payment
     {
-        $data = $data ?? [];
+        $data ??= [];
 
         return DB::transaction(function () use ($id, $data) {
             $payment = $id ? Payment::find($id) : new Payment();
@@ -138,7 +138,7 @@ class PaymentService extends BaseService
     {
         return DB::transaction(function () use ($id) {
             $payment = Payment::find($id);
-            if (!$payment) {
+            if ( ! $payment) {
                 return false;
             }
 
@@ -167,9 +167,10 @@ class PaymentService extends BaseService
     public function prep_form(?int $id = null): Payment
     {
         $payment = $id ? Payment::findOrFail($id) : new Payment();
-        if (!$id) {
+        if ( ! $id) {
             $payment->payment_date = now()->toDateString();
         }
+
         return $payment;
     }
 
@@ -182,7 +183,7 @@ class PaymentService extends BaseService
      */
     public function by_client(int $clientId)
     {
-        return Payment::query()->whereHas('client', fn($q) => $q->where('id', $clientId));
+        return Payment::query()->whereHas('client', fn ($q) => $q->where('id', $clientId));
     }
 
     /**

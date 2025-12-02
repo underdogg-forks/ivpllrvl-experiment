@@ -110,7 +110,6 @@ class InvoiceItemService
      * @param int $invoiceId
      *
      * @return \Illuminate\Database\Eloquent\Collection
-
      */
     public function getItemsByInvoiceId(int $invoiceId)
     {

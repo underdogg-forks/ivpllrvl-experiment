@@ -131,7 +131,7 @@ class QuoteItemService
      *
      * @legacy-file application/modules/quotes/models/Mdl_quote_item.php
      *
-     * @legacy-function get_items_subtotal() 
+     * @legacy-function get_items_subtotal()
      *
      * @return float
      */

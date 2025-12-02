@@ -27,6 +27,7 @@ class ClientService extends BaseService
 
     /**
      * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
      * @legacy-function get_not_assigned_to_user()
      */
     public function getNotAssignedToUser(int $userId)
@@ -43,7 +44,9 @@ class ClientService extends BaseService
 
     /**
      * @param int $id
+     *
      * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
      * @legacy-function delete()
      */
     public function remove($id): void
@@ -61,8 +64,11 @@ class ClientService extends BaseService
      * Returns client_id of existing client.
      *
      * @param $client_name
+     *
      * @return int|null
+     *
      * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
      * @legacy-function client_lookup()
      */
     public function client_lookup($client_name)
@@ -82,6 +88,7 @@ class ClientService extends BaseService
 
     /**
      * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
      * @legacy-function with_total()
      */
     public function with_total()
@@ -92,6 +99,7 @@ class ClientService extends BaseService
 
     /**
      * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
      * @legacy-function with_total_paid()
      */
     public function with_total_paid()
@@ -102,6 +110,7 @@ class ClientService extends BaseService
 
     /**
      * @legacy-file application/modules/clients/models/Mdl_client.php
+     *
      * @legacy-function with_total_balance()
      */
     public function with_total_balance()

@@ -123,11 +123,11 @@ class CustomFieldService extends BaseService
      */
     public function used($id = null, $get = true)
     {
-        if (!$id) {
-            return null;
+        if ( ! $id) {
+            return;
         }
 
-        $cf = $this->get_by_id($id);
+        $cf   = $this->get_by_id($id);
         $base = str_replace('ip_', '', $cf->custom_field_table) . '_field';
 
         $query = \Illuminate\Support\Facades\DB::table($cf->custom_field_table)
@@ -150,7 +150,7 @@ class CustomFieldService extends BaseService
      */
     public function delete($id): bool
     {
-        if (!$this->used($id)->isNotEmpty()) {
+        if ( ! $this->used($id)->isNotEmpty()) {
             $custom_field = $this->get_by_id($id);
 
             if (preg_match('/CHOICE/', $custom_field->custom_field_type)) {
@@ -186,6 +186,7 @@ class CustomFieldService extends BaseService
     public function by_table_name($name)
     {
         $table = array_flip($this->getCustomTables());
+
         return $this->by_table($table[$name]);
     }
 
@@ -220,8 +221,8 @@ class CustomFieldService extends BaseService
      */
     public function get_value_for_field($field_id, $custom_field_model, $object)
     {
-        $modelClass = '\\Modules\\Core\\Models\\' . str_replace('mdl_', '', $custom_field_model);
-        $cf_table = str_replace('mdl_', '', $custom_field_model);
+        $modelClass    = '\\Modules\\Core\\Models\\' . str_replace('mdl_', '', $custom_field_model);
+        $cf_table      = str_replace('mdl_', '', $custom_field_model);
         $cf_model_name = str_replace('_custom', '', $cf_table);
 
         $value = $modelClass::query()
@@ -229,7 +230,7 @@ class CustomFieldService extends BaseService
             ->where($cf_model_name . '_id', $object->{$cf_model_name . '_id'})
             ->get();
 
-        $value_key = $cf_table . '_fieldvalue';
+        $value_key            = $cf_table . '_fieldvalue';
         $value_key_serialized = $cf_table . '_fieldvalue_serialized';
 
         if (empty($value->first()->{$value_key})) {
@@ -256,19 +257,19 @@ class CustomFieldService extends BaseService
     public function get_values_for_fields($custom_field_model, $model_id)
     {
         $modelClass = '\\Modules\\Core\\Models\\' . str_replace('mdl_', '', $custom_field_model);
-        $fields = $modelClass::query()->where($modelClass::$primaryKey, $model_id)->get();
+        $fields     = $modelClass::query()->where($modelClass::$primaryKey, $model_id)->get();
 
         if ($fields->isEmpty()) {
             return [];
         }
 
-        $values = [];
+        $values              = [];
         $custom_field_prefix = str_replace('mdl_', '', $custom_field_model);
 
         foreach ($fields as $field) {
             $field_id_fieldlabel = $custom_field_prefix . '_fieldvalue';
 
-            if (!$field->{$field_id_fieldlabel}) {
+            if ( ! $field->{$field_id_fieldlabel}) {
                 $values[$field->custom_field_label] = null;
                 continue;
             }
@@ -278,7 +279,7 @@ class CustomFieldService extends BaseService
                     ->whereIn('custom_values_id', $field->{$field_id_fieldlabel})
                     ->get();
 
-                $field->{$field_id_fieldlabel} = [];
+                $field->{$field_id_fieldlabel}                 = [];
                 $field->{$field_id_fieldlabel . '_serialized'} = '';
 
                 foreach ($custom_values as $custom_value) {
@@ -298,6 +299,30 @@ class CustomFieldService extends BaseService
         }
 
         return $values;
+    }
+
+    /**
+     * Get deletion blockers for custom field.
+     *
+     * @param int $id Custom field ID
+     *
+     * @return array Array of blocker counts
+     */
+    public function getDeletionBlockers(int $id): array
+    {
+        return [
+            'custom_values' => \Modules\Core\Models\CustomValue::query()
+                ->where('custom_values_field', $id)
+                ->count(),
+        ];
+    }
+
+    /**
+     * Get the model class for this service.
+     */
+    protected function getModelClass(): string
+    {
+        return CustomField::class;
     }
 
     /**
@@ -335,29 +360,5 @@ class CustomFieldService extends BaseService
         $schema->table($table_name, function ($table) use ($column_name) {
             $table->string($column_name, 256)->nullable();
         });
-    }
-
-    /**
-     * Get deletion blockers for custom field.
-     *
-     * @param int $id Custom field ID
-     *
-     * @return array Array of blocker counts
-     */
-    public function getDeletionBlockers(int $id): array
-    {
-        return [
-            'custom_values' => \Modules\Core\Models\CustomValue::query()
-                ->where('custom_values_field', $id)
-                ->count(),
-        ];
-    }
-
-    /**
-     * Get the model class for this service.
-     */
-    protected function getModelClass(): string
-    {
-        return CustomField::class;
     }
 }

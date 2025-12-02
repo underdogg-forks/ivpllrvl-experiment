@@ -54,7 +54,7 @@ class ProjectService extends BaseService
      */
     public function getTasks(int $projectId)
     {
-        if (! $projectId) {
+        if ( ! $projectId) {
             return collect();
         }
 

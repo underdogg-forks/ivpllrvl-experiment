@@ -95,6 +95,7 @@ class TasksController
      * @legacy-file application/modules/tasks/controllers/Tasks.php
      *
      * @legacy-function delete()
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function delete(int $id): \Illuminate\Http\RedirectResponse

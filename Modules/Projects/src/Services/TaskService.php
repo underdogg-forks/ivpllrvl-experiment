@@ -3,9 +3,9 @@
 namespace Modules\Projects\Services;
 
 use Modules\Core\Services\BaseService;
-use Modules\Projects\Models\Task;
 use Modules\Invoices\Models\Invoice;
 use Modules\Invoices\Models\InvoiceItem;
+use Modules\Projects\Models\Task;
 
 /**
  * TaskService.
@@ -78,7 +78,7 @@ class TaskService extends BaseService
      */
     public function get_invoice_for_task(int $taskId): ?Invoice
     {
-        if (! $taskId) {
+        if ( ! $taskId) {
             return null;
         }
 
@@ -86,7 +86,7 @@ class TaskService extends BaseService
             ->where('item_task_id', $taskId)
             ->first();
 
-        if (! $invoiceItem) {
+        if ( ! $invoiceItem) {
             return null;
         }
 
@@ -108,7 +108,7 @@ class TaskService extends BaseService
      */
     public function get_tasks_to_invoice(int $invoiceId)
     {
-        if (! $invoiceId) {
+        if ( ! $invoiceId) {
             return collect();
         }
 
@@ -146,12 +146,12 @@ class TaskService extends BaseService
      */
     public function update_on_invoice_delete(int $invoiceId): void
     {
-        if (! $invoiceId) {
+        if ( ! $invoiceId) {
             return;
         }
 
         $tasks = Task::query()
-            ->whereHas('invoiceItems', fn($q) => $q->where('invoice_id', $invoiceId))
+            ->whereHas('invoiceItems', fn ($q) => $q->where('invoice_id', $invoiceId))
             ->get();
 
         foreach ($tasks as $task) {
@@ -212,7 +212,7 @@ class TaskService extends BaseService
      */
     public function update_on_project_delete(int $projectId): void
     {
-        if (! $projectId) {
+        if ( ! $projectId) {
             return;
         }
 
@@ -251,7 +251,7 @@ class TaskService extends BaseService
     public function canDelete(int $taskId): bool
     {
         $task = Task::query()->find($taskId);
-        if (! $task) {
+        if ( ! $task) {
             return true;
         }
 

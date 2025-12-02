@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Core\src\Controllers;
+namespace Modules\Core\Controllers;
 
 use AllowDynamicProperties;
 use App\Http\Controllers\Controller;

@@ -6,12 +6,12 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-            'resources/assets/nord/css/style-tailwind.css',
-            'resources/assets/core/css/style-tailwind.css',
-            'resources/assets/invoiceplane_blue/css/style-tailwind.css'
-            'resources/js/app.js'],
-            refresh: true,
+                'resources/assets/nord/css/style-tailwind.css',
+                'resources/assets/core/css/style-tailwind.css',
+                'resources/assets/invoiceplane_blue/css/style-tailwind.css',
+                'resources/js/app.js'],
+            refresh: true
         }),
-        tailwindcss(),
-    ],
+        tailwindcss()
+    ]
 });

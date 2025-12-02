@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Modules\Core\src\Controllers;
+namespace Modules\Core\Controllers;
 
-use App\Modules\Filter\Controllers\AllowDynamicProperties;
-
-use function App\Modules\Filter\Controllers\get_setting;
-
-use Modules\Core\Controllers\AdminController;
+use AllowDynamicProperties;
 
 #[AllowDynamicProperties]
 class FilterAjaxController extends AdminController
