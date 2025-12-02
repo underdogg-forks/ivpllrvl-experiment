@@ -106,15 +106,15 @@ class QuotesController
         }
 
         // Get custom fields for quotes
-        $customFields = $this->customFieldService->getByTableOrdered('ip_quote_custom');
+        //$customFields = $this->customFieldService->getByTableOrdered('ip_quote_custom');
 
         // Get custom field values for select/dropdown fields
         $customValues = [];
-        foreach ($customFields as $field) {
+        /*foreach ($customFields as $field) {
             if (in_array($field->custom_field_type, ['select', 'dropdown'])) {
                 $customValues[$field->custom_field_id] = $this->customValueService->getByFieldId($field->custom_field_id);
             }
-        }
+        }*/
 
         // Get all items for this quote
         $items = $this->quoteItemService->getByQuoteId($quote_id);
@@ -129,7 +129,7 @@ class QuotesController
         // Check if there are multiple admin users (for user change functionality)
         $changeUser = $this->userService->hasMultipleActiveAdmins();
 
-        return view('quotes::view', [
+        return view('quotes::quotes.view', [
             'quote'           => $quote,
             'items'           => $items,
             'quote_id'        => $quote_id,
@@ -138,9 +138,9 @@ class QuotesController
             'tax_rates'       => $taxRates,
             'quote_tax_rates' => $quoteTaxRates,
             'quote_statuses'  => $this->quoteService->getStatuses(),
-            'custom_fields'   => $customFields,
-            'custom_values'   => $customValues,
-            'custom_js_vars'  => [
+            //'custom_fields'   => $customFields,
+            //'custom_values'   => $customValues,
+            'custom_js_vars' => [
                 'currency_symbol'           => config('invoiceplane.currency_symbol', '$'),
                 'currency_symbol_placement' => config('invoiceplane.currency_symbol_placement', 'before'),
                 'decimal_point'             => config('invoiceplane.decimal_point', '.'),

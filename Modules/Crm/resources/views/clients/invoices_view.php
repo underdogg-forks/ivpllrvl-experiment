@@ -116,7 +116,7 @@ foreach ($items as $i => $item) {
                             <td><?php _htmlsc($item->item_name); ?></td>
                             <td>
                                 <span class="pull-left"><?php _trans('quantity'); ?></span>
-                                <span class="pull-right amount"><?php echo format_quantity($item->item_quantity) . ' ' . htmlsc($item->item_product_unit); ?></span>
+                                <span class="pull-right amount"><?php echo format_quantity($item->item_quantity) . ' invoices_view.php' . htmlsc($item->item_product_unit); ?></span>
                             </td>
                             <td>
                                 <span class="pull-left"><?php _trans('price'); ?></span>

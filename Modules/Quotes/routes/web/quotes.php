@@ -45,7 +45,7 @@ Route::post('/quotes/ajax/change-client', [QuotesAjaxController::class, 'changeC
 Route::post('/quotes/ajax/quote-to-invoice', [QuotesAjaxController::class, 'quoteToInvoice'])->name('quotes.ajax.quote_to_invoice');
 
 // Modal routes
-Route::get('/quotes/modal/copy', [QuotesAjaxController::class, 'modalCopyQuote'])->name('quotes.modal.copy');
-Route::get('/quotes/modal/create', [QuotesAjaxController::class, 'modalCreateQuote'])->name('quotes.modal.create');
-Route::get('/quotes/modal/change-user', [QuotesAjaxController::class, 'modalChangeUser'])->name('quotes.modal.change_user');
-Route::get('/quotes/modal/change-client', [QuotesAjaxController::class, 'modalChangeClient'])->name('quotes.modal.change_client');
+Route::get('/quotes/modal/copy', [QuotesAjaxController::class, 'modalCopyQuote'])->name('quotes.ajax.modal.copy');
+Route::get('/quotes/modal/create', [QuotesAjaxController::class, 'modalCreateQuote'])->name('quotes.ajax.modal.create');
+Route::get('/quotes/modal/change-user', [QuotesAjaxController::class, 'modalChangeUser'])->name('quotes.ajax.modal.change_user');
+Route::get('/quotes/modal/change-client', [QuotesAjaxController::class, 'modalChangeClient'])->name('quotes.ajax.modal.change_client');
