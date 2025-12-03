@@ -35,12 +35,12 @@
 <body class="fi-body fi-panel-admin bg-gray-50 dark:bg-gray-900" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <x-core::layouts.sidebar />
+        @include('core::layouts.partials.sidebar')
 
         <!-- Main Content Area -->
         <div class="flex flex-col flex-1 overflow-hidden">
             <!-- Header -->
-            <x-core::layouts.header />
+            @include('core::layouts.partials.header')
 
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">

@@ -8,23 +8,10 @@ The InvoicePlane application now uses a modern Blade layout system compatible wi
 
 ```
 Modules/Core/resources/views/layouts/
-└── app.blade.php                    # Main application layout
-```
-
-## Blade Components
-
-### Component Classes
-```
-Modules/Core/src/View/Components/Layouts/
-├── Header.php                       # Header component class
-└── Sidebar.php                      # Sidebar component class
-```
-
-### Component Views
-```
-Modules/Core/resources/views/components/layouts/
-├── header.blade.php                 # Header view with menu
-└── sidebar.blade.php                # Sidebar view with navigation
+├── app.blade.php                    # Main application layout
+└── partials/
+    ├── header.blade.php             # Header partial with menu
+    └── sidebar.blade.php            # Sidebar partial with navigation
 ```
 
 ## How to Use
@@ -79,6 +66,7 @@ The layout is designed to be compatible with Laravel Filament's design system:
 - Alpine.js for interactivity
 - Dark mode support
 - Responsive design patterns
+- Simple Blade partials (no PHP component classes required)
 
 ## Customization
 
@@ -87,8 +75,8 @@ Update the `custom_title` setting in the database.
 
 ### Adding Menu Items
 
-**Header Menu**: Edit `Modules/Core/resources/views/components/layouts/header.blade.php`
-**Sidebar Menu**: Edit `Modules/Core/resources/views/components/layouts/sidebar.blade.php`
+**Header Menu**: Edit `Modules/Core/resources/views/layouts/partials/header.blade.php`
+**Sidebar Menu**: Edit `Modules/Core/resources/views/layouts/partials/sidebar.blade.php`
 
 ### Styling
 Main styles are loaded via Vite:
@@ -119,13 +107,13 @@ Views previously extending `core::components.layouts.app` should now extend `cor
 @endsection
 ```
 
-## Components as Blade Components
+## Layout Partials
 
-The Header and Sidebar are registered as Blade components using:
+The header and sidebar are included as simple Blade partials using:
 
 ```blade
-<x-core::layouts.header />
-<x-core::layouts.sidebar />
+@include('core::layouts.partials.header')
+@include('core::layouts.partials.sidebar')
 ```
 
-This follows Laravel's Blade component pattern and is compatible with Filament's component system.
+This approach keeps the layout system simple with just Blade templates, without requiring PHP component classes.
