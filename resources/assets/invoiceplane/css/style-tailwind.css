@@ -9,6 +9,11 @@
 
 @import "tailwindcss";
 
+/* Apply Poppins font globally */
+* {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 /* ================================
  * InvoicePlane Color Variables
  * Based on Bootstrap default palette

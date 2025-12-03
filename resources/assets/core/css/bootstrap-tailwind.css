@@ -411,4 +411,49 @@
         @apply flex items-center space-x-2;
     }
 
+    /* ================================
+     * FILAMENT-INSPIRED UTILITIES
+     * Filament naming conventions for consistency
+     * ================================ */
+    
+    /* Background utilities */
+    .bg-base {
+        background-color: var(--color-bg-base);
+    }
+
+    .bg-elevated {
+        background-color: var(--color-bg-elevated);
+    }
+
+    .bg-hover {
+        background-color: var(--color-bg-hover);
+    }
+
+    .bg-active {
+        background-color: var(--color-bg-active, var(--color-bg-hover));
+    }
+
+    /* Text utilities */
+    .text-primary {
+        color: var(--color-text-primary);
+    }
+
+    .text-secondary {
+        color: var(--color-text-secondary);
+    }
+
+    .text-accent {
+        color: var(--color-text-accent, var(--brand-primary));
+    }
+
+    /* Border utilities */
+    .border-primary {
+        border-color: var(--color-border);
+    }
+
+    .border-primary-dark {
+        border-color: var(--color-border-dark);
+    }
+
 }
+
