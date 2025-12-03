@@ -12,20 +12,20 @@ if ($custom_field_usage) {
     // ip_*what*_custom
     // $what = explode('_', $custom_field_table)[1]; // Modern php
     $what = strtr($custom_field_table, ['ip_' => '', '_custom' => '']); // O•Al•l•d php
-    $href = site_url($url[$what]);
+    $href = route($url[$what]);
     ?>
 
-    <div id="used<?php echo $what; ?>" class="col-xs-12 col-md-6 col-md-offset-3">
-        <div class="panel-group" id="accordion<?php echo $what; ?>" role="tablist" aria-multiselectable="true">
+    <div id="used{{ $what }}" class="col-xs-12 col-md-6 col-md-offset-3">
+        <div class="panel-group" id="accordion{{ $what }}" role="tablist" aria-multiselectable="true">
             <div class="panel panel-info">
-                <div class="panel-heading no-padding rounded" role="tab" id="heading<?php echo $what; ?>">
+                <div class="panel-heading no-padding rounded" role="tab" id="heading{{ $what }}">
                     <h5 class="panel-title" role="button" data-toggle="collapse" aria-expanded="true" style="padding:1rem 8px"
-                        data-parent="#accordion<?php echo $what; ?>" href="#collapse<?php echo $what; ?>" aria-controls="collapse<?php echo $what; ?>">
+                        data-parent="#accordion{{ $what }}" href="#collapse{{ $what }}" aria-controls="collapse{{ $what }}">
                         <i class="more-less fa pull-right fa-chevron-down"></i>
                         {{ trans('custom_used_in') }}
                     </h5>
                 </div>
-                <div id="collapse<?php echo $what; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $what; ?>">
+                <div id="collapse{{ $what }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ $what }}">
                     <div class="panel-body">
 <?php
         // Build links from custom field usage data

@@ -1,5 +1,5 @@
 <div id="headerbar">
-    <h1 class="headerbar-title">{{ trans('invoices_per_client') }}</h1>
+    <h1 class="headerbar-title">{{ trans('sales_by_client') }}</h1>
 </div>
 
 <div id="content">
@@ -18,8 +18,8 @@
 
                 <div class="panel-body">
 
-                    <form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>"
-                        <?php echo get_setting('reports_in_new_tab', false) ? 'target="_blank"' : ''; ?>>
+                    <form method="post" action="{{ route($this->uri->uri_string()) }}"
+                        {{ get_setting('reports_in_new_tab', false) ? 'target="_blank"' : '' }}>
 
                         <?php _csrf_field(); ?>
 

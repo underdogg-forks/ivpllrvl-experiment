@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ trans('cldr') }}">
 <head>
-    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - {{ trans('sales_by_date') }}</title>
+    <title>{{ get_setting('custom_title', 'InvoicePlane', true) }} - {{ trans('sales_by_date') }}</title>
     <link rel="stylesheet" href="<?php _theme_asset('css/reports.css'); ?>" type="text/css">
 </head>
 
@@ -55,11 +55,11 @@ $initial_year   = 0;
         ?>
 
         <tr>
-            <td style="border-bottom: none;text-align:center;"><?php echo $result->VAT_ID; ?></td>
-            <td style="border-bottom: none;text-align:center;" rowspan="<?php echo $numRows; ?>"
+            <td style="border-bottom: none;text-align:center;">{{ $result->VAT_ID }}</td>
+            <td style="border-bottom: none;text-align:center;" rowspan="{{ $numRows }}"
                 valign="top"><?php _htmlsc($result->Name); ?></td>
             <td style="border-bottom: none;text-align:center;">{{ trans('annual') }}</td>
-            <td style="border-bottom: none;text-align:center;"><?php echo format_currency($result->total_payment); ?></td>
+            <td style="border-bottom: none;text-align:center;">{{ format_currency($result->total_payment) }}</td>
         </tr>
 
 <?php
@@ -87,7 +87,7 @@ $initial_year   = 0;
                                         break;
                                 }
                     ?></td>
-            <td style="border-bottom: none;text-align:center;"><?php echo ($value > 0) ? format_currency($value) : ''; ?></td>
+            <td style="border-bottom: none;text-align:center;">{{ ($value > 0) ? format_currency($value) : '' }}</td>
         </tr>
 <?php
                 } // End if

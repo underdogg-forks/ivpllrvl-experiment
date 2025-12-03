@@ -37,7 +37,7 @@
                             <select name="settings[email_pdf_attachment]" id="settings[email_pdf_attachment]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="0">{{ trans('no') }}</option>
-                                <option value="1" <?php check_select(get_setting('email_pdf_attachment'), '1'); ?>>
+                                <option value="1" {{ get_setting('email_pdf_attachment') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -50,13 +50,13 @@
                             <select name="settings[email_send_method]" id="email_send_method"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="">{{ trans('none') }}</option>
-                                <option value="phpmail" <?php check_select(get_setting('email_send_method'), 'phpmail'); ?>>
+                                <option value="phpmail" {{ get_setting('email_send_method') == 'phpmail' ? 'selected' : '' }}>
                                     {{ trans('email_send_method_phpmail') }}
                                 </option>
-                                <option value="sendmail" <?php check_select(get_setting('email_send_method'), 'sendmail'); ?>>
+                                <option value="sendmail" {{ get_setting('email_send_method') == 'sendmail' ? 'selected' : '' }}>
                                     {{ trans('email_send_method_sendmail') }}
                                 </option>
-                                <option value="smtp" <?php check_select(get_setting('email_send_method'), 'smtp'); ?>>
+                                <option value="smtp" {{ get_setting('email_send_method') == 'smtp' ? 'selected' : '' }}>
                                     {{ trans('email_send_method_smtp') }}
                                 </option>
                             </select>
@@ -71,7 +71,7 @@
                                 </label>
                                 <input type="text" name="settings[smtp_server_address]" id="settings[smtp_server_address]"
                                     class="form-control"
-                                    value="<?php echo get_setting('smtp_server_address', '', true); ?>">
+                                    value="{{ get_setting('smtp_server_address', '', true) }}">
                             </div>
 
                             <div class="form-group">
@@ -80,7 +80,7 @@
                                 </label>
                                 <input type="email" name="settings[smtp_mail_from]" id="settings[smtp_mail_from]"
                                     class="form-control"
-                                    value="<?php echo get_setting('smtp_mail_from', '', true); ?>">
+                                    value="{{ get_setting('smtp_mail_from', '', true) }}">
                             </div>
 
                             <div class="form-group">
@@ -92,7 +92,7 @@
                                     <option value="0">
                                         {{ trans('no') }}
                                     </option>
-                                    <option value="1" <?php check_select(get_setting('smtp_authentication'), '1'); ?>>
+                                    <option value="1" {{ get_setting('smtp_authentication') == '1' ? 'selected' : '' }}>
                                         {{ trans('yes') }}
                                     </option>
                                 </select>
@@ -104,7 +104,7 @@
                                 </label>
                                 <input type="text" name="settings[smtp_username]" id="settings[smtp_username]"
                                     class="form-control"
-                                    value="<?php echo get_setting('smtp_username', '', true); ?>">
+                                    value="{{ get_setting('smtp_username', '', true) }}">
                             </div>
 
                             <div class="form-group">
@@ -124,7 +124,7 @@
                                     </label>
                                     <input type="number" name="settings[smtp_port]" id="settings[smtp_port]"
                                         class="form-control"
-                                        value="<?php echo get_setting('smtp_port'); ?>">
+                                        value="{{ get_setting('smtp_port') }}">
                                 </div>
                             </div>
 
@@ -135,10 +135,10 @@
                                 <select name="settings[smtp_security]" id="settings[smtp_security]"
                                     class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                     <option value="">{{ trans('none') }}</option>
-                                    <option value="ssl" <?php check_select(get_setting('smtp_security'), 'ssl'); ?>>
+                                    <option value="ssl" {{ get_setting('smtp_security') == 'ssl' ? 'selected' : '' }}>
                                         {{ trans('smtp_ssl') }}
                                     </option>
-                                    <option value="tls" <?php check_select(get_setting('smtp_security'), 'tls'); ?>>
+                                    <option value="tls" {{ get_setting('smtp_security') == 'tls' ? 'selected' : '' }}>
                                         {{ trans('smtp_tls') }}
                                     </option>
                                 </select>
@@ -151,7 +151,7 @@
                                 <select name="settings[smtp_verify_certs]" id="settings[smtp_verify_certs]"
                                     class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                     <option value="1">{{ trans('yes') }}</option>
-                                    <option value="0" <?php check_select(get_setting('smtp_verify_certs'), '0'); ?>>
+                                    <option value="0" {{ get_setting('smtp_verify_certs') == '0' ? 'selected' : '' }}>
                                         {{ trans('no') }}
                                     </option>
                                 </select>

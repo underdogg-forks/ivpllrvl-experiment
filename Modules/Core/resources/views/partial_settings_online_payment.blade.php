@@ -38,10 +38,10 @@
                         <?php foreach ($gateway_drivers as $driver => $fields) {
                             $d = mb_strtolower($driver);
                             ?>
-                            <option value="<?php echo $d; ?>">
-                                <?php echo ucwords(str_replace('_', ' ', $driver)); ?>
+                            <option value="{{ $d }}">
+                                {{ ucwords(str_replace('_', ' ', $driver)) }}
                             </option>
-                        <?php } ?>
+                        @endif
                     </select>
                 </div>
 
@@ -52,17 +52,17 @@
         foreach ($gateway_drivers as $driver => $fields) {
             $d = mb_strtolower($driver);
             ?>
-            <div id="gateway-settings-<?php echo $d; ?>"
-                class="gateway-settings panel panel-default <?php echo get_setting('gateway_' . $d . '_enabled') ? 'active-gateway' : 'hidden'; ?>">
+            <div id="gateway-settings-{{ $d }}"
+                class="gateway-settings panel panel-default {{ get_setting('gateway_' . $d . '_enabled') ? 'active-gateway' : 'hidden' }}">
 
                 <div class="panel-heading">
-                    <?php echo ucwords(str_replace('_', ' ', $driver)); ?>
+                    {{ ucwords(str_replace('_', ' ', $driver)) }}
                     <div class="pull-right">
                         <div class="checkbox no-margin">
                             <label>
-                                <input type="hidden" name="settings[gateway_<?php echo $d; ?>_enabled]" value="0">
-                                <input type="checkbox" name="settings[gateway_<?php echo $d; ?>_enabled]" value="1"
-                                    id="settings[gateway_<?php echo $d; ?>_enabled]"
+                                <input type="hidden" name="settings[gateway_{{ $d }}_enabled]" value="0">
+                                <input type="checkbox" name="settings[gateway_{{ $d }}_enabled]" value="1"
+                                    id="settings[gateway_{{ $d }}_enabled]"
                                     <?php check_select(get_setting('gateway_' . $d . '_enabled'), 1, '==', true) ?>>
                                 {{ trans('enabled') }}
                             </label>
@@ -72,81 +72,79 @@
 
                 <div class="panel-body small">
 
-                    <?php foreach ($fields as $key => $setting) { ?>
-                        <?php if ($setting['type'] == 'checkbox') { ?>
+                    @foreach($fields as $key => $setting)
+                        @if($setting['type'] == 'checkbox')
                             <div class="checkbox">
                                 <label>
-                                    <input type="hidden" name="settings[gateway_<?php echo $d; ?>_<?php echo $key ?>]"
+                                    <input type="hidden" name="settings[gateway_{{ $d }}_{{ $key ?>]"
                                         value="0">
-                                    <input type="checkbox" name="settings[gateway_<?php echo $d; ?>_<?php echo $key ?>]"
+                                    <input type="checkbox" name="settings[gateway_<?php echo $d }}_{{ $key ?>]"
                                         value="1"
                                         <?php check_select(get_setting('gateway_' . $d . '_' . $key), 1, '==', true) ?>>
-                                    <?php _trans('online_payment_' . $key, '', $setting['label']); ?>
+                                    <?php _trans('online_payment_' . $key, '', $setting['label']) }}
                                 </label>
                             </div>
 
-                        <?php } else { ?>
+                        @else
                             <div class="form-group">
-                                <label for="settings[gateway_<?php echo $d; ?>_<?php echo $key ?>]">
-                                    <?php _trans('online_payment_' . $key, '', $setting['label']); ?>
+                                <label for="settings[gateway_{{ $d }}_{{ $key ?>]">
+                                    <?php _trans('online_payment_' . $key, '', $setting['label']) }}
                                 </label>
-                                <input type="<?php echo $setting['type']; ?>" class="form-control"
-                                    name="settings[gateway_<?php echo $d; ?>_<?php echo $key ?>]"
-                                    id="settings[gateway_<?php echo $d; ?>_<?php echo $key ?>]"
-                                    <?php if ($setting['type'] == 'password') { ?>
-                                        value="<?php echo $this->crypt->decode(get_setting('gateway_' . $d . '_' . $key)); ?>"
-                                    <?php } else { ?>
-                                        value="<?php echo get_setting('gateway_' . $d . '_' . $key); ?>"
-                                    <?php } ?>
+                                <input type="{{ $setting['type'] }}" class="form-control"
+                                    name="settings[gateway_{{ $d }}_{{ $key ?>]"
+                                    id="settings[gateway_<?php echo $d }}_{{ $key ?>]"
+                                    @if($setting['type'] == 'password')
+                                        value="<?php echo $this->crypt->decode(get_setting('gateway_' . $d . '_' . $key)) }}"
+                                    @else
+                                        value="{{ get_setting('gateway_' . $d . '_' . $key) }}"
+                                    @endif
                                 >
-                                <?php if ($setting['type'] == 'password') { ?>
+                                @if($setting['type'] == 'password')
                                     <input type="hidden" value="1"
-                                        name="settings[gateway_<?php echo $d . '_' . $key ?>_field_is_password]">
-                                <?php } ?>
+                                        name="settings[gateway_{{ $d . '_' . $key ?>_field_is_password]">
+                                @endif
                             </div>
 
-                        <?php } ?>
-                    <?php } ?>
-
+                        @endif
+                    @endif
                     <hr>
 
                     <div class="form-group">
-                        <label for="settings[gateway_<?php echo $d; ?>_currency]">
+                        <label for="settings[gateway_<?php echo $d }}_currency]">
                             {{ trans('currency') }}
                         </label>
-                        <select name="settings[gateway_<?php echo $d; ?>_currency]"
-                            id="settings[gateway_<?php echo $d; ?>_currency]"
+                        <select name="settings[gateway_{{ $d }}_currency]"
+                            id="settings[gateway_{{ $d }}_currency]"
                             class="form-control simple-select">
-                            <?php foreach ($gateway_currency_codes as $val => $key) { ?>
-                                <option value="<?php echo $val; ?>"
-                                    <?php check_select(get_setting('gateway_' . $d . '_currency') ?: get_setting('currency_code'), $val); ?>>
-                                    <?php echo $val; ?>
+                            @foreach($gateway_currency_codes as $val => $key)
+                                <option value="{{ $val }}"
+                                    {{ get_setting('gateway_' . $d . '_currency') ?: get_setting('currency_code') == $val ? 'selected' : '' }}>
+                                    {{ $val }}
                                 </option>
-                            <?php } ?>
+                            @endif
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="settings[gateway_<?php echo $d; ?>_payment_method]">
+                        <label for="settings[gateway_{{ $d }}_payment_method]">
                             {{ trans('online_payment_method') }}
                         </label>
-                        <select name="settings[gateway_<?php echo $d; ?>_payment_method]"
-                            id="settings[gateway_<?php echo $d; ?>_payment_method]"
+                        <select name="settings[gateway_{{ $d }}_payment_method]"
+                            id="settings[gateway_{{ $d }}_payment_method]"
                             class="form-control simple-select">
                             <option value="">{{ trans('none') }}</option>
-                            <?php foreach ($payment_methods as $payment_method) { ?>
-                                <option value="<?php echo $payment_method->payment_method_id; ?>"
+                            @foreach($payment_methods as $payment_method)
+                                <option value="{{ $payment_method->payment_method_id }}"
                                     <?php check_select(get_setting('gateway_' . $d . '_payment_method'), $payment_method->payment_method_id) ?>>
-                                    <?php echo $payment_method->payment_method_name; ?>
+                                    {{ $payment_method->payment_method_name }}
                                 </option>
-                            <?php } ?>
+                            @endif
                         </select>
                     </div>
 
                 </div>
 
             </div>
-        <?php } ?>
-
+        @endif
     </div>
 </div>

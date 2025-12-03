@@ -34,7 +34,7 @@
         }
         var checktime = 2000;
         // Get the current version
-        var ip_version = "<?php echo get_setting('current_version'); ?>";
+        var ip_version = "{{ get_setting('current_version') }}";
         // Get the latest version from the InvoicePlane IDS
         $.ajax({
             'url': 'https://ids.invoiceplane.com/updatecheck?cv=' + ip_version,
@@ -143,7 +143,7 @@
         <div class="panel-body">
 
             <div class="form-group">
-                <input type="text" class="form-control" value="<?php echo get_setting('current_version'); ?>" readonly="readonly">
+                <input type="text" class="form-control" value="{{ get_setting('current_version') }}" readonly="readonly">
             </div>
             <div id="updatecheck-results">
                 <div id="updatecheck-loading" class="btn btn-default btn-sm disabled">

@@ -9,11 +9,9 @@
                     </thead>
 
                     <tbody>
-<?php
-foreach ($elements as $element) {
-    ?>
+@foreach($elements as $element)
                         <tr>
-                            <td><?php echo $element->custom_values_id; ?></td>
+                            <td>{{ $element->custom_values_id }}</td>
                             <td><?php _htmlsc($element->custom_values_value); ?></td>
                             <td>
                                 <div class="options btn-group">
@@ -23,15 +21,15 @@ foreach ($elements as $element) {
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="<?php echo site_url('custom_values/edit/' . $element->custom_values_id); ?>">
+                                            <a href="{{ route('custom_values/edit/' . $element->custom_values_id) }}">
                                                 <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                             </a>
                                         </li>
                                         <li>
-                                            <form action="<?php echo site_url('custom_values/delete/' . $element->custom_values_id); ?>"
+                                            <form action="{{ route('custom_values/delete/' . $element->custom_values_id) }}"
                                                   method="POST">
                                                 <?php _csrf_field(); ?>
-                                                <input type="hidden" name="custom_field_id" value="<?php echo $id; ?>">
+                                                <input type="hidden" name="custom_field_id" value="{{ $id }}">
                                                 <button type="submit" class="dropdown-button"
                                                         onclick="return confirm(`{{ trans('delete_record_warning') }}`);">
                                                     <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
@@ -42,9 +40,7 @@ foreach ($elements as $element) {
                                 </div>
                             </td>
                         </tr>
-<?php
-}
-?>
+@endif
                     </tbody>
 
                 </table>

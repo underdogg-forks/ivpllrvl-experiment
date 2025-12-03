@@ -19,7 +19,7 @@
                                 <option value="0">
                                     {{ trans('no') }}
                                 </option>
-                                <option value="1" <?php check_select(get_setting('projects_enabled'), '1'); ?>>
+                                <option value="1" {{ get_setting('projects_enabled') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -35,8 +35,8 @@
                             <div class="input-group">
                                 <input type="text" name="settings[default_hourly_rate]" id="settings[default_hourly_rate]"
                                     class="form-control amount"
-                                    value="<?php echo get_setting('default_hourly_rate') ? format_amount(get_setting('default_hourly_rate')) : get_setting('default_hourly_rate'); ?>">
-                                <span class="input-group-addon"><?php echo get_setting('currency_symbol'); ?></span>
+                                    value="{{ get_setting('default_hourly_rate') ? format_amount(get_setting('default_hourly_rate')) : get_setting('default_hourly_rate') }}">
+                                <span class="input-group-addon">{{ get_setting('currency_symbol') }}</span>
                                 <input type="hidden" name="settings[default_hourly_rate_field_is_amount]" value="1">
                             </div>
                         </div>

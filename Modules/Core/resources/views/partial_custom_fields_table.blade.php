@@ -20,33 +20,29 @@ foreach ($custom_fields as $custom_field) {
     ?>
             <tr>
                 <td><?php _htmlsc($custom_field->custom_field_label); ?></td>
-                <td><?php _trans($custom_tables[$custom_field->custom_field_table]); ?></td>
-                <td><?php echo $position; ?></td>
-                <td><?php _trans($alpha); ?></td>
-                <td><?php echo $custom_field->custom_field_order; ?></td>
+                <td>{{ trans($custom_tables[$custom_field->custom_field_table]) }}</td>
+                <td>{{ $position }}</td>
+                <td>{{ trans($alpha) }}</td>
+                <td>{{ $custom_field->custom_field_order }}</td>
                 <td>
                     <div class="options btn-group btn-group-sm">
                         <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
-<?php
-        if (in_array($custom_field->custom_field_type, $custom_value_fields)) {
-            ?>
-                        <a href="<?php echo site_url('custom_values/field/' . $custom_field->custom_field_id); ?>"
+@if(in_array($custom_field->custom_field_type, $custom_value_fields))
+                        <a href="{{ route('custom_values/field/' . $custom_field->custom_field_id) }}"
                            class="btn btn-default">
                             <i class="fa fa-list fa-margin"></i> {{ trans('values') }}
                         </a>
-<?php
-        }
-    ?>
+@endif
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?php echo site_url('custom_fields/form/' . $custom_field->custom_field_id); ?>">
+                                <a href="{{ route('custom_fields/form/' . $custom_field->custom_field_id) }}">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
-                                <form action="<?php echo site_url('custom_fields/delete/' . $custom_field->custom_field_id); ?>"
+                                <form action="{{ route('custom_fields/delete/' . $custom_field->custom_field_id) }}"
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"
@@ -59,9 +55,7 @@ foreach ($custom_fields as $custom_field) {
                     </div>
                 </td>
             </tr>
-<?php
-}
-?>
+@endif
         </tbody>
 
     </table>

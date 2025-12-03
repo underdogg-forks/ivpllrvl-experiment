@@ -1,5 +1,5 @@
 <?php
-$href  = site_url('custom_fields/form/' . $field->custom_field_id);
+$href  = route('custom_fields/form/' . $field->custom_field_id);
 $link  = anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($field->custom_field_label), ' class="btn btn-sm btn-default"');
 $alpha = strtr(mb_strtolower($field->custom_field_type), ['-' => '_']);
 $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
@@ -10,19 +10,19 @@ $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-            <a class="btn btn-default" href="<?php echo site_url('custom_values'); ?>">
+            <a class="btn btn-default" href="{{ route('custom_values') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="btn btn-primary" href="<?php echo site_url('custom_values/create/' . $id); ?>">
+            <a class="btn btn-primary" href="{{ route('custom_values/create/' . $id) }}">
                 <i class="fa fa-plus"></i> {{ trans('new') }}
             </a>
         </div>
     </div>
     <div class="visible-sm visible-md visible-lg headerbar-item pull-right">
-        <div class="badge">{{ trans('table') }}: <?php _trans($table); ?></div>
-        <div class="badge">{{ trans('position') }}: <?php echo $position; ?></div>
-        <div class="badge">{{ trans('type') }}: <?php _trans($alpha); ?></div>
-        {{ trans('field') }}: <?php echo $link; ?>
+        <div class="badge">{{ trans('table') }}: {{ trans($table) }}</div>
+        <div class="badge">{{ trans('position') }}: {{ $position }}</div>
+        <div class="badge">{{ trans('type') }}: {{ trans($alpha) }}</div>
+        {{ trans('field') }}: {{ $link }}
     </div>
 </div>
 
@@ -42,19 +42,19 @@ $this->layout->load_view('custom_values/partial_custom_values_field');
 
             <div class="row visible-xs">
                 <div class="col-xs-12">
-                    <div class="form-group">{{ trans('field') }}: <?php echo $link; ?></div>
+                    <div class="form-group">{{ trans('field') }}: {{ $link }}</div>
                 </div>
 
                 <div class="col-xs-12">
-                    <div class="form-group badge">{{ trans('table') }}: <?php _trans($table); ?></div>
+                    <div class="form-group badge">{{ trans('table') }}: {{ trans($table) }}</div>
                 </div>
 
                 <div class="col-xs-12">
-                    <div class="form-group badge">{{ trans('position') }}: <?php echo $position; ?></div>
+                    <div class="form-group badge">{{ trans('position') }}: {{ $position }}</div>
                 </div>
 
                 <div class="col-xs-12">
-                    <div class="form-group badge">{{ trans('type') }}: <?php _trans($alpha); ?></div>
+                    <div class="form-group badge">{{ trans('type') }}: {{ trans($alpha) }}</div>
                 </div>
             </div>
 

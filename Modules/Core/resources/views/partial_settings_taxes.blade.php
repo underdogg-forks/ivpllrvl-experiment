@@ -17,12 +17,12 @@
                             <select name="settings[default_invoice_tax_rate]" id="settings[default_invoice_tax_rate]"
                                 class="form-control simple-select">
                                 <option value="">{{ trans('none') }}</option>
-<?php foreach ($tax_rates as $tax_rate) { ?>
-                                <option value="<?php echo $tax_rate->tax_rate_id; ?>"
-                                    <?php check_select(get_setting('default_invoice_tax_rate'), $tax_rate->tax_rate_id); ?>>
-                                    <?php echo $tax_rate->tax_rate_percent . '% - ' . $tax_rate->tax_rate_name; ?>
-                                </option>
-<?php } ?>
+                                @foreach ($tax_rates as $tax_rate)
+                                    <option value="{{ $tax_rate->tax_rate_id }}"
+                                        {{ get_setting('default_invoice_tax_rate') == $tax_rate->tax_rate_id ? 'selected' : '' }}>
+                                        {{ $tax_rate->tax_rate_percent }}% - {{ $tax_rate->tax_rate_name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -33,28 +33,25 @@
                             <select name="settings[default_item_tax_rate]" id="settings[default_item_tax_rate]"
                                 class="form-control simple-select">
                                 <option value="">{{ trans('none') }}</option>
-<?php foreach ($tax_rates as $tax_rate) { ?>
-                                <option value="<?php echo $tax_rate->tax_rate_id; ?>"
-                                    <?php check_select(get_setting('default_item_tax_rate'), $tax_rate->tax_rate_id); ?>>
-                                    <?php echo $tax_rate->tax_rate_percent . '% - ' . $tax_rate->tax_rate_name; ?>
-                                </option>
-<?php } ?>
+                                @foreach ($tax_rates as $tax_rate)
+                                    <option value="{{ $tax_rate->tax_rate_id }}"
+                                        {{ get_setting('default_item_tax_rate') == $tax_rate->tax_rate_id ? 'selected' : '' }}>
+                                        {{ $tax_rate->tax_rate_percent }}% - {{ $tax_rate->tax_rate_name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
                     </div>
 
-<?php
+@php
 // LEGACY_CALCULATION false : Taxes Global N, Item Y : Use simple calculation : Apply global discount before item tax
 // For e-invoices : 🗸 EN16931, ? PEPPOL3BIS, ? UBL, ? CII ••• (WIP : todo: checks, modify, create models).
-if ( ! $legacy_calculation) {
-    ?>
+@endphp
+@if (!$legacy_calculation)
                     <input name="settings[default_include_item_tax]" id="settings[default_include_item_tax]" type="hidden" value="">
-<?php
-}
-// LEGACY_CALCULATION true : Taxes Global Y, Item Y : Use legacy calculation for Discounts & Taxes : By default in ipconfig.
-else {
-    ?>
+@else
+{{-- LEGACY_CALCULATION true : Taxes Global Y, Item Y : Use legacy calculation for Discounts & Taxes : By default in ipconfig. --}}
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="settings[default_include_item_tax]">
@@ -63,18 +60,17 @@ else {
                             <select name="settings[default_include_item_tax]" id="settings[default_include_item_tax]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="">{{ trans('none') }}</option>
-                                <option value="0" <?php check_select(get_setting('default_include_item_tax'), '0'); ?>>
+                                <option value="0" {{ get_setting('default_include_item_tax') == '0' ? 'selected' : '' }}>
                                     {{ trans('apply_before_item_tax') }}
                                 </option>
-                                <option value="1" <?php check_select(get_setting('default_include_item_tax'), '1'); ?>>
+                                <option value="1" {{ get_setting('default_include_item_tax') == '1' ? 'selected' : '' }}>
                                     {{ trans('apply_after_item_tax') }}
                                 </option>
                             </select>
                         </div>
                     </div>
-<?php
-} // Fi LEGACY_CALCULATION (Show or not Global Taxes) - since v1.6.3
-?>
+{{-- Fi LEGACY_CALCULATION (Show or not Global Taxes) - since v1.6.3 --}}
+@endif
                 </div>
 
             </div>
