@@ -35,13 +35,13 @@
             // No Check No post
             if ( ! task_ids.length) return; // todo: why not animate checkboxes
 
-            $.post("<?php echo site_url('tasks/ajax/process_task_selections'); ?>", {
+            $.post("{{ route('tasks.ajax.process_task_selections') }}", {
                 task_ids: task_ids
             }, function (data) {
-                var items = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                var items = json_parse(data, {{ (int) config('app.debug') }});
                 for (var key in items) {
                     // Set default tax rate id if empty
-                    if (!items[key].tax_rate_id) items[key].tax_rate_id = '<?php echo $default_item_tax_rate; ?>';
+                    if (!items[key].tax_rate_id) items[key].tax_rate_id = '{{ $default_item_tax_rate }}';
 
                     if ($('#item_table .item:last input[name=item_name]').val() !== '') {
                         $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();
@@ -75,27 +75,27 @@
     });
 </script>
 
-<div id="modal-choose-items" class="modal col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2"
+<div id="modal-choose-items" class="modal grid grid-cols-1 sm:grid-cols-10 sm:col-start-2 md:grid-cols-8 md:col-start-3"
      role="dialog" aria-labelledby="modal-choose-items" aria-hidden="true">
-    <form class="modal-content">
-        <div class="modal-header">
+    <form class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+        <div class="modal-header px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h4 class="panel-title text-lg font-semibold">{{ trans('add_task') }}</h4>
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('add_task') }}</h4>
         </div>
 
-        <div class="modal-body">
-            <?php $this->layout->load_view('tasks/partial_task_table_modal'); ?>
+        <div class="modal-body p-4">
+            @include('crm::clients.partial_task_table_modal')
         </div>
 
-        <div class="modal-footer">
-            <div class="btn-group">
-                <button id="task-modal-submit" class="select-items-confirm btn btn-success" type="button">
+        <div class="modal-footer px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div class="btn-group flex gap-2">
+                <button id="task-modal-submit" class="select-items-confirm btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600" type="button">
                     <i class="fa fa-check"></i>
-                    <?php echo lang('submit'); ?>
+                    {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="btn btn-danger inline-flex items-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
-                    <?php echo lang('cancel'); ?>
+                    {{ trans('cancel') }}
                 </button>
             </div>
         </div>
