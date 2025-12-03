@@ -216,7 +216,7 @@ class ClientsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('clients.form', ['id' => $client->client_id]));
+        $response = $this->get(route('clients.form', ['client_id' => $client->client_id]));
 
         /* Assert */
         $response->assertOk();
@@ -257,7 +257,7 @@ class ClientsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('clients.form', ['id' => $client->client_id]), $updateData);
+        $response = $this->post(route('clients.form', ['client_id' => $client->client_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('clients.index'));

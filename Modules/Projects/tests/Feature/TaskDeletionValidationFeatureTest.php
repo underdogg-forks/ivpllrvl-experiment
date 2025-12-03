@@ -36,7 +36,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+        $response = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
         /* Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -67,7 +67,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+        $response = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
         /* Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -97,7 +97,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+        $response = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
         /* Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -133,7 +133,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
             ]);
 
             /** Act */
-            $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+            $response = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
             /* Assert */
             $response->assertRedirect(route('tasks.index'));
@@ -158,7 +158,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         $invalidId = -1;
 
         /** Act */
-        $response = $this->post(route('tasks.delete', ['id' => $invalidId]));
+        $response = $this->post(route('tasks.delete', ['task_id' => $invalidId]));
 
         /* Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -178,7 +178,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $response = $this->post(route('tasks.delete', ['id' => $nonexistentId]));
+        $response = $this->post(route('tasks.delete', ['task_id' => $nonexistentId]));
 
         /* Assert */
         $response->assertRedirect(route('tasks.index'));
@@ -202,7 +202,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         // Initially cannot delete
-        $response1 = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+        $response1 = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
         $response1->assertSessionHas('alert_error');
 
         // Remove invoice reference
@@ -210,7 +210,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         $task->save();
 
         /** Act */
-        $response2 = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+        $response2 = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
         /* Assert */
         $response2->assertRedirect(route('tasks.index'));
@@ -236,7 +236,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
 
         /* Act & Assert */
         foreach ($tasks as $task) {
-            $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+            $response = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
             $response->assertRedirect(route('tasks.index'));
             $response->assertSessionHas('alert_error');
@@ -260,7 +260,7 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
 
         /* Act & Assert */
         foreach ($tasks as $task) {
-            $response = $this->post(route('tasks.delete', ['id' => $task->task_id]));
+            $response = $this->post(route('tasks.delete', ['task_id' => $task->task_id]));
 
             $response->assertRedirect(route('tasks.index'));
             $response->assertSessionHas('alert_success');
@@ -284,8 +284,8 @@ class TaskDeletionValidationFeatureTest extends FeatureTestCase
         $nonDeletableTask = Task::factory()->create(['invoice_id' => $invoice->invoice_id]);
 
         /** Act */
-        $response1 = $this->post(route('tasks.delete', ['id' => $deletableTask->task_id]));
-        $response2 = $this->post(route('tasks.delete', ['id' => $nonDeletableTask->task_id]));
+        $response1 = $this->post(route('tasks.delete', ['task_id' => $deletableTask->task_id]));
+        $response2 = $this->post(route('tasks.delete', ['task_id' => $nonDeletableTask->task_id]));
 
         /* Assert */
         // Deletable task deleted

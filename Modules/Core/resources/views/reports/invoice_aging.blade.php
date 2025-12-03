@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="{{ trans('cldr') }}">
+<head>
+    <title>{{ get_setting('custom_title', 'InvoicePlane', true)}} - {{ trans('invoice_aging') }}</title>
+    <link rel="stylesheet" href="{{ asset('css/reports.css')}}" type="text/css">
+</head>
+<body>
+
+    <h3 class="report_title">{{ trans('invoice_aging') }}</h3>
+
+    <table>
+        <tr>
+            <th>{{ trans('client') }}</th>
+            <th class="amount">{{ trans('invoice_aging_1_15') }}</th>
+            <th class="amount">{{ trans('invoice_aging_16_30') }}</th>
+            <th class="amount">{{ trans('invoice_aging_above_30') }}</th>
+            <th class="amount">{{ trans('total') }}</th>
+        </tr>
+<?php
+foreach ($results as $result) {
+    }}
+        <tr>
+            <td>{{ htmlspecialchars(format_client($result))}}</td>
+            <td class="amount">{{ echo format_currency($result->range_1)}}</td>
+            <td class="amount">{{ echo format_currency($result->range_2)}}</td>
+            <td class="amount">{{ echo format_currency($result->range_3)}}</td>
+            <td class="amount">{{ echo format_currency($result->total_balance)}}</td>
+        </tr>
+<?php
+}
+    }}
+    </table>
+
+</body>
+</html>

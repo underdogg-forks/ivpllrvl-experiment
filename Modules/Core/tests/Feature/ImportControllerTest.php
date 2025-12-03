@@ -351,7 +351,7 @@ class ImportControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('import.delete', ['id' => $import->import_id]));
+        $response = $this->get(route('import.delete', ['import_id' => $import->import_id]));
 
         /* Assert */
         $response->assertRedirect(route('import.index'));
@@ -370,7 +370,7 @@ class ImportControllerTest extends FeatureTestCase
     public function it_requires_authentication_for_delete(): void
     {
         /** Act */
-        $response = $this->get(route('import.delete', ['id' => 1]));
+        $response = $this->get(route('import.delete', ['import_id' => 1]));
 
         /* Assert */
         $response->assertRedirect(route('sessions.login'));
@@ -389,7 +389,7 @@ class ImportControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('import.delete', ['id' => $nonexistentId]));
+        $response = $this->get(route('import.delete', ['import_id' => $nonexistentId]));
 
         /* Assert */
         // Should redirect even if import doesn't exist
@@ -408,7 +408,7 @@ class ImportControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('import.delete', ['id' => 'invalid']));
+        $response = $this->get(route('import.delete', ['import_id' => 'invalid']));
 
         /* Assert */
         // Should handle gracefully

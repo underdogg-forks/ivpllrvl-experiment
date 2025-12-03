@@ -141,7 +141,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('email_templates.form', ['id' => $template->email_template_id]));
+        $response = $this->get(route('email_templates.form', ['email_template_id' => $template->email_template_id]));
 
         /* Assert */
         $response->assertOk();
@@ -218,7 +218,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('email_templates.form', ['id' => $template->email_template_id]), $updateData);
+        $response = $this->post(route('email_templates.form', ['email_template_id' => $template->email_template_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('email_templates.index'));
@@ -276,7 +276,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('email_templates.delete', ['id' => $template->email_template_id])
+            route('email_templates.delete', ['email_template_id' => $template->email_template_id])
         );
 
         /* Assert */
@@ -306,7 +306,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('email_templates.delete', ['id' => 99999])
+            route('email_templates.delete', ['email_template_id' => 99999])
         );
 
         /* Assert */
@@ -325,7 +325,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('email_templates.form', ['id' => 99999]));
+        $response = $this->get(route('email_templates.form', ['email_template_id' => 99999]));
 
         /* Assert */
         $response->assertNotFound();
@@ -540,7 +540,7 @@ class EmailTemplatesControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('email_templates.delete', ['id' => 'invalid'])
+            route('email_templates.delete', ['email_template_id' => 'invalid'])
         );
 
         /* Assert */

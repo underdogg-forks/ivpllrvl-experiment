@@ -1,0 +1,40 @@
+@extends('core::layouts.app')
+
+@section('content')
+<div id="headerbar" class="flex flex-wrap justify-between items-center mb-4">
+    <h1 class="headerbar-title text-xl font-bold">{{ trans('invoice_aging') }}</h1>
+</div>
+
+<div id="content">
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div class="md:col-span-6 md:col-start-4">
+
+            @include('core::layout.alerts')
+
+            <div id="report_options" class="fi-section">
+
+                <div class="fi-section-header">
+                    <i class="fa fa-print"></i>
+                    {{ trans('report_options') }}
+                </div>
+
+                <div class="fi-section-body p-4">
+                    <form method="post" action="{{ route('dashboard.index') }}"
+                        {{ get_setting('reports_in_new_tab', false) ? 'target="_blank"' : '' }}>
+
+                        @csrf
+
+                        <input type="submit" class="fi-btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600"
+                               name="btn_submit" value="{{ trans('run_report') }}">
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+@endsection

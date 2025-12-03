@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="robots" content="NOINDEX,NOFOLLOW">
 
-    <title>{{ get_setting('custom_title', 'InvoicePlane', true) }} - {{ trans('login') }}</title>
+    <title>{{ get_setting('custom_title', 'InvoicePlane', true) }}</title>
 
     @vite([
         'resources/assets/core/css/style-tailwind.css',
@@ -30,27 +30,32 @@
         loadDarkMode();
     </script>
 </head>
-<body class="fi-body fi-panel-admin">
-<div class="container">
-    <div id="login" class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 mx-auto py-8">
-        @if (! empty($login_logo))
-            <img src="{{ asset('uploads/'.$login_logo) }}" alt="logo" class="login-logo img-responsive mx-auto block mb-6" />
-        @else
-            <h1 class="text-2xl font-semibold text-center mb-6">{{ get_setting('custom_title', 'InvoicePlane', true) }} — {{ trans('login') }}</h1>
-        @endif
+<body class="fi-body fi-fi-section-admin bg-gray-50 dark:bg-gray-900" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        @include('core::components.layouts.app.sidebar')
 
-        {{-- alerts / messages --}}
-        <div class="mb-4">
-            @includeWhen(View::exists('core::layout.alerts'), 'core::layout.alerts')
-        </div>
+        <!-- Main Content Area -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            @include('core::components.layouts.app.header')
 
-        {{-- main slot --}}
-        <div>
-            @yield('content')
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                <div class="container mx-auto px-4 py-6">
+                    {{-- Alerts / Messages --}}
+                    @includeWhen(View::exists('core::layout.alerts'), 'core::layout.alerts')
+
+                    {{-- Main Content --}}
+                    @yield('content')
+                </div>
+            </main>
         </div>
     </div>
-</div>
 
-@stack('scripts')
+    <!-- Modal Placeholder -->
+    <div id="modal-placeholder"></div>
+
+    @stack('scripts')
 </body>
 </html>

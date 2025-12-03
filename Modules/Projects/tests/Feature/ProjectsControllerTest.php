@@ -145,7 +145,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->get(route('projects.form', ['id' => $project->project_id]));
+        $response = $this->get(route('projects.form', ['project_id' => $project->project_id]));
 
         /* Assert */
         $response->assertOk();
@@ -184,7 +184,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.form', ['id' => $project->project_id]), $updateData);
+        $response = $this->post(route('projects.form', ['project_id' => $project->project_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('projects.index'));
@@ -373,7 +373,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.form', ['id' => $project->project_id]), $updateData);
+        $response = $this->post(route('projects.form', ['project_id' => $project->project_id]), $updateData);
 
         /* Assert */
         $response->assertSessionHasErrors(['project_status']);
@@ -407,7 +407,7 @@ class ProjectsControllerTest extends FeatureTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $response = $this->get(route('projects.form', ['id' => $nonexistentId]));
+        $response = $this->get(route('projects.form', ['project_id' => $nonexistentId]));
 
         /* Assert */
         $response->assertNotFound();
@@ -568,7 +568,7 @@ class ProjectsControllerTest extends FeatureTestCase
         ];
 
         /** Act */
-        $response = $this->post(route('projects.form', ['id' => $project->project_id]), $updateData);
+        $response = $this->post(route('projects.form', ['project_id' => $project->project_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('projects.index'));

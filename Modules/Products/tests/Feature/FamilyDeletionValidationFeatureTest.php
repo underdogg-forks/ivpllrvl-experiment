@@ -28,7 +28,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         $family = Family::factory()->create(['family_name' => 'Empty Family']);
 
         /** Act */
-        $response = $this->post(route('families.delete', ['id' => $family->family_id]));
+        $response = $this->post(route('families.delete', ['family_id' => $family->family_id]));
 
         /* Assert */
         $response->assertRedirect(route('families.index'));
@@ -47,7 +47,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         Product::factory()->create(['family_id' => $family->family_id]);
 
         /** Act */
-        $response = $this->post(route('families.delete', ['id' => $family->family_id]));
+        $response = $this->post(route('families.delete', ['family_id' => $family->family_id]));
 
         /* Assert */
         $response->assertRedirect(route('families.index'));
@@ -66,7 +66,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         Product::factory()->count(3)->create(['family_id' => $family->family_id]);
 
         /** Act */
-        $response = $this->post(route('families.delete', ['id' => $family->family_id]));
+        $response = $this->post(route('families.delete', ['family_id' => $family->family_id]));
 
         /* Assert */
         $response->assertRedirect(route('families.index'));
@@ -84,7 +84,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         $invalidId = -1;
 
         /** Act */
-        $response = $this->post(route('families.delete', ['id' => $invalidId]));
+        $response = $this->post(route('families.delete', ['family_id' => $invalidId]));
 
         /* Assert */
         $response->assertRedirect(route('families.index'));
@@ -101,7 +101,7 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $response = $this->post(route('families.delete', ['id' => $nonexistentId]));
+        $response = $this->post(route('families.delete', ['family_id' => $nonexistentId]));
 
         /* Assert */
         $response->assertRedirect(route('families.index'));
@@ -119,14 +119,14 @@ class FamilyDeletionValidationFeatureTest extends FeatureTestCase
         $product = Product::factory()->create(['family_id' => $family->family_id]);
 
         // Initially cannot delete
-        $response1 = $this->post(route('families.delete', ['id' => $family->family_id]));
+        $response1 = $this->post(route('families.delete', ['family_id' => $family->family_id]));
         $response1->assertSessionHas('alert_error');
 
         // Remove product
         $product->delete();
 
         /** Act */
-        $response2 = $this->post(route('families.delete', ['id' => $family->family_id]));
+        $response2 = $this->post(route('families.delete', ['family_id' => $family->family_id]));
 
         /* Assert */
         $response2->assertRedirect(route('families.index'));

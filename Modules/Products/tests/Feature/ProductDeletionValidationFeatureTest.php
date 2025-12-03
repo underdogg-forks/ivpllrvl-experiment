@@ -36,7 +36,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response = $this->post(route('products.delete', ['product_id' => $product->product_id]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -73,7 +73,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response = $this->post(route('products.delete', ['product_id' => $product->product_id]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -107,7 +107,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response = $this->post(route('products.delete', ['product_id' => $product->product_id]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -142,7 +142,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response = $this->post(route('products.delete', ['product_id' => $product->product_id]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -172,7 +172,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         }
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response = $this->post(route('products.delete', ['product_id' => $product->product_id]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -193,7 +193,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         $invalidId = -1;
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $invalidId]));
+        $response = $this->post(route('products.delete', ['product_id' => $invalidId]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -213,7 +213,7 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $response = $this->post(route('products.delete', ['id' => $nonexistentId]));
+        $response = $this->post(route('products.delete', ['product_id' => $nonexistentId]));
 
         /* Assert */
         $response->assertRedirect(route('products.index'));
@@ -239,14 +239,14 @@ class ProductDeletionValidationFeatureTest extends FeatureTestCase
         ]);
 
         // Initially cannot delete
-        $response1 = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response1 = $this->post(route('products.delete', ['product_id' => $product->product_id]));
         $response1->assertSessionHas('alert_error');
 
         // Remove the invoice item
         $item->delete();
 
         /** Act */
-        $response2 = $this->post(route('products.delete', ['id' => $product->product_id]));
+        $response2 = $this->post(route('products.delete', ['product_id' => $product->product_id]));
 
         /* Assert */
         $response2->assertRedirect(route('products.index'));

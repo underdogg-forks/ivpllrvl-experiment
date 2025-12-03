@@ -80,7 +80,7 @@ class FamiliesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('families.form', ['id' => $family->family_id]));
+        $response = $this->get(route('families.form', ['family_id' => $family->family_id]));
 
         /* Assert */
         $response->assertOk();
@@ -150,7 +150,7 @@ class FamiliesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('families.form', ['id' => $family->family_id]), $updateData);
+        $response = $this->post(route('families.form', ['family_id' => $family->family_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('families.index'));
@@ -269,7 +269,7 @@ class FamiliesControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('families.delete', ['id' => $family->family_id]),
+            route('families.delete', ['family_id' => $family->family_id]),
             $deletePayload
         );
 

@@ -100,7 +100,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('payment_methods.form', ['id' => $paymentMethod->payment_method_id]));
+        $response = $this->get(route('payment_methods.form', ['payment_method_id' => $paymentMethod->payment_method_id]));
 
         /* Assert */
         $response->assertOk();
@@ -170,7 +170,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('payment_methods.form', ['id' => $paymentMethod->payment_method_id]), $updateData);
+        $response = $this->post(route('payment_methods.form', ['payment_method_id' => $paymentMethod->payment_method_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('payment_methods.index'));
@@ -289,7 +289,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('payment_methods.delete', ['id' => $paymentMethod->payment_method_id]),
+            route('payment_methods.delete', ['payment_method_id' => $paymentMethod->payment_method_id]),
             $deletePayload
         );
 
@@ -324,7 +324,7 @@ class PaymentMethodsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('payment_methods.delete', ['id' => 99999]),
+            route('payment_methods.delete', ['payment_method_id' => 99999]),
             $deletePayload
         );
 

@@ -104,7 +104,7 @@ class CustomValuesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_values.form', ['id' => $customValue->custom_value_id]));
+        $response = $this->get(route('custom_values.form', ['custom_values_id' => $customValue->custom_value_id]));
 
         /* Assert */
         $response->assertOk();
@@ -184,7 +184,7 @@ class CustomValuesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('custom_values.form', ['id' => $customValue->custom_value_id]), $updateData);
+        $response = $this->post(route('custom_values.form', ['custom_values_id' => $customValue->custom_value_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('custom_values.index'));
@@ -247,7 +247,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('custom_values.delete', ['id' => $customValue->custom_value_id]),
+            route('custom_values.delete', ['custom_values_id' => $customValue->custom_value_id]),
             $deletePayload
         );
 
@@ -282,7 +282,7 @@ class CustomValuesControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('custom_values.delete', ['id' => 99999]),
+            route('custom_values.delete', ['custom_values_id' => 99999]),
             $deletePayload
         );
 
@@ -302,7 +302,7 @@ class CustomValuesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom_values.form', ['id' => 99999]));
+        $response = $this->get(route('custom_values.form', ['custom_values_id' => 99999]));
 
         /* Assert */
         $response->assertNotFound();

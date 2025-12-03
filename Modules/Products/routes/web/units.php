@@ -5,6 +5,6 @@ use Modules\Products\Controllers\UnitsController;
 
 Route::middleware('web')->group(function () {
     Route::get('units', [UnitsController::class, 'index'])->name('units.index');
-    Route::get('units/form', [UnitsController::class, 'form'])->name('units.form');
-    Route::post('units/delete', [UnitsController::class, 'delete'])->name('units.delete');
+    Route::get('units/form/{unit_id?}', [UnitsController::class, 'form'])->name('units.form');
+    Route::post('units/delete/{unit_id}', [UnitsController::class, 'delete'])->name('units.delete');
 });

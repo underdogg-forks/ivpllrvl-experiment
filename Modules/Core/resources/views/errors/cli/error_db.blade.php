@@ -1,0 +1,5 @@
+
+Database error: {{ $heading }}
+
+{{ $message }}
+

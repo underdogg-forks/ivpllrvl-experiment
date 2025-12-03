@@ -30,7 +30,7 @@
         loadDarkMode();
     </script>
 </head>
-<body class="fi-body fi-panel-admin">
+<body class="fi-body fi-fi-section-admin">
 <div class="container">
     <div id="login" class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 mx-auto py-8">
         @if (! empty($login_logo))

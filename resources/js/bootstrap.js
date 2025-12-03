@@ -1,9 +1,8 @@
 import axios from "axios";
-import Alpine from "alpinejs";
+
 window.axios = axios;
 
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-window.Alpine = Alpine;
-
-Alpine.start();
+// Alpine.js is provided by Filament and initialized automatically
+// No need to import or start Alpine separately
