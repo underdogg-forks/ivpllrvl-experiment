@@ -14,6 +14,6 @@ Route::middleware('web')->group(function () {
     Route::get('users', [UsersController::class, 'index'])->name('users.index');
     Route::get('users/form/{user_id?}', [UsersController::class, 'form'])->name('users.form');
     Route::get('users/change-password', [UsersController::class, 'changePassword'])->name('users.change-password');
-    Route::post('users/delete', [UsersController::class, 'delete'])->name('users.delete');
+    Route::post('users/delete/{user_id}', [UsersController::class, 'delete'])->name('users.delete');
     Route::post('users/delete-user-client', [UsersController::class, 'deleteUserClient'])->name('users.delete-user-client');
 });

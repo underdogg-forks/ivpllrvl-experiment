@@ -8,7 +8,7 @@ Route::middleware('web')->group(function () {
     Route::get('payments/add', [PaymentsAjaxController::class, 'add'])->name('payments.add');
     Route::get('payments/modal-add-payment', [PaymentsAjaxController::class, 'modalAddPayment'])->name('payments.modal-add-payment');
     Route::get('payments', [PaymentsController::class, 'index'])->name('payments.index');
-    Route::get('payments/form', [PaymentsController::class, 'form'])->name('payments.form');
+    Route::get('payments/form/{payment_id?}', [PaymentsController::class, 'form'])->name('payments.form');
     Route::get('payments/online-logs', [PaymentsController::class, 'onlineLogs'])->name('payments.online-logs');
-    Route::post('payments/delete', [PaymentsController::class, 'delete'])->name('payments.delete');
+    Route::post('payments/delete/{payment_id}', [PaymentsController::class, 'delete'])->name('payments.delete');
 });
