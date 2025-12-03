@@ -1,0 +1,105 @@
+<script>
+    $(function () {
+        // Display the create invoice modal
+        $('#modal-choose-items').modal('show');
+
+        var selectedTasks = [];
+        $('.item-task-id').each(function () {
+            var currentVal = $(this).val();
+            if (currentVal.length) {
+                selectedTasks.push(parseInt(currentVal));
+            }
+        });
+
+        var hiddenTasks = 0;
+        $('.modal-task-id').each(function () {
+            var currentId = parseInt($(this).attr('id').replace('task-id-', ''));
+            if (selectedTasks.indexOf(currentId) !== -1) {
+//                $('#task-id-' + currentId).prop('disabled', true);
+                $('#task-id-' + currentId).parent().parent().hide();
+                hiddenTasks++;
+            }
+        });
+
+        if (hiddenTasks >= $('.task-row').length) {
+            $('#task-modal-submit').hide();
+        }
+
+        // Creates the invoice item
+        $('.select-items-confirm').click(function () {
+            var task_ids = [];
+
+            $("input[name='task_ids[]']:checked").each(function () {
+                task_ids.push(parseInt($(this).val()));
+            });
+            // No Check No post
+            if ( ! task_ids.length) return; // todo: why not animate checkboxes
+
+            $.post("{{ route('tasks.ajax.process_task_selections') }}", {
+                task_ids: task_ids
+            }, function (data) {
+                var items = json_parse(data, {{ (int) config('app.debug') }});
+                for (var key in items) {
+                    // Set default tax rate id if empty
+                    if (!items[key].tax_rate_id) items[key].tax_rate_id = '{{ $default_item_tax_rate }}';
+
+                    if ($('#item_table .item:last input[name=item_name]').val() !== '') {
+                        $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();
+                    }
+
+                    var last_item_row = $('#item_table .item:last');
+
+                    last_item_row.find('input[name=item_task_id]').val(items[key].task_id);
+                    last_item_row.find('input[name=item_name]').val(items[key].task_name);
+                    last_item_row.find('textarea[name=item_description]').val(items[key].task_description);
+                    last_item_row.find('input[name=item_price]').val(items[key].task_price);
+                    last_item_row.find('input[name=item_quantity]').val('1');
+                    last_item_row.find('select[name=item_tax_rate_id]').val(items[key].tax_rate_id);
+
+                    $('#modal-choose-items').modal('hide');
+                    $('#invoice_change_client').hide();
+
+                    // Legacy:no: check items tax usage is correct (ReLoad on change) - since 1.6.3
+                    check_items_tax_usages();
+                }
+            });
+        });
+
+        // Toggle checkbox when click on row
+        $('#tasks_table tr').click(function (event) {
+            if (event.target.type !== 'checkbox') {
+                $(':checkbox', this).trigger('click');
+            }
+        });
+
+    });
+</script>
+
+<div id="modal-choose-items" class="modal grid grid-cols-1 sm:grid-cols-10 sm:col-start-2 md:grid-cols-8 md:col-start-3"
+     role="dialog" aria-labelledby="modal-choose-items" aria-hidden="true">
+    <form class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+        <div class="modal-header px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h4 class="panel-title text-lg font-semibold">{{ trans('add_task') }}</h4>
+            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+        </div>
+
+        <div class="modal-body p-4">
+            @include('crm::clients.partial_task_table_modal')
+        </div>
+
+        <div class="modal-footer px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div class="btn-group flex gap-2">
+                <button id="task-modal-submit" class="select-items-confirm btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600" type="button">
+                    <i class="fa fa-check"></i>
+                    {{ trans('submit') }}
+                </button>
+                <button class="btn btn-danger inline-flex items-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600" type="button" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                    {{ trans('cancel') }}
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

@@ -1,57 +1,39 @@
 @php
-    $completed = env('SETUP_COMPLETED') ? '' : ' hidden';
-    $disabled = env('DISABLE_SETUP') ? ' hidden' : '';
+$completed = env_bool('SETUP_COMPLETED') ? '' : ' hidden';
+$disabled  = env_bool('DISABLE_SETUP') ? ' hidden' : '';
 @endphp
-    <!doctype html>
-
-<!--[if lt IE 7]>
-<html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>
-<html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>
-<html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en"> <!--<![endif]-->
+<!doctype html>
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="utf-8">
-
-    <!-- Use the .htaccess and remove these lines to avoid edge case issues -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <title>{{ 'test' }}</title>
-
-    <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+    <title>{{ get_setting('custom_title', 'InvoicePlane', true) }}</title>
     <meta name="viewport" content="width=device-width">
-
-    <link rel="icon" href="{{-- _core_asset('img/favicon.png') --}}" type="image/png">
-
-    <!-- CSS: implied media=all -->
-    <link rel="stylesheet" href="{{-- _theme_asset('css/welcome.css') --}}" type="text/css">
-    <!-- end CSS-->
+    <link rel="icon" href="{{ asset('assets/core/img/favicon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ asset('assets/invoiceplane/css/welcome.css') }}" type="text/css">
 </head>
-<body>
+<body class="min-h-full">
 
-<div class="container">
+<div class="container mx-auto px-4">
 
-    <div id="content">
-        <div id="logo"><span>InvoicePlane</span></div>
-        <p class="p-4 mb-4 text-cyan-700 dark:text-cyan-200 bg-cyan-100 dark:bg-cyan-900/50 border border-cyan-200 dark:border-cyan-800 rounded-lg text-center {{ $completed ? '' : ' hidden' }}>
+    <div id="content" class="text-center py-8">
+        <div id="logo" class="text-6xl font-bold mb-6"><span>InvoicePlane</span></div>
+        <p class="alert alert-info bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-3 rounded mb-4{{ $completed ? '' : ' hidden' }}">
             Please install InvoicePlane.<br/>
-            <span class=" text-muted">Bitte installiere InvoicePlane.</span><br />
-        <span class="text-muted">S'il vous plaît installer InvoicePlane</span><br />
-        <span class="text-muted">Por favor, instale InvoicePlane</span><br />
+            <span class="text-muted">Bitte installiere InvoicePlane.</span><br/>
+            <span class="text-muted">S'il vous plaît installer InvoicePlane</span><br/>
+            <span class="text-muted">Por favor, instale InvoicePlane</span><br/>
         </p>
 
-        <div class="-group inline-flex rounded-md shadow-sm -justified">
-            <a href="#" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors {{ $completed }}>
-                <i class=" fa fa-user"></i> Enter
+        <div class="btn-group btn-group-justified flex gap-2 justify-center">
+            <a href="{{ route('dashboard') }}" class="btn btn-default inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50{{ $completed }}">
+                <i class="fa fa-user"></i> Enter
             </a>
-            <a href="{{ url('setup') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors {{ $disabled }}>
-                <i class=" fa fa-cogs"></i> Setup
+            <a href="{{ route('setup.index') }}" class="btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700{{ $disabled }}">
+                <i class="fa fa-cogs"></i> Setup
             </a>
-            <a href="https://wiki.invoiceplane.com/"
-               class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 dark:bg-cyan-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-cyan-700 dark:hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors">
+            <a href="https://wiki.invoiceplane.com/" class="btn btn-info inline-flex items-center gap-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700">
                 <i class="fa fa-info-circle"></i> Get Help
             </a>
         </div>
