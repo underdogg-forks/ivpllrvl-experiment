@@ -15,16 +15,16 @@
         // Creates the invoice
         $('#create_recurring_confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("<?php echo site_url('invoices/ajax/create_recurring'); ?>", {
-                    invoice_id: <?php echo $invoice_id; ?>,
+            $.post("{{ route('invoices.ajax.create-recurring') }}", {
+                    invoice_id: {{ $invoice_id }},
                     recur_start_date: $('#recur_start_date').val(),
                     recur_end_date: $('#recur_end_date').val(),
                     recur_frequency: $('#recur_frequency').val()
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
-                        window.location = "<?php echo site_url('invoices/view'); ?>/<?php echo $invoice_id; ?>";
+                        window.location = "{{ route('invoices.view', $invoice_id) }}";
                     }
                     else {
                         // The validation was not successful
@@ -38,7 +38,7 @@
         });
 
         function get_recur_start_date() {
-            $.post("<?php echo site_url('invoices/ajax/get_recur_start_date'); ?>", {
+            $.post("{{ route('invoices.ajax.get-recur-start-date') }}", {
                     invoice_date: $('#invoice_date_created').val(),
                     recur_frequency: $('#recur_frequency').val()
                 },
@@ -61,11 +61,11 @@
             <div class="form-group">
                 <label for="recur_frequency">{{ trans('every') }}</label>
                 <select name="recur_frequency" id="recur_frequency" class="form-control simple-select">
-                    <?php foreach ($recur_frequencies as $key => $lang) { ?>
-                        <option value="<?php echo $key; ?>">
-                            <?php _trans($lang); ?>
+                    @foreach ($recur_frequencies as $key => $lang)
+                        <option value="{{ $key }}">
+                            {{ trans($lang) }}
                         </option>
-                    <?php } ?>
+                    @endforeach
                 </select>
             </div>
 
@@ -81,7 +81,7 @@
             </div>
 
             <div class="form-group has-feedback">
-                <label for="recur_end_date">{{ trans('end_date') }} (<?php echo trans('optional'); ?>)</label>
+                <label for="recur_end_date">{{ trans('end_date') }} ({{ trans('optional') }})</label>
 
                 <div class="input-group">
                     <input name="recur_end_date" id="recur_end_date"

@@ -6,26 +6,26 @@
         // Select2 for all select inputs
         $(".simple-select").select2();
 
-        <?php $this->layout->load_view('clients/script_select2_client_id.js'); ?>
+        @include('crm::script_select2_client_id.js')
 
         // Creates the invoice
         $('#copy_invoice_confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("<?php echo site_url('invoices/ajax/copy_invoice'); ?>", {
+            $.post("{{ route('invoices.ajax.copy-invoice') }}", {
                     legacy_calculation: legacy_calculation, // Automatic. From meta (see script)
-                    invoice_id: <?php echo $invoice_id; ?>,
+                    invoice_id: {{ $invoice_id }},
                     client_id: $('#client_id').val(),
                     user_id: $('#user_id').val(),
                     invoice_date_created: $('#invoice_date_created_modal').val(),
                     invoice_group_id: $('#invoice_group_id').val(),
                     invoice_password: $('#invoice_password').val(),
-                    invoice_time_created: '<?php echo date('H:i:s') ?>',
+                    invoice_time_created: '{{ date('H:i:s') }}',
                     payment_method: $('#payment_method').val()
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
-                        window.location = "<?php echo site_url('invoices/view'); ?>/" + response.invoice_id;
+                        window.location = "{{ route('invoices.view', '') }}/" + response.invoice_id;
                     }
                     else {
                         // The validation was not successful
@@ -51,22 +51,22 @@
         </div>
         <div class="modal-body">
 
-            <input type="hidden" name="user_id" id="user_id" value="<?php echo $invoice->user_id; ?>">
+            <input type="hidden" name="user_id" id="user_id" value="{{ $invoice->user_id }}">
             <input type="hidden" name="payment_method" id="payment_method" class="form-control"
-                   value="<?php echo $invoice->payment_method; ?>">
+                   value="{{ $invoice->payment_method }}">
             <input class="hidden" id="input_permissive_search_clients"
-                   value="<?php echo get_setting('enable_permissive_search_clients'); ?>">
+                   value="{{ get_setting('enable_permissive_search_clients') }}">
 
             <div class="form-group has-feedback">
                 <label for="client_id">{{ trans('client') }}</label>
                 <div class="input-group">
                     <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
-                        <i class="fa fa-toggle-<?php echo get_setting('enable_permissive_search_clients') ? 'on' : 'off' ?> fa-fw" ></i>
+                        <i class="fa fa-toggle-{{ get_setting('enable_permissive_search_clients') ? 'on' : 'off' }} fa-fw" ></i>
                     </span>
                     <select name="client_id" id="client_id" class="client-id-select form-control" autofocus="autofocus" required="required">
-<?php if ( ! empty($client)) : ?>
-                        <option value="<?php echo $client->client_id; ?>"><?php _htmlsc(format_client($client, false)); ?></option>
-<?php endif; ?>
+                        @if (!empty($client))
+                            <option value="{{ $client->client_id }}">{{ format_client($client, false) }}</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -76,7 +76,7 @@
 
                 <div class="input-group">
                     <input name="invoice_date_created_modal" id="invoice_date_created_modal" class="form-control datepicker"
-                           value="<?php echo date_from_mysql(date('Y-m-d', time()), true) ?>">
+                           value="{{ date_from_mysql(date('Y-m-d', time()), true) }}">
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
                     </span>
@@ -86,19 +86,19 @@
             <div class="form-group">
                 <label for="invoice_password">{{ trans('invoice_password') }}</label>
                 <input type="text" name="invoice_password" id="invoice_password" class="form-control"
-                       value="<?php echo get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') ?>"
+                       value="{{ get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') }}"
                        style="margin: 0 auto;" autocomplete="off">
             </div>
 
             <div class="form-group">
                 <label for="invoice_group_id">{{ trans('invoice_group') }}: </label>
                 <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
-                    <?php foreach ($invoice_groups as $invoice_group) { ?>
-                        <option value="<?php echo $invoice_group->invoice_group_id; ?>"
-                            <?php check_select(get_setting('default_invoice_group'), $invoice_group->invoice_group_id); ?>>
-                            <?php _htmlsc($invoice_group->invoice_group_name); ?>
+                    @foreach ($invoice_groups as $invoice_group)
+                        <option value="{{ $invoice_group->invoice_group_id }}"
+                            {{ get_setting('default_invoice_group') == $invoice_group->invoice_group_id ? 'selected' : '' }}>
+                            {{ $invoice_group->invoice_group_name }}
                         </option>
-                    <?php } ?>
+                    @endforeach
                 </select>
             </div>
 
