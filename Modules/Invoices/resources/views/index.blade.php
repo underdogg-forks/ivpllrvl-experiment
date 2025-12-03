@@ -1,3 +1,6 @@
+@extends('core::layouts.app')
+
+@section('content')
 <div id="headerbar">
 
     <h1 class="headerbar-title">{{ trans('invoices') }}</h1>
@@ -91,3 +94,4 @@
         @include('invoices::partial_invoice_table')
     </div>
 </div>
+@endsection

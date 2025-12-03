@@ -1,4 +1,4 @@
-@extends('core::components.layouts.app')
+@extends('core::layouts.app')
 
 @section('content')
 <script src="{{ asset('assets/core/js/zxcvbn.js') }}"></script>
