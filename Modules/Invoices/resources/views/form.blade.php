@@ -1,10 +1,10 @@
 <form method="post">
 
-    <?php _csrf_field(); ?>
+    @csrf
 
     <div id="headerbar">
         <h1 class="headerbar-title">{{ trans('invoice_group_form') }}</h1>
-        <?php $this->layout->load_view('layout/header_buttons'); ?>
+        @include('core::header_buttons')
     </div>
 
     <div id="content">
@@ -12,14 +12,14 @@
         <div class="row">
             <div class="col-xs-12 col-md-6 col-md-offset-3">
 
-                <?php $this->layout->load_view('layout/alerts'); ?>
+                @include('core::alerts')
 
                 <div class="form-group">
                     <label class="control-label" for="invoice_group_name">
                         {{ trans('name') }}
                     </label>
                     <input type="text" name="invoice_group_name" id="invoice_group_name" class="form-control"
-                           value="<?php echo $this->mdl_invoice_groups->form_value('invoice_group_name', true); ?>" required>
+                           value="{{ old('invoice_group_name', $invoice_group->invoice_group_name ?? '') }}" required>
                 </div>
 
                 <div class="form-group">
@@ -28,7 +28,7 @@
                     </label>
                     <input type="text" class="form-control taggable"
                            name="invoice_group_identifier_format" id="invoice_group_identifier_format"
-                           value="<?php echo $this->mdl_invoice_groups->form_value('invoice_group_identifier_format', true); ?>"
+                           value="{{ old('invoice_group_identifier_format', $invoice_group->invoice_group_identifier_format ?? '') }}"
                            placeholder="INV-{{{id}}}" required>
                 </div>
 
@@ -37,7 +37,7 @@
                         {{ trans('next_id') }}
                     </label>
                     <input type="number" name="invoice_group_next_id" id="invoice_group_next_id" class="form-control"
-                           value="<?php echo $this->mdl_invoice_groups->form_value('invoice_group_next_id'); ?>" required>
+                           value="{{ old('invoice_group_next_id', $invoice_group->invoice_group_next_id ?? '') }}" required>
                 </div>
 
                 <div class="form-group">
@@ -45,7 +45,7 @@
                         {{ trans('left_pad') }}
                     </label>
                     <input type="number" name="invoice_group_left_pad" id="invoice_group_left_pad" class="form-control"
-                           value="<?php echo $this->mdl_invoice_groups->form_value('invoice_group_left_pad'); ?>" required>
+                           value="{{ old('invoice_group_left_pad', $invoice_group->invoice_group_left_pad ?? '') }}" required>
                 </div>
 
                 <hr>
