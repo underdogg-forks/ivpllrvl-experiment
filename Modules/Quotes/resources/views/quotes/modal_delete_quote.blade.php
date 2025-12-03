@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('delete_quote') }}</h4>
+            <h4 class="fi-section-title">{{ trans('delete_quote') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -15,10 +15,10 @@
                 @csrf
 
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-danger ajax-loader">
+                    <button type="submit" class="fi-btn-danger ajax-loader">
                         <i class="fa fa-trash-o fa-margin"></i> {{ trans('confirm_deletion') }}
                     </button>
-                    <a href="#" class="btn btn-default" data-dismiss="modal">
+                    <a href="#" class="fi-btn-secondary" data-dismiss="modal">
                         <i class="fa fa-times"></i> {{ trans('cancel') }}
                     </a>
                 </div>

@@ -12,12 +12,12 @@
 
             @include('core::layout.alerts')
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="fi-section">
+                <div class="fi-section-header">
                     <h5 class="font-semibold">{{ trans('import_from_csv') }}</h5>
                 </div>
 
-                <div class="panel-body p-4">
+                <div class="fi-section-body p-4">
                     <form method="post" action="{{ route('import.index') }}">
 
                         @csrf
@@ -29,7 +29,7 @@
                             </label>
                         </div>
 @endforeach
-                        <input type="submit" class="btn btn-default inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 mt-4" name="btn_submit" value="{{ trans('import') }}">
+                        <input type="submit" class="fi-btn-secondary inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 mt-4" name="btn_submit" value="{{ trans('import') }}">
 
                     </form>
                 </div>

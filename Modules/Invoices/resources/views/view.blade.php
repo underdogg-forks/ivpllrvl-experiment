@@ -254,7 +254,7 @@ if ($change_user) {
     <div class="headerbar-item pull-right{{ ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) ? ' btn-group' : '' }}">
 
         <div class="options btn-group btn-group-sm">
-            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="fi-btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-caret-down no-margin"></i> {{ trans('options') }}
             </a>
             <ul class="dropdown-menu">
@@ -342,7 +342,7 @@ if ($einvoice->user) {
         </div>
 
 @if($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4)
-        <a href="#" class="btn btn-sm btn-success ajax-loader" id="btn_save_invoice">
+        <a href="#" class="btn fi-size-sm fi-btn-success ajax-loader" id="btn_save_invoice">
             <i class="fa fa-check"></i> {{ trans('save') }}
         </a>
 <?php
@@ -406,7 +406,7 @@ if ($invoice->is_read_only == 1) {
                 <div class="col-xs-12 visible-xs"><br></div>
 
                 <div class="col-xs-12 col-sm-5 col-sm-offset-1 col-md-6 col-md-offset-1">
-                    <div class="details-box panel panel-default panel-body">
+                    <div class="details-box fi-section fi-section-body">
                         <div class="row">
 <?php
 if ($invoice->invoice_sign == -1) {
@@ -444,7 +444,7 @@ if ($invoice->invoice_sign == -1) {
                                     </label>
 @endforeach
                                     <label for="invoice_number">{{ trans('invoice') }} #</label>
-                                    <input type="text" id="invoice_number" class="form-control"
+                                    <input type="text" id="invoice_number" class="fi-input"
 <?php if ($invoice->invoice_number) : ?>
                                            value="{{ $invoice->invoice_number }}"
 <?php else : ?>
@@ -460,7 +460,7 @@ if ($invoice->invoice_sign == -1) {
 
                                     <div class="input-group">
                                         <input name="invoice_date_created" id="invoice_date_created"
-                                               class="form-control datepicker"
+                                               class="fi-input datepicker"
                                                value="{{ date_from_mysql($invoice->invoice_date_created) }}"
                                                {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                         <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
@@ -472,7 +472,7 @@ if ($invoice->invoice_sign == -1) {
 
                                     <div class="input-group">
                                         <input name="invoice_date_due" id="invoice_date_due"
-                                               class="form-control datepicker"
+                                               class="fi-input datepicker"
                                                value="{{ date_from_mysql($invoice->invoice_date_due) }}"
                                                {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                         <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
@@ -490,7 +490,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 } ?>
                                     </label>
                                     <select name="invoice_status_id" id="invoice_status_id"
-                                            class="form-control simple-select" data-minimum-results-for-search="Infinity"
+                                            class="fi-input simple-select" data-minimum-results-for-search="Infinity"
                                             {{ ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : '' }}
                                     >
 <?php
@@ -507,7 +507,7 @@ foreach ($invoice_statuses as $key => $status) {
                                 <div class="invoice-properties">
                                     <label>{{ trans('payment_method') }}</label>
                                     <select name="payment_method" id="payment_method"
-                                            class="form-control simple-select"
+                                            class="fi-input simple-select"
                                             {{ ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : '' }}
                                     >
                                         <option value="0">{{ trans('select_payment_method') }}</option>
@@ -524,7 +524,7 @@ foreach ($invoice_statuses as $key => $status) {
 
                                 <div class="invoice-properties">
                                     <label>{{ trans('invoice_password') }}</label>
-                                    <input type="text" id="invoice_password" class="form-control"
+                                    <input type="text" id="invoice_password" class="fi-input"
                                            value="<?php _htmlsc($invoice->invoice_password); ?>"
                                            {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                 </div>
@@ -546,10 +546,10 @@ foreach ($custom_fields as $custom_field) {
 
 @if($invoice->invoice_status_id != 1)
                             <div class="col-xs-12">
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                                     <div class="input-group">
-                                        <input type="text" id="invoice-guest-url" readonly class="form-control"
+                                        <input type="text" id="invoice-guest-url" readonly class="fi-input"
                                                value="{{ route('guest.view', ['invoice_url_key' => $invoice->invoice_url_key]) ?>">
                                         <span class="input-group-addon to-clipboard cursor-pointer"
                                               data-clipboard-target="#invoice-guest-url">
@@ -577,12 +577,12 @@ foreach ($custom_fields as $custom_field) {
             <div class="row">
                 <div class="col-xs-12 col-md-6">
 
-                    <div class="panel panel-default no-margin">
-                        <div class="panel-heading">
+                    <div class="fi-section no-margin">
+                        <div class="fi-section-header">
                             {{ trans('invoice_terms') }}
                         </div>
-                        <div class="panel-body">
-                            <textarea id="invoice_terms" name="invoice_terms" class="form-control" rows="3"
+                        <div class="fi-section-body">
+                            <textarea id="invoice_terms" name="invoice_terms" class="fi-input" rows="3"
                                       {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                             ><?php _htmlsc($invoice->invoice_terms); ?></textarea>
                         </div>
@@ -604,9 +604,9 @@ foreach ($custom_fields as $custom_field) {
 
                     <hr>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{{ trans('custom_fields') }}</div>
-                        <div class="panel-body">
+                    <div class="fi-section">
+                        <div class="fi-section-header">{{ trans('custom_fields') }}</div>
+                        <div class="fi-section-body">
                             <div class="row">
 <?php
         $classes = ['control-label', 'controls', '', 'form-group col-xs-12 col-sm-6'];

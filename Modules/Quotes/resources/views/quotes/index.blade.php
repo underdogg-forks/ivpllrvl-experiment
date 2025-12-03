@@ -12,7 +12,7 @@
                 <i class="fa fa-bars"></i> @lang('submenu')
             </button>
 
-            <a class="fi-btn fi-btn-primary"
+            <a class="fi-btn-primary"
                href="{{ route('quotes.ajax.modal.create') }}">
                 <i class="fa fa-plus"></i> @lang('new')
             </a>

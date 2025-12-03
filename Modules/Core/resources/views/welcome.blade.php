@@ -27,13 +27,13 @@ $disabled  = env_bool('DISABLE_SETUP') ? ' hidden' : '';
         </p>
 
         <div class="btn-group btn-group-justified flex gap-2 justify-center">
-            <a href="{{ route('dashboard.index') }}" class="btn btn-default inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50{{ $completed }}">
+            <a href="{{ route('dashboard.index') }}" class="fi-btn-secondary inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50{{ $completed }}">
                 <i class="fa fa-user"></i> Enter
             </a>
-            <a href="{{ route('setup.index') }}" class="btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700{{ $disabled }}">
+            <a href="{{ route('setup.index') }}" class="fi-btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700{{ $disabled }}">
                 <i class="fa fa-cogs"></i> Setup
             </a>
-            <a href="https://wiki.invoiceplane.com/" class="btn btn-info inline-flex items-center gap-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700">
+            <a href="https://wiki.invoiceplane.com/" class="fi-btn-info inline-flex items-center gap-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700">
                 <i class="fa fa-info-circle"></i> Get Help
             </a>
         </div>

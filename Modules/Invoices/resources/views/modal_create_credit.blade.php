@@ -36,11 +36,11 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('create_credit_invoice') }}</h4>
+            <h4 class="fi-section-title">{{ trans('create_credit_invoice') }}</h4>
         </div>
         <div class="modal-body">
 
-            <input type="hidden" name="user_id" id="user_id" class="form-control"
+            <input type="hidden" name="user_id" id="user_id" class="fi-input"
                    value="{{ $invoice->user_id }}">
 
             <input type="hidden" name="parent_id" id="parent_id"
@@ -56,9 +56,9 @@
             <input type="hidden" name="invoice_date_created" id="invoice_date_created"
                    value="{{ $credit_date }}">
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="invoice_password">{{ trans('invoice_password') }}</label>
-                <input type="text" name="invoice_password" id="invoice_password" class="form-control"
+                <input type="text" name="invoice_password" id="invoice_password" class="fi-input"
                        value="{{ get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') }}"
                        style="margin: 0 auto;" autocomplete="off">
             </div>
@@ -98,10 +98,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="btn btn-success" id="create-credit-confirm" type="button">
+                <button class="fi-btn-success" id="create-credit-confirm" type="button">
                     <i class="fa fa-check"></i> {{ trans('confirm') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

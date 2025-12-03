@@ -1,21 +1,21 @@
 <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="fi-section">
+            <div class="fi-section-header">
                 {{ trans('taxes') }}
             </div>
-            <div class="panel-body">
+            <div class="fi-section-body">
 
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
 
-                        <div class="form-group">
+                        <div class="fi-field-wrp">
                             <label for="settings[default_invoice_tax_rate]">
                                 {{ trans('default_invoice_tax_rate') }}
                             </label>
                             <select name="settings[default_invoice_tax_rate]" id="settings[default_invoice_tax_rate]"
-                                class="form-control simple-select">
+                                class="fi-input simple-select">
                                 <option value="">{{ trans('none') }}</option>
                                 @foreach ($tax_rates as $tax_rate)
                                     <option value="{{ $tax_rate->tax_rate_id }}"
@@ -26,12 +26,12 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <div class="fi-field-wrp">
                             <label for="settings[default_item_tax_rate]">
                                 {{ trans('default_item_tax_rate') }}
                             </label>
                             <select name="settings[default_item_tax_rate]" id="settings[default_item_tax_rate]"
-                                class="form-control simple-select">
+                                class="fi-input simple-select">
                                 <option value="">{{ trans('none') }}</option>
                                 @foreach ($tax_rates as $tax_rate)
                                     <option value="{{ $tax_rate->tax_rate_id }}"
@@ -53,12 +53,12 @@
 @else
 {{-- LEGACY_CALCULATION true : Taxes Global Y, Item Y : Use legacy calculation for Discounts & Taxes : By default in ipconfig. --}}
                     <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
+                        <div class="fi-field-wrp">
                             <label for="settings[default_include_item_tax]">
                                 {{ trans('default_invoice_tax_rate_placement') }}
                             </label>
                             <select name="settings[default_include_item_tax]" id="settings[default_include_item_tax]"
-                                class="form-control simple-select" data-minimum-results-for-search="Infinity">
+                                class="fi-input simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="">{{ trans('none') }}</option>
                                 <option value="0" {{ get_setting('default_include_item_tax') == '0' ? 'selected' : '' }}>
                                     {{ trans('apply_before_item_tax') }}

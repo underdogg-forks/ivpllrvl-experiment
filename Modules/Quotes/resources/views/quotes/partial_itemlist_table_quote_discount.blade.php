@@ -10,7 +10,7 @@ $currency = get_setting('currency_symbol');
         <div class="discount-field">
             <div class="input-group input-group-sm">
                 <input id="quote_discount_amount" name="quote_discount_amount"
-                       class="discount-option form-control amount"
+                       class="discount-option fi-input amount"
                        aria-label="{{ trans('global_discount') }}"
                        value="{{ $discount_amount }}">
                 <span class="input-group-addon">{{ $currency }}</span>
@@ -22,7 +22,7 @@ $currency = get_setting('currency_symbol');
                 <input id="quote_discount_percent" name="quote_discount_percent"
                        aria-label="{{ trans('global_discount') }} %"
                        value="{{ $discount_percent }}"
-                       class="discount-option form-control amount">
+                       class="discount-option fi-input amount">
                 <span class="input-group-addon">%</span>
             </div>
         </div>

@@ -11,19 +11,19 @@
             @method('PUT')
         @endif
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="task_name">{{ trans('task_name') }} *</label>
             <input type="text"
                    name="task_name"
                    id="task_name"
-                   class="form-control"
+                   class="fi-input"
                    value="{{ $task->task_name ?? '' }}"
                    required>
         </div>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="project_id">{{ trans('project') }}</label>
-            <select name="project_id" id="project_id" class="form-control">
+            <select name="project_id" id="project_id" class="fi-input">
                 <option value="">{{ trans('select_project') }}</option>
                 @if (isset($projects))
                     @foreach ($projects as $project)
@@ -36,9 +36,9 @@
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="task_status">{{ trans('status') }}</label>
-            <select name="task_status" id="task_status" class="form-control">
+            <select name="task_status" id="task_status" class="fi-input">
                 @if (isset($task_statuses))
                     @foreach ($task_statuses as $status_id => $status)
                         <option value="{{ $status_id }}"
@@ -50,20 +50,20 @@
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="task_finish_date">{{ trans('finish_date') }}</label>
             <input type="date"
                    name="task_finish_date"
                    id="task_finish_date"
-                   class="form-control"
+                   class="fi-input"
                    value="{{ $task->task_finish_date ?? '' }}">
         </div>
 
-        <div class="form-group">
-            <button type="submit" class="fi-btn fi-btn-primary">
+        <div class="fi-field-wrp">
+            <button type="submit" class="fi-btn-primary">
                 <i class="fa fa-save"></i> {{ trans('save') }}
             </button>
-            <a href="{{ route('tasks.index') }}" class="btn btn-default">
+            <a href="{{ route('tasks.index') }}" class="fi-btn-secondary">
                 <i class="fa fa-times"></i> {{ trans('cancel') }}
             </a>
         </div>

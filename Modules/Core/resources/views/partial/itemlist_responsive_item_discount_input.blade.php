@@ -9,7 +9,7 @@ $currency_symbol = get_setting('currency_symbol'); // You can also move this to 
     <label for="item_discount_amount_{{ $item_id }}" class="input-group-addon ig-addon-aligned">
         {{ trans('discount') }}
     </label>
-    <input type="text" name="item_discount_amount" id="item_discount_amount_{{ $item_id }}" class="form-control"
+    <input type="text" name="item_discount_amount" id="item_discount_amount_{{ $item_id }}" class="fi-input"
            value="{{ $item_value }}" {!! $invoice_disabled !!}
            data-toggle="tooltip" data-placement="bottom" title="{{ trans('item_discount') }}">
     <div class="input-group-addon">

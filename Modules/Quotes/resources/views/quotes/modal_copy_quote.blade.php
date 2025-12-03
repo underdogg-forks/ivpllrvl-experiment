@@ -44,7 +44,7 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('copy_quote') }}</h4>
+            <h4 class="fi-section-title">{{ trans('copy_quote') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -53,13 +53,13 @@
             <input class="hidden" id="input_permissive_search_clients"
                    value="{{ get_setting('enable_permissive_search_clients') }}">
 
-            <div class="form-group has-feedback">
+            <div class="fi-field-wrp has-feedback">
                 <label for="client_id">{{ trans('client') }}</label>
                 <div class="input-group">
                     <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
                         <i class="fa fa-toggle-{{ get_setting('enable_permissive_search_clients') ? 'on' : 'off' }} fa-fw" ></i>
                     </span>
-                    <select name="client_id" id="client_id" class="client-id-select form-control" autofocus="autofocus">
+                    <select name="client_id" id="client_id" class="client-id-select fi-input" autofocus="autofocus">
                         @if (!empty($client))
                             <option value="{{ $client->client_id }}">{{ format_client($client, false) }}</option>
                         @endif
@@ -67,11 +67,11 @@
                 </div>
             </div>
 
-            <div class="form-group has-feedback">
+            <div class="fi-field-wrp has-feedback">
                 <label for="quote_date_created_modal">{{ trans('quote_date') }}</label>
                 <div class="input-group">
                     <input name="quote_date_created_modal" id="quote_date_created_modal"
-                           class="form-control datepicker"
+                           class="fi-input datepicker"
                            value="{{ date_from_mysql(date('Y-m-d', time()), true) }}">
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
@@ -79,9 +79,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="invoice_group_id">{{ trans('invoice_group') }}</label>
-                <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
+                <select name="invoice_group_id" id="invoice_group_id" class="fi-input simple-select">
                     @foreach ($invoice_groups as $invoice_group)
                         <option value="{{ $invoice_group->invoice_group_id }}"
                             {{ get_setting('default_quote_group') != $invoice_group->invoice_group_id ? '' : 'selected="selected"' }}>
@@ -95,10 +95,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="fi-btn fi-btn-success" id="copy_quote_confirm" type="button">
+                <button class="fi-btn-success" id="copy_quote_confirm" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="fi-btn fi-btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

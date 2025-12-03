@@ -26,12 +26,12 @@ foreach ($custom_fields as $custom_field) {
                 <td>{{ $custom_field->custom_field_order }}</td>
                 <td>
                     <div class="options btn-group btn-group-sm">
-                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                        <a class="fi-btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
 @if(in_array($custom_field->custom_field_type, $custom_value_fields))
                         <a href="{{ route('custom-values.field', ['custom_field_id' => $custom_field->custom_field_id]) }}"
-                           class="btn btn-default">
+                           class="fi-btn-secondary">
                             <i class="fa fa-list fa-margin"></i> {{ trans('values') }}
                         </a>
 @endif

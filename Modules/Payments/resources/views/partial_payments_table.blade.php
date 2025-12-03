@@ -31,7 +31,7 @@
                 <td>{{ $payment->payment_note }}</td>
                 <td>
                     <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                        <a class="fi-btn-secondary fi-size-sm dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">

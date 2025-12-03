@@ -38,11 +38,11 @@
                 <input type="hidden" name="user_id" id="user_id"
                        value="{{ $user->user_id }}" required>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="fi-section">
+                    <div class="fi-section-header">
                         {{ htmlspecialchars($user->user_name) }}
                     </div>
-                    <div class="panel-body p-4">
+                    <div class="fi-section-body p-4">
 
                         <div class="alert alert-info bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-3 rounded mb-4">
                             <label class="flex items-start gap-2">
@@ -57,7 +57,7 @@
 
                         <div id="list_client">
                             <label for="client_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ trans('client') }}</label>
-                            <select name="client_id" id="client_id" class="form-control simple-select w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                            <select name="client_id" id="client_id" class="fi-input simple-select w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                     autofocus="autofocus" required>
 @foreach($clients as $client)
                                 <option value="{{ $client->client_id }}">{{ htmlspecialchars(format_client($client)) }}</option>

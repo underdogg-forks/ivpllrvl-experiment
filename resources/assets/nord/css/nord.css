@@ -1050,3 +1050,153 @@
         @apply rounded-xl;
     }
 }
+    
+    .fi-badge-lg {
+        @apply px-3 py-1 text-sm;
+    }
+
+}
+
+
+    /* ================================
+     * FILAMENT MODAL/DIALOG COMPONENTS
+     * Enhanced modal styling following Filament design patterns
+     * ================================ */
+    
+    .modal {
+        @apply fixed inset-0 z-50 overflow-y-auto;
+    }
+    
+    .modal-content {
+        @apply relative bg-[var(--color-bg-elevated)] rounded-lg shadow-xl;
+        @apply border border-[var(--color-border)];
+        @apply dark:bg-[var(--color-bg-elevated)] dark:border-[var(--color-border-dark)];
+    }
+    
+    .modal-header {
+        @apply flex items-center justify-between p-4 border-b border-[var(--color-border)];
+        @apply dark:border-[var(--color-border-dark)];
+    }
+    
+    .modal-body {
+        @apply p-4;
+    }
+    
+    .modal-footer {
+        @apply flex items-center justify-end gap-2 p-4 border-t border-[var(--color-border)];
+        @apply dark:border-[var(--color-border-dark)];
+    }
+    
+    /* ================================
+     * FILAMENT DROPDOWN COMPONENTS
+     * Dropdown menus following Filament patterns
+     * ================================ */
+    
+    .fi-dropdown {
+        @apply relative inline-block;
+    }
+    
+    .fi-dropdown-menu {
+        @apply absolute right-0 mt-2 w-56 origin-top-right rounded-md shadow-lg;
+        @apply bg-[var(--color-bg-elevated)] dark:bg-[var(--color-bg-elevated)];
+        @apply border border-[var(--color-border)] dark:border-[var(--color-border-dark)];
+        @apply ring-1 ring-black ring-opacity-5 focus:outline-none;
+    }
+    
+    .fi-dropdown-item {
+        @apply block px-4 py-2 text-sm;
+        @apply text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)];
+        @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
+        @apply transition-colors duration-150;
+    }
+    
+    /* ================================
+     * FILAMENT LIST/TABLE ACTIONS
+     * Action buttons for list items and table rows
+     * ================================ */
+    
+    .fi-action-group {
+        @apply flex items-center gap-1;
+    }
+    
+    .fi-action {
+        @apply inline-flex items-center justify-center p-1.5 rounded-md;
+        @apply text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)];
+        @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
+        @apply hover:text-[var(--color-text-primary)] dark:hover:text-[var(--color-text-primary)];
+        @apply transition-colors duration-150;
+    }
+    
+    .fi-action-danger:hover {
+        @apply text-[var(--brand-danger)] dark:text-[var(--brand-danger)];
+    }
+    
+    /* ================================
+     * FILAMENT LOADING/SPINNER STATES
+     * Loading indicators following Filament patterns
+     * ================================ */
+    
+    .fi-loading {
+        @apply opacity-50 cursor-wait;
+    }
+    
+    .fi-spinner {
+        @apply animate-spin h-5 w-5;
+        border: 2px solid var(--color-border);
+        border-top-color: var(--brand-primary);
+        @apply rounded-full;
+    }
+    
+    /* ================================
+     * FILAMENT TOGGLE/SWITCH COMPONENTS
+     * Toggle switches for boolean inputs
+     * ================================ */
+    
+    .fi-toggle {
+        @apply relative inline-flex h-6 w-11 items-center rounded-full;
+        @apply bg-[var(--color-bg-hover)] dark:bg-[var(--color-bg-hover)];
+        @apply border-2 border-transparent;
+        @apply transition-colors duration-200 ease-in-out;
+        @apply cursor-pointer;
+    }
+    
+    .fi-toggle:checked {
+        @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)];
+    }
+    
+    .fi-toggle-handle {
+        @apply inline-block h-5 w-5 transform rounded-full;
+        @apply bg-white shadow-lg;
+        @apply transition-transform duration-200 ease-in-out;
+    }
+    
+    /* ================================
+     * FILAMENT NOTIFICATION/TOAST COMPONENTS
+     * Toast notifications following Filament patterns
+     * ================================ */
+    
+    .fi-notification {
+        @apply pointer-events-auto w-full max-w-sm rounded-lg shadow-lg;
+        @apply bg-[var(--color-bg-elevated)] dark:bg-[var(--color-bg-elevated)];
+        @apply border border-[var(--color-border)] dark:border-[var(--color-border-dark)];
+        @apply ring-1 ring-black ring-opacity-5;
+    }
+    
+    .fi-notification-success {
+        @apply fi-notification border-l-4 border-l-[var(--brand-success)];
+    }
+    
+    .fi-notification-error {
+        @apply fi-notification border-l-4 border-l-[var(--brand-danger)];
+    }
+    
+    .fi-notification-warning {
+        @apply fi-notification border-l-4 border-l-[var(--brand-warning)];
+    }
+    
+    .fi-notification-info {
+        @apply fi-notification border-l-4 border-l-[var(--brand-info)];
+    }
+
+}
+

@@ -75,13 +75,13 @@
             {!! $logo !!}<br><br>
 @endif
 
-            <div class="form-group mb-4">
+            <div class="fi-field-wrp mb-4">
                 @include('core::layout.alerts', ['without_margin' => true])
             </div>
 
-            <div class="panel panel-default">
+            <div class="fi-section">
 
-                <div class="panel-body p-4">
+                <div class="fi-section-body p-4">
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                         <div class="md:col-span-7">

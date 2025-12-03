@@ -17,28 +17,28 @@ if ($quote_tax_rates) {
         <div class="btn-group btn-group-sm flex gap-2">
 @if(in_array($quote->quote_status_id, [2, 3]))
             <a href="{{ route('guest.approve', $quote->quote_id) }}"
-               class="fi-btn fi-btn-success">
+               class="fi-btn-success">
                 <i class="fa fa-check"></i>
                 {{ trans('approve_this_quote') }}
             </a>
             <a href="{{ route('guest.reject', $quote->quote_id) }}"
-               class="fi-btn fi-btn-danger">
+               class="fi-btn-danger">
                 <i class="fa fa-times-circle"></i>
                 {{ trans('reject_this_quote') }}
             </a>
 @elseif($quote->quote_status_id == 4)
-            <a href="#" class="fi-btn fi-btn-success disabled:opacity-60 disabled:cursor-not-allowed" disabled>
+            <a href="#" class="fi-btn-success disabled:opacity-60 disabled:cursor-not-allowed" disabled>
                 <i class="fa fa-check"></i>
                 {{ trans('quote_approved') }}
             </a>
 @elseif($quote->quote_status_id == 5)
-            <a href="#" class="fi-btn fi-btn-danger disabled:opacity-60 disabled:cursor-not-allowed" disabled>
+            <a href="#" class="fi-btn-danger disabled:opacity-60 disabled:cursor-not-allowed" disabled>
                 <i class="fa fa-times-circle"></i>
                 {{ trans('quote_rejected') }}
             </a>
 @endif
             <a href="{{ route('guest.generate-pdf', $quote_id) }}"
-               class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50" id="btn_generate_pdf" target="_blank">
+               class="fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50" id="btn_generate_pdf" target="_blank">
                 <i class="fa fa-print"></i> {{ trans('download_pdf') }}
             </a>
         </div>

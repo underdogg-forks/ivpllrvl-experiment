@@ -9,23 +9,23 @@
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm index-options">
             <a href="{{ route('guest.status', 'open') }}"
-               class="btn {{ $status == 'open' ? 'btn-primary' : 'btn-default' }}">
+               class="btn {{ $status == 'open' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('open') }}
             </a>
             <a href="{{ route('guest.status', 'approved') }}"
-               class="btn  {{ $status == 'approved' ? 'btn-primary' : 'btn-default' }}">
+               class="btn  {{ $status == 'approved' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('approved') }}
             </a>
             <a href="{{ route('guest.status', 'rejected') }}"
-               class="btn  {{ $status == 'rejected' ? 'btn-primary' : 'btn-default' }}">
+               class="btn  {{ $status == 'rejected' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('rejected') }}
             </a>
             <a href="{{ route('guest.status', 'viewed') }}"
-               class="btn  {{ $status == 'viewed' ? 'btn-primary' : 'btn-default' }}">
+               class="btn  {{ $status == 'viewed' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('viewed') }}
             </a>
             <a href="{{ route('guest.status', 'all') }}"
-               class="btn  {{ $status == 'all' ? 'btn-primary' : 'btn-default' }}">
+               class="btn  {{ $status == 'all' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('all') }}
             </a>
         </div>

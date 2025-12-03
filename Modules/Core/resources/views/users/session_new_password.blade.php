@@ -33,7 +33,7 @@
 
 <div class="container">
 
-    <div id="password_reset" class="panel panel-default panel-body col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+    <div id="password_reset" class="fi-section fi-section-body col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
 
         <h3>{{ trans('set_new_password') }}</h3>
 
@@ -48,15 +48,15 @@
             <input name="token" value="{{ $token }}" class="hidden">
             <input name="user_id" value="{{ $user_id }}" class="hidden">
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="new_password" class="control-label">{{ trans('new_password') }}</label>
-                <input type="password" name="new_password" id="new_password" class="form-control"
+                <input type="password" name="new_password" id="new_password" class="fi-input"
                        placeholder="{{ trans('new_password') }}" required autofocus>
             </div>
 
             <input type="hidden" name="btn_new_password" value="true">
 
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="fi-btn-success">
                 <i class="fa fa-key fa-margin"></i> {{ trans('set_new_password') }}
             </button>
 

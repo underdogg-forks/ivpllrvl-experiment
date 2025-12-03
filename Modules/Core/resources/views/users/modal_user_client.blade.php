@@ -28,13 +28,13 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('add_client') }}</h4>
+            <h4 class="fi-section-title">{{ trans('add_client') }}</h4>
         </div>
         <div class="modal-body">
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="client_id">{{ trans('client') }}</label>
-                <select name="client_id" id="client_id" class="form-control simple-select" autofocus="autofocus">
+                <select name="client_id" id="client_id" class="fi-input simple-select" autofocus="autofocus">
 <?php
                     foreach ($clients as $client) {
                         echo '<option value="' . $client->client_id . '">' . htmlsc(format_client($client)) . '</option>';
@@ -47,10 +47,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="btn btn-success" id="btn_user_client" type="button">
+                <button class="fi-btn-success" id="btn_user_client" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

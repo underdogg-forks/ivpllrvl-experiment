@@ -2,7 +2,7 @@
     <h1 class="headerbar-title">{{ trans('tasks') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="{{ route('tasks.form') }}">
+        <a class="btn fi-size-sm fi-btn-primary" href="{{ route('tasks.form') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
@@ -27,7 +27,7 @@
                     <td>{{ $task->task_status ?? '' }}</td>
                     <td>
                         <a href="{{ route('tasks.form', ['task' => $task->task_id]) }}"
-                           class="btn btn-xs btn-default">
+                           class="btn fi-size-xs fi-btn-secondary">
                             <i class="fa fa-edit"></i> {{ trans('edit') }}
                         </a>
                     </td>

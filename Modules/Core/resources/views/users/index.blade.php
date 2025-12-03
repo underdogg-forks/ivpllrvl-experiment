@@ -5,7 +5,7 @@
     <h1 class="headerbar-title">{{ trans('users') }}</h1>
 
     <div class="headerbar-item">
-        <a class="fi-btn fi-btn-primary" href="{{ route('users.form') }}">
+        <a class="fi-btn-primary" href="{{ route('users.form') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>

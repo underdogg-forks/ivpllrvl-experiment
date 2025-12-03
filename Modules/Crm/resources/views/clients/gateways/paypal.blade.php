@@ -35,13 +35,13 @@
                 <div id="card-error-message"></div>
             </div>
 
-            <div id="card-name-field-container" class="form-group"></div>
-            <div id="card-number-field-container" class="form-group"></div>
-            <div id="card-expiry-field-container" class="form-group"></div>
-            <div id="card-cvv-field-container" class="form-group"></div>
+            <div id="card-name-field-container" class="fi-field-wrp"></div>
+            <div id="card-number-field-container" class="fi-field-wrp"></div>
+            <div id="card-expiry-field-container" class="fi-field-wrp"></div>
+            <div id="card-cvv-field-container" class="fi-field-wrp"></div>
 
             <div class="card-submit-container">
-                <button id="card-submit" type="button" class="fi-btn fi-btn-primary">Process Card Payment</button>
+                <button id="card-submit" type="button" class="fi-btn-primary">Process Card Payment</button>
                 <span id="card-spinner" role="status" aria-live="polite" aria-label="Processing…">
                     <span class="spinner-icon"></span>
                     <span class="spinner-text">Processing…</span>

@@ -9,40 +9,40 @@
 
             <?php $this->layout->load_view('layout/alerts'); ?>
 
-            <div id="report_options" class="panel panel-default">
+            <div id="report_options" class="fi-section">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <i class="fa fa-print fa-margin"></i>
                     {{ trans('report_options') }}
                 </div>
 
-                <div class="panel-body">
+                <div class="fi-section-body">
 
                     <form method="post" action="{{ route($this->uri->uri_string()) }}"
                         {{ get_setting('reports_in_new_tab', false) ? 'target="_blank"' : '' }}>
 
                         <?php _csrf_field(); ?>
 
-                        <div class="form-group has-feedback">
+                        <div class="fi-field-wrp has-feedback">
                             <label for="from_date">
                                 {{ trans('from_date') }}
                             </label>
 
                             <div class="input-group">
-                                <input name="from_date" id="from_date" class="form-control datepicker">
+                                <input name="from_date" id="from_date" class="fi-input datepicker">
                                 <span class="input-group-addon">
                             <i class="fa fa-calendar fa-fw"></i>
                         </span>
                             </div>
                         </div>
 
-                        <div class="form-group has-feedback">
+                        <div class="fi-field-wrp has-feedback">
                             <label for="to_date">
                                 {{ trans('to_date') }}
                             </label>
 
                             <div class="input-group">
-                                <input name="to_date" id="to_date" class="form-control datepicker">
+                                <input name="to_date" id="to_date" class="fi-input datepicker">
                                 <span class="input-group-addon">
                             <i class="fa fa-calendar fa-fw"></i>
                         </span>
@@ -58,7 +58,7 @@
 
                                 <div>
                                     <input type="number" id="minQuantity" name="minQuantity" min="0"
-                                           class="form-control">
+                                           class="fi-input">
                                 </div>
                             </div>
 
@@ -69,12 +69,12 @@
 
                                 <div>
                                     <input type="number" id="maxQuantity" name="maxQuantity" min="0"
-                                           class="form-control">
+                                           class="fi-input">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="fi-field-wrp">
                             <div class="checkbox">
                                 <label for="checkboxTax">
                                     <input type="checkbox" id="checkboxTax" name="checkboxTax">
@@ -83,7 +83,7 @@
                             </div>
                         </div>
 
-                        <input type="submit" class="btn btn-success" name="btn_submit"
+                        <input type="submit" class="fi-btn-success" name="btn_submit"
                                value="{{ trans('run_report') }}">
 
                     </form>

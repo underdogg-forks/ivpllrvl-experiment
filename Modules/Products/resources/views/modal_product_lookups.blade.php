@@ -121,13 +121,13 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('add_product') }}</h4>
+            <h4 class="fi-section-title">{{ trans('add_product') }}</h4>
         </div>
         <div class="modal-body">
 
             <div class="form-inline">
-                <div class="form-group filter-form">
-                    <select name="filter_family" id="filter_family" class="form-control simple-select">
+                <div class="fi-field-wrp filter-form">
+                    <select name="filter_family" id="filter_family" class="fi-input simple-select">
                         <option value="">{{ trans('any_family') }}</option>
                         @foreach ($families as $family)
                             <option value="{{ $family->family_id }}"
@@ -137,14 +137,14 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="filter_product" id="filter_product"
+                <div class="fi-field-wrp">
+                    <input type="text" class="fi-input" name="filter_product" id="filter_product"
                            placeholder="{{ trans('product_name') }}"
                            value="{{ $filter_product ?? '' }}">
                 </div>
                 <button type="button" id="filter-button"
-                        class="btn btn-default">{{ trans('search_product') }}</button>
-                <button type="button" id="product-reset-button" class="btn btn-default">
+                        class="fi-btn-secondary">{{ trans('search_product') }}</button>
+                <button type="button" id="product-reset-button" class="fi-btn-secondary">
                     {{ trans('reset') }}
                 </button>
             </div>
@@ -158,11 +158,11 @@
         </div>
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="select-items-confirm btn btn-success" type="button">
+                <button class="select-items-confirm fi-btn-success" type="button">
                     <i class="fa fa-check"></i>
                     {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
                     {{ trans('cancel') }}
                 </button>

@@ -136,29 +136,29 @@
 
 <div class="col-xs-12 col-md-8 col-md-offset-2">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="fi-section">
+        <div class="fi-section-header">
             {{ trans('updatecheck') }}
         </div>
-        <div class="panel-body">
+        <div class="fi-section-body">
 
-            <div class="form-group">
-                <input type="text" class="form-control" value="{{ get_setting('current_version') }}" readonly="readonly">
+            <div class="fi-field-wrp">
+                <input type="text" class="fi-input" value="{{ get_setting('current_version') }}" readonly="readonly">
             </div>
             <div id="updatecheck-results">
-                <div id="updatecheck-loading" class="btn btn-default btn-sm disabled">
+                <div id="updatecheck-loading" class="fi-btn-secondary fi-size-sm disabled">
                     <i class="fa fa-circle-o-notch fa-spin"></i> {{ trans('checking_for_updates') }}
                 </div>
 
-                <div id="updatecheck-no-updates" class="btn btn-default btn-sm disabled hidden">
+                <div id="updatecheck-no-updates" class="fi-btn-secondary fi-size-sm disabled hidden">
                     {{ trans('no_updates_available') }}
                 </div>
 
-                <div id="updatecheck-failed" class="btn btn-danger btn-sm disabled hidden">
+                <div id="updatecheck-failed" class="fi-btn-danger fi-size-sm disabled hidden">
                     {{ trans('updatecheck_failed') }}
                 </div>
 
-                <a href="" id="updatecheck-updates-available" class="btn btn-success btn-sm hidden" target="_blank">
+                <a href="" id="updatecheck-updates-available" class="fi-btn-success fi-size-sm hidden" target="_blank">
                     {{ trans('updates_available') }}
                 </a>
             </div>
@@ -166,14 +166,14 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="fi-section">
+        <div class="fi-section-header">
             {{ trans('invoiceplane_news') }}
         </div>
-        <div class="panel-body">
+        <div class="fi-section-body">
 
             <div id="ipnews-results">
-                <div id="ipnews-loading" class="btn btn-default btn-sm disabled">
+                <div id="ipnews-loading" class="fi-btn-secondary fi-size-sm disabled">
                     <i class="fa fa-circle-o-notch fa-spin"></i> {{ trans('checking_for_news') }}
                 </div>
 

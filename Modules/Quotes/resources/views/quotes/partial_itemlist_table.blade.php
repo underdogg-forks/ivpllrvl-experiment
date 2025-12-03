@@ -37,19 +37,19 @@
 
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('item') }}</span>
-                    <input type="text" name="item_name" class="form-control" value="">
+                    <input type="text" name="item_name" class="fi-input" value="">
                 </div>
             </td>
             <td class="td-amount td-quantity">
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('quantity') }}</span>
-                    <input type="text" name="item_quantity" class="form-control amount" value="">
+                    <input type="text" name="item_quantity" class="fi-input amount" value="">
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('price') }}</span>
-                    <input type="text" name="item_price" class="form-control amount" value="">
+                    <input type="text" name="item_price" class="fi-input amount" value="">
                     <div class="input-group-addon">{{ get_setting('currency_symbol') }}</div>
                 </div>
             </td>
@@ -59,7 +59,7 @@
             <td class="td-amount">
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('tax_rate') }}</span>
-                    <select name="item_tax_rate_id" class="form-control">
+                    <select name="item_tax_rate_id" class="fi-input">
                         <option value="0">{{ trans('none') }}</option>
                         @foreach ($tax_rates as $tax_rate)
                             <option value="{{ $tax_rate->tax_rate_id }}">
@@ -73,7 +73,7 @@
                 @include('core::partial.itemlist_table_item_discount_input')
             @endif
             <td class="td-icon text-right td-vert-middle">
-                <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}">
+                <button type="button" class="btn_delete_item fi-link fi-size-sm" title="{{ trans('delete') }}">
                     <i class="fa fa-trash-o text-danger"></i>
                 </button>
             </td>
@@ -82,14 +82,14 @@
             <td class="td-textarea">
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('description') }}</span>
-                    <textarea name="item_description" class="form-control"></textarea>
+                    <textarea name="item_description" class="fi-input"></textarea>
                 </div>
             </td>
             <td class="td-amount">
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('product_unit') }}</span>
                     <select name="item_product_unit_id"
-                            class="form-control">
+                            class="fi-input">
                         <option value="0">{{ trans('none') }}</option>
                         @foreach ($units as $unit)
                             <option value="{{ $unit->unit_id }}">
@@ -131,21 +131,21 @@
 
                         <div class="input-group">
                             <span class="input-group-addon">{{ trans('item') }}</span>
-                            <input type="text" name="item_name" class="form-control"
+                            <input type="text" name="item_name" class="fi-input"
                                    value="{{ $item->item_name }}">
                         </div>
                     </td>
                     <td class="td-amount td-quantity">
                         <div class="input-group">
                             <span class="input-group-addon">{{ trans('quantity') }}</span>
-                            <input type="text" name="item_quantity" class="form-control amount"
+                            <input type="text" name="item_quantity" class="fi-input amount"
                                    value="{{ format_quantity($item->item_quantity) }}">
                         </div>
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
                             <span class="input-group-addon">{{ trans('price') }}</span>
-                            <input type="text" name="item_price" class="form-control amount"
+                            <input type="text" name="item_price" class="fi-input amount"
                                    value="{{ format_amount($item->item_price) }}">
                             <div class="input-group-addon">{{ get_setting('currency_symbol') }}</div>
                         </div>
@@ -156,7 +156,7 @@
                     <td class="td-amount">
                         <div class="input-group">
                             <span class="input-group-addon">{{ trans('tax_rate') }}</span>
-                            <select name="item_tax_rate_id" class="form-control">
+                            <select name="item_tax_rate_id" class="fi-input">
                                 <option value="0">{{ trans('none') }}</option>
                                 @foreach ($tax_rates as $tax_rate)
                                     <option value="{{ $tax_rate->tax_rate_id }}"
@@ -171,7 +171,7 @@
                         @include('core::partial.itemlist_table_item_discount_input', ['item' => $item])
                     @endif
                     <td class="td-icon text-right td-vert-middle">
-                        <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}"
+                        <button type="button" class="btn_delete_item fi-link fi-size-sm" title="{{ trans('delete') }}"
                                 data-item-id="{{ $item->item_id }}">
                             <i class="fa fa-trash-o text-danger"></i>
                         </button>
@@ -181,14 +181,14 @@
                     <td class="td-textarea">
                         <div class="input-group">
                             <span class="input-group-addon">{{ trans('description') }}</span>
-                            <textarea name="item_description" class="form-control">{{ $item->item_description }}</textarea>
+                            <textarea name="item_description" class="fi-input">{{ $item->item_description }}</textarea>
                         </div>
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
                             <span class="input-group-addon">{{ trans('product_unit') }}</span>
                             <select name="item_product_unit_id"
-                                    class="form-control">
+                                    class="fi-input">
                                 <option value="0">{{ trans('none') }}</option>
                                 @foreach ($units as $unit)
                                     <option value="{{ $unit->unit_id }}"
@@ -235,11 +235,11 @@
 <div class="row">
     <div class="col-xs-12 col-md-4">
         <div class="btn-group">
-            <a href="javascript:void(0);" class="btn_add_row btn btn-sm btn-default">
+            <a href="javascript:void(0);" class="btn_add_row btn fi-size-sm fi-btn-secondary">
                 <i class="fa fa-plus"></i>
                 {{ trans('add_new_row') }}
             </a>
-            <a href="javascript:void(0);" class="btn_add_product btn btn-sm btn-default">
+            <a href="javascript:void(0);" class="btn_add_product btn fi-size-sm fi-btn-secondary">
                 <i class="fa fa-database"></i>
                 {{ trans('add_product') }}
             </a>
@@ -270,7 +270,7 @@
                                 <form method="POST" class="form-inline"
                                       action="{{ route('quotes.delete_tax', [$quote->quote_id, $quote_tax_rate->quote_tax_rate_id]) }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-xs btn-link" onclick="var Y=confirm('{{ trans('delete_tax_warning') }}');if(Y)show_loader();return Y;">
+                                    <button type="submit" class="btn fi-size-xs fi-btn-link" onclick="var Y=confirm('{{ trans('delete_tax_warning') }}');if(Y)show_loader();return Y;">
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                     <span class="text-muted">

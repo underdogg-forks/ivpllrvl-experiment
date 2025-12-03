@@ -12,13 +12,13 @@
 <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="fi-section">
+            <div class="fi-section-header">
                 {{ trans('online_payments') }}
             </div>
-            <div class="panel-body">
+            <div class="fi-section-body">
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <div class="checkbox">
                         <label>
                             <input type="hidden" name="settings[enable_online_payments]" value="0">
@@ -29,11 +29,11 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="online-payment-select">
                         {{ trans('add_payment_provider') }}
                     </label>
-                    <select id="online-payment-select" class="form-control">
+                    <select id="online-payment-select" class="fi-input">
                         <option value="">{{ trans('none') }}</option>
                         <?php foreach ($gateway_drivers as $driver => $fields) {
                             $d = mb_strtolower($driver);
@@ -53,9 +53,9 @@
             $d = mb_strtolower($driver);
             ?>
             <div id="gateway-settings-{{ $d }}"
-                class="gateway-settings panel panel-default {{ get_setting('gateway_' . $d . '_enabled') ? 'active-gateway' : 'hidden' }}">
+                class="gateway-settings fi-section {{ get_setting('gateway_' . $d . '_enabled') ? 'active-gateway' : 'hidden' }}">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     {{ ucwords(str_replace('_', ' ', $driver)) }}
                     <div class="pull-right">
                         <div class="checkbox no-margin">
@@ -70,7 +70,7 @@
                     </div>
                 </div>
 
-                <div class="panel-body small">
+                <div class="fi-section-body small">
 
                     @foreach($fields as $key => $setting)
                         @if($setting['type'] == 'checkbox')
@@ -86,11 +86,11 @@
                             </div>
 
                         @else
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <label for="settings[gateway_{{ $d }}_{{ $key ?>]">
                                     <?php _trans('online_payment_' . $key, '', $setting['label']) }}
                                 </label>
-                                <input type="{{ $setting['type'] }}" class="form-control"
+                                <input type="{{ $setting['type'] }}" class="fi-input"
                                     name="settings[gateway_{{ $d }}_{{ $key ?>]"
                                     id="settings[gateway_<?php echo $d }}_{{ $key ?>]"
                                     @if($setting['type'] == 'password')
@@ -109,13 +109,13 @@
                     @endif
                     <hr>
 
-                    <div class="form-group">
+                    <div class="fi-field-wrp">
                         <label for="settings[gateway_<?php echo $d }}_currency]">
                             {{ trans('currency') }}
                         </label>
                         <select name="settings[gateway_{{ $d }}_currency]"
                             id="settings[gateway_{{ $d }}_currency]"
-                            class="form-control simple-select">
+                            class="fi-input simple-select">
                             @foreach($gateway_currency_codes as $val => $key)
                                 <option value="{{ $val }}"
                                     {{ get_setting('gateway_' . $d . '_currency') ?: get_setting('currency_code') == $val ? 'selected' : '' }}>
@@ -125,13 +125,13 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="fi-field-wrp">
                         <label for="settings[gateway_{{ $d }}_payment_method]">
                             {{ trans('online_payment_method') }}
                         </label>
                         <select name="settings[gateway_{{ $d }}_payment_method]"
                             id="settings[gateway_{{ $d }}_payment_method]"
-                            class="form-control simple-select">
+                            class="fi-input simple-select">
                             <option value="">{{ trans('none') }}</option>
                             @foreach($payment_methods as $payment_method)
                                 <option value="{{ $payment_method->payment_method_id }}"

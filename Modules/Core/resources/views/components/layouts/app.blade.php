@@ -30,7 +30,7 @@
         loadDarkMode();
     </script>
 </head>
-<body class="fi-body fi-panel-admin bg-gray-50 dark:bg-gray-900" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
+<body class="fi-body fi-fi-section-admin bg-gray-50 dark:bg-gray-900" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         @include('core::components.layouts.app.sidebar')

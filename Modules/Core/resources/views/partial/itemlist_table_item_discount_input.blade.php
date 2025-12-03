@@ -6,7 +6,7 @@ $item_value       = isset($item->item_discount_amount) ? format_amount($item->it
             <td class="td-amount">
                 <div class="input-group">
                     <span class="input-group-addon">{{ trans('discount') }}</span>
-                    <input type="text" name="item_discount_amount" class="form-control amount"
+                    <input type="text" name="item_discount_amount" class="fi-input amount"
                            value="{{ $item_value }}"{{ $invoice_disabled }}
                            data-toggle="tooltip" data-placement="bottom" title="{{ trans('item_discount') }}">
                     <span class="input-group-addon">{{ get_setting('currency_symbol') . ' ' . trans('per_item') }}</span>

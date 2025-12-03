@@ -2,7 +2,7 @@
     <h1 class="headerbar-title">{{ trans('projects') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="{{ route('projects.create') }}">
+        <a class="btn fi-size-sm fi-btn-primary" href="{{ route('projects.create') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
@@ -29,7 +29,7 @@
                     <td>{{ $project->client->client_name ?? '' }}</td>
                     <td>
                         <a href="{{ route('projects.edit', ['project' => $project->project_id]) }}"
-                           class="btn btn-xs btn-default">
+                           class="btn fi-size-xs fi-btn-secondary">
                             <i class="fa fa-edit"></i> {{ trans('edit') }}
                         </a>
                     </td>

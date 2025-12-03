@@ -25,17 +25,17 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('add_quote_tax') }}</h4>
+            <h4 class="fi-section-title">{{ trans('add_quote_tax') }}</h4>
         </div>
         <div class="modal-body">
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="tax_rate_id">
                     {{ trans('tax_rate') }}
                 </label>
 
                 <div class="controls">
-                    <select name="tax_rate_id" id="tax_rate_id" class="form-control simple-select" required>
+                    <select name="tax_rate_id" id="tax_rate_id" class="fi-input simple-select" required>
                         <option value="0">{{ trans('none') }}</option>
                         @foreach ($tax_rates as $tax_rate)
                             <option value="{{ $tax_rate->tax_rate_id }}">
@@ -46,13 +46,13 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="include_item_tax">
                     {{ trans('tax_rate_placement') }}
                 </label>
 
                 <div class="controls">
-                    <select name="include_item_tax" id="include_item_tax" class="form-control simple-select" required>
+                    <select name="include_item_tax" id="include_item_tax" class="fi-input simple-select" required>
                         <option value="0">
                             {{ trans('apply_before_item_tax') }}
                         </option>
@@ -67,10 +67,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="fi-btn fi-btn-success" id="quote_tax_submit" type="button">
+                <button class="fi-btn-success" id="quote_tax_submit" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="fi-btn fi-btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

@@ -50,17 +50,17 @@ $permissive = get_setting('enable_permissive_search_' . $who . 's');
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('change_' . $who) }}</h4>
+            <h4 class="fi-section-title">{{ trans('change_' . $who) }}</h4>
         </div>
         <div class="modal-body">
-            <div class="form-group has-feedback">
+            <div class="fi-field-wrp has-feedback">
                 <label for="change_{{ $who }}_id">{{ trans($who) }}</label>
                 <div class="input-group">
                     <span id="toggle_permissive_search_{{ $who }}s" class="input-group-addon"
                           title="{{ trans('enable_permissive_search_' . $who . 's') }}" style="cursor:pointer;">
                         <i class="fa fa-toggle-{{ $permissive ? 'on' : 'off' ?> fa-fw"></i>
                     </span>
-                    <select name="<?php echo $who }}_id" id="change_{{ $who }}_id" class="{{ $who }}-id-select form-control"
+                    <select name="<?php echo $who }}_id" id="change_{{ $who }}_id" class="{{ $who }}-id-select fi-input"
                             autofocus="autofocus" required>
 <?php
 $who_id = ${$who}->{$who_id} ?? $this->input->post($who_id);
@@ -82,10 +82,10 @@ if ($who_id) {
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="btn btn-success ajax_loader" id="{{ $who }}_change_confirm" type="button">
+                <button class="fi-btn-success ajax_loader" id="{{ $who }}_change_confirm" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

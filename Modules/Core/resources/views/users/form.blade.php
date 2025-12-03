@@ -57,59 +57,59 @@ $einvoicingOpt = $einvoicing ? $einvoicingTip . trans('optional') . ')"' : '';
 
                 <div id="userInfo">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{{ trans('account_information') }}</div>
+                    <div class="fi-section">
+                        <div class="fi-section-header">{{ trans('account_information') }}</div>
 
-                        <div class="panel-body">
-                            <div class="form-group">
+                        <div class="fi-section-body">
+                            <div class="fi-field-wrp">
                                 <label for="user_name">{{ trans('name') }}</label>
-                                <input type="text" name="user_name" id="user_name" class="form-control"
+                                <input type="text" name="user_name" id="user_name" class="fi-input"
                                        value="{{ $this->mdl_users->form_value('user_name', true) }}">
                             </div>
 
-                            <div class="form-group"{{ $itsCompany ? $einvoicingB2B : $einvoicingOpt }}>
+                            <div class="fi-field-wrp"{{ $itsCompany ? $einvoicingB2B : $einvoicingOpt }}>
                                 <label for="user_company">{{ trans('company') }} ({{ trans($itsCompany ? 'required_field' : 'optional') }})</label>{{ $qr_code_info }}
-                                <input type="text" name="user_company" id="user_company" class="form-control"
+                                <input type="text" name="user_company" id="user_company" class="fi-input"
                                        value="{{ $this->mdl_users->form_value('user_company', true) }}">
                             </div>
 
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <label for="user_email">{{ trans('email_address') }}</label>
-                                <input type="text" name="user_email" id="user_email" class="form-control"
+                                <input type="text" name="user_email" id="user_email" class="fi-input"
                                        value="{{ $this->mdl_users->form_value('user_email', true) }}" required>
                             </div>
 
 <?php // New user
 if ( ! $id) {
     ?>
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <label for="user_password">
                                     {{ trans('password') }}
                                 </label>
-                                <input type="password" name="user_password" id="user_password" class="form-control" required>
+                                <input type="password" name="user_password" id="user_password" class="fi-input" required>
                             </div>
 
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <label for="user_password">
                                     {{ trans('verify_password') }}
                                 </label>
-                                <input type="password" name="user_passwordv" id="user_passwordv" class="form-control" required>
+                                <input type="password" name="user_passwordv" id="user_passwordv" class="fi-input" required>
                             </div>
 <?php
 } else { // Edit user
     ?>
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <a href="{{ route('users.change-password', ['user_id' => $id]) }}"
-                                   class="btn btn-default">
+                                   class="fi-btn-secondary">
                                     {{ trans('change_password') }}
                                 </a>
                             </div>
 <?php
 }
 ?>
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <label for="user_language">{{ trans('language') }}</label>
-                                <select name="user_language" id="user_language" class="form-control simple-select" required>
+                                <select name="user_language" id="user_language" class="fi-input simple-select" required>
                                     <option value="system">
                                         <?php echo trans('use_system_language') ?>
                                     </option>
@@ -124,9 +124,9 @@ foreach ($languages as $language) {
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="fi-field-wrp">
                                 <label for="user_type">{{ trans('user_type') }}</label>
-                                <select name="user_type" id="user_type" class="form-control simple-select" required>
+                                <select name="user_type" id="user_type" class="fi-input simple-select" required>
 <?php
 $user_type = $this->mdl_users->form_value('user_type');
 foreach ($user_types as $key => $type) {
@@ -142,43 +142,43 @@ foreach ($user_types as $key => $type) {
                     </div>
 
                     <div id="administrator_fields">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">{{ trans('address') }}</div>
+                        <div class="fi-section">
+                            <div class="fi-section-header">{{ trans('address') }}</div>
 
-                            <div class="panel-body">
-                                <div class="form-group"{{ $einvoicingReq }}>
+                            <div class="fi-section-body">
+                                <div class="fi-field-wrp"{{ $einvoicingReq }}>
                                     <label for="user_address_1">{{ trans('street_address') }}</label>
-                                    <input type="text" name="user_address_1" id="user_address_1" class="form-control"
+                                    <input type="text" name="user_address_1" id="user_address_1" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_address_1', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingOpt }}>
+                                <div class="fi-field-wrp"{{ $einvoicingOpt }}>
                                     <label for="user_address_2">{{ trans('street_address_2') }}</label>
-                                    <input type="text" name="user_address_2" id="user_address_2" class="form-control"
+                                    <input type="text" name="user_address_2" id="user_address_2" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_address_2', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingReq }}>
+                                <div class="fi-field-wrp"{{ $einvoicingReq }}>
                                     <label for="user_city">{{ trans('city') }}</label>
-                                    <input type="text" name="user_city" id="user_city" class="form-control"
+                                    <input type="text" name="user_city" id="user_city" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_city', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingOpt }}>
+                                <div class="fi-field-wrp"{{ $einvoicingOpt }}>
                                     <label for="user_state">{{ trans('state') }}</label>
-                                    <input type="text" name="user_state" id="user_state" class="form-control"
+                                    <input type="text" name="user_state" id="user_state" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_state', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingReq }}>
+                                <div class="fi-field-wrp"{{ $einvoicingReq }}>
                                     <label for="user_zip">{{ trans('zip_code') }}</label>
-                                    <input type="text" name="user_zip" id="user_zip" class="form-control"
+                                    <input type="text" name="user_zip" id="user_zip" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_zip', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingReq }}>
+                                <div class="fi-field-wrp"{{ $einvoicingReq }}>
                                     <label for="user_country">{{ trans('country') }}</label>
-                                    <select name="user_country" id="user_country" class="form-control">
+                                    <select name="user_country" id="user_country" class="fi-input">
                                         <option value="">{{ trans('none') }}</option>
 @foreach($countries as $cldr => $country)
                                         <option value="{{ $cldr }}"
@@ -198,19 +198,19 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
                             </div>
                         </div>
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">{{ trans('tax_information') }}</div>
+                        <div class="fi-section">
+                            <div class="fi-section-header">{{ trans('tax_information') }}</div>
 
-                            <div class="panel-body">
-                                <div class="form-group"{{ $itsCompany ? $einvoicingB2B : $einvoicingOpt }}>
+                            <div class="fi-section-body">
+                                <div class="fi-field-wrp"{{ $itsCompany ? $einvoicingB2B : $einvoicingOpt }}>
                                     <label for="user_vat_id">{{ trans('vat_id') }} ({{ trans($itsCompany ? 'required_field' : 'optional') }})</label>
-                                    <input type="text" name="user_vat_id" id="user_vat_id" class="form-control"
+                                    <input type="text" name="user_vat_id" id="user_vat_id" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_vat_id', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingReq }}>
+                                <div class="fi-field-wrp"{{ $einvoicingReq }}>
                                     <label for="user_tax_code">{{ trans('tax_code') }}</label>
-                                    <input type="text" name="user_tax_code" id="user_tax_code" class="form-control"
+                                    <input type="text" name="user_tax_code" id="user_tax_code" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_tax_code', true) }}">
                                 </div>
 
@@ -226,41 +226,41 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
                         </div>
 
                         <!-- eInvoicing -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">{{ trans('bank_information') }}</div>
+                        <div class="fi-section">
+                            <div class="fi-section-header">{{ trans('bank_information') }}</div>
 
-                            <div class="panel-body">
-                                <div class="form-group"{{ $einvoicingOpt }}>
+                            <div class="fi-section-body">
+                                <div class="fi-field-wrp"{{ $einvoicingOpt }}>
                                     <label for="user_bank">{{ trans('bank') }}</label>
-                                    <input type="text" name="user_bank" id="user_bank" class="form-control"
+                                    <input type="text" name="user_bank" id="user_bank" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_bank', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingReq }}>{{ $qr_code_info }}
+                                <div class="fi-field-wrp"{{ $einvoicingReq }}>{{ $qr_code_info }}
                                     <label for="user_iban">{{ 'IBAN' }}</label>
-                                    <input type="text" name="user_iban" id="user_iban" class="form-control"
+                                    <input type="text" name="user_iban" id="user_iban" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_iban', true) }}">
                                 </div>
 
-                                <div class="form-group"{{ $einvoicingOpt }}>{{ $qr_code_info }}
+                                <div class="fi-field-wrp"{{ $einvoicingOpt }}>{{ $qr_code_info }}
                                     <label for="user_bic">{{ 'BIC' }}</label>
                                     <input type="text" name="user_bic" id="user_bic"
-                                           class="form-control"
+                                           class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_bic', true) }}">
                                 </div>
 
-                                <div class="form-group">{{ $qr_code_info }}
+                                <div class="fi-field-wrp">{{ $qr_code_info }}
                                     <label for="user_remittance_text">{{ trans('user_remittance_text') }}</label>
-                                    <input type="text" name="user_remittance_text" id="user_remittance_text" class="form-control taggable"
+                                    <input type="text" name="user_remittance_text" id="user_remittance_text" class="fi-input taggable"
                                            placeholder="{{{invoice_number}}} {{{invoice_date_due}}}"
                                            value="{{ $this->mdl_users->form_value('user_remittance_text', true) }}">
                                 </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
+                                <div class="fi-section">
+                                    <div class="fi-section-header">
                                         {{ trans('qr_code_settings_remittance_text_tags') }}
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="fi-section-body">
                                         <?php $this->layout->load_view('email_templates/template-tags-invoices'); ?>
                                     </div>
                                 </div>
@@ -268,26 +268,26 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
                         </div>
 
 @if($this->mdl_settings->setting('sumex') == '1')
-                        <div class="panel panel-default">
-                            <div class="panel-heading">{{ trans('sumex_information') }}</div>
+                        <div class="fi-section">
+                            <div class="fi-section-header">{{ trans('sumex_information') }}</div>
 
-                            <div class="panel-body">
+                            <div class="fi-section-body">
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_subscribernumber">{{ trans('user_subscriber_number') }}</label>
-                                    <input type="text" name="user_subscribernumber" id="user_subscribernumber" class="form-control"
+                                    <input type="text" name="user_subscribernumber" id="user_subscribernumber" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_subscribernumber', true) }}">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_gln">{{ trans('gln') }}</label>
-                                    <input type="text" name="user_gln" id="user_gln" class="form-control"
+                                    <input type="text" name="user_gln" id="user_gln" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_gln', true) }}">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_rcc">{{ trans('sumex_rcc') }}</label>
-                                    <input type="text" name="user_rcc" id="user_rcc" class="form-control"
+                                    <input type="text" name="user_rcc" id="user_rcc" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_rcc', true) }}">
                                 </div>
                             </div>
@@ -297,38 +297,38 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
 <?php
 } // Endif sumex
 ?>
-                        <div class="panel panel-default">
+                        <div class="fi-section">
 
-                            <div class="panel-heading">{{ trans('contact_information') }}</div>
+                            <div class="fi-section-header">{{ trans('contact_information') }}</div>
 
-                            <div class="panel-body">
-                                <div class="form-group">
+                            <div class="fi-section-body">
+                                <div class="fi-field-wrp">
                                     <label for="user_invoicing_con>tact">{{ trans('contact') }} ({{ trans('invoicing') }})</label>
-                                    <input type="text" name="user_invoicing_contact" id="user_invoicing_contact" class="form-control"
+                                    <input type="text" name="user_invoicing_contact" id="user_invoicing_contact" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_invoicing_contact', true) }}">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_phone">{{ trans('phone_number') }}</label>
-                                    <input type="text" name="user_phone" id="user_phone" class="form-control"
+                                    <input type="text" name="user_phone" id="user_phone" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_phone', true) }}">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_fax">{{ trans('fax_number') }}</label>
-                                    <input type="text" name="user_fax" id="user_fax" class="form-control"
+                                    <input type="text" name="user_fax" id="user_fax" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_fax', true) }}">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_mobile">{{ trans('mobile_number') }}</label>
-                                    <input type="text" name="user_mobile" id="user_mobile" class="form-control"
+                                    <input type="text" name="user_mobile" id="user_mobile" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_mobile', true) }}">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="user_web">{{ trans('web_address') }}</label>
-                                    <input type="text" name="user_web" id="user_web" class="form-control"
+                                    <input type="text" name="user_web" id="user_web" class="fi-input"
                                            value="{{ $this->mdl_users->form_value('user_web', true) }}">
                                 </div>
 <?php
@@ -354,9 +354,9 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
 
                                 <hr>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">{{ trans('custom_fields') }}</div>
-                                    <div class="panel-body">
+                                <div class="fi-section">
+                                    <div class="fi-section-header">{{ trans('custom_fields') }}</div>
+                                    <div class="fi-section-body">
                                         <div class="row">
 <?php
         $classes = ['control-label', 'controls', '', 'form-group col-xs-12 col-sm-6'];

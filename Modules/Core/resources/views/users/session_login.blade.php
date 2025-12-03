@@ -46,26 +46,26 @@
 
             <?php _csrf_field(); ?>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="email" class="control-label">{{ trans('email') }}</label>
-                <input type="email" name="email" id="email" class="form-control"
+                <input type="email" name="email" id="email" class="fi-input"
                        placeholder="{{ trans('email') }}" required autofocus
                 >
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="password" class="control-label">{{ trans('password') }}</label>
-                <input type="password" name="password" id="password" class="form-control"
+                <input type="password" name="password" id="password" class="fi-input"
                        placeholder="{{ trans('password') }}" required
                 >
             </div>
 
             <input type="hidden" name="btn_login" value="true">
 
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="fi-btn-primary">
                 <i class="fa fa-unlock fa-margin"></i> {{ trans('login') }}
             </button>
-            <a href="{{ route('sessions.passwordreset') }}" class="btn btn-default">
+            <a href="{{ route('sessions.passwordreset') }}" class="fi-btn-secondary">
                 {{ trans('forgot_your_password') }}
             </a>
 

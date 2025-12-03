@@ -5,7 +5,7 @@
     <h1 class="headerbar-title">{{ trans('import_data') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="{{ route('import.form') }}">
+        <a class="btn fi-size-sm fi-btn-primary" href="{{ route('import.form') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
@@ -46,7 +46,7 @@
                     <td>{{ $import->num_payments }}</td>
                     <td>
                         <div class="options btn-group btn-group-sm">
-                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="fi-btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>
                             <ul class="dropdown-menu">
