@@ -2,14 +2,14 @@
     <h1 class="headerbar-title">{{ trans('payments') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('guest/payments/index'), $payments); ?>
+        {!! $payments->links() !!}
     </div>
 
 </div>
 
 <div id="content" class="table-content">
 
-    <?php $this->layout->load_view('layout/alerts'); ?>
+    @include('core::alerts')
 
     <div id="filter_results">
         <div class="table-responsive">
@@ -26,19 +26,19 @@
                 </thead>
 
                 <tbody>
-                <?php foreach ($payments as $payment) { ?>
+                @foreach ($payments as $payment)
                     <tr>
-                        <td><?php echo date_from_mysql($payment->payment_date); ?></td>
+                        <td>{{ date_from_mysql($payment->payment_date) }}</td>
                         <td>
-                            <a href="<?php echo site_url('guest/invoices/view/' . $payment->invoice_id); ?>">
-                                <?php echo $payment->invoice_number; ?>
+                            <a href="{{ route('guest.invoices.view', $payment->invoice_id) }}">
+                                {{ $payment->invoice_number }}
                             </a>
                         </td>
-                        <td><?php echo format_currency($payment->payment_amount); ?></td>
-                        <td><?php echo $payment->payment_method_name; ?></td>
-                        <td><?php _htmlsc($payment->payment_note); ?></td>
+                        <td>{{ format_currency($payment->payment_amount) }}</td>
+                        <td>{{ $payment->payment_method_name }}</td>
+                        <td>{{ $payment->payment_note }}</td>
                     </tr>
-                <?php } ?>
+                @endforeach
                 </tbody>
 
             </table>
