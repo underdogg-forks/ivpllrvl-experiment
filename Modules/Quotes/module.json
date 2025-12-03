@@ -1,9 +1,9 @@
 {
     "name": "Quotes",
     "alias": "quotes",
-    "description": "Quotes module for managing quotes",
+    "description": "",
     "keywords": [],
-    "priority": 5,
+    "priority": 0,
     "providers": [
         "Modules\\Quotes\\Providers\\QuotesServiceProvider"
     ],

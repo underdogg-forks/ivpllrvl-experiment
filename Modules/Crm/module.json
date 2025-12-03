@@ -1,9 +1,9 @@
 {
     "name": "Crm",
     "alias": "crm",
-    "description": "CRM module for managing clients and customer relationships",
+    "description": "",
     "keywords": [],
-    "priority": 6,
+    "priority": 0,
     "providers": [
         "Modules\\Crm\\Providers\\CrmServiceProvider"
     ],

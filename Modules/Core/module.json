@@ -1,9 +1,9 @@
 {
     "name": "Core",
     "alias": "core",
-    "description": "Core module containing settings, dashboard, layout and setup",
+    "description": "",
     "keywords": [],
-    "priority": 1,
+    "priority": 0,
     "providers": [
         "Modules\\Core\\Providers\\CoreServiceProvider"
     ],

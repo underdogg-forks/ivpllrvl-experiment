@@ -13,13 +13,13 @@ use Modules\Quotes\Controllers\QuotesController;
 // Index routes
 Route::get('/quotes', [QuotesController::class, 'index'])->name('quotes.index');
 Route::get('/quotes/index', [QuotesController::class, 'index']);
-Route::get('/quotes/status/all', [QuotesController::class, 'status'])->defaults('status', 'all')->name('quotes.status');
-Route::get('/quotes/status/approved', [QuotesController::class, 'status'])->defaults('status', 'approved');
-Route::get('/quotes/status/canceled', [QuotesController::class, 'status'])->defaults('status', 'canceled');
-Route::get('/quotes/status/draft', [QuotesController::class, 'status'])->defaults('status', 'draft');
-Route::get('/quotes/status/rejected', [QuotesController::class, 'status'])->defaults('status', 'rejected');
-Route::get('/quotes/status/sent', [QuotesController::class, 'status'])->defaults('status', 'sent');
-Route::get('/quotes/status/viewed', [QuotesController::class, 'status'])->defaults('status', 'viewed');
+Route::get('/quotes/status/all', [QuotesController::class, 'status'])->defaults('status', 'all')->name('quotes.status.all');
+Route::get('/quotes/status/approved', [QuotesController::class, 'status'])->defaults('status', 'approved')->name('quotes.status.approved');
+Route::get('/quotes/status/canceled', [QuotesController::class, 'status'])->defaults('status', 'canceled')->name('quotes.status.canceled');
+Route::get('/quotes/status/draft', [QuotesController::class, 'status'])->defaults('status', 'draft')->name('quotes.status.draft');
+Route::get('/quotes/status/rejected', [QuotesController::class, 'status'])->defaults('status', 'rejected')->name('quotes.status.rejected');
+Route::get('/quotes/status/sent', [QuotesController::class, 'status'])->defaults('status', 'sent')->name('quotes.status.sent');
+Route::get('/quotes/status/viewed', [QuotesController::class, 'status'])->defaults('status', 'viewed')->name('quotes.status.viewed');
 
 // View routes
 Route::get('/quotes/view/{quote_id}', [QuotesController::class, 'view'])->name('quotes.view');
@@ -33,7 +33,7 @@ Route::post('/quotes/delete_tax/{quote_id}/{quote_tax_rate_id}', [QuotesControll
 Route::post('/quotes/recalculate_all', [QuotesController::class, 'recalculateAllQuotes'])->name('quotes.recalculate_all');
 
 // AJAX routes
-Route::get('/quotes/generate_pdf/{id}', [QuotesAjaxController::class, 'generatePdf'])->name('quotes.generate_pdf');
+Route::get('/quotes/generate_pdf/{quote_id}', [QuotesController::class, 'generatePdf'])->name('quotes.generate_pdf');
 Route::post('/quotes/ajax/save', [QuotesAjaxController::class, 'save'])->name('quotes.ajax.save');
 Route::post('/quotes/ajax/create', [QuotesAjaxController::class, 'create'])->name('quotes.ajax.create');
 Route::post('/quotes/ajax/save-tax-rate', [QuotesAjaxController::class, 'saveQuoteTaxRate'])->name('quotes.ajax.save_tax_rate');
@@ -45,7 +45,7 @@ Route::post('/quotes/ajax/change-client', [QuotesAjaxController::class, 'changeC
 Route::post('/quotes/ajax/quote-to-invoice', [QuotesAjaxController::class, 'quoteToInvoice'])->name('quotes.ajax.quote_to_invoice');
 
 // Modal routes
-Route::get('/quotes/modal/copy', [QuotesAjaxController::class, 'modalCopyQuote'])->name('quotes.modal.copy');
-Route::get('/quotes/modal/create', [QuotesAjaxController::class, 'modalCreateQuote'])->name('quotes.modal.create');
-Route::get('/quotes/modal/change-user', [QuotesAjaxController::class, 'modalChangeUser'])->name('quotes.modal.change_user');
-Route::get('/quotes/modal/change-client', [QuotesAjaxController::class, 'modalChangeClient'])->name('quotes.modal.change_client');
+Route::get('/quotes/modal/copy', [QuotesAjaxController::class, 'modalCopyQuote'])->name('quotes.ajax.modal.copy');
+Route::get('/quotes/modal/create', [QuotesAjaxController::class, 'modalCreateQuote'])->name('quotes.ajax.modal.create');
+Route::get('/quotes/modal/change-user', [QuotesAjaxController::class, 'modalChangeUser'])->name('quotes.ajax.modal.change_user');
+Route::get('/quotes/modal/change-client', [QuotesAjaxController::class, 'modalChangeClient'])->name('quotes.ajax.modal.change_client');

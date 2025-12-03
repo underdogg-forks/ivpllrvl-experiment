@@ -32,52 +32,32 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => storage_path('app/private'),
+            'serve' => true,
             'throw' => false,
+            'report' => false,
         ],
 
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL') . '/storage',
+            'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'report' => false,
         ],
 
-        'uploads' => [
-            'driver' => 'local',
-            'root' => storage_path('app/uploads'),
+        's3' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
-        ],
-
-        'uploads_archive' => [
-            'driver' => 'local',
-            'root' => storage_path('app/uploads/archive'),
-            'throw' => false,
-        ],
-
-        'uploads_customer_files' => [
-            'driver' => 'local',
-            'root' => storage_path('app/uploads/customer_files'),
-            'throw' => false,
-        ],
-
-        'uploads_import' => [
-            'driver' => 'local',
-            'root' => storage_path('app/uploads/import'),
-            'throw' => false,
-        ],
-
-        'uploads_temp' => [
-            'driver' => 'local',
-            'root' => storage_path('app/uploads/temp'),
-            'throw' => false,
-        ],
-
-        'uploads_temp_mpdf' => [
-            'driver' => 'local',
-            'root' => storage_path('app/uploads/temp/mpdf'),
-            'throw' => false,
+            'report' => false,
         ],
 
     ],

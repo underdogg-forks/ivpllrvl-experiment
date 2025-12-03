@@ -1,10 +1,30 @@
 {
-    "name": "invoiceplane/payments-module",
-    "description": "Payments module for InvoicePlane",
-    "type": "library",
+    "name": "nwidart/payments",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
     "autoload": {
         "psr-4": {
-            "Modules\\Payments\\": ""
+            "Modules\\Payments\\": "src/",
+            "Modules\\Payments\\Database\\Factories\\": "database/factories/",
+            "Modules\\Payments\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Payments\\Tests\\": "tests/"
         }
     }
 }

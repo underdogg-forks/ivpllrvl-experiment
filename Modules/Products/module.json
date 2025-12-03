@@ -1,9 +1,9 @@
 {
     "name": "Products",
     "alias": "products",
-    "description": "Products module for managing products, families, units and tax rates",
+    "description": "",
     "keywords": [],
-    "priority": 4,
+    "priority": 0,
     "providers": [
         "Modules\\Products\\Providers\\ProductsServiceProvider"
     ],

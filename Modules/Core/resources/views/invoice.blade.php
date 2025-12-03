@@ -1,0 +1,231 @@
+<script>
+    $(function () {
+        var template_fields = ["body", "subject", "from_name", "from_email", "cc", "bcc", "pdf_template"];
+
+        $('#email_template').change(function () {
+            var email_template_id = $(this).val();
+
+            if (email_template_id === '') return;
+
+            $.post("{{ route('email-templates.get-content') }}", {
+                email_template_id: email_template_id
+            }, function (data) {
+                inject_email_template(template_fields, json_parse(data, {{ (int) IP_DEBUG }}));
+            });
+        });
+
+        var selected_email_template = <?php echo $email_template ?>;
+        inject_email_template(template_fields, selected_email_template);
+    });
+
+    $(document).ready(function() {
+        // this is the email invoice window, disable the quote select
+        $('#tags_invoice').prop('disabled', false);
+        $('#tags_quote').prop('disabled', 'disabled');
+        // Fix blocked by browser if to_email field is empty
+        $('#btn_cancel').on('click', function(){$('#to_email').prop('required', false);});
+    });
+
+</script>
+
+<form method="post" action="{{ route('mailer.send-invoice', ['invoice_id' => $invoice->invoice_id]) ?>">
+
+    <?php _csrf_field() }}
+
+    <div id="headerbar">
+        <h1 class="headerbar-title">{{ trans('email_invoice') }}</h1>
+
+        <div class="headerbar-item pull-right">
+            <div class="btn-group btn-group-sm">
+                <button class="fi-btn-primary ajax-loader" name="btn_send" value="1">
+                    <i class="fa fa-send"></i>
+                    {{ trans('send') }}
+                </button>
+                <button class="fi-btn-danger" name="btn_cancel" id="btn_cancel" value="1">
+                    <i class="fa fa-times"></i>
+                    {{ trans('cancel') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="content">
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8 col-md-offset-2">
+
+                <?php $this->layout->load_view('layout/alerts'); ?>
+
+<?php
+// e-invoice alert when client or user empty required field
+if ($invoice->client_einvoicing_version != '' && $invoice->client_einvoicing_active == 0) {
+    ?>
+                <div class="alert alert-warning">
+                    <table style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td><i class="fa fa-exclamation-triangle fa-2x"></i>&emsp;</td>
+                            <td>{{ trans('einvoicing_no_creation_hint') . '<br>' . trans('einvoicing_send_invoice_hint') }}</td>
+                        </tr>
+                    </table>
+                </div>
+@endif
+                <div class="fi-field-wrp">
+                    <label for="to_email">{{ trans('to_email') }}</label>
+                    <input type="email" multiple name="to_email" id="to_email" class="fi-input" required
+                           value="{{ $invoice->client_email }}">
+                </div>
+
+                <hr>
+
+                <div class="fi-field-wrp">
+                    <label for="email_template">{{ trans('email_template') }}</label>
+                    <select name="email_template" id="email_template" class="fi-input simple-select">
+                        <option value="">{{ trans('none') }}</option>
+@foreach($email_templates as $email_template)
+                        <option value="{{ $email_template->email_template_id }}"
+                            {{ $selected_email_template == $email_template->email_template_id ? 'selected' : '' }}>
+                            <?php _htmlsc($email_template->email_template_title); ?>
+                        </option>
+@endif
+                    </select>
+                </div>
+
+                <div class="fi-field-wrp">
+                    <label for="from_name">{{ trans('from_name') }}</label>
+                    <input type="text" name="from_name" id="from_name" class="fi-input"
+                           value="<?php _htmlsc($invoice->user_name); ?>">
+                </div>
+
+                <div class="fi-field-wrp">
+                    <label for="from_email">{{ trans('from_email') }}</label>
+                    <input type="text" name="from_email" id="from_email" class="fi-input" required
+                           value="{{ $invoice->user_email }}">
+                </div>
+
+                <div class="fi-field-wrp">
+                    <label for="cc">{{ trans('cc') }}</label>
+                    <input type="text" name="cc" id="cc" value="" class="fi-input">
+                </div>
+
+                <div class="fi-field-wrp">
+                    <label for="bcc">{{ trans('bcc') }}</label>
+                    <input type="text" name="bcc" id="bcc" value="" class="fi-input">
+                </div>
+
+                <div class="fi-field-wrp">
+                    <label for="subject">{{ trans('subject') }}</label>
+                    <input type="text" name="subject" id="subject" class="fi-input"
+                           value="{{ trans('invoice') }} #{{ $invoice->invoice_number }}">
+                </div>
+
+                <div class="fi-field-wrp">
+                    <label for="pdf_template">{{ trans('pdf_template') }}</label>
+                    <select name="pdf_template" id="pdf_template" class="fi-input simple-select">
+                        <option value="">{{ trans('none') }}</option>
+@foreach($pdf_templates as $pdf_template)
+                        <option value="{{ $pdf_template }}"
+                            {{ $selected_pdf_template == $pdf_template ? 'selected' : '' }}>
+                            {{ $pdf_template }}
+                        </option>
+@endif
+                    </select>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+
+                        <div class="fi-field-wrp">
+                            <label for="body">{{ trans('body') }}</label>
+
+                            <br>
+
+                            <div class="html-tags btn-group btn-group-sm">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-paragraph">
+                                    <i class="fa fa-paragraph"></i>
+                                </span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-linebreak">
+                                    &lt;br&gt;
+                                </span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-bold">
+                                    <i class="fa fa-bold"></i>
+                                </span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-italic">
+                                    <i class="fa fa-italic"></i>
+                                </span>
+                            </div>
+                            <div class="html-tags btn-group btn-group-sm">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h1">H1</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h2">H2</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h3">H3</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h4">H4</span>
+                            </div>
+                            <div class="html-tags btn-group btn-group-sm">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-code">
+                                    <i class="fa fa-code"></i>
+                                </span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-hr">
+                                    &lt;hr/&gt;
+                                </span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-css">
+                                    CSS
+                                </span>
+                            </div>
+
+                            <textarea name="body" id="body" rows="8"
+                                      class="email-template-body fi-input taggable"></textarea>
+
+                            <br>
+
+                            <div class="fi-section">
+                                <div class="fi-section-header">
+                                    {{ trans('preview') }}
+                                    <div id="email-template-preview-reload" class="pull-right cursor-pointer">
+                                        <i class="fa fa-refresh"></i>
+                                    </div>
+                                </div>
+                                <div class="fi-section-body">
+                                    <iframe id="email-template-preview"></iframe>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+
+                        <?php $this->layout->load_view('email_templates/template-tags'); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8 col-md-offset-2">
+
+                <div class="fi-field-wrp">
+                    <?php _dropzone_html($invoice->is_read_only); ?>
+                </div>
+
+                <div class="fi-field-wrp"><label for="invoice-guest-url">{{ trans('guest_url') }}</label>
+                    <div class="input-group">
+                        <input type="text" id="invoice-guest-url" readonly class="fi-input"
+                               value="<?php echo route('guest.view', ['invoice_url_key' => $invoice->invoice_url_key]) ?>">
+                        <div class="input-group-addon to-clipboard cursor-pointer"
+                             data-clipboard-target="#invoice-guest-url">
+                            <i class="fa fa-clipboard fa-fw"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<?php
+            _dropzone_script($invoice->invoice_url_key, $invoice->client_id);

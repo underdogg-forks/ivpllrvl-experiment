@@ -5,10 +5,59 @@
 /.env
 
 # Dependencies
+
+*.log
+.DS_Store
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
 /node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
 /vendor
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/auth.json
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+# Built assets - generated from resources/assets
+/public/assets/*/css/*.css
+/public/assets/*/css/*.css.map
+/public/assets/core/js/*.js
+!/public/assets/core/js/scripts.js
+!/public/assets/core/js/jquery-ui.js
+!/public/assets/core/js/paypal.js
+/public/assets/core/fonts/*
+!/public/assets/core/fonts/.gitignore
+/public/assets/core/js/locales/
+
+# Old assets directory (deprecated - use public/assets instead)
+/assets/
 
 # Other files
+.htaccess
 .idea
 .todo
 .sass-cache
@@ -21,5 +70,6 @@ adminer.php
 npm-debug.log
 yarn-error.log
 .temp
+/stan.txt
 /todo.txt
 /stan.txt

@@ -1,0 +1,31 @@
+/* resources/assets/overrides/filament-fixes.css */
+
+/* Restore Filament icon sizing */
+.fi-icon,
+.fi-icon svg,
+.fi-icon * {
+    width: 1em !important;
+    height: 1em !important;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+/* Filament button/icon baseline */
+.fi-btn svg,
+.fi-icon-btn svg {
+    width: 1em !important;
+    height: 1em !important;
+}
+
+/* Make sure Filament base classes are preserved */
+.fi-input, .fi-btn, .fi-section {
+    all: unset;
+    /* re-apply only what we need */
+    display: block;
+}
+
+/* If nord introduced global svg rules, neutralize them for Filament */
+.fi svg {
+    width: 1em !important;
+    height: 1em !important;
+}

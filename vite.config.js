@@ -1,111 +1,22 @@
 import { defineConfig } from 'vite';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-/**
- * Vite Configuration for InvoicePlane
- * 
- * Modern build tooling with Tailwind CSS support
- * 
- * Features:
- * - Tailwind CSS compilation with PostCSS
- * - JavaScript bundling and minification
- * - Asset copying (fonts, locales)
- * - Hot module replacement for development
- */
+import laravel from 'laravel-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  // Base public path
-  base: '/assets/',
-  
-  // Build configuration
-  build: {
-    // Output to public/assets
-    outDir: 'public/assets',
-    emptyOutDir: false, // Changed to false to preserve other assets
-    
-    // Generate sourcemaps for debugging
-    sourcemap: process.env.NODE_ENV === 'development',
-    
-    // Minification
-    minify: process.env.NODE_ENV === 'production' ? 'terser' : false,
-    
-    rollupOptions: {
-      input: {
-        // Main Tailwind CSS styles
-        'core/css/style-tailwind': 'resources/assets/core/css/style-tailwind.css',
-
-        // Nord Theme - Brand new theme with Nord color palette
-        'nord/css/style-tailwind': 'resources/assets/nord/css/style-tailwind.css',
-
-        // InvoicePlane Default Theme
-        'invoiceplane/css/style-tailwind': 'resources/assets/invoiceplane/css/style-tailwind.css',
-
-        // InvoicePlane Blue Theme
-        'invoiceplane_blue/css/style-tailwind': 'resources/assets/invoiceplane_blue/css/style-tailwind.css',
-        
-        // Existing custom CSS files
-        'core/css/custom-pdf': 'resources/assets/core/css/custom-pdf.css',
-        'core/css/paypal': 'resources/assets/core/css/paypal.css',
-        
-        // Main application script (if it exists)
-        ...((() => {
-          try {
-            require.resolve('./resources/assets/core/js/scripts.js');
-            return { 'core/js/scripts': 'resources/assets/core/js/scripts.js' };
-          } catch {
-            return {};
-          }
-        })()),
-      },
-      output: {
-        // Output naming patterns
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
-          // Keep CSS in the same structure
-          if (assetInfo.name?.endsWith('.css')) {
-            return '[name][extname]';
-          }
-          return 'assets/[name]-[hash][extname]';
-        },
-      },
-    },
-  },
-  
-  // Development server
-  server: {
-    port: 5173,
-    strictPort: false,
-    
-    // Proxy to backend (if needed)
-    proxy: {
-      '^(?!/assets/).*': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-      },
-    },
-    
-    // Watch for changes
-    watch: {
-      include: ['resources/assets/**'],
-    },
-  },
-  
-  // CSS configuration with Tailwind CSS
-  css: {
-    postcss: './postcss.config.js',
-  },
-  
-  // Resolve configuration
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'resources/assets'),
-    },
-  },
-  
-  // Plugin configuration
-  plugins: [],
+    plugins: [
+        laravel({
+            input: [
+                'resources/assets/core/css/style-tailwind.css',
+                'resources/assets/invoiceplane/css/style-tailwind.css',
+                'resources/assets/invoiceplane_blue/css/style-tailwind.css',
+                'resources/assets/nord/css/nord.css',
+                'resources/assets/orange/css/orange.css',
+                'resources/assets/reddit/css/reddit.css',
+                'resources/assets/overrides/filament-fixes.css',
+                'resources/js/app.js'
+            ],
+            refresh: true
+        }),
+        tailwindcss()
+    ]
 });

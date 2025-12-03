@@ -1,0 +1,133 @@
+<?php
+
+namespace Modules\Invoices\Services;
+
+use Modules\Invoices\Models\InvoiceItem;
+use Modules\Invoices\Models\ItemAmount;
+
+class InvoiceItemService
+{
+    public function getValidationRules(): array
+    {
+        return [
+            'invoice_id'       => 'required|integer',
+            'item_name'        => 'required|string',
+            'item_description' => 'nullable|string',
+            'item_quantity'    => 'nullable|numeric',
+            'item_price'       => 'nullable|numeric',
+            'item_tax_rate_id' => 'nullable|integer',
+            'item_product_id'  => 'nullable|integer',
+        ];
+    }
+
+    /**
+     * @param []   $global_discount
+     *
+     * @return int|null
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item.php
+     *
+     * @legacy-function save()
+     */
+    public function save(?int $itemId, array $data, int $invoiceId, array &$globalDiscount = []): InvoiceItem
+    {
+        $payload = array_merge($data, ['invoice_id' => $invoiceId]);
+
+        if ($itemId) {
+            $item = InvoiceItem::findOrFail($itemId);
+            $item->update($payload);
+        } else {
+            $item = InvoiceItem::create($payload);
+        }
+
+        app(InvoiceItemAmountService::class)->calculate($item->item_id, $globalDiscount);
+        app(InvoiceAmountService::class)->calculate($invoiceId, $globalDiscount);
+
+        return $item;
+    }
+
+    /**
+     * @param int $item_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item.php
+     *
+     * @legacy-function delete()
+     */
+    public function delete(int $itemId): bool
+    {
+        $item = InvoiceItem::find($itemId);
+
+        if ( ! $item) {
+            return false;
+        }
+
+        $invoiceId = $item->invoice_id;
+        $item->delete();
+
+        ItemAmount::query()->where('item_id', $itemId)->delete();
+
+        $globalDiscount = [
+            'item' => app(InvoiceAmountService::class)->getGlobalDiscount($invoiceId),
+        ];
+        app(InvoiceAmountService::class)->calculate($invoiceId, $globalDiscount);
+
+        return true;
+    }
+
+    /**
+     * legacy_calculation false: Need to recalculate invoice amounts - since v1.6.3.
+     *
+     * @param $invoice_id
+     *
+     * Legacy migration info:
+     *
+     * @legacy-file application/modules/invoices/models/Mdl_item.php
+     *
+     * @legacy-function get_items_subtotal()
+     *
+     * return items_subtotal
+     */
+    public function getItemsSubtotal(int $invoiceId): float
+    {
+        // Get all item IDs for this invoice
+        $itemIds = InvoiceItem::query()->where('invoice_id', $invoiceId)
+            ->pluck('item_id');
+
+        // Sum the subtotals from invoice_item_amounts
+        $result = ItemAmount::query()->whereIn('item_id', $itemIds)
+            ->sum('item_subtotal');
+
+        return (float) ($result ?? 0.0);
+    }
+
+    /**
+     * Get invoice items by invoice ID.
+     *
+     * @param int $invoiceId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getItemsByInvoiceId(int $invoiceId)
+    {
+        return InvoiceItem::query()->where('invoice_id', $invoiceId)->orderBy('item_order')->get();
+    }
+
+    /**
+     * Find an item by invoice ID and item ID.
+     *
+     * @param int $invoiceId
+     * @param int $itemId
+     *
+     * @return InvoiceItem|null
+     */
+    public function findByInvoiceAndItemId(int $invoiceId, int $itemId): ?InvoiceItem
+    {
+        return InvoiceItem::query()->where('invoice_id', $invoiceId)
+            ->where('item_id', $itemId)
+            ->first();
+    }
+}

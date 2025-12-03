@@ -1,9 +1,9 @@
 {
     "name": "Payments",
     "alias": "payments",
-    "description": "Payments module for managing payments and payment methods",
+    "description": "",
     "keywords": [],
-    "priority": 3,
+    "priority": 0,
     "providers": [
         "Modules\\Payments\\Providers\\PaymentsServiceProvider"
     ],

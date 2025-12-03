@@ -1,10 +1,30 @@
 {
-    "name": "invoiceplane/quotes-module",
-    "description": "Quotes module for InvoicePlane",
-    "type": "library",
+    "name": "nwidart/quotes",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
     "autoload": {
         "psr-4": {
-            "Modules\\Quotes\\": ""
+            "Modules\\Quotes\\": "src/",
+            "Modules\\Quotes\\Database\\Factories\\": "database/factories/",
+            "Modules\\Quotes\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Quotes\\Tests\\": "tests/"
         }
     }
 }

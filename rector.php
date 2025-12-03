@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Rector\CodeQuality\Rector\ClassMethod\ExplicitReturnNullRector;
 use Rector\CodeQuality\Rector\Equal\UseIdenticalOverEqualWithSameTypeRector;
 use Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector;
@@ -8,6 +10,11 @@ use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRect
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNeverTypeRector;
 
 return RectorConfig::configure()
+    ->withPaths([
+        __DIR__ . '/app',
+        __DIR__ . '/Modules',
+        __DIR__ . '/tests',
+    ])
     // uncomment to reach your current PHP version
     // ->withPhpSets()
     ->withPaths([

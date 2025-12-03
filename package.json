@@ -1,50 +1,20 @@
 {
-    "name": "invoiceplane",
-    "version": "1.6.4-beta-1",
-    "description": "InvoicePlane is a self-hosted open source application for managing your invoices, clients and payments",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/InvoicePlane/InvoicePlane.git"
-    },
-    "author": "InvoicePlane Developers & Contributors",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/InvoicePlane/InvoicePlane/issues"
-    },
-    "homepage": "https://www.invoiceplane.com",
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
     "scripts": {
         "build": "vite build",
-        "build:dev": "NODE_ENV=development vite build",
-        "dev": "vite",
-        "preview": "vite preview"
+        "dev": "vite"
     },
     "devDependencies": {
-        "@tailwindcss/postcss": "^4.1.16",
-        "autoprefixer": "^10.4.21",
-        "bootstrap-datepicker": "1.10",
-        "bootstrap-sass": "3.4",
-        "clipboard": "2.0",
-        "dropzone": "5.9",
-        "font-awesome": "4.7",
-        "grunt": "1.6",
-        "grunt-contrib-clean": "2.0",
-        "grunt-contrib-concat": "2.1",
-        "grunt-contrib-copy": "1.0",
-        "grunt-contrib-uglify": "5.2",
-        "grunt-contrib-watch": "1.1",
-        "grunt-postcss": "0.9",
-        "grunt-sass": "3.1",
-        "html5shiv": "3.7",
-        "jquery": "3.7",
-        "jquery-ui": "1.14",
-        "js-cookie": "2.2",
-        "load-grunt-tasks": "5.1",
-        "postcss": "^8.5.6",
-        "sass": "^1.89.2",
-        "select2": "4.1.0-rc.0",
-        "tailwindcss": "^4.1.16",
-        "terser": "^5.44.0",
-        "vite": "^7.1.12",
-        "zxcvbn": "4.4"
+        "@shufo/prettier-plugin-blade": "^1.15.3",
+        "@tailwindcss/vite": "^4.1.7",
+        "axios": "^1.8.2",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^2.0.0",
+        "prettier": "^3.5.3",
+        "prettier-plugin-tailwindcss": "^0.6.11",
+        "tailwindcss": "^4.1.7",
+        "vite": "^7.0.7"
     }
 }
