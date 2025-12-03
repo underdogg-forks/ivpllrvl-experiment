@@ -15,22 +15,20 @@
         </thead>
 
         <tbody>
-<?php
-foreach ($payments as $payment) {
-    ?>
+        @foreach ($payments as $payment)
             <tr>
-                <td><?php echo date_from_mysql($payment->payment_date); ?></td>
-                <td><?php echo date_from_mysql($payment->invoice_date_created); ?></td>
-                <td><?php echo anchor('invoices/view/' . $payment->invoice_id, $payment->invoice_number); ?></td>
+                <td>{{ date_from_mysql($payment->payment_date) }}</td>
+                <td>{{ date_from_mysql($payment->invoice_date_created) }}</td>
+                <td><a href="{{ route('invoices.view', $payment->invoice_id) }}">{{ $payment->invoice_number }}</a></td>
                 <td>
-                    <a href="<?php echo site_url('clients/view/' . $payment->client_id); ?>"
+                    <a href="{{ route('clients.view', $payment->client_id) }}"
                        title="{{ trans('view_client') }}">
-                        <?php _htmlsc(format_client($payment)); ?>
+                        {{ format_client($payment) }}
                     </a>
                 </td>
-                <td class="amount last"><?php echo format_currency($payment->payment_amount); ?></td>
-                <td><?php _htmlsc($payment->payment_method_name); ?></td>
-                <td><?php _htmlsc($payment->payment_note); ?></td>
+                <td class="amount last">{{ format_currency($payment->payment_amount) }}</td>
+                <td>{{ $payment->payment_method_name }}</td>
+                <td>{{ $payment->payment_note }}</td>
                 <td>
                     <div class="options btn-group">
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
@@ -38,15 +36,15 @@ foreach ($payments as $payment) {
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<?php echo site_url('payments/form/' . $payment->payment_id); ?>">
+                                <a href="{{ route('payments.form', $payment->payment_id) }}">
                                     <i class="fa fa-edit fa-margin"></i>
                                     {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
-                                <form action="<?php echo site_url('payments/delete/' . $payment->payment_id); ?>"
+                                <form action="{{ route('payments.delete', $payment->payment_id) }}"
                                       method="POST">
-                                    <?php _csrf_field(); ?>
+                                    @csrf
                                     <button type="submit" class="dropdown-button"
                                             onclick="return confirm('{{ trans('delete_record_warning') }}');">
                                         <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
@@ -57,9 +55,7 @@ foreach ($payments as $payment) {
                     </div>
                 </td>
             </tr>
-<?php
-} // End foreach
-?>
+        @endforeach
         </tbody>
 
     </table>

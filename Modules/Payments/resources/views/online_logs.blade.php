@@ -2,17 +2,17 @@
     <h1 class="headerbar-title">{{ trans('payment_logs') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <?php echo pager(site_url('payments/online_logs'), $payment_logs); ?>
+        {!! pager(route('payments.online-logs'), $payment_logs) !!}
     </div>
 
 </div>
 
 <div id="content" class="table-content">
 
-    <?php $this->layout->load_view('layout/alerts'); ?>
+    @include('core::alerts')
 
     <div id="filter_results">
-        <?php $this->layout->load_view('payments/partial_online_logs_table'); ?>
+        @include('payments::partial_online_logs_table')
     </div>
 
 </div>

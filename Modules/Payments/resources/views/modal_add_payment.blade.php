@@ -10,7 +10,7 @@
         $(".simple-select").select2();
 
         $('#btn_modal_payment_submit').click(function () {
-            $.post("<?php echo site_url('payments/ajax/add'); ?>", {
+            $.post("{{ route('payments.ajax.add') }}", {
                     invoice_id: $('#invoice_id').val(),
                     payment_amount: $('#payment_amount').val(),
                     payment_method_id: $('#payment_method_id').val(),
@@ -18,17 +18,17 @@
                     payment_note: $('#payment_note').val()
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
                         // The validation was successful and payment was added
                         if ($('#payment_cf_exist').val() === 'yes') {
                             // There are payment custom fields, display the payment form
                             // to allow completing the custom fields
-                            window.location = "<?php echo site_url('payments/form'); ?>/" + response.payment_id;
+                            window.location = "{{ route('payments.form', '') }}/" + response.payment_id;
                         }
                         else {
                             // There are no payment custom fields, return to invoice view
-                            window.location = "<?php echo $_SERVER['HTTP_REFERER']; ?>";
+                            window.location = "{{ url()->previous() }}";
                         }
                     }
                     else {
@@ -57,14 +57,14 @@
         <div class="modal-body">
             <form>
 
-                <input type="hidden" name="invoice_id" id="invoice_id" value="<?php echo $invoice_id; ?>">
+                <input type="hidden" name="invoice_id" id="invoice_id" value="{{ $invoice_id }}">
 
                 <div class="form-group">
                     <label for="payment_amount">{{ trans('amount') }}</label>
 
                     <div class="controls">
                         <input type="text" name="payment_amount" id="payment_amount" class="form-control"
-                               value="<?php echo isset($invoice_balance) ? format_amount($invoice_balance) : ''; ?>">
+                               value="{{ isset($invoice_balance) ? format_amount($invoice_balance) : '' }}">
                     </div>
                 </div>
 
@@ -75,7 +75,7 @@
                     <div class="input-group">
                         <input name="payment_date" id="payment_date"
                                class="form-control datepicker"
-                               value="<?php echo date(date_format_setting()); ?>">
+                               value="{{ date(date_format_setting()) }}">
                         <span class="input-group-addon">
                             <i class="fa fa-calendar fa-fw"></i>
                         </span>
@@ -87,28 +87,19 @@
                     <label for="payment_method_id">{{ trans('payment_method') }}</label>
 
                     <div class="controls">
-<?php
-// Add a hidden input field if a payment method was set to pass the disabled attribute
-if ($this->mdl_payments->form_value('payment_method_id')) {
-    ?>
-                        <input type="hidden" name="payment_method_id" class="hidden"
-                               value="<?php echo $this->mdl_payments->form_value('payment_method_id'); ?>">
-<?php
-}
-            ?>
+                        @if (isset($payment_method_id) && $payment_method_id)
+                            <input type="hidden" name="payment_method_id" class="hidden"
+                                   value="{{ $payment_method_id }}">
+                        @endif
                         <select name="payment_method_id" id="payment_method_id" class="form-control simple-select"
-                                <?php echo empty($invoice_payment_method) ? '' : 'disabled="disabled"'; ?>>
+                                {{ empty($invoice_payment_method) ? '' : 'disabled="disabled"' }}>
                             <option value="">{{ trans('none') }}</option>
-<?php
-foreach ($payment_methods as $payment_method) {
-    ?>
-                            <option value="<?php echo $payment_method->payment_method_id; ?>"
-                                    <?php check_select(isset($invoice_payment_method) && $invoice_payment_method == $payment_method->payment_method_id); ?>>
-                                <?php _htmlsc($payment_method->payment_method_name); ?>
-                            </option>
-<?php
-} // End foreach
-            ?>
+                            @foreach ($payment_methods as $payment_method)
+                                <option value="{{ $payment_method->payment_method_id }}"
+                                        {{ check_select(isset($invoice_payment_method) && $invoice_payment_method == $payment_method->payment_method_id) }}>
+                                    {{ $payment_method->payment_method_name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -122,7 +113,7 @@ foreach ($payment_methods as $payment_method) {
                 </div>
 
                 <!-- Add a hidden input field to pass whether payment custom fields have been create -->
-                <input type="hidden" name="payment_cf_exist" id="payment_cf_exist" value="<?php echo $payment_cf_exist; ?>">
+                <input type="hidden" name="payment_cf_exist" id="payment_cf_exist" value="{{ $payment_cf_exist }}">
 
             </form>
         </div>
