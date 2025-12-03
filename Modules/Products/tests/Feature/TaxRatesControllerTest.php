@@ -111,7 +111,7 @@ class TaxRatesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('tax_rates.form', ['id' => $taxRate->tax_rate_id]));
+        $response = $this->get(route('tax_rates.form', ['tax_rate_id' => $taxRate->tax_rate_id]));
 
         /* Assert */
         $response->assertOk();
@@ -149,7 +149,7 @@ class TaxRatesControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('tax_rates.form', ['id' => $taxRate->tax_rate_id]), $updateData);
+        $response = $this->post(route('tax_rates.form', ['tax_rate_id' => $taxRate->tax_rate_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));

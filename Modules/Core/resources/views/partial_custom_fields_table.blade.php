@@ -30,19 +30,19 @@ foreach ($custom_fields as $custom_field) {
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
 @if(in_array($custom_field->custom_field_type, $custom_value_fields))
-                        <a href="{{ route('custom-values.field', ['id' => $custom_field->custom_field_id]) }}"
+                        <a href="{{ route('custom-values.field', ['custom_field_id' => $custom_field->custom_field_id]) }}"
                            class="btn btn-default">
                             <i class="fa fa-list fa-margin"></i> {{ trans('values') }}
                         </a>
 @endif
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{ route('custom-fields.form', ['id' => $custom_field->custom_field_id]) }}">
+                                <a href="{{ route('custom-fields.form', ['custom_field_id' => $custom_field->custom_field_id]) }}">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
-                                <form action="{{ route('custom-fields.delete', ['id' => $custom_field->custom_field_id]) }}"
+                                <form action="{{ route('custom-fields.delete', ['custom_field_id' => $custom_field->custom_field_id]) }}"
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"

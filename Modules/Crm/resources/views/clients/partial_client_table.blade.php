@@ -60,7 +60,7 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('clients.form', ['id' => $client->client_id]) }}" 
+                                <a href="{{ route('clients.form', ['client_id' => $client->client_id]) }}" 
                                    class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>

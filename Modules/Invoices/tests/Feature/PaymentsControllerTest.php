@@ -132,7 +132,7 @@ class PaymentsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('payments.form', ['id' => $payment->payment_id]));
+        $response = $this->get(route('payments.form', ['payment_id' => $payment->payment_id]));
 
         /* Assert */
         $response->assertOk();
@@ -214,7 +214,7 @@ class PaymentsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('payments.form', ['id' => $payment->payment_id]), $updateData);
+        $response = $this->post(route('payments.form', ['payment_id' => $payment->payment_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('payments.index'));
@@ -368,7 +368,7 @@ class PaymentsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('payments.delete', ['id' => $payment->payment_id]),
+            route('payments.delete', ['payment_id' => $payment->payment_id]),
             $deletePayload
         );
 
@@ -403,7 +403,7 @@ class PaymentsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('payments.delete', ['id' => 99999]),
+            route('payments.delete', ['payment_id' => 99999]),
             $deletePayload
         );
 

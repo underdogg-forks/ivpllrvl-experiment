@@ -101,7 +101,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom-fields.form', ['id' => $customField->custom_field_id]));
+        $response = $this->get(route('custom-fields.form', ['custom_field_id' => $customField->custom_field_id]));
 
         /* Assert */
         $response->assertOk();
@@ -179,7 +179,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('custom-fields.form', ['id' => $customField->custom_field_id]), $updateData);
+        $response = $this->post(route('custom-fields.form', ['custom_field_id' => $customField->custom_field_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('custom-fields.index'));
@@ -241,7 +241,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('custom-fields.delete', ['id' => $customField->custom_field_id]),
+            route('custom-fields.delete', ['custom_field_id' => $customField->custom_field_id]),
             $deletePayload
         );
 
@@ -276,7 +276,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('custom-fields.delete', ['id' => 99999]),
+            route('custom-fields.delete', ['custom_field_id' => 99999]),
             $deletePayload
         );
 
@@ -296,7 +296,7 @@ class CustomFieldsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('custom-fields.form', ['id' => 99999]));
+        $response = $this->get(route('custom-fields.form', ['custom_field_id' => 99999]));
 
         /* Assert */
         $response->assertNotFound();

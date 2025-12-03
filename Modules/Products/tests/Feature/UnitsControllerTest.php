@@ -111,7 +111,7 @@ class UnitsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('units.form', ['id' => $unit->unit_id]));
+        $response = $this->get(route('units.form', ['unit_id' => $unit->unit_id]));
 
         /* Assert */
         $response->assertOk();
@@ -146,7 +146,7 @@ class UnitsControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->post(route('units.form', ['id' => $unit->unit_id]), $updateData);
+        $response = $this->post(route('units.form', ['unit_id' => $unit->unit_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('units.index'));

@@ -107,7 +107,7 @@ class UsersControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($adminUser);
-        $response = $this->get(route('users.form', ['id' => $editUser->user_id]));
+        $response = $this->get(route('users.form', ['user_id' => $editUser->user_id]));
 
         /* Assert */
         $response->assertOk();
@@ -190,7 +190,7 @@ class UsersControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($adminUser);
-        $response = $this->post(route('users.form', ['id' => $editUser->user_id]), $updateData);
+        $response = $this->post(route('users.form', ['user_id' => $editUser->user_id]), $updateData);
 
         /* Assert */
         $response->assertRedirect(route('users.index'));
@@ -252,7 +252,7 @@ class UsersControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($adminUser);
         $response = $this->post(
-            route('users.delete', ['id' => $deleteUser->user_id]),
+            route('users.delete', ['user_id' => $deleteUser->user_id]),
             $deletePayload
         );
 
@@ -287,7 +287,7 @@ class UsersControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('users.delete', ['id' => 99999]),
+            route('users.delete', ['user_id' => 99999]),
             $deletePayload
         );
 
@@ -307,7 +307,7 @@ class UsersControllerTest extends FeatureTestCase
 
         /* Act */
         $this->actingAs($user);
-        $response = $this->get(route('users.form', ['id' => 99999]));
+        $response = $this->get(route('users.form', ['user_id' => 99999]));
 
         /* Assert */
         $response->assertNotFound();

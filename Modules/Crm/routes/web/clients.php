@@ -13,7 +13,7 @@ Route::middleware('web')->group(function () {
     Route::get('clients/load-client-notes', [ClientsAjaxController::class, 'loadClientNotes'])->name('clients.load-client-notes');
     Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');
     Route::get('clients/status', [ClientsController::class, 'status'])->name('clients.status');
-    Route::get('clients/form', [ClientsController::class, 'form'])->name('clients.form');
+    Route::get('clients/form/{client_id?}', [ClientsController::class, 'form'])->name('clients.form');
     Route::get('clients/view', [ClientsController::class, 'view'])->name('clients.view');
     Route::post('clients/delete', [ClientsController::class, 'delete'])->name('clients.delete');
 });

@@ -30,7 +30,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         $taxRate = TaxRate::factory()->create(['tax_rate_name' => 'Deletable']);
 
         /** Act */
-        $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
+        $response = $this->post(route('tax_rates.delete', ['tax_rate_id' => $taxRate->tax_rate_id]));
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -49,7 +49,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         Product::factory()->create(['tax_rate_id' => $taxRate->tax_rate_id]);
 
         /** Act */
-        $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
+        $response = $this->post(route('tax_rates.delete', ['tax_rate_id' => $taxRate->tax_rate_id]));
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -68,7 +68,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         InvoiceItem::factory()->create(['item_tax_rate_id' => $taxRate->tax_rate_id]);
 
         /** Act */
-        $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
+        $response = $this->post(route('tax_rates.delete', ['tax_rate_id' => $taxRate->tax_rate_id]));
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -87,7 +87,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         QuoteItem::factory()->create(['item_tax_rate_id' => $taxRate->tax_rate_id]);
 
         /** Act */
-        $response = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
+        $response = $this->post(route('tax_rates.delete', ['tax_rate_id' => $taxRate->tax_rate_id]));
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -105,7 +105,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         $invalidId = -1;
 
         /** Act */
-        $response = $this->post(route('tax_rates.delete', ['id' => $invalidId]));
+        $response = $this->post(route('tax_rates.delete', ['tax_rate_id' => $invalidId]));
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -122,7 +122,7 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         $nonexistentId = 99999;
 
         /** Act */
-        $response = $this->post(route('tax_rates.delete', ['id' => $nonexistentId]));
+        $response = $this->post(route('tax_rates.delete', ['tax_rate_id' => $nonexistentId]));
 
         /* Assert */
         $response->assertRedirect(route('tax_rates.index'));
@@ -140,14 +140,14 @@ class TaxRateDeletionValidationFeatureTest extends FeatureTestCase
         $product = Product::factory()->create(['tax_rate_id' => $taxRate->tax_rate_id]);
 
         // Initially cannot delete
-        $response1 = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
+        $response1 = $this->post(route('tax_rates.delete', ['tax_rate_id' => $taxRate->tax_rate_id]));
         $response1->assertSessionHas('alert_error');
 
         // Remove reference
         $product->delete();
 
         /** Act */
-        $response2 = $this->post(route('tax_rates.delete', ['id' => $taxRate->tax_rate_id]));
+        $response2 = $this->post(route('tax_rates.delete', ['tax_rate_id' => $taxRate->tax_rate_id]));
 
         /* Assert */
         $response2->assertRedirect(route('tax_rates.index'));

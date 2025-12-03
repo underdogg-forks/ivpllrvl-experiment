@@ -380,7 +380,7 @@ class ProductsControllerTest extends FeatureTestCase
         /* Act */
         $this->actingAs($user);
         $response = $this->post(
-            route('products.delete', ['id' => $testId]),
+            route('products.delete', ['product_id' => $testId]),
             $deletePayload
         );
 

@@ -2,7 +2,7 @@
 
 @section('content')
 @php
-$href  = route('custom-fields.form', ['id' => $field->custom_field_id]);
+$href  = route('custom-fields.form', ['custom_field_id' => $field->custom_field_id]);
 $link  = '<a href="' . $href . '" class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50"><i class="fa fa-edit fa-margin"></i> ' . htmlspecialchars($field->custom_field_label) . '</a>';
 $alpha = strtr(mb_strtolower($field->custom_field_type), ['-' => '_']);
 @endphp
