@@ -12,9 +12,9 @@
 
             @include('core::layout.alerts')
 
-            <div id="report_options" class="panel panel-default bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div id="report_options" class="panel panel-default">
 
-                <div class="panel-heading px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-semibold">
+                <div class="panel-heading">
                     <i class="fa fa-print"></i>
                     {{ trans('report_options') }}
                 </div>

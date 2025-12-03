@@ -262,8 +262,9 @@
     }
 
     .panel-heading {
-        padding: 0.625rem 1rem;
+        padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--color-border);
+        font-weight: 600;
     }
 
     .panel-default > .panel-heading {

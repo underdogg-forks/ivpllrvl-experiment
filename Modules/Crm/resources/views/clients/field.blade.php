@@ -23,8 +23,8 @@
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div class="md:col-span-6 md:col-start-4">
 
-            <div class="panel panel-default bg-white dark:bg-gray-800 rounded-lg shadow">
-                <div class="panel-heading px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-semibold">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     {{ trans('user') }}: {{ htmlspecialchars($user->user_name) }}
                 </div>
 
