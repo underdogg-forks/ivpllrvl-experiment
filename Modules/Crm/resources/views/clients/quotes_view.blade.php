@@ -16,12 +16,12 @@ if ($quote_tax_rates) {
     <div class="headerbar-item">
         <div class="btn-group btn-group-sm flex gap-2">
 @if(in_array($quote->quote_status_id, [2, 3]))
-            <a href="{{ route('guest.quotes.approve', $quote->quote_id) }}"
+            <a href="{{ route('guest.approve', $quote->quote_id) }}"
                class="btn btn-success inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 dark:bg-green-500 rounded-md text-sm font-medium text-white hover:bg-green-700">
                 <i class="fa fa-check"></i>
                 {{ trans('approve_this_quote') }}
             </a>
-            <a href="{{ route('guest.quotes.reject', $quote->quote_id) }}"
+            <a href="{{ route('guest.reject', $quote->quote_id) }}"
                class="btn btn-danger inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 dark:bg-red-500 rounded-md text-sm font-medium text-white hover:bg-red-700">
                 <i class="fa fa-times-circle"></i>
                 {{ trans('reject_this_quote') }}
@@ -37,7 +37,7 @@ if ($quote_tax_rates) {
                 {{ trans('quote_rejected') }}
             </a>
 @endif
-            <a href="{{ route('guest.quotes.generate_pdf', $quote_id) }}"
+            <a href="{{ route('guest.generate-pdf', $quote_id) }}"
                class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50" id="btn_generate_pdf" target="_blank">
                 <i class="fa fa-print"></i> {{ trans('download_pdf') }}
             </a>

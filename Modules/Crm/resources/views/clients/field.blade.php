@@ -9,7 +9,7 @@
             <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('users.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600" href="{{ route('user_clients.create', $id) }}">
+            <a class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600" href="{{ route('users.modal-add-user-client', $id) }}">
                 <i class="fa fa-plus"></i> {{ trans('new') }}
             </a>
         </div>
@@ -49,7 +49,7 @@
                                     </td>
                                     <td class="px-4 py-2">
                                         <form
-                                            action="{{ route('user_clients.delete', $user_client->user_client_id) }}"
+                                            action="{{ route('users.delete-user-client', $user_client->user_client_id) }}"
                                             method="POST">
                                             @csrf
                                             <button type="submit" class="btn btn-default btn-sm inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"

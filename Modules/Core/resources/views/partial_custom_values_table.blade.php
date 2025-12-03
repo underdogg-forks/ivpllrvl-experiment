@@ -17,7 +17,7 @@
         <tbody>
 <?php
 foreach ($custom_values as $custom_values) {
-    $href     = route('custom_fields/form/' . $custom_values->custom_field_id);
+    $href     = route('custom-fields.form', ['id' => $custom_values->custom_field_id]);
     $alpha    = str_replace('-', '_', mb_strtolower($custom_values->custom_field_type));
     $position = $positions[$custom_values->custom_field_table][$custom_values->custom_field_location];
     ?>
@@ -35,12 +35,12 @@ foreach ($custom_values as $custom_values) {
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{ route('custom_values/field/' . $custom_values->custom_field_id) }}">
+                                <a href="{{ route('custom-values.field', ['id' => $custom_values->custom_field_id]) }}">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }} ({{ trans('values') }})
                                 </a>
                             </li>
                             <li>
-                                <form action="{{ route('custom_fields/delete/' . $custom_values->custom_field_id) }}"
+                                <form action="{{ route('custom-fields.delete', ['id' => $custom_values->custom_field_id]) }}"
                                       method="POST">
                                     <?php _csrf_field(); ?>
                                     <button type="submit" class="dropdown-button"

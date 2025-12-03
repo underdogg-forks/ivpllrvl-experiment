@@ -99,7 +99,7 @@ if ( ! $id) {
 } else { // Edit user
     ?>
                             <div class="form-group">
-                                <a href="{{ route('users/change_password/' . $id) }}"
+                                <a href="{{ route('users.change-password', ['user_id' => $id]) }}"
                                    class="btn btn-default">
                                     {{ trans('change_password') }}
                                 </a>

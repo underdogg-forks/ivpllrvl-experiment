@@ -7,7 +7,7 @@
 
             if (email_template_id === '') return;
 
-            $.post("{{ route('email-templates.ajax.get-content') }}", {
+            $.post("{{ route('email-templates.get-content') }}", {
                 email_template_id: email_template_id
             }, function (data) {
                 inject_email_template(template_fields, json_parse(data, {{ (int) IP_DEBUG }}));

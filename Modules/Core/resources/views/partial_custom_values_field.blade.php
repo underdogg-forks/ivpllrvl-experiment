@@ -21,12 +21,12 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="{{ route('custom_values/edit/' . $element->custom_values_id) }}">
+                                            <a href="{{ route('custom-values.edit', ['id' => $element->custom_values_id]) }}">
                                                 <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                             </a>
                                         </li>
                                         <li>
-                                            <form action="{{ route('custom_values/delete/' . $element->custom_values_id) }}"
+                                            <form action="{{ route('custom-values.delete', ['id' => $element->custom_values_id]) }}"
                                                   method="POST">
                                                 <?php _csrf_field(); ?>
                                                 <input type="hidden" name="custom_field_id" value="{{ $id }}">

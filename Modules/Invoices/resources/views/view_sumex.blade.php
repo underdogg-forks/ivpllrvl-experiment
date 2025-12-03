@@ -201,7 +201,7 @@ if ($change_user) {
     ?>
         <a data-toggle="tooltip" data-placement="bottom"
            title="{{ $edit_user_title }}"
-           href="{{ route('users/form/' . $invoice->user_id) }}">
+           href="{{ route('users.form', ['user_id' => $invoice->user_id]) }}">
             <i class="fa fa-xs fa-user text-{{ $my_class }}"></i>
                 <span class="hidden-xs"><?php _htmlsc($invoice->user_name); ?></span>
         </a>
@@ -328,7 +328,7 @@ if ($invoice->is_read_only == 1) {
                 <div class="col-xs-12 col-md-8">
                     <div class="col-md-6">
                         <h2>
-                            <a href="{{ route('clients/view/' . $invoice->client_id) }}">{{ format_client($invoice) ?></a>
+                            <a href="{{ route('clients.view', ['client_id' => $invoice->client_id]) }}">{{ format_client($invoice) ?></a>
 @if($invoice->invoice_status_id == 1)
                                 <span id="invoice_change_client" class="fa fa-edit cursor-pointer small"
                                       data-toggle="tooltip" data-placement="bottom"

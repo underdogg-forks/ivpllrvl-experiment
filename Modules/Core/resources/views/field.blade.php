@@ -1,5 +1,5 @@
 <?php
-$href  = route('custom_fields/form/' . $field->custom_field_id);
+$href  = route('custom-fields.form', ['id' => $field->custom_field_id]);
 $link  = anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($field->custom_field_label), ' class="btn btn-sm btn-default"');
 $alpha = strtr(mb_strtolower($field->custom_field_type), ['-' => '_']);
 $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
@@ -13,7 +13,7 @@ $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
             <a class="btn btn-default" href="{{ route('custom-values.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="btn btn-primary" href="{{ route('custom_values/create/' . $id) }}">
+            <a class="btn btn-primary" href="{{ route('custom-values.create', ['id' => $id]) }}">
                 <i class="fa fa-plus"></i> {{ trans('new') }}
             </a>
         </div>

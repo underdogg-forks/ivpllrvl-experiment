@@ -61,7 +61,7 @@
 
             product_table.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
 
-            var lookup_url = "{{ route('products.ajax.modal-lookups', '') }}/";
+            var lookup_url = "{{ route('products.ajax.modal_product_lookups', '') }}/";
             lookup_url += Math.floor(Math.random() * 1000) + '/?';
             lookup_url += "&reset_table=true";
 
@@ -89,7 +89,7 @@
 
             product_table.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
 
-            var lookup_url = "{{ route('products.ajax.modal-lookups', '') }}/";
+            var lookup_url = "{{ route('products.ajax.modal_product_lookups', '') }}/";
             lookup_url += Math.floor(Math.random() * 1000) + '/?';
 
             if (filter_family) {
