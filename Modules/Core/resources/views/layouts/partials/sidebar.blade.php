@@ -1,6 +1,6 @@
 <!-- Sidebar Navigation -->
 <aside :class="{ 'w-full md:w-64': sidebarOpen, 'w-0 md:w-16 hidden md:block': !sidebarOpen }"
-    class="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out overflow-hidden">
+    class="bg-elevated border-r border-primary transition-all duration-300 ease-in-out overflow-hidden">
     <!-- Sidebar Content -->
     <div class="h-full flex flex-col">
         <!-- Sidebar Menu -->
@@ -9,7 +9,7 @@
                 <!-- Dashboard -->
                 <li>
                     <a href="{{ route('dashboard') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('dashboard*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('dashboard*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-house w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('dashboard') }}</span>
                     </a>
@@ -18,7 +18,7 @@
                 <!-- Clients -->
                 <li>
                     <a href="{{ route('crm.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('crm*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('crm*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-users w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('clients') }}</span>
                     </a>
@@ -27,7 +27,7 @@
                 <!-- Quotes -->
                 <li>
                     <a href="{{ route('quotes.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('quotes*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('quotes*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-file-text w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('quotes') }}</span>
                     </a>
@@ -36,7 +36,7 @@
                 <!-- Invoices -->
                 <li>
                     <a href="{{ route('invoices.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('invoices*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('invoices*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-file-invoice w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('invoices') }}</span>
                     </a>
@@ -45,7 +45,7 @@
                 <!-- Payments -->
                 <li>
                     <a href="{{ route('payments.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('payments*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('payments*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-credit-card w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('payments') }}</span>
                     </a>
@@ -54,7 +54,7 @@
                 <!-- Products -->
                 <li>
                     <a href="{{ route('products.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('products*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('products*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-box w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('products') }}</span>
                     </a>
@@ -64,7 +64,7 @@
                 @if(get_setting('projects_enabled') == 1)
                 <li>
                     <a href="{{ route('projects.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('projects*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('projects*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-tasks w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('projects') }}</span>
                     </a>
@@ -73,13 +73,13 @@
 
                 <!-- Divider -->
                 <li class="pt-4 pb-2">
-                    <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                    <div class="border-t border-primary"></div>
                 </li>
 
                 <!-- Settings & Administration -->
                 <li>
                     <a href="{{ route('settings') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('settings*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('settings*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-cog w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('system_settings') }}</span>
                     </a>
@@ -88,7 +88,7 @@
                 <!-- Reports -->
                 <li>
                     <a href="{{ route('reports.invoice_aging') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('reports*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('reports*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-chart-bar w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('reports') }}</span>
                     </a>

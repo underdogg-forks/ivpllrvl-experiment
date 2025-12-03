@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="fi">
+<html lang="en" class="fi" x-data="{ theme: localStorage.getItem('color-theme') || 'blue' }" :data-theme="theme">
 <head>
     <meta charset="utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -32,7 +32,7 @@
 
     @stack('styles')
 </head>
-<body class="fi-body fi-panel-admin bg-gray-50 dark:bg-gray-900" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
+<body class="fi-body fi-panel-admin bg-base" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         @include('core::layouts.partials.sidebar')
@@ -43,7 +43,7 @@
             @include('core::layouts.partials.header')
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <main class="flex-1 overflow-y-auto bg-base">
                 <div class="container mx-auto px-4 py-6">
                     {{-- Alerts / Messages --}}
                     @includeWhen(View::exists('core::layout.alerts'), 'core::layout.alerts')
