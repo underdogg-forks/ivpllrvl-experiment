@@ -1,15 +1,15 @@
 @extends('core::layouts.app')
 
 @section('content')
-<div id="headerbar" class="flex flex-wrap justify-between items-center mb-4">
-    <h1 class="headerbar-title text-xl font-bold">{{ trans('assigned_clients') }}</h1>
+<div id="headerbar" class="headerbar">
+    <h1 class="headerbar-title">{{ trans('assigned_clients') }}</h1>
 
     <div class="headerbar-item">
         <div class="btn-group btn-group-sm flex gap-2">
-            <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('users.index') }}">
+            <a class="btn btn-default" href="{{ route('users.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600" href="{{ route('users.modal-add-user-client', $id) }}">
+            <a class="btn-create" href="{{ route('users.modal-add-user-client', $id) }}">
                 <i class="fa fa-plus"></i> {{ trans('new') }}
             </a>
         </div>

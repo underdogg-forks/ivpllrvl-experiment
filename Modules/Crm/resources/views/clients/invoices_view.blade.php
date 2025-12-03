@@ -14,18 +14,18 @@ if ($invoice_tax_rates) {
     <div class="headerbar-item">
         <div class="btn-group btn-group-sm flex gap-2">
 @if($invoice->invoice_balance == 0 || $invoice->invoice_status_id >= 4)
-            <button class="btn btn-success disabled inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 rounded-md text-sm font-medium text-white opacity-60 cursor-not-allowed">
+            <button class="btn btn-success disabled opacity-60 cursor-not-allowed">
                 <i class="fa fa-check"></i> {{ trans('paid') }}
             </button>
 @elseif($enable_online_payments)
             <a href="{{ route('guest.form', $invoice->invoice_url_key) }}"
-               class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 rounded-md text-sm font-medium text-white hover:bg-blue-700">
+               class="btn-create">
                 <i class="fa fa-credit-card"></i>
                 {{ trans('pay_now') }}
             </a>
 @endif
             <a href="{{ route('guest.generate-pdf', $invoice->invoice_id) }}"
-               class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50" id="btn_generate_pdf" target="_blank">
+               class="btn btn-default" id="btn_generate_pdf" target="_blank">
                 <i class="fa fa-print"></i> {{ trans('download_pdf') }}
             </a>
         </div>

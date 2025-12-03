@@ -245,11 +245,16 @@
      * PANELS
      * ================================ */
     .panel {
-        @apply rounded border;
+        @apply rounded-lg shadow;
         background-color: var(--color-bg-elevated);
         margin-bottom: 1.25rem;
         border-width: 1px;
         border-color: var(--color-border);
+    }
+
+    .panel-default {
+        @apply rounded-lg shadow;
+        background-color: var(--color-bg-elevated);
     }
 
     .panel-body {
