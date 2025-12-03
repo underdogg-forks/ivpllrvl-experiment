@@ -6,14 +6,14 @@
         // Select2 for all select inputs
         $(".simple-select").select2();
 
-        <?php $this->layout->load_view('clients/script_select2_client_id.js'); ?>
+        @include('crm::clients.script_select2_client_id')
 
         // Creates the quote
         $('#copy_quote_confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("<?php echo site_url('quotes/ajax/copy_quote'); ?>", {
+            $.post("{{ route('quotes.ajax.copy') }}", {
                     legacy_calculation: legacy_calculation, // Automatic. From meta (see script)
-                    quote_id: <?php echo $quote_id; ?>,
+                    quote_id: {{ $quote_id }},
                     client_id: $('#client_id').val(),
                     user_id: $('#user_id').val(),
                     quote_date_created: $('#quote_date_created_modal').val(),
@@ -21,9 +21,9 @@
                     quote_password: $('#quote_password').val(),
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
-                        window.location = "<?php echo site_url('quotes/view'); ?>/" + response.quote_id;
+                        window.location = "{{ route('quotes.view', '') }}/" + response.quote_id;
                     }
                     else {
                         // The validation was not successful
@@ -48,21 +48,21 @@
         </div>
         <div class="modal-body">
 
-            <input type="hidden" name="user_id" id="user_id" value="<?php echo $quote->user_id; ?>">
+            <input type="hidden" name="user_id" id="user_id" value="{{ $quote->user_id }}">
 
             <input class="hidden" id="input_permissive_search_clients"
-                   value="<?php echo get_setting('enable_permissive_search_clients'); ?>">
+                   value="{{ get_setting('enable_permissive_search_clients') }}">
 
             <div class="form-group has-feedback">
                 <label for="client_id">{{ trans('client') }}</label>
                 <div class="input-group">
                     <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
-                        <i class="fa fa-toggle-<?php echo get_setting('enable_permissive_search_clients') ? 'on' : 'off' ?> fa-fw" ></i>
+                        <i class="fa fa-toggle-{{ get_setting('enable_permissive_search_clients') ? 'on' : 'off' }} fa-fw" ></i>
                     </span>
                     <select name="client_id" id="client_id" class="client-id-select form-control" autofocus="autofocus">
-<?php if ( ! empty($client)) : ?>
-                        <option value="<?php echo $client->client_id; ?>"><?php _htmlsc(format_client($client, false)); ?></option>
-<?php endif; ?>
+                        @if (!empty($client))
+                            <option value="{{ $client->client_id }}">{{ format_client($client, false) }}</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 <div class="input-group">
                     <input name="quote_date_created_modal" id="quote_date_created_modal"
                            class="form-control datepicker"
-                           value="<?php echo date_from_mysql(date('Y-m-d', time()), true); ?>">
+                           value="{{ date_from_mysql(date('Y-m-d', time()), true) }}">
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
                     </span>
@@ -82,12 +82,12 @@
             <div class="form-group">
                 <label for="invoice_group_id">{{ trans('invoice_group') }}</label>
                 <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
-                    <?php foreach ($invoice_groups as $invoice_group) { ?>
-                        <option value="<?php echo $invoice_group->invoice_group_id; ?>"
-                            <?php echo get_setting('default_quote_group') != $invoice_group->invoice_group_id ? '' : 'selected="selected"' ?>>
-                            <?php _htmlsc($invoice_group->invoice_group_name); ?>
+                    @foreach ($invoice_groups as $invoice_group)
+                        <option value="{{ $invoice_group->invoice_group_id }}"
+                            {{ get_setting('default_quote_group') != $invoice_group->invoice_group_id ? '' : 'selected="selected"' }}>
+                            {{ $invoice_group->invoice_group_name }}
                         </option>
-                    <?php } ?>
+                    @endforeach
                 </select>
             </div>
 

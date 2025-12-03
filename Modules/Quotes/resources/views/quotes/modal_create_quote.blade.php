@@ -6,25 +6,25 @@
         // Select2 for all select inputs
         $('.simple-select').select2();
 
-        <?php $this->layout->load_view('clients/script_select2_client_id.js'); ?>
+        @include('crm::clients.script_select2_client_id')
 
         // Creates the quote
         $('#quote_create_confirm').click(function () {
             show_loader(); // Show spinner
             // Posts the data to validate and create the quote;
             // will create the new client if necessary
-            $.post("<?php echo site_url('quotes/ajax/create'); ?>", {
+            $.post("{{ route('quotes.ajax.create') }}", {
                     client_id: $('#create_quote_client_id').val(),
                     quote_date_created: $('#quote_date_created').val(),
                     quote_password: $('#quote_password').val(),
-                    user_id: '<?php echo $this->session->userdata('user_id'); ?>',
+                    user_id: '{{ auth()->id() }}',
                     invoice_group_id: $('#invoice_group_id').val()
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
                         // The validation was successful and quote was created
-                        window.location = "<?php echo site_url('quotes/view'); ?>/" + response.quote_id;
+                        window.location = "{{ route('quotes.view', '') }}/" + response.quote_id;
                     }
                     else {
                         // The validation was not successful
@@ -48,19 +48,19 @@
         <div class="modal-body">
 
             <input class="hidden" id="input_permissive_search_clients"
-                   value="<?php echo get_setting('enable_permissive_search_clients'); ?>">
+                   value="{{ get_setting('enable_permissive_search_clients') }}">
 
             <div class="form-group has-feedback">
                 <label for="create_quote_client_id">{{ trans('client') }}</label>
                 <div class="input-group">
                     <span id="toggle_permissive_search_clients" class="input-group-addon" title="{{ trans('enable_permissive_search_clients') }}" style="cursor:pointer;">
-                        <i class="fa fa-toggle-<?php echo get_setting('enable_permissive_search_clients') ? 'on' : 'off' ?> fa-fw" ></i>
+                        <i class="fa fa-toggle-{{ get_setting('enable_permissive_search_clients') ? 'on' : 'off' }} fa-fw" ></i>
                     </span>
                     <select name="client_id" id="create_quote_client_id" class="client-id-select form-control"
                             autofocus="autofocus" required>
-                        <?php if ( ! empty($client)) : ?>
-                            <option value="<?php echo $client->client_id; ?>"><?php _htmlsc(format_client($client, false)); ?></option>
-                        <?php endif; ?>
+                        @if (!empty($client))
+                            <option value="{{ $client->client_id }}">{{ format_client($client, false) }}</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                 <div class="input-group">
                     <input name="quote_date_created" id="quote_date_created"
                            class="form-control datepicker"
-                           value="<?php echo date(date_format_setting()); ?>" required>
+                           value="{{ date(date_format_setting()) }}" required>
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
                     </span>
@@ -83,7 +83,7 @@
             <div class="form-group">
                 <label for="quote_password">{{ trans('quote_password') }}</label>
                 <input type="text" name="quote_password" id="quote_password" class="form-control"
-                       value="<?php echo get_setting('quote_pre_password') ? '' : get_setting('quote_pre_password') ?>"
+                       value="{{ get_setting('quote_pre_password') ? '' : get_setting('quote_pre_password') }}"
                        autocomplete="off">
             </div>
 
@@ -91,12 +91,12 @@
                 <label for="invoice_group_id">{{ trans('invoice_group') }}: </label>
                 <select name="invoice_group_id" id="invoice_group_id"
                     class="form-control simple-select" data-minimum-results-for-search="Infinity" required>
-                    <?php foreach ($invoice_groups as $invoice_group) { ?>
-                        <option value="<?php echo $invoice_group->invoice_group_id; ?>"
-                            <?php check_select(get_setting('default_quote_group'), $invoice_group->invoice_group_id); ?>>
-                            <?php _htmlsc($invoice_group->invoice_group_name); ?>
+                    @foreach ($invoice_groups as $invoice_group)
+                        <option value="{{ $invoice_group->invoice_group_id }}"
+                            {{ check_select(get_setting('default_quote_group'), $invoice_group->invoice_group_id) }}>
+                            {{ $invoice_group->invoice_group_name }}
                         </option>
-                    <?php } ?>
+                    @endforeach
                 </select>
             </div>
 

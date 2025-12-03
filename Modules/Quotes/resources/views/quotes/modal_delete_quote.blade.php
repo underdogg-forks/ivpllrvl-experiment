@@ -10,13 +10,13 @@
 
         </div>
         <div class="modal-footer">
-            <form action="<?php echo site_url('quotes/delete/' . $quote->quote_id); ?>"
+            <form action="{{ route('quotes.delete', $quote->quote_id) }}"
                   method="POST">
-                <?php _csrf_field(); ?>
+                @csrf
 
                 <div class="btn-group">
                     <button type="submit" class="btn btn-danger ajax-loader">
-                        <i class="fa fa-trash-o fa-margin"></i> <?php _trans('confirm_deletion') ?>
+                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('confirm_deletion') }}
                     </button>
                     <a href="#" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times"></i> {{ trans('cancel') }}

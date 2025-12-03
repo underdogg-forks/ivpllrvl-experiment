@@ -9,20 +9,20 @@
         // Creates the invoice
         $('#quote_to_invoice_confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("<?php echo site_url('quotes/ajax/quote_to_invoice'); ?>", {
+            $.post("{{ route('quotes.ajax.quote_to_invoice') }}", {
                     legacy_calculation: legacy_calculation, // Automatic. From meta (see script)
-                    quote_id: <?php echo $quote_id; ?>,
+                    quote_id: {{ $quote_id }},
                     client_id: $('#client_id').val(),
                     invoice_date_created: $('#invoice_date_created').val(),
-                    invoice_time_created: '<?php echo date('H:i:s') ?>',
+                    invoice_time_created: '{{ date('H:i:s') }}',
                     invoice_group_id: $('#invoice_group_id').val(),
                     invoice_password: $('#invoice_password').val(),
                     user_id: $('#user_id').val()
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
-                        window.location = "<?php echo site_url('invoices/view'); ?>/" + response.invoice_id;
+                        window.location = "{{ route('invoices.view', '') }}/" + response.invoice_id;
                     }
                     else {
                         // The validation was not successful
@@ -48,9 +48,9 @@
         <div class="modal-body">
 
             <input type="hidden" name="client_id" id="client_id"
-                   value="<?php echo $quote->client_id; ?>">
+                   value="{{ $quote->client_id }}">
             <input type="hidden" name="user_id" id="user_id"
-                   value="<?php echo $quote->user_id; ?>">
+                   value="{{ $quote->user_id }}">
 
             <div class="form-group has-feedback">
                 <label for="invoice_date_created">
@@ -69,7 +69,7 @@
             <div class="form-group">
                 <label for="invoice_password">{{ trans('invoice_password') }}</label>
                 <input type="text" name="invoice_password" id="invoice_password" class="form-control"
-                       value="<?php echo get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') ?>"
+                       value="{{ get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') }}"
                        autocomplete="off">
             </div>
 
@@ -78,11 +78,11 @@
                     {{ trans('invoice_group') }}
                 </label>
                 <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
-                    <?php foreach ($invoice_groups as $invoice_group) { ?>
-                        <option value="<?php echo $invoice_group->invoice_group_id; ?>"
-                            <?php check_select(get_setting('default_invoice_group'), $invoice_group->invoice_group_id); ?>>
-                            <?php _htmlsc($invoice_group->invoice_group_name); ?></option>
-                    <?php } ?>
+                    @foreach ($invoice_groups as $invoice_group)
+                        <option value="{{ $invoice_group->invoice_group_id }}"
+                            {{ check_select(get_setting('default_invoice_group'), $invoice_group->invoice_group_id) }}>
+                            {{ $invoice_group->invoice_group_name }}</option>
+                    @endforeach
                 </select>
             </div>
 

@@ -4,15 +4,15 @@
             var tax_rate_id = $('#tax_rate_id').val();
             if ('0' == tax_rate_id) return;
             show_loader(); // Show spinner
-            $.post("<?php echo site_url('quotes/ajax/save_quote_tax_rate'); ?>", {
-                    quote_id: <?php echo $quote_id; ?>,
+            $.post("{{ route('quotes.ajax.save_tax_rate') }}", {
+                    quote_id: {{ $quote_id }},
                     tax_rate_id: tax_rate_id,
                     include_item_tax: $('#include_item_tax').val()
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) config('app.debug') }});
                     if (response.success === 1) {
-                        window.location = "<?php echo site_url('quotes/view'); ?>/" + <?php echo $quote_id; ?>;
+                        window.location = "{{ route('quotes.view', $quote_id) }}";
                     }
                     // close_loader(); No error returned (show go to wiki if not success after 10s)  Todo: else // The validation was not successful
                 }
@@ -37,11 +37,11 @@
                 <div class="controls">
                     <select name="tax_rate_id" id="tax_rate_id" class="form-control simple-select" required>
                         <option value="0">{{ trans('none') }}</option>
-                        <?php foreach ($tax_rates as $tax_rate) { ?>
-                            <option value="<?php echo $tax_rate->tax_rate_id; ?>">
-                                <?php echo format_amount($tax_rate->tax_rate_percent) . '% - ' . htmlsc($tax_rate->tax_rate_name); ?>
+                        @foreach ($tax_rates as $tax_rate)
+                            <option value="{{ $tax_rate->tax_rate_id }}">
+                                {{ format_amount($tax_rate->tax_rate_percent) }}% - {{ $tax_rate->tax_rate_name }}
                             </option>
-                        <?php } ?>
+                        @endforeach
                     </select>
                 </div>
             </div>
