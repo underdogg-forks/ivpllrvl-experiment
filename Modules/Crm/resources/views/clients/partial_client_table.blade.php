@@ -46,29 +46,33 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
                 <td class="px-4 py-2">{{ htmlspecialchars($client->client_phone ? $client->client_phone : ($client->client_mobile ? $client->client_mobile : '')) }}</td>
                 <td class="px-4 py-2 amount last">{{ format_currency($client->client_invoice_balance) }}</td>
                 <td class="px-4 py-2">
-                    <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" data-toggle="dropdown" href="#">
+                    <div x-data="{ open: false }" class="relative inline-block text-left">
+                        <button @click="open = !open" type="button"
+                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
-                        </a>
-                        <ul class="dropdown-menu bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                        </button>
+                        <ul x-show="open" @click.away="open = false" x-cloak
+                            class="absolute right-0 mt-1 w-48 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
-                                <a href="{{ route('clients.show', $client->client_id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="{{ route('clients.show', $client->client_id) }}" 
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-eye fa-margin"></i> {{ trans('view') }}
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('clients.edit', $client->client_id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="{{ route('clients.edit', $client->client_id) }}" 
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="client-create-quote block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                <a href="#" class="client-create-quote block px-4 py-2 text-sm text-primary hover:bg-hover"
                                    data-client-id="{{ $client->client_id }}">
                                     <i class="fa fa-file fa-margin"></i> {{ trans('create_quote') }}
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="client-create-invoice block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                <a href="#" class="client-create-invoice block px-4 py-2 text-sm text-primary hover:bg-hover"
                                    data-client-id="{{ $client->client_id }}">
                                     <i class="fa fa-file-text fa-margin"></i> {{ trans('create_invoice') }}
                                 </a>
@@ -78,7 +82,8 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
                                       method="POST" class="w-full">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="dropdown-button w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    <button type="submit" 
+                                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-hover"
                                             onclick="return confirm('{{ trans('delete_client_warning') }}');">
                                         <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>

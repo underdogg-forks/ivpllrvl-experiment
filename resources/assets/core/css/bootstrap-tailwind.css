@@ -3,6 +3,7 @@
  *
  * This file provides Bootstrap 3 class names but implements them using Tailwind utilities.
  * This allows views to keep using Bootstrap classes while the actual styling comes from Tailwind.
+ * Updated to use theme CSS custom properties for better theming support.
  */
 
 @import "tailwindcss";
@@ -22,25 +23,25 @@
     }
 
     .btn-primary {
-        background-color: #337ab7;
+        background-color: rgb(var(--color-primary));
         color: white;
-        border-color: #2e6da4;
+        border-color: rgb(var(--color-primary-dark));
     }
 
     .btn-primary:hover {
-        background-color: #286090;
-        border-color: #204d74;
+        background-color: rgb(var(--color-primary-hover));
+        border-color: rgb(var(--color-primary-dark));
     }
 
     .btn-default {
-        background-color: white;
-        color: #333;
-        border-color: #ccc;
+        background-color: rgb(var(--color-bg-elevated));
+        color: rgb(var(--color-text-primary));
+        border-color: rgb(var(--color-border-dark));
     }
 
     .btn-default:hover {
-        background-color: #e6e6e6;
-        border-color: #adadad;
+        background-color: rgb(var(--color-bg-hover));
+        border-color: rgb(var(--color-border-dark));
     }
 
     .btn-success {
@@ -122,16 +123,16 @@
         padding: 0.375rem 0.75rem;
         font-size: 0.875rem;
         line-height: 1.25;
-        color: #555;
-        background-color: white;
-        border-color: #ccc;
+        color: rgb(var(--color-text-primary));
+        background-color: rgb(var(--color-bg-elevated));
+        border-color: rgb(var(--color-border));
         transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
     }
 
     .form-control:focus {
-        border-color: #66afe9;
+        border-color: rgb(var(--color-primary));
         outline: none;
-        box-shadow: 0 0 8px rgba(102, 175, 233, 0.6), inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: 0 0 8px rgba(var(--color-primary), 0.4), inset 0 1px 1px rgba(0, 0, 0, 0.075);
     }
 
     .input-sm {
@@ -158,9 +159,9 @@
         padding: 0.375rem 0.75rem;
         font-size: 0.875rem;
         line-height: 1.25;
-        color: #555;
-        background-color: #eee;
-        border-color: #ccc;
+        color: rgb(var(--color-text-primary));
+        background-color: rgb(var(--color-bg-hover));
+        border-color: rgb(var(--color-border));
         white-space: nowrap;
     }
 
@@ -180,29 +181,29 @@
     .table td {
         padding: 0.5rem;
         line-height: 1.25;
-        border-top: 1px solid #ddd;
+        border-top: 1px solid rgb(var(--color-border));
     }
 
     .table thead th {
-        border-bottom: 2px solid #ddd;
+        border-bottom: 2px solid rgb(var(--color-border));
         vertical-align: bottom;
     }
 
     .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f9f9f9;
+        background-color: rgb(var(--color-bg-hover) / 0.3);
     }
 
     .table-bordered {
-        border: 1px solid #ddd;
+        border: 1px solid rgb(var(--color-border));
     }
 
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #ddd;
+        border: 1px solid rgb(var(--color-border));
     }
 
     .table-hover tbody tr:hover {
-        background-color: #f5f5f5;
+        background-color: rgb(var(--color-bg-hover));
     }
 
     /* ================================
@@ -243,10 +244,11 @@
      * PANELS
      * ================================ */
     .panel {
-        @apply rounded border bg-white;
+        @apply rounded border;
+        background-color: rgb(var(--color-bg-elevated));
         margin-bottom: 1.25rem;
         border-width: 1px;
-        border-color: #ddd;
+        border-color: rgb(var(--color-border));
     }
 
     .panel-body {
@@ -255,13 +257,13 @@
 
     .panel-heading {
         padding: 0.625rem 1rem;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid rgb(var(--color-border));
     }
 
     .panel-default > .panel-heading {
-        color: #333;
-        background-color: #f5f5f5;
-        border-color: #ddd;
+        color: rgb(var(--color-text-primary));
+        background-color: rgb(var(--color-bg-hover));
+        border-color: rgb(var(--color-border));
     }
 
     /* ================================
@@ -288,7 +290,7 @@
     }
 
     .text-muted {
-        color: #777;
+        color: rgb(var(--color-text-secondary));
     }
 
     .clearfix::after {
@@ -308,10 +310,12 @@
 
     .pagination li a,
     .pagination li span {
-        @apply relative block text-center bg-white border border-gray-300;
+        @apply relative block text-center border;
+        background-color: rgb(var(--color-bg-elevated));
+        border-color: rgb(var(--color-border));
         padding: 0.375rem 0.75rem;
         line-height: 1.25;
-        color: #337ab7;
+        color: rgb(var(--color-accent));
         text-decoration: none;
         margin-left: -1px;
     }
@@ -330,15 +334,15 @@
     }
 
     .pagination li a:hover {
-        background-color: #eee;
-        border-color: #ddd;
+        background-color: rgb(var(--color-bg-hover));
+        border-color: rgb(var(--color-border-dark));
     }
 
     .pagination .active a {
         z-index: 10;
         color: white;
-        background-color: #337ab7;
-        border-color: #337ab7;
+        background-color: rgb(var(--color-primary));
+        border-color: rgb(var(--color-primary));
         cursor: default;
     }
 }

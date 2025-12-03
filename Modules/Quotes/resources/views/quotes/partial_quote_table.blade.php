@@ -25,7 +25,7 @@
                 // Convert the dropdown menu to a dropup if quote is after the invoice split
                 $dropup = $quote_idx > $quote_list_split;
             @endphp
-            <tr>
+            <tr class="hover:bg-hover">
                 <td>
                     <span class="label {{ $quote_statuses[$quote->quote_status_id]['class'] }}">
                         {{ $quote_statuses[$quote->quote_status_id]['label'] }}
@@ -33,6 +33,7 @@
                 </td>
                 <td>
                     <a href="{{ route('quotes.view', $quote->quote_id) }}"
+                       class="text-accent hover:underline"
                        title="{{ trans('edit') }}">
                         {{ $quote->quote_number ? $quote->quote_number : $quote->quote_id }}
                     </a>
@@ -45,6 +46,7 @@
                 </td>
                 <td>
                     <a href="{{ route('clients.view', $quote->client_id) }}"
+                       class="text-accent hover:underline"
                        title="{{ trans('view_client') }}">
                         {{ format_client($quote) }}
                     </a>
@@ -53,25 +55,29 @@
                     {{ format_currency($quote->quote_total) }}
                 </td>
                 <td>
-                    <div class="options btn-group{{ $dropup ? ' dropup' : '' }}">
-                        <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
-                           href="#">
+                    <div x-data="{ open: false }" class="relative inline-block text-left">
+                        <button @click="open = !open" type="button"
+                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
-                        </a>
-                        <ul class="dropdown-menu">
+                        </button>
+                        <ul x-show="open" @click.away="open = false" x-cloak
+                            class="absolute {{ $dropup ? 'bottom-full mb-1' : 'mt-1' }} right-0 w-48 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
-                                <a href="{{ route('quotes.view', $quote->quote_id) }}">
+                                <a href="{{ route('quotes.view', $quote->quote_id) }}"
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('quotes.generate_pdf', $quote->quote_id) }}"
-                                   target="_blank">
+                                   target="_blank"
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-print fa-margin"></i> {{ trans('download_pdf') }}
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('mailer.quote', $quote->quote_id) }}">
+                                <a href="{{ route('mailer.quote', $quote->quote_id) }}"
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-send fa-margin"></i> {{ trans('send_email') }}
                                 </a>
                             </li>
@@ -79,7 +85,8 @@
                                 <form action="{{ route('quotes.delete', $quote->quote_id) }}"
                                       method="POST">
                                     @csrf
-                                    <button type="submit" class="dropdown-button"
+                                    <button type="submit" 
+                                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-hover"
                                             onclick="return confirm('{{ trans('delete_quote_warning') }}');">
                                         <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
