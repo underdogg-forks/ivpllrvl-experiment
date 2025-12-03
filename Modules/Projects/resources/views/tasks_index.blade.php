@@ -2,7 +2,7 @@
     <h1 class="headerbar-title">{{ trans('tasks') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="{{ route('tasks.create') }}">
+        <a class="btn btn-sm btn-primary" href="{{ route('tasks.form') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>

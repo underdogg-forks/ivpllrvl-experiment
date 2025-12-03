@@ -8,7 +8,7 @@
             <ul class="space-y-1 px-2">
                 <!-- Dashboard -->
                 <li>
-                    <a href="{{ route('dashboard') }}" 
+                    <a href="{{ route('dashboard.index') }}" 
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('dashboard*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-house w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('dashboard') }}</span>
@@ -78,7 +78,7 @@
 
                 <!-- Settings & Administration -->
                 <li>
-                    <a href="{{ route('settings') }}" 
+                    <a href="{{ route('settings.index') }}" 
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('settings*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-cog w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('system_settings') }}</span>
@@ -87,7 +87,7 @@
 
                 <!-- Reports -->
                 <li>
-                    <a href="{{ route('reports.invoice_aging') }}" 
+                    <a href="{{ route('dashboard.index') }}" 
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('reports*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                         <i class="fas fa-chart-bar w-5 text-center" :class="{ 'mr-3': sidebarOpen }"></i>
                         <span x-show="sidebarOpen" x-cloak>{{ trans('reports') }}</span>

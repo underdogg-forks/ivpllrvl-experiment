@@ -11,7 +11,7 @@
         // Creates the invoice
         $('#copy_invoice_confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("{{ route('invoices.ajax.copy-invoice') }}", {
+            $.post("{{ route('invoices.copy-invoice') }}", {
                     legacy_calculation: legacy_calculation, // Automatic. From meta (see script)
                     invoice_id: {{ $invoice_id }},
                     client_id: $('#client_id').val(),

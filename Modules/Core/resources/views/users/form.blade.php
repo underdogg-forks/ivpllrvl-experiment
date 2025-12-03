@@ -35,7 +35,7 @@ $einvoicingOpt = $einvoicing ? $einvoicingTip . trans('optional') . ')"' : '';
 
         $('#add-user-client-modal').click(function () {
             <?php $user_id = $id ?? ''; ?>
-            $('#modal-placeholder').load("{{ route('users/ajax/modal_add_user_client/' . $user_id) }}");
+            $('#modal-placeholder').load("{{ route('users.modal-add-user-client', ['user_id' => $user_id]) }}");
         });
     });
 </script>

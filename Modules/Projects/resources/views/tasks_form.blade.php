@@ -5,7 +5,7 @@
 </div>
 
 <div id="content">
-    <form method="post" action="{{ isset($task->task_id) && $task->task_id ? route('tasks.update', ['task' => $task->task_id]) : route('tasks.store') }}">
+    <form method="post" action="{{ isset($task->task_id) && $task->task_id ? route('tasks.update', ['task' => $task->task_id]) : route('tasks.form') }}">
         @csrf
         @if (isset($task->task_id) && $task->task_id)
             @method('PUT')

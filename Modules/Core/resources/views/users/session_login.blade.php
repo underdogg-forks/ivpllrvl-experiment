@@ -65,7 +65,7 @@
             <button type="submit" class="btn btn-primary">
                 <i class="fa fa-unlock fa-margin"></i> {{ trans('login') }}
             </button>
-            <a href="{{ route('sessions/passwordreset') }}" class="btn btn-default">
+            <a href="{{ route('sessions.passwordreset') }}" class="btn btn-default">
                 {{ trans('forgot_your_password') }}
             </a>
 

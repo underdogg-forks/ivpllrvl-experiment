@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="panel-body p-4">
-                    <form method="post" action="{{ route('reports.invoice_aging') }}"
+                    <form method="post" action="{{ route('dashboard.index') }}"
                         {{ get_setting('reports_in_new_tab', false) ? 'target="_blank"' : '' }}>
 
                         @csrf

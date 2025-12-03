@@ -15,7 +15,7 @@
             // No Check No post
             if ( ! product_ids.length) return; // todo: why not animate checkboxes
 
-            $.post("{{ route('products.ajax.process-selections') }}", {
+            $.post("{{ route('products.ajax.process_product_selections') }}", {
                 product_ids: product_ids
             }, function (data) {
                 var items = json_parse(data, {{ (int) config('app.debug') }});

@@ -7,7 +7,7 @@
 
             if (email_template_id === '') return;
 
-            $.post("{{ route('email_templates/ajax/get_content') }}", {
+            $.post("{{ route('email-templates.ajax.get-content') }}", {
                 email_template_id: email_template_id
             }, function (data) {
                 inject_email_template(template_fields, json_parse(data, {{ (int) IP_DEBUG }}));
@@ -28,7 +28,7 @@
 
 </script>
 
-<form method="post" action="{{ route('mailer/send_quote/' . $quote->quote_id) ?>">
+<form method="post" action="{{ route('mailer.send-quote', ['quote_id' => $quote->quote_id]) ?>">
 
     <?php _csrf_field() }}
 
@@ -203,7 +203,7 @@
                     <label for="quote-guest-url">{{ trans('guest_url') }}</label>
                     <div class="input-group">
                         <input type="text" id="quote-guest-url" readonly class="form-control"
-                               value="{{ route('guest/view/quote/' . $quote->quote_url_key) }}">
+                               value="{{ route('guest.view', ['quote_url_key' => $quote->quote_url_key]) }}">
                         <div class="input-group-addon to-clipboard cursor-pointer"
                              data-clipboard-target="#quote-guest-url">
                             <i class="fa fa-clipboard fa-fw"></i>

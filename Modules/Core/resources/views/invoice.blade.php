@@ -7,7 +7,7 @@
 
             if (email_template_id === '') return;
 
-            $.post("{{ route('email_templates/ajax/get_content') }}", {
+            $.post("{{ route('email-templates.ajax.get-content') }}", {
                 email_template_id: email_template_id
             }, function (data) {
                 inject_email_template(template_fields, json_parse(data, {{ (int) IP_DEBUG }}));
@@ -28,7 +28,7 @@
 
 </script>
 
-<form method="post" action="{{ route('mailer/send_invoice/' . $invoice->invoice_id) ?>">
+<form method="post" action="{{ route('mailer.send-invoice', ['invoice_id' => $invoice->invoice_id]) ?>">
 
     <?php _csrf_field() }}
 
@@ -214,7 +214,7 @@ if ($invoice->client_einvoicing_version != '' && $invoice->client_einvoicing_act
                 <div class="form-group"><label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                     <div class="input-group">
                         <input type="text" id="invoice-guest-url" readonly class="form-control"
-                               value="<?php echo route('guest/view/invoice/' . $invoice->invoice_url_key) ?>">
+                               value="<?php echo route('guest.view', ['invoice_url_key' => $invoice->invoice_url_key]) ?>">
                         <div class="input-group-addon to-clipboard cursor-pointer"
                              data-clipboard-target="#invoice-guest-url">
                             <i class="fa fa-clipboard fa-fw"></i>

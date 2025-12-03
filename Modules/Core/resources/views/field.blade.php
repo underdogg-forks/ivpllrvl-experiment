@@ -10,7 +10,7 @@ $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-            <a class="btn btn-default" href="{{ route('custom_values') }}">
+            <a class="btn btn-default" href="{{ route('custom-values.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
             <a class="btn btn-primary" href="{{ route('custom_values/create/' . $id) }}">

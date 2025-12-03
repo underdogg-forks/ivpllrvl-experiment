@@ -5,13 +5,13 @@
     <h1 class="headerbar-title">{{ trans('import_data') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="{{ route('import/form') }}">
+        <a class="btn btn-sm btn-primary" href="{{ route('import.form') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
 
     <div class="headerbar-item pull-right">
-        {{ pager(route('import/index'), $imports) }}
+        {{ pager(route('import.index'), $imports) }}
     </div>
 
 </div>

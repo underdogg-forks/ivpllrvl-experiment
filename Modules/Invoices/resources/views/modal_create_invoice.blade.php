@@ -12,7 +12,7 @@
         $('#invoice_create_confirm').click(function () {
             // Posts the data to validate and create the invoice;
             // will create the new client if necessary
-            $.post("{{ route('invoices.ajax.create') }}", {
+            $.post("{{ route('invoices.create') }}", {
                     client_id: $('#create_invoice_client_id').val(),
                     invoice_date_created: $('#invoice_date_created').val(),
                     invoice_group_id: $('#invoice_group_id').val(),
