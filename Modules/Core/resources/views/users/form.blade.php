@@ -35,7 +35,7 @@ $einvoicingOpt = $einvoicing ? $einvoicingTip . trans('optional') . ')"' : '';
 
         $('#add-user-client-modal').click(function () {
             <?php $user_id = $id ?? ''; ?>
-            $('#modal-placeholder').load("<?php echo site_url('users/ajax/modal_add_user_client/' . $user_id); ?>");
+            $('#modal-placeholder').load("{{ route('users/ajax/modal_add_user_client/' . $user_id) }}");
         });
     });
 </script>
@@ -46,14 +46,14 @@ $einvoicingOpt = $einvoicing ? $einvoicingTip . trans('optional') . ')"' : '';
 
     <div id="headerbar">
         <h1 class="headerbar-title">{{ trans('user_form') }}</h1>
-        <?php echo $this->layout->load_view('layout/header_buttons'); ?>
+        {{ $this->layout->load_view('layout/header_buttons') }}
     </div>
 
     <div id="content">
         <div class="row">
             <div class="col-xs-12 col-md-6 col-md-offset-3">
 
-                <?php echo $this->layout->load_view('layout/alerts'); ?>
+                {{ $this->layout->load_view('layout/alerts') }}
 
                 <div id="userInfo">
 
@@ -64,19 +64,19 @@ $einvoicingOpt = $einvoicing ? $einvoicingTip . trans('optional') . ')"' : '';
                             <div class="form-group">
                                 <label for="user_name">{{ trans('name') }}</label>
                                 <input type="text" name="user_name" id="user_name" class="form-control"
-                                       value="<?php echo $this->mdl_users->form_value('user_name', true); ?>">
+                                       value="{{ $this->mdl_users->form_value('user_name', true) }}">
                             </div>
 
-                            <div class="form-group"<?php echo $itsCompany ? $einvoicingB2B : $einvoicingOpt; ?>>
-                                <label for="user_company">{{ trans('company') }} (<?php _trans($itsCompany ? 'required_field' : 'optional'); ?>)</label><?php echo $qr_code_info; ?>
+                            <div class="form-group"{{ $itsCompany ? $einvoicingB2B : $einvoicingOpt }}>
+                                <label for="user_company">{{ trans('company') }} ({{ trans($itsCompany ? 'required_field' : 'optional') }})</label>{{ $qr_code_info }}
                                 <input type="text" name="user_company" id="user_company" class="form-control"
-                                       value="<?php echo $this->mdl_users->form_value('user_company', true); ?>">
+                                       value="{{ $this->mdl_users->form_value('user_company', true) }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="user_email">{{ trans('email_address') }}</label>
                                 <input type="text" name="user_email" id="user_email" class="form-control"
-                                       value="<?php echo $this->mdl_users->form_value('user_email', true); ?>" required>
+                                       value="{{ $this->mdl_users->form_value('user_email', true) }}" required>
                             </div>
 
 <?php // New user
@@ -99,15 +99,12 @@ if ( ! $id) {
 } else { // Edit user
     ?>
                             <div class="form-group">
-                                <a href="<?php echo site_url('users/change_password/' . $id); ?>"
+                                <a href="{{ route('users/change_password/' . $id) }}"
                                    class="btn btn-default">
                                     {{ trans('change_password') }}
                                 </a>
                             </div>
-<?php
-}
-?>
-
+@endif
                             <div class="form-group">
                                 <label for="user_language">{{ trans('language') }}</label>
                                 <select name="user_language" id="user_language" class="form-control simple-select" required>
@@ -118,12 +115,10 @@ if ( ! $id) {
 $usr_lang = $this->mdl_users->form_value('user_language');
 foreach ($languages as $language) {
     ?>
-                                    <option value="<?php echo $language; ?>" <?php check_select($usr_lang, $language); ?>>
-                                        <?php echo ucfirst($language); ?>
+                                    <option value="{{ $language }}" {{ $usr_lang == $language ? 'selected' : '' }}>
+                                        {{ ucfirst($language) }}
                                     </option>
-<?php
-}
-?>
+@endif
                                 </select>
                             </div>
 
@@ -134,12 +129,10 @@ foreach ($languages as $language) {
 $user_type = $this->mdl_users->form_value('user_type');
 foreach ($user_types as $key => $type) {
     ?>
-                                    <option value="<?php echo $key; ?>" <?php check_select($user_type, $key); ?>>
-                                        <?php echo $type; ?>
+                                    <option value="{{ $key }}" {{ $user_type == $key ? 'selected' : '' }}>
+                                        {{ $type }}
                                     </option>
-<?php
-}
-?>
+@endif
                                 </select>
                             </div>
                         </div>
@@ -151,50 +144,46 @@ foreach ($user_types as $key => $type) {
                             <div class="panel-heading">{{ trans('address') }}</div>
 
                             <div class="panel-body">
-                                <div class="form-group"<?php echo $einvoicingReq; ?>>
+                                <div class="form-group"{{ $einvoicingReq }}>
                                     <label for="user_address_1">{{ trans('street_address') }}</label>
                                     <input type="text" name="user_address_1" id="user_address_1" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_address_1', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_address_1', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingOpt; ?>>
+                                <div class="form-group"{{ $einvoicingOpt }}>
                                     <label for="user_address_2">{{ trans('street_address_2') }}</label>
                                     <input type="text" name="user_address_2" id="user_address_2" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_address_2', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_address_2', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingReq; ?>>
+                                <div class="form-group"{{ $einvoicingReq }}>
                                     <label for="user_city">{{ trans('city') }}</label>
                                     <input type="text" name="user_city" id="user_city" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_city', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_city', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingOpt; ?>>
+                                <div class="form-group"{{ $einvoicingOpt }}>
                                     <label for="user_state">{{ trans('state') }}</label>
                                     <input type="text" name="user_state" id="user_state" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_state', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_state', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingReq; ?>>
+                                <div class="form-group"{{ $einvoicingReq }}>
                                     <label for="user_zip">{{ trans('zip_code') }}</label>
                                     <input type="text" name="user_zip" id="user_zip" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_zip', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_zip', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingReq; ?>>
+                                <div class="form-group"{{ $einvoicingReq }}>
                                     <label for="user_country">{{ trans('country') }}</label>
                                     <select name="user_country" id="user_country" class="form-control">
                                         <option value="">{{ trans('none') }}</option>
-<?php
-foreach ($countries as $cldr => $country) {
-    ?>
-                                        <option value="<?php echo $cldr; ?>"
-                                            <?php check_select($selected_country, $cldr); ?>>
+@foreach($countries as $cldr => $country)
+                                        <option value="{{ $cldr }}"
+                                            {{ $selected_country == $cldr ? 'selected' : '' }}>
                                             <?php echo $country ?>
                                         </option>
-<?php
-}
-?>
+@endif
                                     </select>
                                 </div>
 <?php
@@ -211,16 +200,16 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
                             <div class="panel-heading">{{ trans('tax_information') }}</div>
 
                             <div class="panel-body">
-                                <div class="form-group"<?php echo  $itsCompany ? $einvoicingB2B : $einvoicingOpt; ?>>
-                                    <label for="user_vat_id">{{ trans('vat_id') }} (<?php _trans($itsCompany ? 'required_field' : 'optional'); ?>)</label>
+                                <div class="form-group"{{ $itsCompany ? $einvoicingB2B : $einvoicingOpt }}>
+                                    <label for="user_vat_id">{{ trans('vat_id') }} ({{ trans($itsCompany ? 'required_field' : 'optional') }})</label>
                                     <input type="text" name="user_vat_id" id="user_vat_id" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_vat_id', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_vat_id', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingReq; ?>>
+                                <div class="form-group"{{ $einvoicingReq }}>
                                     <label for="user_tax_code">{{ trans('tax_code') }}</label>
                                     <input type="text" name="user_tax_code" id="user_tax_code" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_tax_code', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_tax_code', true) }}">
                                 </div>
 
 <?php
@@ -239,30 +228,30 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
                             <div class="panel-heading">{{ trans('bank_information') }}</div>
 
                             <div class="panel-body">
-                                <div class="form-group"<?php echo $einvoicingOpt; ?>>
+                                <div class="form-group"{{ $einvoicingOpt }}>
                                     <label for="user_bank">{{ trans('bank') }}</label>
                                     <input type="text" name="user_bank" id="user_bank" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_bank', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_bank', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingReq; ?>><?php echo $qr_code_info; ?>
-                                    <label for="user_iban"><?php echo 'IBAN'; ?></label>
+                                <div class="form-group"{{ $einvoicingReq }}>{{ $qr_code_info }}
+                                    <label for="user_iban">{{ 'IBAN' }}</label>
                                     <input type="text" name="user_iban" id="user_iban" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_iban', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_iban', true) }}">
                                 </div>
 
-                                <div class="form-group"<?php echo $einvoicingOpt; ?>><?php echo $qr_code_info; ?>
-                                    <label for="user_bic"><?php echo 'BIC'; ?></label>
+                                <div class="form-group"{{ $einvoicingOpt }}>{{ $qr_code_info }}
+                                    <label for="user_bic">{{ 'BIC' }}</label>
                                     <input type="text" name="user_bic" id="user_bic"
                                            class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_bic', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_bic', true) }}">
                                 </div>
 
-                                <div class="form-group"><?php echo $qr_code_info; ?>
+                                <div class="form-group">{{ $qr_code_info }}
                                     <label for="user_remittance_text">{{ trans('user_remittance_text') }}</label>
                                     <input type="text" name="user_remittance_text" id="user_remittance_text" class="form-control taggable"
                                            placeholder="{{{invoice_number}}} {{{invoice_date_due}}}"
-                                           value="<?php echo $this->mdl_users->form_value('user_remittance_text', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_remittance_text', true) }}">
                                 </div>
 
                                 <div class="panel panel-default">
@@ -276,9 +265,7 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
                             </div>
                         </div>
 
-<?php
-if ($this->mdl_settings->setting('sumex') == '1') {
-    ?>
+@if($this->mdl_settings->setting('sumex') == '1')
                         <div class="panel panel-default">
                             <div class="panel-heading">{{ trans('sumex_information') }}</div>
 
@@ -287,19 +274,19 @@ if ($this->mdl_settings->setting('sumex') == '1') {
                                 <div class="form-group">
                                     <label for="user_subscribernumber">{{ trans('user_subscriber_number') }}</label>
                                     <input type="text" name="user_subscribernumber" id="user_subscribernumber" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_subscribernumber', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_subscribernumber', true) }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="user_gln">{{ trans('gln') }}</label>
                                     <input type="text" name="user_gln" id="user_gln" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_gln', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_gln', true) }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="user_rcc">{{ trans('sumex_rcc') }}</label>
                                     <input type="text" name="user_rcc" id="user_rcc" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_rcc', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_rcc', true) }}">
                                 </div>
                             </div>
 
@@ -316,31 +303,31 @@ if ($this->mdl_settings->setting('sumex') == '1') {
                                 <div class="form-group">
                                     <label for="user_invoicing_con>tact">{{ trans('contact') }} ({{ trans('invoicing') }})</label>
                                     <input type="text" name="user_invoicing_contact" id="user_invoicing_contact" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_invoicing_contact', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_invoicing_contact', true) }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="user_phone">{{ trans('phone_number') }}</label>
                                     <input type="text" name="user_phone" id="user_phone" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_phone', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_phone', true) }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="user_fax">{{ trans('fax_number') }}</label>
                                     <input type="text" name="user_fax" id="user_fax" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_fax', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_fax', true) }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="user_mobile">{{ trans('mobile_number') }}</label>
                                     <input type="text" name="user_mobile" id="user_mobile" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_mobile', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_mobile', true) }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="user_web">{{ trans('web_address') }}</label>
                                     <input type="text" name="user_web" id="user_web" class="form-control"
-                                           value="<?php echo $this->mdl_users->form_value('user_web', true); ?>">
+                                           value="{{ $this->mdl_users->form_value('user_web', true) }}">
                                 </div>
 <?php
 $default_custom = false;
@@ -359,9 +346,7 @@ foreach ($custom_fields['ip_user_custom'] as $custom_field) {
 
                         </div>
 
-<?php
-if ($default_custom) {
-    ?>
+@if($default_custom)
                         <div class="row">
                             <div class="col-xs-12">
 

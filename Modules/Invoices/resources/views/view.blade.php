@@ -20,11 +20,11 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
         });
 
         $('.btn_add_product').click(function () {
-            $('#modal-placeholder').load("<?php echo site_url('products/ajax/modal_product_lookups'); ?>/" + Math.floor(Math.random() * 1000));
+            $('#modal-placeholder').load("{{ route('products/ajax/modal_product_lookups') }}/" + Math.floor(Math.random() * 1000));
         });
 
         $('.btn_add_task').click(function () {
-            $('#modal-placeholder').load("<?php echo site_url('tasks/ajax/modal_task_lookups/' . $invoice_id); ?>/" + Math.floor(Math.random() * 1000));
+            $('#modal-placeholder').load("{{ route('tasks/ajax/modal_task_lookups/' . $invoice_id) }}/" + Math.floor(Math.random() * 1000));
         });
 
         $('.btn_add_row').click(function () {
@@ -33,37 +33,30 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
             check_items_tax_usages();
         });
 
-<?php
-if ( ! $items) {
-    ?>
+@if( ! $items)
         $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();
-<?php
-}
-?>
-
+@endforeach
         // Legacy:no: check items tax usage is correct (Load on change)
         $(document).on('loaded', check_items_tax_usages());
 
         $('#btn_create_recurring').click(function () {
-            $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_create_recurring'); ?>", {
-                invoice_id: <?php echo $invoice_id; ?>
+            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_create_recurring') }}", {
+                invoice_id: {{ $invoice_id }}
             });
         });
-<?php
-if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
-    ?>
+@if($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id)
 
         $('#invoice_change_client').click(function () {
-            $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_change_client'); ?>", {
-                invoice_id: <?php echo $invoice_id; ?>,
-                client_id: "<?php echo e($invoice->client_id); ?>",
+            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_change_client') }}", {
+                invoice_id: {{ $invoice_id }},
+                client_id: "{{ e($invoice->client_id) }}",
             });
         });
 
         $('#invoice_change_user').click(function () {
-            $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_change_user'); ?>", {
-                invoice_id: <?php echo $invoice_id; ?>,
-                user_id: "<?php echo e($invoice->user_id); ?>",
+            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_change_user') }}", {
+                invoice_id: {{ $invoice_id }},
+                user_id: "{{ e($invoice->user_id) }}",
             });
         });
 <?php
@@ -86,9 +79,9 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
                 item_order++;
                 items.push(row);
             });
-            $.post("<?php echo site_url('invoices/ajax/save'); ?>", {
-                    legacy_calculation: <?php echo (int) $legacy_calculation; ?>,
-                    invoice_id: <?php echo $invoice_id; ?>,
+            $.post("{{ route('invoices/ajax/save') }}", {
+                    legacy_calculation: {{ (int) $legacy_calculation }},
+                    invoice_id: {{ $invoice_id }},
                     invoice_number: $('#invoice_number').val(),
                     invoice_date_created: $('#invoice_date_created').val(),
                     invoice_date_due: $('#invoice_date_due').val(),
@@ -102,9 +95,9 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
                     payment_method: $('#payment_method').val(),
                 },
                 function (data) {
-                    var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                    var response = json_parse(data, {{ (int) IP_DEBUG }});
                     if (response.success === 1) {
-                        window.location = "<?php echo site_url('invoices/view'); ?>/" + <?php echo $invoice_id; ?>;
+                        window.location = "{{ route('invoices/view') }}/" + {{ $invoice_id }};
                     } else {
                         $('#fullpage-loader').hide();
                         $('.control-group').removeClass('has-error');
@@ -121,11 +114,11 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
         });
 
         $('#btn_generate_pdf').click(function () {
-            window.open('<?php echo site_url('invoices/generate_pdf/' . $invoice_id); ?>', '_blank');
+            window.open('{{ route('invoices/generate_pdf/' . $invoice_id) }}', '_blank');
         });
 
         $('#btn_generate_xml').click(function () {
-            window.open('<?php echo site_url('invoices/generate_xml/' . $invoice_id); ?>', '_blank');
+            window.open('{{ route('invoices/generate_xml/' . $invoice_id) }}', '_blank');
         });
 
         $(document).on('click', '.btn_delete_item', function () {
@@ -137,11 +130,11 @@ if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
                 $(this).parents('.item').remove();
                 check_items_tax_usages();
             } else {
-                $.post("<?php echo site_url('invoices/ajax/delete_item/' . $invoice->invoice_id); ?>", {
+                $.post("{{ route('invoices/ajax/delete_item/' . $invoice->invoice_id) }}", {
                         'item_id': item_id,
                     },
                     function (data) {
-                        var response = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                        var response = json_parse(data, {{ (int) IP_DEBUG }});
                         if (response.success === 1) {
                             btn.parents('.item').remove();
                         } else {
@@ -173,9 +166,7 @@ if ($invoice->is_read_only != 1) {
              $(document).on('click', '.down', function () {
                DownR($(this));
              });
-<?php
-    } else {
-        ?>
+@else
             var fixHelper = function (e, tr) {
                 var $originals = tr.children();
                 var $helper = tr.clone();
@@ -189,10 +180,7 @@ if ($invoice->is_read_only != 1) {
                 items: 'tbody',
                 helper: fixHelper,
             });
-<?php
-    }
-    ?>
-
+@endforeach
         if ($('#invoice_discount_percent').val().length > 0) {
             $('#invoice_discount_amount').prop('disabled', true);
         }
@@ -215,11 +203,8 @@ if ($invoice->is_read_only != 1) {
                 $('#invoice_discount_amount').prop('disabled', false);
             }
         });
-<?php
-}
-?>
-
-<?php if ($invoice->invoice_is_recurring) { ?>
+@endforeach
+@if($invoice->invoice_is_recurring)
         $(document).on('click', '.js-item-recurrence-toggler', function () {
             var itemRecurrenceState = $(this).next('input').val();
             if (itemRecurrenceState === ('1')) {
@@ -232,8 +217,7 @@ if ($invoice->is_read_only != 1) {
                 $(this).addClass('fa-calendar-check-o text-success');
             }
         });
-<?php } ?>
-
+@endforeach
     });
 </script>
 
@@ -244,23 +228,21 @@ echo $legacy_calculation ? $modal_add_invoice_tax : ''; // Legacy calculation ha
 <div id="headerbar">
     <h1 class="headerbar-title">
         <span data-toggle="tooltip" data-placement="bottom" title="{{ trans('invoicing') }}: <?php _htmlsc(PHP_EOL . format_user($invoice->user_id)); ?>">
-            <?php echo trans('invoice') . ' ' . ($invoice->invoice_number ? '#' . $invoice->invoice_number : trans('id') . ': ' . $invoice->invoice_id); ?>
+            {{ trans('invoice') . ' ' . ($invoice->invoice_number ? '#' . $invoice->invoice_number : trans('id') . ': ' . $invoice->invoice_id) }}
         </span>
 <?php
 // Nb Admins > 1 only
 if ($change_user) {
     ?>
         <a data-toggle="tooltip" data-placement="bottom"
-           title="<?php echo $edit_user_title; ?>"
-           href="<?php echo site_url('users/form/' . $invoice->user_id); ?>">
-            <i class="fa fa-xs fa-user text-<?php echo $my_class; ?>"></i>
+           title="{{ $edit_user_title }}"
+           href="{{ route('users/form/' . $invoice->user_id) }}">
+            <i class="fa fa-xs fa-user text-{{ $my_class }}"></i>
                 <span class="hidden-xs"><?php _htmlsc($invoice->user_name); ?></span>
         </a>
-<?php
-        if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
-            ?>
+@if($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id)
 
-        <span id="invoice_change_user" class="fa fa-fw fa-edit text-<?php echo $its_mine ? 'muted' : 'danger'; ?> cursor-pointer"
+        <span id="invoice_change_user" class="fa fa-fw fa-edit text-{{ $its_mine ? 'muted' : 'danger' }} cursor-pointer"
               data-toggle="tooltip" data-placement="bottom"
               title="{{ trans('change_user') }}"></span>
 <?php
@@ -269,7 +251,7 @@ if ($change_user) {
 ?>
     </h1>
 
-    <div class="headerbar-item pull-right<?php echo ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) ? ' btn-group' : ''; ?>">
+    <div class="headerbar-item pull-right{{ ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) ? ' btn-group' : '' }}">
 
         <div class="options btn-group btn-group-sm">
             <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
@@ -289,29 +271,25 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
 ?>
                 <li>
                     <a href="#" id="btn_create_credit"
-                       data-invoice-id="<?php echo $invoice_id; ?>">
+                       data-invoice-id="{{ $invoice_id }}">
                         <i class="fa fa-minus fa-margin"></i> {{ trans('create_credit_invoice') }}
                     </a>
                 </li>
-<?php
-if ($invoice->invoice_balance != 0) {
-    ?>
+@if($invoice->invoice_balance != 0)
                 <li>
                     <a href="#" class="invoice-add-payment"
-                       data-invoice-id="<?php echo $invoice_id; ?>"
-                       data-invoice-balance="<?php echo $invoice->invoice_balance; ?>"
-                       data-invoice-payment-method="<?php echo $invoice->payment_method; ?>"
-                       data-payment-cf-exist="<?php echo $payment_cf_exist ?? ''; ?>">
+                       data-invoice-id="{{ $invoice_id }}"
+                       data-invoice-balance="{{ $invoice->invoice_balance }}"
+                       data-invoice-payment-method="{{ $invoice->payment_method }}"
+                       data-payment-cf-exist="{{ $payment_cf_exist ?? '' }}">
                         <i class="fa fa-credit-card fa-margin"></i>
                         {{ trans('enter_payment') }}
                     </a>
                 </li>
-<?php
-}
-?>
+@endforeach
                 <li>
                     <a href="#" id="btn_generate_pdf"
-                       data-invoice-id="<?php echo $invoice_id; ?>">
+                       data-invoice-id="{{ $invoice_id }}">
                         <i class="fa fa-print fa-margin"></i>
                         {{ trans('download_pdf') }}
                     </a>
@@ -322,16 +300,14 @@ if ($einvoice->user) {
     ?>
                 <li>
                     <a href="#" id="btn_generate_xml"
-                       data-invoice-id="<?php echo $invoice_id; ?>">
+                       data-invoice-id="{{ $invoice_id }}">
                         <i class="fa fa-file-code-o fa-margin"></i>
                         {{ trans('download_xml') }}
                     </a>
                 </li>
-<?php
-}
-?>
+@endforeach
                 <li>
-                    <a href="<?php echo site_url('mailer/invoice/' . $invoice->invoice_id); ?>">
+                    <a href="{{ route('mailer/invoice/' . $invoice->invoice_id) }}">
                         <i class="fa fa-send fa-margin"></i>
                         {{ trans('send_email') }}
                     </a>
@@ -339,22 +315,20 @@ if ($einvoice->user) {
                 <li class="divider"></li>
                 <li>
                     <a href="#" id="btn_create_recurring"
-                       data-invoice-id="<?php echo $invoice_id; ?>">
+                       data-invoice-id="{{ $invoice_id }}">
                         <i class="fa fa-refresh fa-margin"></i>
                         {{ trans('create_recurring') }}
                     </a>
                 </li>
                 <li>
                     <a href="#" id="btn_copy_invoice"
-                       data-invoice-id="<?php echo $invoice_id; ?>"
-                       data-client-id="<?php echo $invoice->client_id; ?>">
+                       data-invoice-id="{{ $invoice_id }}"
+                       data-client-id="{{ $invoice->client_id }}">
                         <i class="fa fa-copy fa-margin"></i>
                         {{ trans('copy_invoice') }}
                     </a>
                 </li>
-<?php
-if ($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_deletion') === true && $invoice->is_read_only != 1)) {
-    ?>
+@if($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_deletion') === true && $invoice->is_read_only != 1))
                 <li>
                     <a href="#delete-invoice" data-toggle="modal">
                         <i class="fa fa-trash-o fa-margin"></i>
@@ -367,9 +341,7 @@ if ($invoice->invoice_status_id == 1 || ($this->config->item('enable_invoice_del
             </ul>
         </div>
 
-<?php
-if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
-    ?>
+@if($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4)
         <a href="#" class="btn btn-sm btn-success ajax-loader" id="btn_save_invoice">
             <i class="fa fa-check"></i> {{ trans('save') }}
         </a>
@@ -379,9 +351,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
     </div>
 
     <div class="headerbar-item invoice-labels pull-right">
-<?php
-if ($invoice->invoice_is_recurring) {
-    ?>
+@if($invoice->invoice_is_recurring)
         <span class="label label-info">
             <i class="fa fa-refresh"></i> {{ trans('recurring') }}
         </span>
@@ -392,16 +362,14 @@ if ($invoice->is_read_only == 1) {
         <span class="label label-danger">
             <i class="fa fa-read-only"></i> {{ trans('read_only') }}
         </span>
-<?php
-}
-?>
+@endforeach
     </div>
 
 </div>
 
 <div id="content">
 
-    <?php echo $this->layout->load_view('layout/alerts'); ?>
+    {{ $this->layout->load_view('layout/alerts') }}
 
     <div id="invoice_form">
         <div class="invoice">
@@ -410,10 +378,8 @@ if ($invoice->is_read_only == 1) {
                 <div class="col-xs-12 col-sm-6 col-md-5">
 
                     <h2>
-                        <a href="<?php echo site_url('clients/view/' . $invoice->client_id); ?>"><?php _htmlsc(format_client($invoice)); ?></a>
-<?php
-if ($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id) {
-    ?>
+                        <a href="{{ route('clients/view/' . $invoice->client_id) }}"><?php _htmlsc(format_client($invoice)); ?></a>
+@if($invoice->invoice_status_id == 1 && ! $invoice->creditinvoice_parent_id)
                         <span id="invoice_change_client" class="fa fa-edit cursor-pointer small"
                               data-toggle="tooltip" data-placement="bottom"
                               title="{{ trans('change_client') }}"></span>
@@ -449,7 +415,7 @@ if ($invoice->invoice_sign == -1) {
     ?>
                             <div class="col-xs-12">
                                 <div class="alert alert-warning small">
-                                    <i class="fa fa-credit-invoice"></i>&nbsp;<?php echo $view_link; ?>
+                                    <i class="fa fa-credit-invoice"></i>&nbsp;{{ $view_link }}
                                 </div>
                             </div>
 <?php
@@ -459,43 +425,32 @@ if ($invoice->invoice_sign == -1) {
                             <div class="col-xs-12 col-md-6">
 
                                 <div class="invoice-properties">
-<?php
-if ($einvoice->name) {
-    ?>
+@if($einvoice->name)
                                     <label class="pull-right" id="e_invoice_active"
                                            data-toggle="tooltip" data-placement="bottom"
-                                           title="e-<?php echo trans('invoice') . ' ' . ($einvoice->user ? trans('version') . ' ' . $einvoice->name . ' 🗸' : '🚫 ' . trans('einvoicing_user_fields_error')); ?>"
+                                           title="e-{{ trans('invoice') . ' ' . ($einvoice->user ? trans('version') . ' ' . $einvoice->name . ' 🗸' : '🚫 ' . trans('einvoicing_user_fields_error')) }}"
                                     >
                                         <i class="fa fa-file-code-o"></i>
-                                        <?php echo $einvoice->name; ?>
-<?php
-    if ($einvoice->user) {
-        ?>
+                                        {{ $einvoice->name }}
+@if($einvoice->user)
                                         <i class="fa fa-check-square-o text-success"></i>
-<?php
-    } else {
-        ?>
+@else
                                         <a class="fa fa-user-times text-warning"
-                                           href="<?php echo site_url('users/form/' . $invoice->user_id); ?>"
+                                           href="{{ route('users/form/' . $invoice->user_id) }}"
                                            data-toggle="tooltip" data-placement="top"
-                                           title="<?php echo $edit_user_title; ?>"
+                                           title="{{ $edit_user_title }}"
                                         ></a>
-<?php
-    }
-    ?>
-
+@endforeach
                                     </label>
-<?php
-}
-?>
+@endforeach
                                     <label for="invoice_number">{{ trans('invoice') }} #</label>
                                     <input type="text" id="invoice_number" class="form-control"
 <?php if ($invoice->invoice_number) : ?>
-                                           value="<?php echo $invoice->invoice_number; ?>"
+                                           value="{{ $invoice->invoice_number }}"
 <?php else : ?>
                                            placeholder="{{ trans('not_set') }}"
 <?php endif; ?>
-                                           <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>
+                                           {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                                     >
 
                                 </div>
@@ -506,8 +461,8 @@ if ($einvoice->name) {
                                     <div class="input-group">
                                         <input name="invoice_date_created" id="invoice_date_created"
                                                class="form-control datepicker"
-                                               value="<?php echo date_from_mysql($invoice->invoice_date_created); ?>"
-                                               <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>>
+                                               value="{{ date_from_mysql($invoice->invoice_date_created) }}"
+                                               {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                         <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                                     </div>
                                 </div>
@@ -518,8 +473,8 @@ if ($einvoice->name) {
                                     <div class="input-group">
                                         <input name="invoice_date_due" id="invoice_date_due"
                                                class="form-control datepicker"
-                                               value="<?php echo date_from_mysql($invoice->invoice_date_due); ?>"
-                                               <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>>
+                                               value="{{ date_from_mysql($invoice->invoice_date_due) }}"
+                                               {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                         <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                                     </div>
                                 </div>
@@ -536,18 +491,16 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
                                     </label>
                                     <select name="invoice_status_id" id="invoice_status_id"
                                             class="form-control simple-select" data-minimum-results-for-search="Infinity"
-                                            <?php echo ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : ''; ?>
+                                            {{ ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : '' }}
                                     >
 <?php
 foreach ($invoice_statuses as $key => $status) {
     $is_selected = ($key == $invoice->invoice_status_id) ? ' selected="selected"' : '';
     ?>
-                                        <option value="<?php echo $key; ?>"<?php echo $is_selected; ?>>
-                                            <?php echo $status['label']; ?>
+                                        <option value="{{ $key }}"{{ $is_selected }}>
+                                            {{ $status['label'] }}
                                         </option>
-<?php
-}
-?>
+@endforeach
                                     </select>
                                 </div>
 
@@ -555,15 +508,13 @@ foreach ($invoice_statuses as $key => $status) {
                                     <label>{{ trans('payment_method') }}</label>
                                     <select name="payment_method" id="payment_method"
                                             class="form-control simple-select"
-                                            <?php echo ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : ''; ?>
+                                            {{ ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : '' }}
                                     >
                                         <option value="0">{{ trans('select_payment_method') }}</option>
-<?php
-foreach ($payment_methods as $payment_method) {
-    ?>
+@foreach($payment_methods as $payment_method)
                                         <option <?php check_select($invoice->payment_method, $payment_method->payment_method_id) ?>
-                                            value="<?php echo $payment_method->payment_method_id; ?>">
-                                            <?php echo $payment_method->payment_method_name; ?>
+                                            value="{{ $payment_method->payment_method_id }}">
+                                            {{ $payment_method->payment_method_name }}
                                         </option>
 <?php
 } // End foreach
@@ -575,7 +526,7 @@ foreach ($payment_methods as $payment_method) {
                                     <label>{{ trans('invoice_password') }}</label>
                                     <input type="text" id="invoice_password" class="form-control"
                                            value="<?php _htmlsc($invoice->invoice_password); ?>"
-                                           <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>>
+                                           {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                 </div>
                             </div>
 
@@ -593,15 +544,13 @@ foreach ($custom_fields as $custom_field) {
 }
 ?>
 
-<?php
-if ($invoice->invoice_status_id != 1) {
-    ?>
+@if($invoice->invoice_status_id != 1)
                             <div class="col-xs-12">
                                 <div class="form-group">
                                     <label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                                     <div class="input-group">
                                         <input type="text" id="invoice-guest-url" readonly class="form-control"
-                                               value="<?php echo site_url('guest/view/invoice/' . $invoice->invoice_url_key) ?>">
+                                               value="{{ route('guest/view/invoice/' . $invoice->invoice_url_key) ?>">
                                         <span class="input-group-addon to-clipboard cursor-pointer"
                                               data-clipboard-target="#invoice-guest-url">
                                             <i class="fa fa-clipboard fa-fw"></i>
@@ -621,7 +570,7 @@ if ($invoice->invoice_status_id != 1) {
 
             <br>
 
-<?php $this->layout->load_view('invoices/partial_itemlist_' . (get_setting('show_responsive_itemlist') ? 'responsive' : 'table')); ?>
+<?php $this->layout->load_view('invoices/partial_itemlist_' . (get_setting('show_responsive_itemlist') ? 'responsive' : 'table')) }}
 
             <hr>
 
@@ -634,7 +583,7 @@ if ($invoice->invoice_status_id != 1) {
                         </div>
                         <div class="panel-body">
                             <textarea id="invoice_terms" name="invoice_terms" class="form-control" rows="3"
-                                      <?php echo $invoice->is_read_only ? 'disabled="disabled"' : ''; ?>
+                                      {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                             ><?php _htmlsc($invoice->invoice_terms); ?></textarea>
                         </div>
                     </div>
@@ -649,9 +598,7 @@ if ($invoice->invoice_status_id != 1) {
                 </div>
             </div>
 
-<?php
-if ($default_custom) {
-    ?>
+@if($default_custom)
             <div class="row">
                 <div class="col-xs-12">
 

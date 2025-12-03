@@ -28,7 +28,7 @@
 
         <h1 id="logo"><span>InvoicePlane</span></h1>
 
-        <form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
+        <form method="post" action="{{ route($this->uri->uri_string()) }}">
 
             <?php _csrf_field(); ?>
 
@@ -36,7 +36,7 @@
 
             <legend>{{ trans('setup_create_user') }}</legend>
 
-            <?php echo $this->layout->load_view('layout/alerts'); ?>
+            {{ $this->layout->load_view('layout/alerts') }}
 
             <p>{{ trans('setup_create_user_message') }}</p>
 
@@ -45,7 +45,7 @@
                     {{ trans('email_address') }}
                 </label>
                 <input type="email" name="user_email" id="user_email" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_email', true); ?>">
+                       value="{{ $this->mdl_users->form_value('user_email', true) }}">
                 <span class="help-block">{{ trans('setup_user_email_info') }}</span>
             </div>
 
@@ -54,7 +54,7 @@
                     {{ trans('name') }}
                 </label>
                 <input type="text" name="user_name" id="user_name" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_name', true); ?>">
+                       value="{{ $this->mdl_users->form_value('user_name', true) }}">
                 <span class="help-block">{{ trans('setup_user_name_info') }}</span>
             </div>
 
@@ -89,13 +89,13 @@
                 </label>
                 <select name="user_language" id="user_language" class="form-control simple-select">
                     <option value="system">
-                        <?php echo trans('use_system_language') ?>
+                        {{ trans('use_system_language') ?>
                     </option>
-                    <?php foreach ($languages as $language) { ?>
-                        <option value="<?php echo $language; ?>">
-                            <?php echo ucfirst($language); ?>
+                    @foreach($languages as $language)
+                        <option value="<?php echo $language }}">
+                            {{ ucfirst($language) }}
                         </option>
-                    <?php } ?>
+                    @endif
                 </select>
             </div>
 
@@ -107,7 +107,7 @@
                     {{ trans('street_address') }}
                 </label>
                 <input type="text" name="user_address_1" id="user_address_1" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_address_1', true); ?>">
+                       value="{{ $this->mdl_users->form_value('user_address_1', true) }}">
             </div>
 
             <div class="form-group">
@@ -115,7 +115,7 @@
                     {{ trans('street_address_2') }}
                 </label>
                 <input type="text" name="user_address_2" id="user_address_2" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_address_2', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_address_2', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -124,7 +124,7 @@
                     {{ trans('city') }}
                 </label>
                 <input type="text" name="user_city" id="user_city" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_city', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_city', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -133,7 +133,7 @@
                     {{ trans('state') }}
                 </label>
                 <input type="text" name="user_state" id="user_state" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_state', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_state', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -142,7 +142,7 @@
                     {{ trans('zip_code') }}
                 </label>
                 <input type="text" name="user_zip" id="user_zip" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_zip', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_zip', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -152,12 +152,12 @@
                 </label>
                 <select name="user_country" class="form-control simple-select">
                     <option value="">{{ trans('none') }}</option>
-                    <?php foreach ($countries as $cldr => $country) { ?>
-                        <option value="<?php echo $cldr; ?>"
-                            <?php check_select($this->mdl_users->form_value('user_country'), $cldr); ?>>
-                            <?php echo $country ?>
+                    @foreach($countries as $cldr => $country)
+                        <option value="{{ $cldr }}"
+                            {{ $this->mdl_users->form_value('user_country') == $cldr ? 'selected' : '' }}>
+                            {{ $country ?>
                         </option>
-                    <?php } ?>
+                    @endif
                 </select>
             </div>
 
@@ -170,7 +170,7 @@
                     {{ trans('phone') }}
                 </label>
                 <input type="text" name="user_phone" id="user_phone" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_phone', true); ?>"
+                       value="<?php echo $this->mdl_users->form_value('user_phone', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -179,7 +179,7 @@
                     {{ trans('fax') }}
                 </label>
                 <input type="text" name="user_fax" id="user_fax" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_fax', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_fax', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -188,7 +188,7 @@
                     {{ trans('mobile') }}
                 </label>
                 <input type="text" name="user_mobile" id="user_mobile" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_mobile', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_mobile', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
@@ -197,7 +197,7 @@
                     {{ trans('web') }}
                 </label>
                 <input type="text" name="user_web" id="user_web" class="form-control"
-                       value="<?php echo $this->mdl_users->form_value('user_web', true); ?>"
+                       value="{{ $this->mdl_users->form_value('user_web', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 

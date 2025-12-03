@@ -10,7 +10,7 @@
 <html class="no-js" lang="en"> <!--<![endif]-->
 
 <head>
-    <title><?php echo get_setting('custom_title', 'InvoicePlane', true); ?> - {{ trans('set_new_password') }}</title>
+    <title>{{ get_setting('custom_title', 'InvoicePlane', true) }} - {{ trans('set_new_password') }}</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -41,12 +41,12 @@
 
         <div class="row"><?php $this->layout->load_view('layout/alerts'); ?></div>
 
-        <form method="post" action="<?php echo site_url('sessions/passwordreset'); ?>">
+        <form method="post" action="{{ route('sessions/passwordreset') }}">
 
             <?php _csrf_field(); ?>
 
-            <input name="token" value="<?php echo $token; ?>" class="hidden">
-            <input name="user_id" value="<?php echo $user_id; ?>" class="hidden">
+            <input name="token" value="{{ $token }}" class="hidden">
+            <input name="user_id" value="{{ $user_id }}" class="hidden">
 
             <div class="form-group">
                 <label for="new_password" class="control-label">{{ trans('new_password') }}</label>

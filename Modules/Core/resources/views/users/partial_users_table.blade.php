@@ -11,19 +11,15 @@
             </thead>
 
             <tbody>
-<?php
-foreach ($users as $user) {
-    ?>
+@foreach($users as $user)
                 <tr>
                     <td><?php _htmlsc($user->user_name); ?></td>
-                    <td><?php echo $user_types[$user->user_type]; ?></td>
-                    <td><?php echo $user->user_email; ?></td>
+                    <td>{{ $user_types[$user->user_type] }}</td>
+                    <td>{{ $user->user_email }}</td>
                     <td>
                         <div class="options btn-group btn-group-sm">
-<?php
-        if ($user->user_type == 2) {
-            ?>
-                        <a href="<?php echo site_url('user_clients/user/' . $user->user_id); ?>"
+@if($user->user_type == 2)
+                        <a href="{{ route('user_clients/user/' . $user->user_id) }}"
                            class="btn btn-default">
                             <i class="fa fa-list fa-margin"></i> {{ trans('assigned_clients') }}
                         </a>
@@ -36,15 +32,13 @@ foreach ($users as $user) {
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="<?php echo site_url('users/form/' . $user->user_id); ?>">
+                                    <a href="{{ route('users/form/' . $user->user_id) }}">
                                         <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                     </a>
                                 </li>
-<?php
-        if ($user->user_id !== 1) {
-            ?>
+@if($user->user_id !== 1)
                                     <li>
-                                        <form action="<?php echo site_url('users/delete/' . $user->user_id); ?>"
+                                        <form action="{{ route('users/delete/' . $user->user_id) }}"
                                               method="POST">
                                             <?php _csrf_field(); ?>
                                             <button type="submit" class="dropdown-button"
@@ -53,9 +47,7 @@ foreach ($users as $user) {
                                             </button>
                                         </form>
                                     </li>
-<?php
-        }
-    ?>
+@endif
                             </ul>
                         </div>
                     </td>

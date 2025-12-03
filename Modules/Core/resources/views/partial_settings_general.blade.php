@@ -1,7 +1,7 @@
 <script>
     $(function () {
         $('#btn_generate_cron_key').click(function () {
-            $.post("<?php echo site_url('settings/ajax/get_cron_key'); ?>", function (data) {
+            $.post("{{ route('settings.get-cron-key') }}", function (data) {
                 $('#cron_key').val(data);
             });
         });
@@ -25,13 +25,12 @@
                             </label>
                             <select name="settings[default_language]" id="settings[default_language]"
                                 class="form-control simple-select">
-                                <?php foreach ($languages as $language) {
-                                    $sys_lang = get_setting('default_language');
-                                    ?>
-                                    <option value="<?php echo $language; ?>" <?php check_select($sys_lang, $language) ?>>
-                                        <?php echo ucfirst($language); ?>
+                                @php $sys_lang = get_setting('default_language'); @endphp
+                                @foreach ($languages as $language)
+                                    <option value="{{ $language }}" {{ $sys_lang == $language ? 'selected' : '' }}>
+                                        {{ ucfirst($language) }}
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -43,11 +42,11 @@
                             </label>
                             <select name="settings[system_theme]" id="settings[system_theme]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <?php foreach ($available_themes as $theme_key => $theme_name) { ?>
-                                    <option value="<?php echo $theme_key; ?>" <?php check_select(get_setting('system_theme'), $theme_key); ?>>
-                                        <?php echo $theme_name; ?>
+                                @foreach($available_themes as $theme_key => $theme_name)
+                                    <option value="{{ $theme_key }}" {{ get_setting('system_theme') == $theme_key ? 'selected' : '' }}>
+                                        {{ $theme_name }}
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -61,12 +60,12 @@
                             </label>
                             <select name="settings[first_day_of_week]" id="settings[first_day_of_week]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <?php foreach ($first_days_of_weeks as $first_day_of_week_id => $first_day_of_week_name) { ?>
-                                    <option value="<?php echo $first_day_of_week_id; ?>"
-                                        <?php check_select(get_setting('first_day_of_week'), $first_day_of_week_id); ?>>
-                                        <?php echo $first_day_of_week_name; ?>
+                                @foreach($first_days_of_weeks as $first_day_of_week_id => $first_day_of_week_name)
+                                    <option value="{{ $first_day_of_week_id }}"
+                                        {{ get_setting('first_day_of_week') == $first_day_of_week_id ? 'selected' : '' }}>
+                                        {{ $first_day_of_week_name }}
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -78,13 +77,13 @@
                             </label>
                             <select name="settings[date_format]" id="settings[date_format]"
                                 class="form-control simple-select">
-                                <?php foreach ($date_formats as $date_format) { ?>
-                                    <option value="<?php echo $date_format['setting']; ?>"
-                                        <?php check_select(get_setting('date_format'), $date_format['setting']); ?>>
-                                        <?php echo $current_date->format($date_format['setting']); ?>
-                                        (<?php echo $date_format['setting'] ?>)
+                                @foreach($date_formats as $date_format)
+                                    <option value="{{ $date_format['setting'] }}"
+                                        {{ get_setting('date_format') == $date_format['setting'] ? 'selected' : '' }}>
+                                        {{ $current_date->format($date_format['setting']) }}
+                                        ({{ $date_format['setting'] ?>)
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -99,11 +98,11 @@
                             <select name="settings[default_country]" id="settings[default_country]"
                                 class="form-control simple-select">
                                 <option value="">{{ trans('none') }}</option>
-                                <?php foreach ($countries as $cldr => $country) { ?>
-                                    <option value="<?php echo $cldr; ?>" <?php check_select(get_setting('default_country'), $cldr); ?>>
-                                        <?php echo $country ?>
+                                @foreach($countries as $cldr => $country)
+                                    <option value="<?php echo $cldr }}" {{ get_setting('default_country') == $cldr ? 'selected' : '' }}>
+                                        {{ $country ?>
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -138,7 +137,7 @@
                             </label>
                             <input type="text" name="settings[currency_symbol]" id="settings[currency_symbol]"
                                 class="form-control"
-                                value="<?php echo get_setting('currency_symbol', '', true); ?>">
+                                value="<?php echo get_setting('currency_symbol', '', true) }}">
                         </div>
                     </div>
 
@@ -149,13 +148,13 @@
                             </label>
                             <select name="settings[currency_symbol_placement]" id="settings[currency_symbol_placement]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <option value="before" <?php check_select(get_setting('currency_symbol_placement'), 'before'); ?>>
+                                <option value="before" {{ get_setting('currency_symbol_placement') == 'before' ? 'selected' : '' }}>
                                     {{ trans('before_amount') }}
                                 </option>
-                                <option value="after" <?php check_select(get_setting('currency_symbol_placement'), 'after'); ?>>
+                                <option value="after" {{ get_setting('currency_symbol_placement') == 'after' ? 'selected' : '' }}>
                                     {{ trans('after_amount') }}
                                 </option>
-                                <option value="afterspace" <?php check_select(get_setting('currency_symbol_placement'), 'afterspace'); ?>>
+                                <option value="afterspace" {{ get_setting('currency_symbol_placement') == 'afterspace' ? 'selected' : '' }}>
                                     {{ trans('after_amount_space') }}
                                 </option>
                             </select>
@@ -172,12 +171,12 @@
                             <select name="settings[currency_code]"
                                 id="settings[currency_code]"
                                 class="form-control simple-select">
-                                <?php foreach ($gateway_currency_codes as $val => $key) { ?>
-                                    <option value="<?php echo $val; ?>"
-                                        <?php check_select(get_setting('currency_code', '', true), $val); ?>>
-                                        <?php echo $val; ?>
+                                @foreach($gateway_currency_codes as $val => $key)
+                                    <option value="{{ $val }}"
+                                        {{ get_setting('currency_code' == '', true), $val ? 'selected' : '' }}>
+                                        {{ $val }}
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -189,10 +188,10 @@
                             </label>
                             <select name="settings[tax_rate_decimal_places]" class="form-control simple-select"
                                 id="tax_rate_decimal_places" data-minimum-results-for-search="Infinity">
-                                <option value="2" <?php check_select(get_setting('tax_rate_decimal_places'), '2'); ?>>
+                                <option value="2" {{ get_setting('tax_rate_decimal_places') == '2' ? 'selected' : '' }}>
                                     2
                                 </option>
-                                <option value="3" <?php check_select(get_setting('tax_rate_decimal_places'), '3'); ?>>
+                                <option value="3" {{ get_setting('tax_rate_decimal_places') == '3' ? 'selected' : '' }}>
                                     3
                                 </option>
                             </select>
@@ -211,12 +210,12 @@
                             <select name="settings[number_format]" id="settings[number_format]"
                                 class="form-control simple-select"
                                 data-minimum-results-for-search="Infinity">
-                                <?php foreach ($number_formats as $key => $value) { ?>
-                                    <option value="<?php echo $key; ?>"
-                                        <?php check_select(get_setting('number_format'), $value['label']); ?>>
-                                        <?php _trans($value['label']); ?>
+                                @foreach($number_formats as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ get_setting('number_format') == $value['label'] ? 'selected' : '' }}>
+                                        {{ trans($value['label']) }}
                                     </option>
-                                <?php } ?>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -230,14 +229,14 @@
                             <select name="settings[default_item_decimals]" id="settings[default_item_decimals]"
                                 class="form-control simple-select"
                                 data-minimum-results-for-search="Infinity">
-                                <option value="1" <?php check_select($current_default_item_decimals, '1'); ?>>1</option>
-                                <option value="2" <?php check_select($current_default_item_decimals, '2'); ?>>2</option>
-                                <option value="3" <?php check_select($current_default_item_decimals, '3'); ?>>3</option>
-                                <option value="4" <?php check_select($current_default_item_decimals, '4'); ?>>4</option>
-                                <option value="5" <?php check_select($current_default_item_decimals, '5'); ?>>5</option>
-                                <option value="6" <?php check_select($current_default_item_decimals, '6'); ?>>6</option>
-                                <option value="7" <?php check_select($current_default_item_decimals, '7'); ?>>7</option>
-                                <option value="8" <?php check_select($current_default_item_decimals, '8'); ?>>8</option>
+                                <option value="1" {{ $current_default_item_decimals == '1' ? 'selected' : '' }}>1</option>
+                                <option value="2" {{ $current_default_item_decimals == '2' ? 'selected' : '' }}>2</option>
+                                <option value="3" {{ $current_default_item_decimals == '3' ? 'selected' : '' }}>3</option>
+                                <option value="4" {{ $current_default_item_decimals == '4' ? 'selected' : '' }}>4</option>
+                                <option value="5" {{ $current_default_item_decimals == '5' ? 'selected' : '' }}>5</option>
+                                <option value="6" {{ $current_default_item_decimals == '6' ? 'selected' : '' }}>6</option>
+                                <option value="7" {{ $current_default_item_decimals == '7' ? 'selected' : '' }}>7</option>
+                                <option value="8" {{ $current_default_item_decimals == '8' ? 'selected' : '' }}>8</option>
                             </select>
                         </div>
                     </div>
@@ -261,22 +260,22 @@
                             </label>
                             <select name="settings[quote_overview_period]" id="settings[quote_overview_period]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <option value="this-month" <?php check_select(get_setting('quote_overview_period'), 'this-month'); ?>>
+                                <option value="this-month" {{ get_setting('quote_overview_period') == 'this-month' ? 'selected' : '' }}>
                                     {{ trans('this_month') }}
                                 </option>
-                                <option value="last-month" <?php check_select(get_setting('quote_overview_period'), 'last-month'); ?>>
+                                <option value="last-month" {{ get_setting('quote_overview_period') == 'last-month' ? 'selected' : '' }}>
                                     {{ trans('last_month') }}
                                 </option>
-                                <option value="this-quarter" <?php check_select(get_setting('quote_overview_period'), 'this-quarter'); ?>>
+                                <option value="this-quarter" {{ get_setting('quote_overview_period') == 'this-quarter' ? 'selected' : '' }}>
                                     {{ trans('this_quarter') }}
                                 </option>
-                                <option value="last-quarter" <?php check_select(get_setting('quote_overview_period'), 'last-quarter'); ?>>
+                                <option value="last-quarter" {{ get_setting('quote_overview_period') == 'last-quarter' ? 'selected' : '' }}>
                                     {{ trans('last_quarter') }}
                                 </option>
-                                <option value="this-year" <?php check_select(get_setting('quote_overview_period'), 'this-year'); ?>>
+                                <option value="this-year" {{ get_setting('quote_overview_period') == 'this-year' ? 'selected' : '' }}>
                                     {{ trans('this_year') }}
                                 </option>
-                                <option value="last-year" <?php check_select(get_setting('quote_overview_period'), 'last-year'); ?>>
+                                <option value="last-year" {{ get_setting('quote_overview_period') == 'last-year' ? 'selected' : '' }}>
                                     {{ trans('last_year') }}
                                 </option>
                             </select>
@@ -290,22 +289,22 @@
                             </label>
                             <select name="settings[invoice_overview_period]" id="settings[invoice_overview_period]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
-                                <option value="this-month" <?php check_select(get_setting('invoice_overview_period'), 'this-month'); ?>>
+                                <option value="this-month" {{ get_setting('invoice_overview_period') == 'this-month' ? 'selected' : '' }}>
                                     {{ trans('this_month') }}
                                 </option>
-                                <option value="last-month" <?php check_select(get_setting('invoice_overview_period'), 'last-month'); ?>>
+                                <option value="last-month" {{ get_setting('invoice_overview_period') == 'last-month' ? 'selected' : '' }}>
                                     {{ trans('last_month') }}
                                 </option>
-                                <option value="this-quarter" <?php check_select(get_setting('invoice_overview_period'), 'this-quarter'); ?>>
+                                <option value="this-quarter" {{ get_setting('invoice_overview_period') == 'this-quarter' ? 'selected' : '' }}>
                                     {{ trans('this_quarter') }}
                                 </option>
-                                <option value="last-quarter" <?php check_select(get_setting('invoice_overview_period'), 'last-quarter'); ?>>
+                                <option value="last-quarter" {{ get_setting('invoice_overview_period') == 'last-quarter' ? 'selected' : '' }}>
                                     {{ trans('last_quarter') }}
                                 </option>
-                                <option value="this-year" <?php check_select(get_setting('invoice_overview_period'), 'this-year'); ?>>
+                                <option value="this-year" {{ get_setting('invoice_overview_period') == 'this-year' ? 'selected' : '' }}>
                                     {{ trans('this_year') }}
                                 </option>
-                                <option value="last-year" <?php check_select(get_setting('invoice_overview_period'), 'last-year'); ?>>
+                                <option value="last-year" {{ get_setting('invoice_overview_period') == 'last-year' ? 'selected' : '' }}>
                                     {{ trans('last_year') }}
                                 </option>
                             </select>
@@ -324,7 +323,7 @@
                                 <option value="0">
                                     {{ trans('no') }}
                                 </option>
-                                <option value="1" <?php check_select(get_setting('disable_quickactions'), '1'); ?>>
+                                <option value="1" {{ get_setting('disable_quickactions') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -352,7 +351,7 @@
                                 <option value="0">
                                     {{ trans('no') }}
                                 </option>
-                                <option value="1" <?php check_select(get_setting('disable_sidebar'), '1'); ?>>
+                                <option value="1" {{ get_setting('disable_sidebar') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -366,7 +365,7 @@
                             </label>
                             <input type="text" name="settings[custom_title]" id="settings[custom_title]"
                                 class="form-control"
-                                value="<?php echo get_setting('custom_title', '', true); ?>">
+                                value="{{ get_setting('custom_title', '', true) }}">
                         </div>
                     </div>
                 </div>
@@ -380,7 +379,7 @@
                             <select name="settings[monospace_amounts]" class="form-control simple-select"
                                 id="monospace_amounts" data-minimum-results-for-search="Infinity">
                                 <option value="0">{{ trans('no') }}</option>
-                                <option value="1" <?php check_select(get_setting('monospace_amounts'), '1'); ?>>
+                                <option value="1" {{ get_setting('monospace_amounts') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -388,7 +387,7 @@
                             <p class="help-block">
                                 {{ trans('example') }}:
                                 <span style="font-family: Monaco, Lucida Console, monospace">
-                                    <?php echo format_currency(123456.78); ?>
+                                    {{ format_currency(123456.78) }}
                                 </span>
                             </p>
                         </div>
@@ -398,12 +397,12 @@
                             <label for="login_logo">
                                 {{ trans('login_logo') }}
                             </label>
-                            <?php if (get_setting('login_logo')) { ?>
+                            @if(get_setting('login_logo'))
                                 <br/>
                                 <img class="personal_logo"
-                                    src="<?php echo base_url(); ?>uploads/<?php echo get_setting('login_logo'); ?>"><br>
-                                <?php echo anchor('settings/remove_logo/login', trans('remove_logo')); ?><br/>
-                            <?php } ?>
+                                    src="{{ base_url() }}uploads/{{ get_setting('login_logo') }}"><br>
+                                <a href="{{ route('settings.remove-logo', ['type' => 'login']) }}">{{ trans('remove_logo') }}</a><br/>
+                            @endif
                             <input type="file" name="login_logo" id="login_logo" class="form-control"/>
                         </div>
                     </div>
@@ -418,7 +417,7 @@
                             <select name="settings[reports_in_new_tab]" id="settings[reports_in_new_tab]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="0">{{ trans('no') }}</option>
-                                <option value="1" <?php check_select(get_setting('reports_in_new_tab'), '1'); ?>>
+                                <option value="1" {{ get_setting('reports_in_new_tab') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -434,7 +433,7 @@
                                 <option value="0">
                                     {{ trans('no') }}
                                 </option>
-                                <option value="1" <?php check_select(get_setting('show_responsive_itemlist'), '1'); ?>>
+                                <option value="1" {{ get_setting('show_responsive_itemlist') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -461,7 +460,7 @@
                             <select name="settings[bcc_mails_to_admin]" id="settings[bcc_mails_to_admin]"
                                 class="form-control simple-select" data-minimum-results-for-search="Infinity">
                                 <option value="0">{{ trans('no') }}</option>
-                                <option value="1" <?php check_select(get_setting('bcc_mails_to_admin'), '1'); ?>>
+                                <option value="1" {{ get_setting('bcc_mails_to_admin') == '1' ? 'selected' : '' }}>
                                     {{ trans('yes') }}
                                 </option>
                             </select>
@@ -478,7 +477,7 @@
                             </label>
                             <div class="input-group">
                                 <input type="text" name="settings[cron_key]" id="cron_key" class="form-control" readonly
-                                    value="<?php echo get_setting('cron_key'); ?>">
+                                    value="{{ get_setting('cron_key') }}">
                                 <div class="input-group-btn">
                                     <button id="btn_generate_cron_key" type="button" class="btn btn-primary btn-block">
                                         <i class="fa fa-recycle fa-margin"></i> {{ trans('generate') }}

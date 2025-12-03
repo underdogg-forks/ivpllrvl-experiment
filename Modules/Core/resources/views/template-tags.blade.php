@@ -78,15 +78,13 @@ if ($sumex) {
 if ($custom_fields['ip_client_custom']) {
     ?>
                 <optgroup label="{{ trans('custom_fields') }}">
-                    <?php foreach ($custom_fields['ip_client_custom'] as $custom) { ?>
-                        <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
-                            <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
+                    @foreach($custom_fields['ip_client_custom'] as $custom)
+                        <option value="{{{{{ 'ip_cf_' . $custom->custom_field_id }}}}}">
+                            {{ $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')' }}
                         </option>
-                    <?php } ?>
+                    @endif
                 </optgroup>
-<?php
-}
-?>
+@endif
             </select>
         </div>
 
@@ -155,9 +153,7 @@ if ($custom_fields['ip_client_custom']) {
                         BIC
                     </option>
                 </optgroup>
-<?php
-if ($sumex) {
-    ?>
+@if($sumex)
                 <optgroup label="{{ trans('sumex_information') }}">
                     <option value="{{{user_subscribernumber}}}">
                         {{ trans('user_subscriber_number') }}
@@ -174,15 +170,13 @@ if ($sumex) {
 if ($custom_fields['ip_user_custom']) {
     ?>
                 <optgroup label="{{ trans('custom_fields') }}">
-                    <?php foreach ($custom_fields['ip_user_custom'] as $custom) { ?>
-                        <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
-                            <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
+                    @foreach($custom_fields['ip_user_custom'] as $custom)
+                        <option value="{{{{{ 'ip_cf_' . $custom->custom_field_id }}}}}">
+                            {{ $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')' }}
                         </option>
-                    <?php } ?>
+                    @endif
                 </optgroup>
-<?php
-}
-?>
+@endif
             </select>
         </div>
 
@@ -222,25 +216,19 @@ if ($custom_fields['ip_user_custom']) {
                         {{ trans('guest_url') }}
                     </option>
                 </optgroup>
-<?php
-if ($custom_fields['ip_quote_custom']) {
-    ?>
+@if($custom_fields['ip_quote_custom'])
 
                 <optgroup label="{{ trans('custom_fields') }}">
-                    <?php foreach ($custom_fields['ip_quote_custom'] as $custom) { ?>
-                        <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
-                            <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
+                    @foreach($custom_fields['ip_quote_custom'] as $custom)
+                        <option value="{{{{{ 'ip_cf_' . $custom->custom_field_id }}}}}">
+                            {{ $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')' }}
                         </option>
-                    <?php } ?>
+                    @endif
                 </optgroup>
-<?php
-}
-?>
+@endif
             </select>
         </div>
-<?php
-if ($sumex) {
-    ?>
+@if($sumex)
         <div class="form-group">
             <label for="tags_sumex">{{ trans('invoice_sumex') }}</label>
             <select id="tags_sumex" class="tag-select form-control">
@@ -267,8 +255,6 @@ if ($sumex) {
                 </option>
             </select>
         </div>
-<?php
-}
-?>
+@endif
     </div>
 </div>

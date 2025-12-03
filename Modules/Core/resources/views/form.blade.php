@@ -11,7 +11,7 @@
 
         <?php $this->layout->load_view('layout/alerts'); ?>
 
-        <input class="hidden" name="is_update" type="hidden" value="<?php echo ($this->mdl_email_templates->form_value('is_update')) ? '1' : '0'; ?>">
+        <input class="hidden" name="is_update" type="hidden" value="{{ ($this->mdl_email_templates->form_value('is_update')) ? '1' : '0' }}">
 
         <div class="row">
             <div class="col-xs-12 col-md-8 col-md-offset-2">
@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label for="email_template_title" class="control-label">{{ trans('title') }}</label>
                     <input type="text" name="email_template_title" id="email_template_title"
-                           value="<?php echo $this->mdl_email_templates->form_value('email_template_title', true); ?>"
+                           value="{{ $this->mdl_email_templates->form_value('email_template_title', true) }}"
                            class="form-control" required>
                 </div>
 
@@ -49,7 +49,7 @@
                     </label>
                     <input type="text" name="email_template_from_name" id="email_template_from_name"
                            class="form-control taggable"
-                           value="<?php echo $this->mdl_email_templates->form_value('email_template_from_name', true); ?>">
+                           value="{{ $this->mdl_email_templates->form_value('email_template_from_name', true) }}">
                 </div>
 
                 <div class="form-group">
@@ -58,19 +58,19 @@
                     </label>
                     <input type="text" name="email_template_from_email" id="email_template_from_email"
                            class="form-control taggable"
-                           value="<?php echo $this->mdl_email_templates->form_value('email_template_from_email', true); ?>">
+                           value="{{ $this->mdl_email_templates->form_value('email_template_from_email', true) }}">
                 </div>
 
                 <div class="form-group">
                     <label for="email_template_cc" class="control-label">{{ trans('cc') }}</label>
                     <input type="text" name="email_template_cc" id="email_template_cc" class="form-control taggable"
-                           value="<?php echo $this->mdl_email_templates->form_value('email_template_cc', true); ?>">
+                           value="{{ $this->mdl_email_templates->form_value('email_template_cc', true) }}">
                 </div>
 
                 <div class="form-group">
                     <label for="email_template_bcc" class="control-label">{{ trans('bcc') }}: </label>
                     <input type="text" name="email_template_bcc" id="email_template_bcc" class="form-control taggable"
-                           value="<?php echo $this->mdl_email_templates->form_value('email_template_bcc', true); ?>">
+                           value="{{ $this->mdl_email_templates->form_value('email_template_bcc', true) }}">
                 </div>
 
                 <div class="form-group">
@@ -79,7 +79,7 @@
                     </label>
                     <input type="text" name="email_template_subject" id="email_template_subject"
                            class="form-control taggable"
-                           value="<?php echo $this->mdl_email_templates->form_value('email_template_subject', true); ?>">
+                           value="{{ $this->mdl_email_templates->form_value('email_template_subject', true) }}">
                 </div>
 
                 <div class="form-group">
@@ -91,29 +91,21 @@
                         <option value="">{{ trans('none') }}</option>
 
                         <optgroup label="{{ trans('invoices') }}">
-<?php
-foreach ($invoice_templates as $template) {
-    ?>
-                            <option class="hidden-invoice" value="<?php echo $template; ?>"
-                                <?php check_select($selected_pdf_template, $template); ?>>
-                                <?php echo $template; ?>
+@foreach($invoice_templates as $template)
+                            <option class="hidden-invoice" value="{{ $template }}"
+                                {{ $selected_pdf_template == $template ? 'selected' : '' }}>
+                                {{ $template }}
                             </option>
-<?php
-}
-    ?>
+@endif
                         </optgroup>
 
                         <optgroup label="{{ trans('quotes') }}">
-<?php
-foreach ($quote_templates as $template) {
-    ?>
-                            <option class="hidden-quote" value="<?php echo $template; ?>"
-                                <?php check_select($selected_pdf_template, $template); ?>>
-                                <?php echo $template; ?>
+@foreach($quote_templates as $template)
+                            <option class="hidden-quote" value="{{ $template }}"
+                                {{ $selected_pdf_template == $template ? 'selected' : '' }}>
+                                {{ $template }}
                             </option>
-<?php
-}
-    ?>
+@endif
                         </optgroup>
                     </select>
                 </div>
@@ -165,7 +157,7 @@ foreach ($quote_templates as $template) {
                                 id="email_template_body"
                                 rows="8"
                                 class="email-template-body form-control taggable"
-                            ><?php echo $this->mdl_email_templates->form_value('email_template_body', true); ?></textarea>
+                            >{{ $this->mdl_email_templates->form_value('email_template_body', true) }}</textarea>
 
                             <br>
 
@@ -200,7 +192,7 @@ foreach ($quote_templates as $template) {
 
 <script>
     $(function () {
-        var email_template_type = "<?php echo $this->mdl_email_templates->form_value('email_template_type'); ?>";
+        var email_template_type = "{{ $this->mdl_email_templates->form_value('email_template_type') }}";
         var $email_template_type_options = $("[name=email_template_type]");
 
         $email_template_type_options.click(function () {

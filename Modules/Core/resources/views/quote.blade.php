@@ -7,10 +7,10 @@
 
             if (email_template_id === '') return;
 
-            $.post("<?php echo site_url('email_templates/ajax/get_content'); ?>", {
+            $.post("{{ route('email_templates/ajax/get_content') }}", {
                 email_template_id: email_template_id
             }, function (data) {
-                inject_email_template(template_fields, json_parse(data, <?php echo (int) IP_DEBUG; ?>));
+                inject_email_template(template_fields, json_parse(data, {{ (int) IP_DEBUG }}));
             });
         });
 
@@ -28,9 +28,9 @@
 
 </script>
 
-<form method="post" action="<?php echo site_url('mailer/send_quote/' . $quote->quote_id) ?>">
+<form method="post" action="{{ route('mailer/send_quote/' . $quote->quote_id) ?>">
 
-    <?php _csrf_field(); ?>
+    <?php _csrf_field() }}
 
     <div id="headerbar">
         <h1 class="headerbar-title">{{ trans('email_quote') }}</h1>
@@ -59,7 +59,7 @@
                 <div class="form-group">
                     <label for="to_email">{{ trans('to_email') }}</label>
                     <input type="email" multiple name="to_email" id="to_email" class="form-control" required
-                           value="<?php echo $quote->client_email; ?>">
+                           value="{{ $quote->client_email }}">
                 </div>
 
                 <hr>
@@ -68,16 +68,12 @@
                     <label for="email_template">{{ trans('email_template') }}</label>
                     <select name="email_template" id="email_template" class="form-control simple-select">
                         <option value="">{{ trans('none') }}</option>
-<?php
-foreach ($email_templates as $email_template) {
-    ?>
-                        <option value="<?php echo $email_template->email_template_id; ?>"
-                            <?php check_select($selected_email_template, $email_template->email_template_id); ?>>
+@foreach($email_templates as $email_template)
+                        <option value="{{ $email_template->email_template_id }}"
+                            {{ $selected_email_template == $email_template->email_template_id ? 'selected' : '' }}>
                             <?php _htmlsc($email_template->email_template_title); ?>
                         </option>
-<?php
-}
-            ?>
+@endif
                     </select>
                 </div>
 
@@ -90,7 +86,7 @@ foreach ($email_templates as $email_template) {
                 <div class="form-group">
                     <label for="from_email">{{ trans('from_email') }}</label>
                     <input type="text" name="from_email" id="from_email" class="form-control" required
-                           value="<?php echo $quote->user_email; ?>">
+                           value="{{ $quote->user_email }}">
                 </div>
 
                 <div class="form-group">
@@ -106,23 +102,19 @@ foreach ($email_templates as $email_template) {
                 <div class="form-group">
                     <label for="subject">{{ trans('subject') }}</label>
                     <input type="text" name="subject" id="subject" class="form-control"
-                           value="{{ trans('quote') }} #<?php echo $quote->quote_number; ?>">
+                           value="{{ trans('quote') }} #{{ $quote->quote_number }}">
                 </div>
 
                 <div class="form-group">
                     <label for="pdf_template">{{ trans('pdf_template') }}</label>
                     <select name="pdf_template" id="pdf_template" class="form-control simple-select">
                         <option value="">{{ trans('none') }}</option>
-<?php
-foreach ($pdf_templates as $pdf_template) {
-    ?>
-                        <option value="<?php echo $pdf_template; ?>"
-                            <?php check_select($selected_pdf_template, $pdf_template); ?>>
-                            <?php echo $pdf_template; ?>
+@foreach($pdf_templates as $pdf_template)
+                        <option value="{{ $pdf_template }}"
+                            {{ $selected_pdf_template == $pdf_template ? 'selected' : '' }}>
+                            {{ $pdf_template }}
                         </option>
-<?php
-}
-            ?>
+@endif
                     </select>
                 </div>
 
@@ -211,7 +203,7 @@ foreach ($pdf_templates as $pdf_template) {
                     <label for="quote-guest-url">{{ trans('guest_url') }}</label>
                     <div class="input-group">
                         <input type="text" id="quote-guest-url" readonly class="form-control"
-                               value="<?php echo site_url('guest/view/quote/' . $quote->quote_url_key); ?>">
+                               value="{{ route('guest/view/quote/' . $quote->quote_url_key) }}">
                         <div class="input-group-addon to-clipboard cursor-pointer"
                              data-clipboard-target="#quote-guest-url">
                             <i class="fa fa-clipboard fa-fw"></i>

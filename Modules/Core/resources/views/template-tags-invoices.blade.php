@@ -43,18 +43,14 @@
 <!--                     {{ trans('payment_method') }} -->
 <!--                 </option> -->
         </optgroup>
-<?php
-if ($custom_fields['ip_invoice_custom']) {
-    ?>
+@if($custom_fields['ip_invoice_custom'])
         <optgroup label="{{ trans('custom_fields') }}">
-            <?php foreach ($custom_fields['ip_invoice_custom'] as $custom) { ?>
-                <option value="{{{<?php echo 'ip_cf_' . $custom->custom_field_id; ?>}}}">
-                    <?php echo $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')'; ?>
+            @foreach($custom_fields['ip_invoice_custom'] as $custom)
+                <option value="{{{{{ 'ip_cf_' . $custom->custom_field_id }}}}}">
+                    {{ $custom->custom_field_label . ' (ID ' . $custom->custom_field_id . ')' }}
                 </option>
-            <?php } ?>
+            @endif
         </optgroup>
-<?php
-}
-?>
+@endif
     </select>
 </div>
