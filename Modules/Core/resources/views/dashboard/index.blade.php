@@ -1,189 +1,364 @@
-@extends('core::components.layouts.app')
+<div id="content">
+    @include(\'core::alerts\')
 
-@section('content')
-    <div id="content" class="space-y-6">
+    <div class="row{{ (get_setting('disable_quickactions') == 1) ? ' hidden' : '' }}">
+        <div class="col-xs-12">
 
-        @include('core::layout.alerts')
+            <div id="panel-quick-actions" class="panel panel-default quick-actions">
 
-        {{-- Quick Actions --}}
-        <div class="{{ get_setting('disable_quickactions') == 1 ? 'hidden' : '' }}">
-            <div id="panel-quick-actions" class="bg-white border rounded shadow">
-                <div class="px-4 py-2 border-b font-bold">{{ trans('quick_actions') }}</div>
-                <div class="grid grid-cols-4 gap-1 text-center">
-                    <a href="{{ route('clients.form') }}" class="py-3 hover:bg-gray-100 border-r">
-                        <i class="fa fa-user mb-1 block"></i>
-                        <span class="hidden sm:inline">{{ trans('add_client') }}</span>
+                <div class="panel-heading">
+                    <b>{{ trans('quick_actions') }}</b>
+                </div>
+
+                <div class="btn-group btn-group-justified no-margin">
+                    <a href="{{ route('clients.form') }}" class="btn btn-default">
+                        <i class="fa fa-user fa-margin"></i>
+                        <span class="hidden-xs">{{ trans('add_client') }}</span>
                     </a>
-                    <a href="javascript:void(0)" class="create-quote py-3 hover:bg-gray-100 border-r">
-                        <i class="fa fa-file mb-1 block"></i>
-                        <span class="hidden sm:inline">{{ trans('create_quote') }}</span>
+                    <a href="javascript:void(0)" class="create-quote btn btn-default">
+                        <i class="fa fa-file fa-margin"></i>
+                        <span class="hidden-xs">{{ trans('create_quote') }}</span>
                     </a>
-                    <a href="javascript:void(0)" class="create-invoice py-3 hover:bg-gray-100 border-r">
-                        <i class="fa fa-file-text mb-1 block"></i>
-                        <span class="hidden sm:inline">{{ trans('create_invoice') }}</span>
+                    <a href="javascript:void(0)" class="create-invoice btn btn-default">
+                        <i class="fa fa-file-text fa-margin"></i>
+                        <span class="hidden-xs">{{ trans('create_invoice') }}</span>
                     </a>
-                    <a href="{{ route('payments.form') }}" class="py-3 hover:bg-gray-100">
-                        <i class="fa fa-credit-card mb-1 block"></i>
-                        <span class="hidden sm:inline">{{ trans('enter_payment') }}</span>
+                    <a href="{{ route('payments.form') }}" class="btn btn-default">
+                        <i class="fa fa-credit-card fa-margin"></i>
+                        <span class="hidden-xs">{{ trans('enter_payment') }}</span>
                     </a>
                 </div>
+
             </div>
         </div>
+    </div>
 
-        {{-- Quote & Invoice Overview --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="panel-quote-overview" class="bg-white border rounded shadow">
-                <div class="px-4 py-2 border-b font-bold flex justify-between items-center">
-                    <span><i class="fa fa-bar-chart mr-2"></i>{{ trans('quote_overview') }}</span>
-                    <span class="text-gray-500">{{ $quote_status_period }}</span>
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+
+            <div id="panel-quote-overview" class="panel panel-default overview">
+
+                <div class="panel-heading">
+                    <b><i class="fa fa-bar-chart fa-margin"></i> {{ trans('quote_overview') }}</b>
+                    <span class="pull-right text-muted">{{ lang($quote_status_period) }}</span>
                 </div>
-                <table class="min-w-full divide-y divide-gray-200">
-                    @foreach ($quote_status_totals as $total)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">
-                                <a href="{{ route($total['href']) }}">{{ $total['label'] }}</a>
-                            </td>
-                            <td class="px-4 py-2 text-right">
-                                <span class="{{ $total['class'] }}">{{ format_currency($total['sum_total']) }}</span>
-                            </td>
-                        </tr>
-                    @endforeach
-                </table>
-            </div>
 
-            <div id="panel-invoice-overview" class="bg-white border rounded shadow">
-                <div class="px-4 py-2 border-b font-bold flex justify-between items-center">
-                    <span><i class="fa fa-bar-chart mr-2"></i>{{ trans('invoice_overview') }}</span>
-                    <span class="text-gray-500">{{ $invoice_status_period }}</span>
-                </div>
-                <table class="min-w-full divide-y divide-gray-200">
-                    @foreach ($invoice_status_totals as $total)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">
-                                <a href="{{ route($total['href']) }}">{{ $total['label'] }}</a>
-                            </td>
-                            <td class="px-4 py-2 text-right">
-                                <span class="{{ $total['class'] }}">{{ format_currency($total['sum_total']) }}</span>
-                            </td>
-                        </tr>
-                    @endforeach
-                </table>
-
-                @if(empty($overdue_invoices))
-                    <div class="px-4 py-2 border-t text-gray-500">{{ trans('no_overdue_invoices') }}</div>
-                @else
-                    @php
-                        $overdue_invoices_total = collect($overdue_invoices)->sum(fn($invoice) => $invoice['invoice_balance'] * $invoice['invoice_sign']);
-                    @endphp
-                    <div class="px-4 py-2 border-t bg-red-50 text-red-700 flex justify-between items-center">
-                        <a href="{{ route('invoices.status.overdue') }}" class="font-semibold">
-                            <i class="fa fa-external-link mr-1"></i>{{ trans('overdue_invoices') }}
-                        </a>
-                        <span>{{ format_currency($overdue_invoices_total) }}</span>
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        {{-- Recent Quotes & Invoices --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="panel-recent-quotes" class="bg-white border rounded shadow overflow-x-auto">
-                <div class="px-4 py-2 border-b font-bold flex items-center">
-                    <i class="fa fa-history mr-2"></i>{{ trans('recent_quotes') }}
-                </div>
-                <table class="min-w-full divide-y divide-gray-200 table-auto">
-                    <thead>
-                    <tr class="bg-gray-50">
-                        <th class="px-4 py-2 text-left">{{ trans('status') }}</th>
-                        <th class="px-4 py-2">{{ trans('date') }}</th>
-                        <th class="px-4 py-2">{{ trans('quote') }}</th>
-                        <th class="px-4 py-2">{{ trans('client') }}</th>
-                        <th class="px-4 py-2 text-right">{{ trans('balance') }}</th>
-                        <th></th>
+                <table class="table table-hover table-bordered table-condensed no-margin">
+@foreach($quote_status_totals as $total)
+                    <tr>
+                        <td>
+                            <a href="{{ route($total['href']) }}">
+                                {{ $total['label'] }}
+                            </a>
+                        </td>
+                        <td class="amount">
+                            <span class="{{ $total['class'] }}">
+                                {{ format_currency($total['sum_total']) }}
+                            </span>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($quotes as $quote)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">
-                                <span class="label {{ $quote_statuses[$quote->quote_status_id]['class'] }}">
+@endif
+                </table>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-md-6">
+
+            <div id="panel-invoice-overview" class="panel panel-default overview">
+
+                <div class="panel-heading">
+                    <b><i class="fa fa-bar-chart fa-margin"></i> {{ trans('invoice_overview') }}</b>
+                    <span class="pull-right text-muted">{{ lang($invoice_status_period) }}</span>
+                </div>
+
+                <table class="table table-hover table-bordered table-condensed no-margin">
+@foreach($invoice_status_totals as $total)
+                    <tr>
+                        <td>
+                            <a href="{{ route($total['href']) }}">
+                                {{ $total['label'] }}
+                            </a>
+                        </td>
+                        <td class="amount">
+                            <span class="{{ $total['class'] }}">
+                                {{ format_currency($total['sum_total']) }}
+                            </span>
+                        </td>
+                    </tr>
+@endif
+                </table>
+            </div>
+@if(empty($overdue_invoices))
+            <div class="panel panel-default panel-heading">
+                <span class="text-muted">{{ trans('no_overdue_invoices') }}</span>
+            </div>
+@else
+            @php
+                $overdue_invoices_total = 0;
+                foreach ($overdue_invoices as $invoice) {
+                    $overdue_invoices_total += $invoice->invoice_balance;
+                }
+            @endphp
+            <div class="panel panel-danger panel-heading">
+                <a href="{{ route('invoices.status.overdue') }}" class="text-danger">
+                    <i class="fa fa-external-link"></i> {{ trans('overdue_invoices') }}
+                </a>
+                <span class="pull-right text-danger">
+                    {{ format_currency($overdue_invoices_total) }}
+                </span>
+            </div>
+@endif
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+
+            <div id="panel-recent-quotes" class="panel panel-default">
+
+                <div class="panel-heading">
+                    <b><i class="fa fa-history fa-margin"></i> {{ trans('recent_quotes') }}</b>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-condensed no-margin">
+                        <thead>
+                        <tr>
+                            <th>{{ trans('status') }}</th>
+                            <th style="min-width: 15%;">{{ trans('date') }}</th>
+                            <th style="min-width: 15%;">{{ trans('quote') }}</th>
+                            <th style="min-width: 35%;">{{ trans('client') }}</th>
+                            <th class="amount">{{ trans('balance') }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+@foreach($quotes as $quote)
+                            <tr>
+                                <td>
+                                <span class="label
+                                {{ $quote_statuses[$quote->quote_status_id]['class'] }}">
                                     {{ $quote_statuses[$quote->quote_status_id]['label'] }}
                                 </span>
-                            </td>
-                            <td class="px-4 py-2">{{ date_from_mysql($quote->quote_date_created) }}</td>
-                            <td class="px-4 py-2"><a href="{{ route('quotes.view', ['quote_id' => $quote['quote_id']]) }}">{{ $quote->quote_number ?: $quote->quote_id }}</a></td>
-                            <td class="px-4 py-2"><a href="{{ route('clients.view', ['client_id' => $quote->client_id]) }}">{{ htmlsc(format_client($quote)) }}</a></td>
-                            <td class="px-4 py-2 text-right">{{ format_currency($quote->quote_total) }}</td>
-                            <td class="px-4 py-2 text-center">
-                                <a href="{{ route('quotes.generate_pdf', ['quote_id' => $quote->quote_id]) }}" target="_blank">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </a>
+                                </td>
+                                <td>
+                                    {{ date_from_mysql($quote->quote_date_created) }}
+                                </td>
+                                <td>
+                                    <a href="{{ route(\'quotes.view\', $quote->quote_id) }}">$quote->quote_number ? $quote->quote_number : $quote->quote_id</a>
+                                </td>
+                                <td>
+                                    <a href="{{ route(\'clients.view\', $quote->client_id) }}">{{ htmlsc(format_client($quote)) }}</a>
+                                </td>
+                                <td class="amount">
+                                    {{ format_currency($quote->quote_total) }}
+                                </td>
+                                <td style="text-align: center;">
+                                    <a href="{{ route('quotes.generate_pdf', $quote->quote_id) }}"
+                                       target="_blank" title="{{ trans('download_pdf') }}">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+@endif
+                        <tr>
+                            <td colspan="6" class="text-right small">
+                                {{ anchor('quotes/status/all', trans('view_all')) }}
                             </td>
                         </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="6" class="px-4 py-2 text-right text-sm">
-                            <a href="{{ route('quotes.status.all') }}">{{ trans('view_all') }}</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div id="panel-recent-invoices" class="bg-white border rounded shadow overflow-x-auto">
-                <div class="px-4 py-2 border-b font-bold flex items-center">
-                    <i class="fa fa-history mr-2"></i>{{ trans('recent_invoices') }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+
+            <div id="panel-recent-invoices" class="panel panel-default">
+
+                <div class="panel-heading">
+                    <b><i class="fa fa-history fa-margin"></i> {{ trans('recent_invoices') }}</b>
                 </div>
-                <table class="min-w-full divide-y divide-gray-200 table-auto">
-                    <thead>
-                    <tr class="bg-gray-50">
-                        <th class="px-4 py-2">{{ trans('status') }}</th>
-                        <th class="px-4 py-2">{{ trans('due_date') }}</th>
-                        <th class="px-4 py-2">{{ trans('invoice') }}</th>
-                        <th class="px-4 py-2">{{ trans('client') }}</th>
-                        <th class="px-4 py-2 text-right">{{ trans('balance') }}</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($invoices as $invoice)
-                        @php if(config('disable_read_only')) $invoice->is_read_only = 0; @endphp
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">
-                                <span class="label {{ $invoice_statuses[$invoice->invoice_status_id]['class'] }}">
-                                    {{ $invoice_statuses[$invoice->invoice_status_id]['label'] }}
-                                    @if($invoice->invoice_sign == '-1')
-                                        &nbsp;<i class="fa fa-credit-invoice"></i>
-                                    @endif
-                                    @if($invoice->is_read_only)
-                                        &nbsp;<i class="fa fa-read-only"></i>
-                                    @endif
-                                    @if($invoice->invoice_is_recurring)
-                                        &nbsp;<i class="fa fa-refresh"></i>
-                                    @endif
-                                </span>
-                            </td>
-                            <td class="px-4 py-2"><span class="{{ $invoice->is_overdue ? 'text-red-600' : '' }}">{{ date_from_mysql($invoice->invoice_date_due) }}</span></td>
-                            <td class="px-4 py-2"><a href="{{ route('invoices.view', ['id' => $invoice->invoice_id]) }}">{{ $invoice->invoice_number ?: $invoice->invoice_id }}</a></td>
-                            <td class="px-4 py-2"><a href="{{ route('clients.view', ['id' => $invoice->client_id]) }}">{{ htmlsc(format_client($invoice)) }}</a></td>
-                            <td class="px-4 py-2 text-right">{{ format_currency($invoice->invoice_balance * $invoice->invoice_sign) }}</td>
-                            <td class="px-4 py-2 text-center">
-                                <a href="{{ $invoice->sumex_id ? route('invoices.generate_sumex_pdf', ['id' => $invoice->invoice_id]) : route('invoices.generate_pdf', ['id' => $invoice->invoice_id]) }}"
-                                   target="_blank">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </a>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-condensed no-margin">
+                        <thead>
+                        <tr>
+                            <th>{{ trans('status') }}</th>
+                            <th style="min-width: 15%;">{{ trans('due_date') }}</th>
+                            <th style="min-width: 15%;">{{ trans('invoice') }}</th>
+                            <th style="min-width: 35%;">{{ trans('client') }}</th>
+                            <th class="amount">{{ trans('balance') }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+@foreach($invoices as $invoice)
+    @php
+        if (config('app.disable_read_only') == true) {
+            $invoice->is_read_only = 0;
+        }
+    @endphp
+                            <tr>
+                                <td>
+                                    <span class="label {{ $invoice_statuses[$invoice->invoice_status_id]['class'] }}">
+                                        {{ $invoice_statuses[$invoice->invoice_status_id]['label'] }}
+                                        @if($invoice->invoice_sign == '-1')
+                                            &nbsp;<i class="fa fa-credit-invoice" title="{{ trans('credit_invoice') }}"></i>
+                                        @endif
+                                        @if($invoice->is_read_only)
+                                            &nbsp;<i class="fa fa-read-only" title="{{ trans('read_only') }}"></i>
+                                        @endif
+                                        @if($invoice->invoice_is_recurring)
+                                            &nbsp;<i class="fa fa-refresh" title="{{ trans('recurring') }}"></i>
+                                        @endif
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="{{ ($invoice->is_overdue) ? 'font-overdue' : '' }}">
+                                        {{ date_from_mysql($invoice->invoice_date_due) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ route(\'invoices.view\', $invoice->invoice_id) }}">$invoice->invoice_number ? $invoice->invoice_number : $invoice->invoice_id</a>
+                                </td>
+                                <td>
+                                    <a href="{{ route(\'clients.view\', $invoice->client_id) }}">{{ htmlsc(format_client($invoice)) }}</a>
+                                </td>
+                                <td class="amount">
+                                    {{ format_currency($invoice->invoice_balance * $invoice->invoice_sign) }}
+                                </td>
+                                <td style="text-align: center;">
+@if($invoice->sumex_id != null)
+                                    <a href="{{ route('invoices.generate-sumex-pdf', $invoice->invoice_id) }}"
+                                       target="_blank" title="{{ trans('generate_sumex') }}">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </a>
+@else
+                                    <a href="{{ route('invoices.generate_pdf', $invoice->invoice_id) }}"
+                                       target="_blank" title="{{ trans('download_pdf') }}">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </a>
+@endif
+                                </td>
+                            </tr>
+@endif
+                        <tr>
+                            <td colspan="6" class="text-right small">
+                                {{ anchor('invoices/status/all', trans('view_all')) }}
                             </td>
                         </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="6" class="px-4 py-2 text-right text-sm">
-                            <a href="{{ route('invoices.status.all') }}">{{ trans('view_all') }}</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+@if(get_setting('projects_enabled') == 1)
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+
+                <div id="panel-projects" class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <b><i class="fa fa-list fa-margin"></i> {{ trans('projects') }}</b>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed no-margin">
+                            <thead>
+                            <tr>
+                                <th>{{ trans('project_name') }}</th>
+                                <th>{{ trans('client_name') }}</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+@foreach($projects as $project)
+                                <tr>
+                                    <td>
+                                        <a href="{{ route(\'projects.view\', $project->project_id) }}">{{ htmlsc($project->project_name) }}</a>
+                                    </td>
+                                    <td>
+                                        @if($project->client_id != null)
+                                            {{ anchor('clients/view/' . $project->client_id, htmlsc(format_client($project))) }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+@endif
+                                <tr>
+                                    <td colspan="6" class="text-right small">
+                                        <a href=\"{{ route('projects.index') }}\">{{ trans('view_all') }}</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-12 col-md-6">
+
+                <div id="panel-recent-invoices" class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <b><i class="fa fa-check-square-o fa-margin"></i> {{ trans('tasks') }}</b>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed no-margin">
+
+                            <thead>
+                            <tr>
+                                <th>{{ trans('status') }}</th>
+                                <th>{{ trans('task_name') }}</th>
+                                <th>{{ trans('task_finish_date') }}</th>
+                                <th>{{ trans('project') }}</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+@foreach($tasks as $task)
+                                <tr>
+                                    <td>
+                                    <span class="label {{ $task_statuses[$task->task_status]['class'] ?? '' }}">
+                                        @if(isset($task_statuses[$task->task_status]['label']))
+                                            {{ $task_statuses[$task->task_status]['label'] }}
+                                        } {{--PHPREMOVEEND--}}
+                                    </span>
+                                    </td>
+                                    <td>
+                                        {{ anchor('tasks/form/' . $task->task_id, htmlsc($task->task_name)) {{--PHPREMOVEEND--}}
+                                    </td>
+                                    <td>
+                                    <span class="{{--PHPREMOVE--}} echo ($task->is_overdue) ? 'font-overdue' : '' }}">
+                                        {{ date_from_mysql($task->task_finish_date) }}
+                                    </span>
+                                    </td>
+                                    <td>
+                                        {{ empty($task->project_id) ? '' : anchor('projects/view/' . $task->project_id, htmlsc($task->project_name)) }}
+                                    </td>
+                                </tr>
+@endif
+                                <tr>
+                                    <td colspan="6" class="text-right small">
+                                        <a href=\"{{ route('tasks.index') }}\">{{ trans('view_all') }}</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
             </div>
         </div>
+@endif {{-- End if projects_enabled --}}
 
-    </div>
-@endsection
+</div>
