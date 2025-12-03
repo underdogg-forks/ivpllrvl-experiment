@@ -1,10 +1,8 @@
-<?php
-?>
 <!DOCTYPE html>
-<html style="display:table;width:100%;">
+<html class="h-full">
 <head>
     <meta charset="utf-8">
-    <title>InvoicePlane - <?php echo $heading; ?></title>
+    <title>InvoicePlane - {{ $heading }}</title>
     <style>
         html,
         html * {
@@ -16,26 +14,32 @@
             background: #B94A48;
             color: #fff;
             height: 100vh;
-            display: table-cell;
-            vertical-align: middle;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             padding: 2vh 2vw;
         }
 
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
         h4 {
             font-size: 30px;
-            text-align: center;
-            width: 100%;
+            margin-bottom: 20px;
         }
 
         p {
             font-size: 16px;
-            width: 100%;
         }
     </style>
 </head>
 <body>
-<h4><?php echo $heading; ?></h4>
-<p><?php echo $message; ?></p>
+<div class="container">
+    <h4>{{ $heading }}</h4>
+    <p>{{ $message }}</p>
+</div>
 </body>
 </html>

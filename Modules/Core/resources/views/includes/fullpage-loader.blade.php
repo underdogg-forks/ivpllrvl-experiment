@@ -1,7 +1,7 @@
-<div id="fullpage-loader" style="display: none">
+<div id="fullpage-loader" class="hidden">
     <div class="loader-content">
         <i id="loader-icon" class="fa fa-cog fa-spin"></i>
-        <div id="loader-error" style="display: none">
+        <div id="loader-error" class="hidden">
             {{ trans('loading_error') }}<br/>
             <a href="https://wiki.invoiceplane.com/{{ trans('cldr') }}/1.0/general/faq"
                class="btn btn-primary btn-sm" target="_blank">

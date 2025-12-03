@@ -1,0 +1,5 @@
+
+ERROR: {{ $heading }}
+
+{{ $message }}
+
