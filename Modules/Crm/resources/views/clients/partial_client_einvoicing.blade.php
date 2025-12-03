@@ -125,10 +125,10 @@ foreach ($req_einvoicing->users as $user_id => $user) {
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td class="px-4 py-2">{{ trans($lang[$l]) }}</td>
                                 <td class="px-4 py-2 text-center">
-                                    <a href="{{ route('clients.edit', $client_id) }}#client_{{ $key }}" {!! $title_tip . ' #' . trans($lang[$l]) . ' (' . mb_trim(trans('field')) . ')"' !!}>{!! $c_icon !!}</a>
+                                    <a href="{{ route('clients.form', ['id' => $client_id]) }}#client_{{ $key }}" {!! $title_tip . ' #' . trans($lang[$l]) . ' (' . mb_trim(trans('field')) . ')"' !!}>{!! $c_icon !!}</a>
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    <a href="{{ route('users.edit', $user_id) }}#user_{{ $key }}" {!! $title_tip . ' ' . htmlspecialchars($user->user_name) . ' #' . trans($lang[$l]) . ' (' . mb_trim(trans('field')) . ')"' !!}>{!! $u_icon !!}</a>
+                                    <a href="{{ route('users.form', ['id' => $user_id]) }}#user_{{ $key }}" {!! $title_tip . ' ' . htmlspecialchars($user->user_name) . ' #' . trans($lang[$l]) . ' (' . mb_trim(trans('field')) . ')"' !!}>{!! $u_icon !!}</a>
                                 </td>
                             </tr>
 @php

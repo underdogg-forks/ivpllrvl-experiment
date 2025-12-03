@@ -28,7 +28,7 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
 @endif
                 </td>
                 <td class="px-4 py-2">
-                    <a href="{{ route('clients.show', $client->client_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                    <a href="{{ route('clients.view', ['client_id' => $client->client_id]) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
                         {{ htmlspecialchars(format_client($client)) }}
                     </a>
                 </td>
@@ -54,13 +54,13 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
                         <ul x-show="clientMenuOpen" @click.away="clientMenuOpen = false" x-cloak
                             class="absolute right-0 mt-1 w-48 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
-                                <a href="{{ route('clients.show', $client->client_id) }}" 
+                                <a href="{{ route('clients.view', ['client_id' => $client->client_id]) }}" 
                                    class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-eye fa-margin"></i> {{ trans('view') }}
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('clients.edit', $client->client_id) }}" 
+                                <a href="{{ route('clients.form', ['id' => $client->client_id]) }}" 
                                    class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
