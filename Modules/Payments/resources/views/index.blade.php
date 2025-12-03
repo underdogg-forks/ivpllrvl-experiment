@@ -1,3 +1,6 @@
+@extends('core::layouts.app')
+
+@section('content')
 <div id="headerbar">
     <h1 class="headerbar-title">{{ trans('payment_methods') }}</h1>
 
@@ -66,3 +69,4 @@
     </div>
 
 </div>
+@endsection

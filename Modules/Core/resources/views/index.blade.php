@@ -1,3 +1,6 @@
+@extends('core::layouts.app')
+
+@section('content')
 <div id="headerbar">
     <h1 class="headerbar-title">{{ trans('import_data') }}</h1>
 
@@ -68,3 +71,4 @@
     </div>
 
 </div>
+@endsection

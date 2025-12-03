@@ -1,3 +1,6 @@
+@extends('core::layouts.app')
+
+@section('content')
 <form method="post">
 
     @csrf
@@ -175,3 +178,4 @@
     </div>
 
 </form>
+@endsection
