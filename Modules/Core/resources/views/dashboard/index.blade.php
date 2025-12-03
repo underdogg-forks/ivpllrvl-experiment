@@ -1,5 +1,8 @@
+@extends('core::layouts.app')
+
+@section('content')
 <div id="content">
-    @include(\'core::alerts\')
+    @include('core::alerts')
 
     <div class="row{{ (get_setting('disable_quickactions') == 1) ? ' hidden' : '' }}">
         <div class="col-xs-12">
@@ -362,3 +365,4 @@
 @endif {{-- End if projects_enabled --}}
 
 </div>
+@endsection

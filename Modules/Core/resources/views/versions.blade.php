@@ -1,4 +1,4 @@
-@extends('core::components.layouts.app')
+@extends('core::layouts.app')
 
 @section('content')
 <div id="headerbar" class="flex flex-wrap justify-between items-center mb-4">
