@@ -3,13 +3,9 @@
  *
  * This is the main stylesheet that combines:
  * 1. Tailwind CSS base, components, and utilities
- * 2. Theme system with CSS custom properties
- * 3. Bootstrap-compatible classes implemented with Tailwind
- * 4. InvoicePlane custom styles
+ * 2. Bootstrap-compatible classes implemented with Tailwind
+ * 3. InvoicePlane custom styles
  */
-
-/* Import theme system first */
-@import "./themes.css";
 
 /* Import Tailwind CSS and Bootstrap-compatible classes */
 @import "./bootstrap-tailwind.css";

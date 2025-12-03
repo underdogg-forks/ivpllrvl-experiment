@@ -62,22 +62,22 @@
                 
                 <div x-show="open" @click.away="open = false" x-cloak
                     class="absolute right-0 mt-2 w-40 bg-elevated border border-primary rounded-md shadow-lg py-1 z-50">
-                    <button @click="theme = 'blue'; localStorage.setItem('color-theme', 'blue'); open = false"
+                    <button @click="theme = 'blue'; localStorage.setItem('color-theme', 'blue'); location.reload()"
                         class="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-hover"
                         :class="{ 'bg-active text-accent': theme === 'blue' }">
                         <i class="fas fa-circle text-blue-500 mr-2"></i> Blue
                     </button>
-                    <button @click="theme = 'orange'; localStorage.setItem('color-theme', 'orange'); open = false"
+                    <button @click="theme = 'orange'; localStorage.setItem('color-theme', 'orange'); location.reload()"
                         class="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-hover"
                         :class="{ 'bg-active text-accent': theme === 'orange' }">
                         <i class="fas fa-circle text-orange-500 mr-2"></i> Orange
                     </button>
-                    <button @click="theme = 'red'; localStorage.setItem('color-theme', 'red'); open = false"
+                    <button @click="theme = 'reddit'; localStorage.setItem('color-theme', 'reddit'); location.reload()"
                         class="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-hover"
-                        :class="{ 'bg-active text-accent': theme === 'red' }">
-                        <i class="fas fa-circle text-red-500 mr-2"></i> Red
+                        :class="{ 'bg-active text-accent': theme === 'reddit' }">
+                        <i class="fas fa-circle" style="color: #FF4500" mr-2"></i> Reddit
                     </button>
-                    <button @click="theme = 'nord'; localStorage.setItem('color-theme', 'nord'); document.documentElement.classList.add('dark'); open = false"
+                    <button @click="theme = 'nord'; localStorage.setItem('color-theme', 'nord'); document.documentElement.classList.add('dark'); location.reload()"
                         class="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-hover"
                         :class="{ 'bg-active text-accent': theme === 'nord' }">
                         <i class="fas fa-circle text-cyan-400 mr-2"></i> Nord Dark

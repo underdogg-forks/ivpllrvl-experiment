@@ -1,0 +1,128 @@
+/**
+ * InvoicePlane Styles - Reddit Theme
+ *
+ * This is the Reddit-themed stylesheet that combines:
+ * 1. Tailwind CSS base, components, and utilities with Reddit color palette
+ * 2. Bootstrap-compatible classes implemented with Tailwind
+ * 3. InvoicePlane custom styles with Reddit theming
+ */
+
+@import "tailwindcss";
+
+/* ================================
+ * Reddit Color Variables
+ * Based on Reddit's brand colors
+ * ================================ */
+:root {
+    /* Gray scale */
+    --gray-base: #000;
+    --gray-darker: #1A1A1B;
+    --gray-dark: #272729;
+    --gray: #818384;
+    --gray-light: #D7DADC;
+    --gray-lighter: #EDEFF1;
+    --gray-lightest: #F6F7F8;
+
+    /* Brand colors - Reddit palette */
+    --brand-primary: #FF4500; /* Reddit Orange */
+    --brand-success: #46D160;
+    --brand-info: #0079D3; /* Reddit Blue */
+    --brand-warning: #FFB000;
+    --brand-danger: #EA0027;
+
+    /* Dark variants for alerts */
+    --dark-success: #2E7D32;
+    --dark-info: #005A9E;
+    --dark-warning: #CC8E00;
+    --dark-danger: #B00020;
+
+    /* Scaffolding */
+    --body-bg: #fff;
+    --text-color: #1c1c1c;
+    --link-color: #0079D3;
+    --link-hover-color: #005A9E;
+
+    /* Theme-specific colors */
+    --color-primary: #FF4500;
+    --color-primary-light: #FFD8CC;
+    --color-primary-dark: #CC3700;
+    --color-primary-hover: #E63E00;
+    
+    --color-accent: #FF4500;
+    --color-accent-light: #FF5722;
+    --color-accent-dark: #B33000;
+    
+    --color-bg-base: #DAE0E6;
+    --color-bg-elevated: #FFFFFF;
+    --color-bg-hover: #F6F7F8;
+    --color-bg-active: #FFE4D6;
+    
+    --color-text-primary: #1c1c1c;
+    --color-text-secondary: #7c7c7c;
+    --color-text-accent: #CC3700;
+    
+    --color-border: #ccc;
+    --color-border-dark: #999;
+}
+
+/* Dark mode for Reddit theme */
+.dark {
+    --gray-base: #D7DADC;
+    --gray-darker: #D7DADC;
+    --gray-dark: #818384;
+    --gray: #818384;
+    --gray-light: #343536;
+    --gray-lighter: #272729;
+    --gray-lightest: #1A1A1B;
+
+    --body-bg: #030303;
+    --text-color: #D7DADC;
+    --link-color: #4FBCFF;
+    --link-hover-color: #7CC5FF;
+
+    --color-bg-base: #030303;
+    --color-bg-elevated: #1A1A1B;
+    --color-bg-hover: #272729;
+    --color-bg-active: #331400;
+    
+    --color-text-primary: #D7DADC;
+    --color-text-secondary: #818384;
+    
+    --color-border: #343536;
+    --color-border-dark: #474748;
+}
+
+@layer components {
+    /* ================================
+     * BUTTONS
+     * ================================ */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 9999px; /* Reddit uses fully rounded buttons */
+        border-width: 1px;
+        border-style: solid;
+        transition: all 150ms ease-in-out;
+        padding: 0.375rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        line-height: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+        background-color: var(--brand-primary);
+        color: white;
+        border-color: var(--brand-primary);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-hover);
+    }
+
+    /* Additional button styles follow existing pattern... */
+}

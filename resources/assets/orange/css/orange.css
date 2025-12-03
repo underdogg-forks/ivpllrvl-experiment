@@ -1,0 +1,126 @@
+/**
+ * InvoicePlane Styles - Orange Theme
+ *
+ * This is the Orange-themed stylesheet that combines:
+ * 1. Tailwind CSS base, components, and utilities with Orange color palette
+ * 2. Bootstrap-compatible classes implemented with Tailwind
+ * 3. InvoicePlane custom styles with Orange theming
+ */
+
+@import "tailwindcss";
+
+/* ================================
+ * Orange Color Variables
+ * Based on warm orange palette
+ * ================================ */
+:root {
+    /* Gray scale */
+    --gray-base: #000;
+    --gray-darker: #222;
+    --gray-dark: #333;
+    --gray: #555;
+    --gray-light: #777;
+    --gray-lighter: #eee;
+    --gray-lightest: #f9f9f9;
+
+    /* Brand colors - Orange palette */
+    --brand-primary: #F97316; /* orange-500 */
+    --brand-success: #5cb85c;
+    --brand-info: #FB923C; /* orange-400 */
+    --brand-warning: #FDBA74; /* orange-300 */
+    --brand-danger: #d9534f;
+
+    /* Dark variants for alerts */
+    --dark-success: #3c763d;
+    --dark-info: #C2410C; /* orange-700 */
+    --dark-warning: #EA580C; /* orange-600 */
+    --dark-danger: #a94442;
+
+    /* Scaffolding */
+    --body-bg: #fff;
+    --text-color: #333;
+    --link-color: #F97316;
+    --link-hover-color: #EA580C;
+
+    /* Theme-specific colors */
+    --color-primary: #F97316;
+    --color-primary-light: #FED7AA;
+    --color-primary-dark: #C2410C;
+    --color-primary-hover: #EA580C;
+    
+    --color-accent: #F97316;
+    --color-accent-light: #FB923C;
+    --color-accent-dark: #7C2D12;
+    
+    --color-bg-base: #F9FAFB;
+    --color-bg-elevated: #FFFFFF;
+    --color-bg-hover: #F3F4F6;
+    --color-bg-active: #FFEDD5;
+    
+    --color-text-primary: #374151;
+    --color-text-secondary: #6B7280;
+    --color-text-accent: #C2410C;
+    
+    --color-border: #E5E7EB;
+    --color-border-dark: #D1D5DB;
+}
+
+/* Dark mode for Orange theme */
+.dark {
+    --gray-base: #FFF;
+    --gray-darker: #ECEFF4;
+    --gray-dark: #D8DEE9;
+    --gray: #AAAAAA;
+    --gray-light: #555;
+    --gray-lighter: #333;
+    --gray-lightest: #222;
+
+    --body-bg: #1F2937;
+    --text-color: #E5E7EB;
+    --link-color: #FB923C;
+    --link-hover-color: #FDBA74;
+
+    --color-bg-base: #111827;
+    --color-bg-elevated: #1F2937;
+    --color-bg-hover: #374151;
+    --color-bg-active: #431407;
+    
+    --color-text-primary: #E5E7EB;
+    --color-text-secondary: #9CA3AF;
+    
+    --color-border: #374151;
+    --color-border-dark: #4B5563;
+}
+
+@layer components {
+    /* ================================
+     * BUTTONS
+     * ================================ */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        border-width: 1px;
+        border-style: solid;
+        transition: all 150ms ease-in-out;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+    }
+
+    .btn-primary {
+        background-color: var(--brand-primary);
+        color: white;
+        border-color: var(--color-primary-dark);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-dark);
+    }
+
+    /* Additional button styles follow existing pattern... */
+}
