@@ -51,8 +51,8 @@
         <!-- Right side: Theme switcher, documentation, profile -->
         <div class="flex items-center space-x-4">
             <!-- Theme Switcher -->
-            <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open" 
+            <div x-data="{ themeSwitcherOpen: false }" class="relative">
+                <button @click="themeSwitcherOpen = !themeSwitcherOpen" 
                     class="p-2 rounded-md text-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     title="Change theme">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -60,7 +60,7 @@
                     </svg>
                 </button>
                 
-                <div x-show="open" @click.away="open = false" x-cloak
+                <div x-show="themeSwitcherOpen" @click.away="themeSwitcherOpen = false" x-cloak
                     class="absolute right-0 mt-2 w-40 bg-elevated border border-primary rounded-md shadow-lg py-1 z-50">
                     <button @click="theme = 'blue'; localStorage.setItem('color-theme', 'blue'); location.reload()"
                         class="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-hover"
@@ -93,8 +93,8 @@
             </a>
 
             <!-- Profile Dropdown -->
-            <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open" class="flex items-center focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-2 py-1">
+            <div x-data="{ profileMenuOpen: false }" class="relative">
+                <button @click="profileMenuOpen = !profileMenuOpen" class="flex items-center focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-2 py-1">
                     <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
                         <span
                             class="flex h-full w-full items-center justify-center rounded-lg bg-primary text-white font-semibold">
@@ -110,7 +110,7 @@
                     </svg>
                 </button>
 
-                <div x-show="open" @click.away="open = false" x-cloak
+                <div x-show="profileMenuOpen" @click.away="profileMenuOpen = false" x-cloak
                     class="absolute right-0 mt-2 w-56 bg-elevated rounded-md shadow-lg py-1 z-50 border border-primary">
                     <div class="px-4 py-2 border-b border-primary">
                         <p class="text-sm font-medium text-primary">{{ session('user_name', 'User') }}</p>

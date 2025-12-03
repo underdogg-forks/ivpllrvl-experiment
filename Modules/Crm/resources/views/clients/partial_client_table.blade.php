@@ -46,12 +46,12 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
                 <td class="px-4 py-2">{{ htmlspecialchars($client->client_phone ? $client->client_phone : ($client->client_mobile ? $client->client_mobile : '')) }}</td>
                 <td class="px-4 py-2 amount last">{{ format_currency($client->client_invoice_balance) }}</td>
                 <td class="px-4 py-2">
-                    <div x-data="{ open: false }" class="relative inline-block text-left">
-                        <button @click="open = !open" type="button"
+                    <div x-data="{ clientMenuOpen: false }" class="relative inline-block text-left">
+                        <button @click="clientMenuOpen = !clientMenuOpen" type="button"
                             class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </button>
-                        <ul x-show="open" @click.away="open = false" x-cloak
+                        <ul x-show="clientMenuOpen" @click.away="clientMenuOpen = false" x-cloak
                             class="absolute right-0 mt-1 w-48 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
                                 <a href="{{ route('clients.show', $client->client_id) }}" 

@@ -31,12 +31,12 @@
                     <td>{{ $product->product_tariff }}</td>
                 @endif
                 <td>
-                    <div x-data="{ open: false }" class="relative inline-block text-left">
-                        <button @click="open = !open" type="button"
+                    <div x-data="{ productMenuOpen: false }" class="relative inline-block text-left">
+                        <button @click="productMenuOpen = !open" type="button"
                             class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </button>
-                        <ul x-show="open" @click.away="open = false" x-cloak
+                        <ul x-show="productMenuOpen" @click.away="productMenuOpen = false" x-cloak
                             class="absolute right-0 mt-1 w-40 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
                                 <a href="{{ route('products.form', $product->product_id) }}"

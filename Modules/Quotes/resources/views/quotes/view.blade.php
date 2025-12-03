@@ -201,12 +201,12 @@
 
         <div class="headerbar-item float-right inline-flex rounded-md shadow-sm gap-2">
             <!-- Options Dropdown with Alpine.js -->
-            <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open"
+            <div x-data="{ quickMenuOpen: false }" class="relative">
+                <button @click="quickMenuOpen = !quickMenuOpen"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
                     <i class="fa fa-caret-down no-margin"></i> @lang('options')
                 </button>
-                <ul x-show="open" @click.away="open = false" x-cloak
+                <ul x-show="quickMenuOpen" @click.away="quickMenuOpen = false" x-cloak
                     class="absolute right-0 mt-2 min-w-[200px] bg-elevated border border-primary rounded-md shadow-lg overflow-hidden z-50">
                     @if($legacy_calculation)
                         <li>

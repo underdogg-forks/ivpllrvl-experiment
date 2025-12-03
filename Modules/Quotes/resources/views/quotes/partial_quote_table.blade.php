@@ -55,12 +55,12 @@
                     {{ format_currency($quote->quote_total) }}
                 </td>
                 <td>
-                    <div x-data="{ open: false }" class="relative inline-block text-left">
-                        <button @click="open = !open" type="button"
+                    <div x-data="{ quoteMenuOpen: false }" class="relative inline-block text-left">
+                        <button @click="quoteMenuOpen = !open" type="button"
                             class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </button>
-                        <ul x-show="open" @click.away="open = false" x-cloak
+                        <ul x-show="quoteMenuOpen" @click.away="quoteMenuOpen = false" x-cloak
                             class="absolute {{ $dropup ? 'bottom-full mb-1' : 'mt-1' }} right-0 w-48 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
                                 <a href="{{ route('quotes.view', $quote->quote_id) }}"
