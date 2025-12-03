@@ -15,7 +15,7 @@
             // No Check No post
             if ( ! product_ids.length) return; // todo: why not animate checkboxes
 
-            $.post("{{ route('products.ajax.process-selections') }}", {
+            $.post("{{ route('products.ajax.process_product_selections') }}", {
                 product_ids: product_ids
             }, function (data) {
                 var items = json_parse(data, {{ (int) config('app.debug') }});
@@ -61,7 +61,7 @@
 
             product_table.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
 
-            var lookup_url = "{{ route('products.ajax.modal-lookups', '') }}/";
+            var lookup_url = "{{ route('products.ajax.modal_product_lookups', '') }}/";
             lookup_url += Math.floor(Math.random() * 1000) + '/?';
             lookup_url += "&reset_table=true";
 
@@ -89,7 +89,7 @@
 
             product_table.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
 
-            var lookup_url = "{{ route('products.ajax.modal-lookups', '') }}/";
+            var lookup_url = "{{ route('products.ajax.modal_product_lookups', '') }}/";
             lookup_url += Math.floor(Math.random() * 1000) + '/?';
 
             if (filter_family) {

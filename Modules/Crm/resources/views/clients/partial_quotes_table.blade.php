@@ -16,7 +16,7 @@
 @foreach($quotes as $quote)
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-4 py-2">
-                    <a href="{{ route('guest.quotes.view', $quote->quote_id) }}"
+                    <a href="{{ route('guest.view', $quote->quote_id) }}"
                        title="{{ trans('edit') }}"
                        class="text-blue-600 dark:text-blue-400 hover:underline">
                         {{ $quote->quote_number }}
@@ -33,17 +33,17 @@
                 <td class="px-4 py-2">{{ format_currency($quote->quote_total) }}</td>
                 <td class="px-4 py-2">
                     <div class="options btn-group btn-group-sm flex gap-2">
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.quotes.view', $quote->quote_id) }}">
+                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.view', $quote->quote_id) }}">
                             <i class="fa fa-eye"></i> {{ trans('view') }}
                         </a>
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.quotes.generate_pdf', $quote->quote_id) }}">
+                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.generate-pdf', $quote->quote_id) }}">
                             <i class="fa fa-print"></i> {{ trans('pdf') }}
                         </a>
 @if(in_array($quote->quote_status_id, [2, 3]))
-                        <a class="btn btn-success inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600" href="{{ route('guest.quotes.approve', $quote->quote_id) }}">
+                        <a class="btn btn-success inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600" href="{{ route('guest.approve', $quote->quote_id) }}">
                             <i class="fa fa-check"></i> {{ trans('approve') }}
                         </a>
-                        <a class="btn btn-danger inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600" href="{{ route('guest.quotes.reject', $quote->quote_id) }}">
+                        <a class="btn btn-danger inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600" href="{{ route('guest.reject', $quote->quote_id) }}">
                             <i class="fa fa-ban"></i> {{ trans('reject') }}
                         </a>
 @endif

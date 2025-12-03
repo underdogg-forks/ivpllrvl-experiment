@@ -5,7 +5,7 @@
     <h1 class="headerbar-title text-xl font-bold">{{ trans('version_history') }}</h1>
 
     <div class="headerbar-item">
-        {!! pager(route('settings.versions.index'), $versions) !!}
+        {!! pager(route('settings.index'), $versions) !!}
     </div>
 </div>
 

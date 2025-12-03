@@ -19,11 +19,11 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
         });
 
         $('.btn_add_product').click(function () {
-            $('#modal-placeholder').load("{{ route('products/ajax/modal_product_lookups') }}/" + Math.floor(Math.random() * 1000));
+            $('#modal-placeholder').load("{{ route('products.ajax.modal_product_lookups') }}/" + Math.floor(Math.random() * 1000));
         });
 
         $('.btn_add_task').click(function () {
-            $('#modal-placeholder').load("{{ route('tasks/ajax/modal_task_lookups/' . $invoice_id) }}/" + Math.floor(Math.random() * 1000));
+            $('#modal-placeholder').load("{{ route('tasks.modal-task-lookups', ['invoice_id' => $invoice_id]) }}/" + Math.floor(Math.random() * 1000));
         });
 
         $('.btn_add_row').click(function () {
@@ -40,7 +40,7 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
 
         $('#btn_create_recurring').click(function () {
             $('#modal-placeholder').load(
-                "{{ route('invoices/ajax/modal_create_recurring') }}",
+                "{{ route('invoices.modal-create-recurring') }}",
                 {
                     invoice_id: {{ $invoice_id }}
                 }
@@ -48,7 +48,7 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
         });
 
         $('#invoice_change_client').click(function () {
-            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_change_client') }}", {
+            $('#modal-placeholder').load("{{ route('invoices.modal-change-client') }}", {
                 invoice_id: {{ $invoice_id }},
                 client_id: "{{ e($invoice->client_id) }}"
             });
@@ -70,7 +70,7 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
                 item_order++;
                 items.push(row);
             });
-            $.post("{{ route('invoices/ajax/save') }}", {
+            $.post("{{ route('invoices.save') }}", {
                     invoice_id: {{ $invoice_id }},
                     invoice_number: $('#invoice_number').val(),
                     invoice_date_created: $('#invoice_date_created').val(),
@@ -94,7 +94,7 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
                 function (data) {
                     var response = json_parse(data, {{ (int) IP_DEBUG }});
                     if (response.success === 1) {
-                        window.location = "{{ route('invoices/view') }}/" + {{ $invoice_id }};
+                        window.location = "{{ route('invoices.view') }}/" + {{ $invoice_id }};
                     } else {
                         $('#fullpage-loader').hide();
                         $('.control-group').removeClass('has-error');
@@ -111,11 +111,11 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
         });
 
         $('#btn_generate_pdf').click(function () {
-            window.open('{{ route('invoices/generate_sumex_copy/' . $invoice_id) }}', '_blank');
+            window.open('{{ route('invoices.generate-sumex-copy', ['invoice_id' => $invoice_id]) }}', '_blank');
         });
 
         $('#btn_sumex').click(function () {
-            window.open('{{ route('invoices/generate_sumex_pdf/' . $invoice_id) }}', '_blank');
+            window.open('{{ route('invoices.generate-sumex-pdf', ['invoice_id' => $invoice_id]) }}', '_blank');
         });
 
         $(document).on('click', '.btn_delete_item', function () {
@@ -127,7 +127,7 @@ $edit_user_title = trans('edit') . ' ' . trans('user') . ' (' . trans('invoicing
                 $(this).parents('.item').remove();
                 check_items_tax_usages();
             } else {
-                $.post("{{ route('invoices/ajax/delete_item/' . $invoice->invoice_id) }}", {
+                $.post("{{ route('invoices.delete-item', ['invoice_id' => $invoice->invoice_id]) }}", {
                         'item_id': item_id,
                     },
                     function (data) {
@@ -201,7 +201,7 @@ if ($change_user) {
     ?>
         <a data-toggle="tooltip" data-placement="bottom"
            title="{{ $edit_user_title }}"
-           href="{{ route('users/form/' . $invoice->user_id) }}">
+           href="{{ route('users.form', ['user_id' => $invoice->user_id]) }}">
             <i class="fa fa-xs fa-user text-{{ $my_class }}"></i>
                 <span class="hidden-xs"><?php _htmlsc($invoice->user_name); ?></span>
         </a>
@@ -265,7 +265,7 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('mailer/invoice/' . $invoice->invoice_id) }}">
+                    <a href="{{ route('mailer.invoice', ['invoice_id' => $invoice->invoice_id]) }}">
                         <i class="fa fa-send fa-margin"></i>
                         {{ trans('send_email') }}
                     </a>
@@ -328,7 +328,7 @@ if ($invoice->is_read_only == 1) {
                 <div class="col-xs-12 col-md-8">
                     <div class="col-md-6">
                         <h2>
-                            <a href="{{ route('clients/view/' . $invoice->client_id) }}">{{ format_client($invoice) ?></a>
+                            <a href="{{ route('clients.view', ['client_id' => $invoice->client_id]) }}">{{ format_client($invoice) ?></a>
 @if($invoice->invoice_status_id == 1)
                                 <span id="invoice_change_client" class="fa fa-edit cursor-pointer small"
                                       data-toggle="tooltip" data-placement="bottom"
@@ -590,7 +590,7 @@ foreach ($custom_fields as $custom_field) {
                                     <label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                                     <div class="input-group">
                                         <input type="text" id="invoice-guest-url" readonly class="form-control"
-                                               value="{{ route('guest/view/invoice/' . $invoice->invoice_url_key) ?>">
+                                               value="{{ route('guest.view', ['invoice_url_key' => $invoice->invoice_url_key]) ?>">
                                         <span class="input-group-addon to-clipboard cursor-pointer"
                                               data-clipboard-target="#invoice-guest-url">
                                             <i class="fa fa-clipboard fa-fw"></i>

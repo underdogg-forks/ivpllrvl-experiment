@@ -8,23 +8,23 @@
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm index-options">
-            <a href="{{ route('guest.quotes.status', 'open') }}"
+            <a href="{{ route('guest.status', 'open') }}"
                class="btn {{ $status == 'open' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('open') }}
             </a>
-            <a href="{{ route('guest.quotes.status', 'approved') }}"
+            <a href="{{ route('guest.status', 'approved') }}"
                class="btn  {{ $status == 'approved' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('approved') }}
             </a>
-            <a href="{{ route('guest.quotes.status', 'rejected') }}"
+            <a href="{{ route('guest.status', 'rejected') }}"
                class="btn  {{ $status == 'rejected' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('rejected') }}
             </a>
-            <a href="{{ route('guest.quotes.status', 'viewed') }}"
+            <a href="{{ route('guest.status', 'viewed') }}"
                class="btn  {{ $status == 'viewed' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('viewed') }}
             </a>
-            <a href="{{ route('guest.quotes.status', 'all') }}"
+            <a href="{{ route('guest.status', 'all') }}"
                class="btn  {{ $status == 'all' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('all') }}
             </a>

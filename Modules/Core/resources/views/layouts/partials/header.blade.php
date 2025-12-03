@@ -16,7 +16,7 @@
 
         <!-- Center: Main Menu Navigation -->
         <nav class="hidden lg:flex items-center space-x-1">
-            <a href="{{ route('dashboard') }}" 
+            <a href="{{ route('dashboard.index') }}" 
                class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('dashboard*') ? 'bg-active text-accent' : 'text-primary hover:bg-hover' }}">
                 <i class="fas fa-house mr-1"></i>
                 {{ trans('dashboard') }}
@@ -127,7 +127,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('settings') }}"
+                    <a href="{{ route('settings.index') }}"
                         class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                         <div class="flex items-center">
                             <i class="fas fa-cog mr-2"></i>

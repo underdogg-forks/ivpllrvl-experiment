@@ -14,15 +14,15 @@
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm index-options">
-            <a href="{{ route('invoices.client', [$client_id, 'open']) }}"
+            <a href="{{ route('invoices.index', [$client_id, 'open']) }}"
                class="btn {{ $status == 'open' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('open') }}
             </a>
-            <a href="{{ route('invoices.client', [$client_id, 'closed']) }}"
+            <a href="{{ route('invoices.index', [$client_id, 'closed']) }}"
                class="btn  {{ $status == 'closed' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('closed') }}
             </a>
-            <a href="{{ route('invoices.client', [$client_id, 'overdue']) }}"
+            <a href="{{ route('invoices.index', [$client_id, 'overdue']) }}"
                class="btn  {{ $status == 'overdue' ? 'btn-primary' : 'btn-default' }}">
                 {{ trans('overdue') }}
             </a>

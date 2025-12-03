@@ -13,7 +13,7 @@
             </button>
 
             <a class="create-quote inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-               href="{{ route('quotes.modal.create') }}">
+               href="{{ route('quotes.ajax.modal.create') }}">
                 <i class="fa fa-plus"></i> @lang('new')
             </a>
         </div>

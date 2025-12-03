@@ -10,7 +10,7 @@
         $(".simple-select").select2();
 
         $('#btn_modal_payment_submit').click(function () {
-            $.post("{{ route('payments.ajax.add') }}", {
+            $.post("{{ route('payments.add') }}", {
                     invoice_id: $('#invoice_id').val(),
                     payment_amount: $('#payment_amount').val(),
                     payment_method_id: $('#payment_method_id').val(),

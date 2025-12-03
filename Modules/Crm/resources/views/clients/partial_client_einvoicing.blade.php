@@ -86,7 +86,7 @@ $lang         = explode(' ', strtr($base, ['_1' => ''])); // Translation vars na
 foreach ($req_einvoicing->users as $user_id => $user) {
     if ($user->show_table) {
         $title_tip = ' data-toggle="tooltip" data-placement="bottom" title="' . trans('edit'); // Tooltip helper ! Need add: . '"'
-        $user_link = '<a href="' . route('users.edit', $user_id) . '" ' . $title_tip . ' ' . htmlspecialchars($user->user_name) . '">' . trans('user') . '</a>'; // ! Need add: . '"'
+        $user_link = '<a href="' . route('users.form', $user_id) . '" ' . $title_tip . ' ' . htmlspecialchars($user->user_name) . '">' . trans('user') . '</a>'; // ! Need add: . '"'
         $open      = $user_id == session('user_id') && $req_einvoicing->users[session('user_id')]->show_table;
         $me        = $user_id == session('user_id');
 @endphp

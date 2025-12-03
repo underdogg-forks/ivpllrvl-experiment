@@ -41,12 +41,12 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{ route('invoices.recurring.stop', $invoice->invoice_recurring_id) }}">
+                                <a href="{{ route('invoices.stop', $invoice->invoice_recurring_id) }}">
                                     <i class="fa fa-ban fa-margin"></i> {{ trans('stop') }}
                                 </a>
                             </li>
                             <li>
-                                <form action="{{ route('invoices.recurring.delete', $invoice->invoice_recurring_id) }}"
+                                <form action="{{ route('invoices.delete', $invoice->invoice_recurring_id) }}"
                                       method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-button"

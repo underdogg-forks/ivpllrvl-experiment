@@ -15,7 +15,7 @@
         // Creates the invoice
         $('#create_recurring_confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("{{ route('invoices.ajax.create-recurring') }}", {
+            $.post("{{ route('invoices.create-recurring') }}", {
                     invoice_id: {{ $invoice_id }},
                     recur_start_date: $('#recur_start_date').val(),
                     recur_end_date: $('#recur_end_date').val(),
@@ -38,7 +38,7 @@
         });
 
         function get_recur_start_date() {
-            $.post("{{ route('invoices.ajax.get-recur-start-date') }}", {
+            $.post("{{ route('invoices.get-recur-start-date') }}", {
                     invoice_date: $('#invoice_date_created').val(),
                     recur_frequency: $('#recur_frequency').val()
                 },

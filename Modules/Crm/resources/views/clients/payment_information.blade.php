@@ -52,7 +52,7 @@
 
             <ul class="nav navbar-nav flex gap-4">
                 <li>
-                    <a target="_blank" href="{{ route('guest.invoices.generate_pdf', $invoice->invoice_url_key) }}" class="inline-flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                    <a target="_blank" href="{{ route('guest.generate-pdf', $invoice->invoice_url_key) }}" class="inline-flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                         <i class="fa fa-print"></i> {{ trans('download_pdf') }}
                     </a>
                 </li>
@@ -143,7 +143,7 @@
                 </div>
                 <ul class="list-group space-y-2">
 @foreach($gateways as $gateway)
-                    <a class="list-group-item list-group-item-action block px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700" href="{{ route('guest.payment_information.form', [$invoice->invoice_url_key, $gateway]) }}">{{ ucwords(str_replace('_', ' ', $gateway)) }}</a>
+                    <a class="list-group-item list-group-item-action block px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700" href="{{ route('guest.form', [$invoice->invoice_url_key, $gateway]) }}">{{ ucwords(str_replace('_', ' ', $gateway)) }}</a>
 @endforeach
                 </ul>
 @endif

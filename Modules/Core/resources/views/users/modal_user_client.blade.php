@@ -7,12 +7,12 @@
         $(".simple-select").select2();
 
         $('#btn_user_client').click(function () {
-            $.post("{{ route('users/ajax/save_user_client') }}", {
+            $.post("{{ route('users.save-user-client') }}", {
                 user_id: '{{ $user_id }}',
                 client_id: $('#client_id').val()
             }, function (data) {
                 <?php echo config('app.debug') ? 'console.log(data);' : ''; ?>
-                $('#div_user_client_table').load('{{ route('users/ajax/load_user_client_table') }}', {
+                $('#div_user_client_table').load('{{ route('users.load-user-client-table') }}', {
                     user_id: '{{ $user_id }}'
                 });
 

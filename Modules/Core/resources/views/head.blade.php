@@ -46,22 +46,22 @@
         });
 
         $(document).on('click', '.create-invoice', function () {
-            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_create_invoice') }}");
+            $('#modal-placeholder').load("{{ route('invoices.modal-create-invoice') }}");
         });
 
         $(document).on('click', '.create-quote', function () {
-            $('#modal-placeholder').load("{{ route('quotes/ajax/modal_create_quote') }}");
+            $('#modal-placeholder').load("{{ route('quotes.ajax.modal.create') }}");
         });
 
         $(document).on('click', '#btn_quote_to_invoice', function () {
             var quote_id = $(this).data('quote-id');
-            $('#modal-placeholder').load("{{ route('quotes/ajax/modal_quote_to_invoice') }}/" + quote_id);
+            $('#modal-placeholder').load("{{ route('quotes.ajax.quote_to_invoice') }}/" + quote_id);
         });
 
         $(document).on('click', '#btn_copy_invoice', function () {
             var invoice_id = $(this).data('invoice-id');
             var client_id = $(this).data('client-id');
-            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_copy_invoice') }}", {
+            $('#modal-placeholder').load("{{ route('invoices.modal-copy-invoice') }}", {
                 invoice_id: invoice_id,
                 client_id: client_id
             });
@@ -69,13 +69,13 @@
 
         $(document).on('click', '#btn_create_credit', function () {
             var invoice_id = $(this).data('invoice-id');
-            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_create_credit') }}", {invoice_id: invoice_id});
+            $('#modal-placeholder').load("{{ route('invoices.modal-create-credit') }}", {invoice_id: invoice_id});
         });
 
         $(document).on('click', '#btn_copy_quote', function () {
             var quote_id = $(this).data('quote-id');
             var client_id = $(this).data('client-id');
-            $('#modal-placeholder').load("{{ route('quotes/ajax/modal_copy_quote') }}", {
+            $('#modal-placeholder').load("{{ route('quotes.ajax.modal.copy') }}", {
                 quote_id: quote_id,
                 client_id: client_id
             });
@@ -83,12 +83,12 @@
 
         $(document).on('click', '.client-create-invoice', function () {
             var client_id = $(this).data('client-id');
-            $('#modal-placeholder').load("{{ route('invoices/ajax/modal_create_invoice') }}", {client_id: client_id});
+            $('#modal-placeholder').load("{{ route('invoices.modal-create-invoice') }}", {client_id: client_id});
         });
 
         $(document).on('click', '.client-create-quote', function () {
             var client_id = $(this).data('client-id');
-            $('#modal-placeholder').load("{{ route('quotes/ajax/modal_create_quote') }}", {client_id: client_id});
+            $('#modal-placeholder').load("{{ route('quotes.ajax.modal.create') }}", {client_id: client_id});
         });
 
         $(document).on('click', '.invoice-add-payment', function () {
@@ -96,7 +96,7 @@
             var invoice_balance = $(this).data('invoice-balance');
             var invoice_payment_method = $(this).data('invoice-payment-method');
             var payment_cf_exist =  $(this).data('payment-cf-exist');
-            $('#modal-placeholder').load("{{ route('payments/ajax/modal_add_payment') }}", {
+            $('#modal-placeholder').load("{{ route('payments.modal-add-payment') }}", {
                 invoice_id: invoice_id,
                 invoice_balance: invoice_balance,
                 invoice_payment_method: invoice_payment_method,

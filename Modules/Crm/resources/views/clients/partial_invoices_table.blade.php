@@ -20,7 +20,7 @@
     @endphp
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-4 py-2">
-                    <a href="{{ route('guest.invoices.view', $invoice->invoice_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                    <a href="{{ route('guest.view', $invoice->invoice_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
                         {{ $invoice->invoice_number }}
                     </a>
                 </td>
@@ -31,14 +31,14 @@
                 <td class="px-4 py-2">{{ format_currency($invoice->invoice_balance) }}</td>
                 <td class="px-4 py-2">
                     <div class="options btn-group btn-group-sm flex gap-2">
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.invoices.view', $invoice->invoice_id) }}">
+                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.view', $invoice->invoice_id) }}">
                             <i class="fa fa-eye"></i> {{ trans('view') }}
                         </a>
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.invoices.generate_pdf', $invoice->invoice_id) }}">
+                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.generate-pdf', $invoice->invoice_id) }}">
                             <i class="fa fa-print"></i> {{ trans('pdf') }}
                         </a>
 @if($enable_online_payments && $invoice->invoice_balance > 0 && $invoice->invoice_status_id != 4)
-                        <a class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600" href="{{ route('guest.payment_information.form', $invoice->invoice_url_key) }}">
+                        <a class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600" href="{{ route('guest.form', $invoice->invoice_url_key) }}">
                             <i class="fa fa-credit-card"></i> {{ trans('pay_now') }}
                         </a>
 @elseif($invoice->invoice_balance == 0)

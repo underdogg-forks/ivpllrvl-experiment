@@ -59,10 +59,10 @@
         clientId: '{{ $paypal_client_id }}',
         currency: '{{ $currency }}',
         invoiceUrlKey: '{{ $invoice_url_key }}',
-        createOrderUrl: '{{ route('guest.gateways.paypal.create-order', $invoice_url_key) }}',
-        capturePaymentUrl: '{{ route('guest.gateways.paypal.capture-payment', '') }}',
-        successUrl: '{{ route('guest.view.invoice', $invoice_url_key) }}',
-        errorUrl: '{{ route('guest.payment-information.form', [$invoice_url_key, 'paypal']) }}'
+        createOrderUrl: '{{ route('guest.paypal-create-order', $invoice_url_key) }}',
+        capturePaymentUrl: '{{ route('guest.paypal-capture-payment', '') }}',
+        successUrl: '{{ route('guest.view', $invoice_url_key) }}',
+        errorUrl: '{{ route('guest.form', [$invoice_url_key, 'paypal']) }}'
     };
 </script>
 <script src="{{ core_asset('js/paypal.js') }}"></script>

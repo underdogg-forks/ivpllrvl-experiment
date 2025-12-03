@@ -315,7 +315,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
     @if($invoice_tax_rates)
         @foreach($invoice_tax_rates as $invoice_tax_rate)
                     <form method="post"
-                          action="{{ route('invoices.delete_invoice_tax', [$invoice->invoice_id, $invoice_tax_rate->invoice_tax_rate_id]) }}">
+                          action="{{ route('invoices.delete-invoice-tax', [$invoice->invoice_id, $invoice_tax_rate->invoice_tax_rate_id]) }}">
                     @csrf
                     <span class="amount">
                         {{ format_currency($invoice_tax_rate->invoice_tax_rate_amount) }}

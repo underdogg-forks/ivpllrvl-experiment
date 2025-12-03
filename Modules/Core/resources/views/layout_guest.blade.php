@@ -58,7 +58,7 @@
 
             <ul class="nav navbar-nav navbar-right settings">
                 <li>
-                    <a href="{{ route('sessions/logout') }}"
+                    <a href="{{ route('sessions.logout') }}"
                        class="tip icon logout" data-placement="bottom"
                        title="{{ trans('logout') }}">
                         <span class="visible-xs">&nbsp;{{ trans('logout') }}</span>
@@ -75,26 +75,26 @@
     <div class="sidebar hidden-xs{{ get_setting('disable_sidebar') == 1 ? ' hidden' : '' }}">
         <ul>
             <li>
-                <a href="{{ route('guest') }}" title="{{ trans('dashboard') }}" class="tip"
+                <a href="{{ route('guest.index') }}" title="{{ trans('dashboard') }}" class="tip"
                    data-placement="right">
                     <i class="fa fa-dashboard"></i>
                 </a>
             </li>
             <li>
-                <a href="{{ route('guest/quotes/index') }}" title="{{ trans('quotes') }}"
+                <a href="{{ route('guest.index') }}" title="{{ trans('quotes') }}"
                    class="tip"
                    data-placement="right">
                     <i class="fa fa-file"></i>
                 </a>
             </li>
             <li>
-                <a href="{{ route('guest/invoices/index') }}" title="{{ trans('invoices') }}"
+                <a href="{{ route('guest.index') }}" title="{{ trans('invoices') }}"
                    class="tip" data-placement="right">
                     <i class="fa fa-file-text"></i>
                 </a>
             </li>
             <li>
-                <a href="{{ route('guest/payments/index') }}" title="{{ trans('payments') }}"
+                <a href="{{ route('guest.index') }}" title="{{ trans('payments') }}"
                    class="tip" data-placement="right">
                     <i class="fa fa-money"></i>
                 </a>

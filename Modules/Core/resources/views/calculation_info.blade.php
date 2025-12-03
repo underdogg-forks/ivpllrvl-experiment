@@ -3,7 +3,7 @@
 
         <h1 id="logo" class="text-4xl font-bold text-center mb-6"><span>InvoicePlane</span></h1>
 
-        <form method="post" action="{{ route('setup.calculation_info') }}">
+        <form method="post" action="{{ route('setup.calculation-info') }}">
 
             @csrf
 

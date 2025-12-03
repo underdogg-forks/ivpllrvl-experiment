@@ -64,7 +64,7 @@
 @foreach($tasks as $task)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('tasks.edit', $task->task_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                                        <a href="{{ route('tasks.form', $task->task_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
                                             {{ htmlspecialchars($task->task_name) }}
                                         </a>
                                     </td>

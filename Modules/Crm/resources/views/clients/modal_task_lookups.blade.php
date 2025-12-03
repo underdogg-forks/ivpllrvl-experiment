@@ -35,7 +35,7 @@
             // No Check No post
             if ( ! task_ids.length) return; // todo: why not animate checkboxes
 
-            $.post("{{ route('tasks.ajax.process_task_selections') }}", {
+            $.post("{{ route('tasks.process-task-selections') }}", {
                 task_ids: task_ids
             }, function (data) {
                 var items = json_parse(data, {{ (int) config('app.debug') }});

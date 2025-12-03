@@ -3,7 +3,7 @@
         $('#modal-create-credit-invoice').modal('show');
         $('#create-credit-confirm').click(function () {
             show_loader(); // Show spinner
-            $.post("{{ route('invoices.ajax.create-credit') }}", {
+            $.post("{{ route('invoices.create-credit') }}", {
                     invoice_id: {{ $invoice_id }},
                     client_id: $('#client_id').val(),
                     invoice_date_created: $('#invoice_date_created').val(),

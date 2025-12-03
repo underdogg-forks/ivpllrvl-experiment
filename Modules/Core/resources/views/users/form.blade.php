@@ -35,7 +35,7 @@ $einvoicingOpt = $einvoicing ? $einvoicingTip . trans('optional') . ')"' : '';
 
         $('#add-user-client-modal').click(function () {
             <?php $user_id = $id ?? ''; ?>
-            $('#modal-placeholder').load("{{ route('users/ajax/modal_add_user_client/' . $user_id) }}");
+            $('#modal-placeholder').load("{{ route('users.modal-add-user-client', ['user_id' => $user_id]) }}");
         });
     });
 </script>
@@ -99,12 +99,14 @@ if ( ! $id) {
 } else { // Edit user
     ?>
                             <div class="form-group">
-                                <a href="{{ route('users/change_password/' . $id) }}"
+                                <a href="{{ route('users.change-password', ['user_id' => $id]) }}"
                                    class="btn btn-default">
                                     {{ trans('change_password') }}
                                 </a>
                             </div>
-@endif
+<?php
+}
+?>
                             <div class="form-group">
                                 <label for="user_language">{{ trans('language') }}</label>
                                 <select name="user_language" id="user_language" class="form-control simple-select" required>

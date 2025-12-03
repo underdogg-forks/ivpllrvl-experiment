@@ -78,7 +78,7 @@ $class_checks = ['fa fa-lg fa-check-square-o text-success', 'fa fa-lg fa-edit te
                                 </a>
                             </li>
                             <li>
-                                <form action="{{ route('clients.destroy', $client->client_id) }}"
+                                <form action="{{ route('clients.delete', $client->client_id) }}"
                                       method="POST" class="w-full">
                                     @csrf
                                     @method('DELETE')

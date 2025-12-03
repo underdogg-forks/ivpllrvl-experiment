@@ -19,7 +19,7 @@
                     <td>
                         <div class="options btn-group btn-group-sm">
 @if($user->user_type == 2)
-                        <a href="{{ route('user_clients/user/' . $user->user_id) }}"
+                        <a href="{{ route('users.load-user-client-table', ['user_id' => $user->user_id]) }}"
                            class="btn btn-default">
                             <i class="fa fa-list fa-margin"></i> {{ trans('assigned_clients') }}
                         </a>
@@ -32,13 +32,13 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('users/form/' . $user->user_id) }}">
+                                    <a href="{{ route('users.form', ['user_id' => $user->user_id]) }}">
                                         <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                     </a>
                                 </li>
 @if($user->user_id !== 1)
                                     <li>
-                                        <form action="{{ route('users/delete/' . $user->user_id) }}"
+                                        <form action="{{ route('users.delete', ['user_id' => $user->user_id]) }}"
                                               method="POST">
                                             <?php _csrf_field(); ?>
                                             <button type="submit" class="dropdown-button"

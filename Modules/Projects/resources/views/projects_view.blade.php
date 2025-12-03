@@ -40,7 +40,7 @@
                         <td>{{ $task->task_name ?? '' }}</td>
                         <td>{{ $task->task_status ?? '' }}</td>
                         <td>
-                            <a href="{{ route('tasks.edit', ['task' => $task->task_id]) }}"
+                            <a href="{{ route('tasks.form', ['task' => $task->task_id]) }}"
                                class="btn btn-xs btn-default">
                                 <i class="fa fa-edit"></i> {{ trans('edit') }}
                             </a>

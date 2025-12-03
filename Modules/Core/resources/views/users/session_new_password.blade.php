@@ -41,7 +41,7 @@
 
         <div class="row"><?php $this->layout->load_view('layout/alerts'); ?></div>
 
-        <form method="post" action="{{ route('sessions/passwordreset') }}">
+        <form method="post" action="{{ route('sessions.passwordreset') }}">
 
             <?php _csrf_field(); ?>
 

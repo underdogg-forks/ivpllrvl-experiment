@@ -152,8 +152,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ route('users/form/'
-                        . $this->session->userdata('user_id')) }}"
+                    <a href="{{ route('users.form', ['user_id' => $this->session->userdata('user_id')]) }}"
                        class="tip icon" data-placement="bottom"
                        title="<?php
                         _htmlsc($this->session->userdata('user_name'));
@@ -171,7 +170,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('sessions/logout') }}"
+                    <a href="{{ route('sessions.logout') }}"
                        class="tip icon logout" data-placement="bottom"
                        title="{{ trans('logout') }}">
                         <i class="fa fa-power-off"></i>
