@@ -1,0 +1,82 @@
+/**
+ * InvoicePlane Styles - Orange Theme
+ *
+ * This theme defines color variables and imports the central bootstrap-tailwind.css
+ */
+
+@import "tailwindcss";
+@import "../../core/css/bootstrap-tailwind.css";
+
+/* ================================
+ * Orange Color Variables
+ * ================================ */
+:root {
+    /* Gray scale */
+    --gray-base: #000;
+    --gray-darker: #222;
+    --gray-dark: #333;
+    --gray: #555;
+    --gray-light: #777;
+    --gray-lighter: #eee;
+    --gray-lightest: #f9f9f9;
+
+    /* Brand colors - Orange palette */
+    --brand-primary: #F97316;
+    --brand-success: #5cb85c;
+    --brand-info: #FB923C;
+    --brand-warning: #FDBA74;
+    --brand-danger: #d9534f;
+
+    /* Dark variants */
+    --dark-success: #3c763d;
+    --dark-info: #C2410C;
+    --dark-warning: #EA580C;
+    --dark-danger: #a94442;
+
+    /* Scaffolding */
+    --body-bg: #fff;
+    --text-color: #333;
+    --link-color: #F97316;
+    --link-hover-color: #EA580C;
+
+    /* Theme-specific colors */
+    --color-primary: #F97316;
+    --color-primary-light: #FED7AA;
+    --color-primary-dark: #C2410C;
+    --color-primary-hover: #EA580C;
+    
+    --color-accent: #F97316;
+    --color-accent-light: #FB923C;
+    --color-accent-dark: #7C2D12;
+    
+    --color-bg-base: #F9FAFB;
+    --color-bg-elevated: #FFFFFF;
+    --color-bg-hover: #F3F4F6;
+    --color-bg-active: #FFEDD5;
+    
+    --color-text-primary: #374151;
+    --color-text-secondary: #6B7280;
+    --color-text-accent: #C2410C;
+    
+    --color-border: #E5E7EB;
+    --color-border-dark: #D1D5DB;
+}
+
+/* Dark mode */
+.dark {
+    --body-bg: #1F2937;
+    --text-color: #E5E7EB;
+    --link-color: #FB923C;
+    --link-hover-color: #FDBA74;
+
+    --color-bg-base: #111827;
+    --color-bg-elevated: #1F2937;
+    --color-bg-hover: #374151;
+    --color-bg-active: #431407;
+    
+    --color-text-primary: #E5E7EB;
+    --color-text-secondary: #9CA3AF;
+    
+    --color-border: #374151;
+    --color-border-dark: #4B5563;
+}

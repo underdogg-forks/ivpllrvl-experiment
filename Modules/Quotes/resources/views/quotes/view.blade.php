@@ -199,29 +199,57 @@
             @endif
         </h1>
 
-        <div class="headerbar-item float-right inline-flex rounded-md shadow-sm">
-            <div class="options inline-flex rounded-md shadow-sm [&>*]:px-3 [&>*]:py-1.5 [&>*]:text-sm">
-                <a class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                   data-toggle="dropdown" href="#">
+        <div class="headerbar-item float-right inline-flex rounded-md shadow-sm gap-2">
+            <!-- Options Dropdown with Alpine.js -->
+            <div x-data="{ quickMenuOpen: false }" class="relative">
+                <button @click="quickMenuOpen = !quickMenuOpen"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
                     <i class="fa fa-caret-down no-margin"></i> @lang('options')
-                </a>
-                <ul class="absolute z-10 mt-2 min-w-[160px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg overflow-hidden">
+                </button>
+                <ul x-show="quickMenuOpen" @click.away="quickMenuOpen = false" x-cloak
+                    class="absolute right-0 mt-2 min-w-[200px] bg-elevated border border-primary rounded-md shadow-lg overflow-hidden z-50">
                     @if($legacy_calculation)
-                        <li><a href="#add-quote-tax" data-toggle="modal"><i
-                                    class="fa fa-plus fa-margin"></i> @lang('add_quote_tax')</a></li>
+                        <li>
+                            <a href="#add-quote-tax" data-toggle="modal"
+                               class="block px-4 py-2 text-sm text-primary hover:bg-hover">
+                                <i class="fa fa-plus fa-margin"></i> @lang('add_quote_tax')
+                            </a>
+                        </li>
                     @endif
-                    <li><a href="#" id="btn_generate_pdf"><i class="fa fa-print fa-margin"></i> @lang('download_pdf')</a></li>
-                    <li><a href="{{ route('mailer.quote', $quote->quote_id) }}"><i
-                                class="fa fa-send fa-margin"></i> @lang('send_email')</a></li>
-                    <li><a href="#" id="btn_quote_to_invoice"><i
-                                class="fa fa-refresh fa-margin"></i> @lang('quote_to_invoice')</a></li>
-                    <li><a href="#" id="btn_copy_quote" data-client-id="{{ $quote->client_id }}"><i
-                                class="fa fa-copy fa-margin"></i> @lang('copy_quote')</a></li>
-                    <li><a href="#delete-quote" data-toggle="modal"><i class="fa fa-trash-o fa-margin"></i> @lang('delete')
-                        </a></li>
+                    <li>
+                        <a href="#" id="btn_generate_pdf"
+                           class="block px-4 py-2 text-sm text-primary hover:bg-hover">
+                            <i class="fa fa-print fa-margin"></i> @lang('download_pdf')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('mailer.quote', $quote->quote_id) }}"
+                           class="block px-4 py-2 text-sm text-primary hover:bg-hover">
+                            <i class="fa fa-send fa-margin"></i> @lang('send_email')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="btn_quote_to_invoice"
+                           class="block px-4 py-2 text-sm text-primary hover:bg-hover">
+                            <i class="fa fa-refresh fa-margin"></i> @lang('quote_to_invoice')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="btn_copy_quote" data-client-id="{{ $quote->client_id }}"
+                           class="block px-4 py-2 text-sm text-primary hover:bg-hover">
+                            <i class="fa fa-copy fa-margin"></i> @lang('copy_quote')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#delete-quote" data-toggle="modal"
+                           class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-hover">
+                            <i class="fa fa-trash-o fa-margin"></i> @lang('delete')
+                        </a>
+                    </li>
                 </ul>
             </div>
 
+            <!-- Save Button -->
             <a href="#"
                class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ajax-loader"
                id="btn_save_quote">

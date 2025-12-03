@@ -1,0 +1,82 @@
+/**
+ * InvoicePlane Styles - Reddit Theme
+ *
+ * This theme defines color variables and imports the central bootstrap-tailwind.css
+ */
+
+@import "tailwindcss";
+@import "../../core/css/bootstrap-tailwind.css";
+
+/* ================================
+ * Reddit Color Variables
+ * ================================ */
+:root {
+    /* Gray scale */
+    --gray-base: #000;
+    --gray-darker: #1A1A1B;
+    --gray-dark: #272729;
+    --gray: #818384;
+    --gray-light: #D7DADC;
+    --gray-lighter: #EDEFF1;
+    --gray-lightest: #F6F7F8;
+
+    /* Brand colors - Reddit palette */
+    --brand-primary: #FF4500;
+    --brand-success: #46D160;
+    --brand-info: #0079D3;
+    --brand-warning: #FFB000;
+    --brand-danger: #EA0027;
+
+    /* Dark variants */
+    --dark-success: #2E7D32;
+    --dark-info: #005A9E;
+    --dark-warning: #CC8E00;
+    --dark-danger: #B00020;
+
+    /* Scaffolding */
+    --body-bg: #fff;
+    --text-color: #1c1c1c;
+    --link-color: #0079D3;
+    --link-hover-color: #005A9E;
+
+    /* Theme-specific colors */
+    --color-primary: #FF4500;
+    --color-primary-light: #FFD8CC;
+    --color-primary-dark: #CC3700;
+    --color-primary-hover: #E63E00;
+    
+    --color-accent: #FF4500;
+    --color-accent-light: #FF5722;
+    --color-accent-dark: #B33000;
+    
+    --color-bg-base: #DAE0E6;
+    --color-bg-elevated: #FFFFFF;
+    --color-bg-hover: #F6F7F8;
+    --color-bg-active: #FFE4D6;
+    
+    --color-text-primary: #1c1c1c;
+    --color-text-secondary: #7c7c7c;
+    --color-text-accent: #CC3700;
+    
+    --color-border: #ccc;
+    --color-border-dark: #999;
+}
+
+/* Dark mode */
+.dark {
+    --body-bg: #030303;
+    --text-color: #D7DADC;
+    --link-color: #4FBCFF;
+    --link-hover-color: #7CC5FF;
+
+    --color-bg-base: #030303;
+    --color-bg-elevated: #1A1A1B;
+    --color-bg-hover: #272729;
+    --color-bg-active: #331400;
+    
+    --color-text-primary: #D7DADC;
+    --color-text-secondary: #818384;
+    
+    --color-border: #343536;
+    --color-border-dark: #474748;
+}

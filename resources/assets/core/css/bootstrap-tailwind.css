@@ -3,6 +3,7 @@
  *
  * This file provides Bootstrap 3 class names but implements them using Tailwind utilities.
  * This allows views to keep using Bootstrap classes while the actual styling comes from Tailwind.
+ * Uses CSS custom properties for theming - define variables in theme files.
  */
 
 @import "tailwindcss";
@@ -22,69 +23,65 @@
     }
 
     .btn-primary {
-        background-color: #337ab7;
+        background-color: var(--brand-primary);
         color: white;
-        border-color: #2e6da4;
+        border-color: var(--color-primary-dark);
     }
 
     .btn-primary:hover {
-        background-color: #286090;
-        border-color: #204d74;
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-dark);
     }
 
     .btn-default {
-        background-color: white;
-        color: #333;
-        border-color: #ccc;
+        background-color: var(--color-bg-elevated);
+        color: var(--color-text-primary);
+        border-color: var(--color-border-dark);
     }
 
     .btn-default:hover {
-        background-color: #e6e6e6;
-        border-color: #adadad;
+        background-color: var(--color-bg-hover);
+        border-color: var(--color-border-dark);
     }
 
     .btn-success {
-        background-color: #5cb85c;
+        background-color: var(--brand-success);
         color: white;
-        border-color: #4cae4c;
+        border-color: var(--dark-success);
     }
 
     .btn-success:hover {
-        background-color: #449d44;
-        border-color: #398439;
+        background-color: var(--dark-success);
     }
 
     .btn-info {
-        background-color: #5bc0de;
+        background-color: var(--brand-info);
         color: white;
-        border-color: #46b8da;
+        border-color: var(--dark-info);
     }
 
     .btn-info:hover {
-        background-color: #31b0d5;
-        border-color: #269abc;
+        background-color: var(--dark-info);
     }
 
     .btn-warning {
-        background-color: #f0ad4e;
+        background-color: var(--brand-warning);
         color: white;
-        border-color: #eea236;
+        border-color: var(--dark-warning);
     }
 
     .btn-warning:hover {
-        background-color: #ec971f;
-        border-color: #d58512;
+        background-color: var(--dark-warning);
     }
 
     .btn-danger {
-        background-color: #d9534f;
+        background-color: var(--brand-danger);
         color: white;
-        border-color: #d43f3a;
+        border-color: var(--dark-danger);
     }
 
     .btn-danger:hover {
-        background-color: #c9302c;
-        border-color: #ac2925;
+        background-color: var(--dark-danger);
     }
 
     /* Button sizes */
@@ -122,16 +119,15 @@
         padding: 0.375rem 0.75rem;
         font-size: 0.875rem;
         line-height: 1.25;
-        color: #555;
-        background-color: white;
-        border-color: #ccc;
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-elevated);
+        border-color: var(--color-border);
         transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
     }
 
     .form-control:focus {
-        border-color: #66afe9;
+        border-color: var(--brand-primary);
         outline: none;
-        box-shadow: 0 0 8px rgba(102, 175, 233, 0.6), inset 0 1px 1px rgba(0, 0, 0, 0.075);
     }
 
     .input-sm {
@@ -158,9 +154,9 @@
         padding: 0.375rem 0.75rem;
         font-size: 0.875rem;
         line-height: 1.25;
-        color: #555;
-        background-color: #eee;
-        border-color: #ccc;
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-hover);
+        border-color: var(--color-border);
         white-space: nowrap;
     }
 
@@ -180,29 +176,30 @@
     .table td {
         padding: 0.5rem;
         line-height: 1.25;
-        border-top: 1px solid #ddd;
+        border-top: 1px solid var(--color-border);
     }
 
     .table thead th {
-        border-bottom: 2px solid #ddd;
+        border-bottom: 2px solid var(--color-border);
         vertical-align: bottom;
     }
 
     .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f9f9f9;
+        background-color: var(--color-bg-hover);
+        opacity: 0.3;
     }
 
     .table-bordered {
-        border: 1px solid #ddd;
+        border: 1px solid var(--color-border);
     }
 
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #ddd;
+        border: 1px solid var(--color-border);
     }
 
     .table-hover tbody tr:hover {
-        background-color: #f5f5f5;
+        background-color: var(--color-bg-hover);
     }
 
     /* ================================
@@ -216,25 +213,25 @@
     }
 
     .alert-success {
-        color: #3c763d;
+        color: var(--dark-success);
         background-color: #dff0d8;
         border-color: #d6e9c6;
     }
 
     .alert-info {
-        color: #31708f;
+        color: var(--dark-info);
         background-color: #d9edf7;
         border-color: #bce8f1;
     }
 
     .alert-warning {
-        color: #8a6d3b;
+        color: var(--dark-warning);
         background-color: #fcf8e3;
         border-color: #faebcc;
     }
 
     .alert-danger {
-        color: #a94442;
+        color: var(--dark-danger);
         background-color: #f2dede;
         border-color: #ebccd1;
     }
@@ -243,10 +240,11 @@
      * PANELS
      * ================================ */
     .panel {
-        @apply rounded border bg-white;
+        @apply rounded border;
+        background-color: var(--color-bg-elevated);
         margin-bottom: 1.25rem;
         border-width: 1px;
-        border-color: #ddd;
+        border-color: var(--color-border);
     }
 
     .panel-body {
@@ -255,13 +253,13 @@
 
     .panel-heading {
         padding: 0.625rem 1rem;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--color-border);
     }
 
     .panel-default > .panel-heading {
-        color: #333;
-        background-color: #f5f5f5;
-        border-color: #ddd;
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-hover);
+        border-color: var(--color-border);
     }
 
     /* ================================
@@ -288,7 +286,7 @@
     }
 
     .text-muted {
-        color: #777;
+        color: var(--color-text-secondary);
     }
 
     .clearfix::after {
@@ -308,10 +306,12 @@
 
     .pagination li a,
     .pagination li span {
-        @apply relative block text-center bg-white border border-gray-300;
+        @apply relative block text-center border;
+        background-color: var(--color-bg-elevated);
+        border-color: var(--color-border);
         padding: 0.375rem 0.75rem;
         line-height: 1.25;
-        color: #337ab7;
+        color: var(--brand-primary);
         text-decoration: none;
         margin-left: -1px;
     }
@@ -330,15 +330,15 @@
     }
 
     .pagination li a:hover {
-        background-color: #eee;
-        border-color: #ddd;
+        background-color: var(--color-bg-hover);
+        border-color: var(--color-border-dark);
     }
 
     .pagination .active a {
         z-index: 10;
         color: white;
-        background-color: #337ab7;
-        border-color: #337ab7;
+        background-color: var(--brand-primary);
+        border-color: var(--brand-primary);
         cursor: default;
     }
 }

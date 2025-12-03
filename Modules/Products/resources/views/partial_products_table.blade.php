@@ -31,14 +31,16 @@
                     <td>{{ $product->product_tariff }}</td>
                 @endif
                 <td>
-                    <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle"
-                           data-toggle="dropdown" href="#">
+                    <div x-data="{ productMenuOpen: false }" class="relative inline-block text-left">
+                        <button @click="productMenuOpen = !open" type="button"
+                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
-                        </a>
-                        <ul class="dropdown-menu">
+                        </button>
+                        <ul x-show="productMenuOpen" @click.away="productMenuOpen = false" x-cloak
+                            class="absolute right-0 mt-1 w-40 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
-                                <a href="{{ route('products.form', $product->product_id) }}">
+                                <a href="{{ route('products.form', $product->product_id) }}"
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
@@ -46,7 +48,8 @@
                                 <form action="{{ route('products.delete', $product->product_id) }}"
                                       method="POST">
                                     @csrf
-                                    <button type="submit" class="dropdown-button"
+                                    <button type="submit" 
+                                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-hover"
                                             onclick="return confirm('{{ trans('delete_record_warning') }}');">
                                         <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
