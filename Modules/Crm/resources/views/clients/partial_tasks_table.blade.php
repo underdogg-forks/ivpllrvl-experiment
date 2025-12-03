@@ -17,14 +17,14 @@
     @php
         $label_class = $task_statuses[$task->task_status]['class'] ?? '';
     @endphp
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <tr class="hover:bg-hover">
                 <td class="px-4 py-2">
                     <span class="label {{ $label_class }} px-2 py-1 rounded-md text-xs font-semibold">
                         {{ $task_statuses[$task->task_status]['label'] ?? '' }}
                     </span>
                 </td>
                 <td class="px-4 py-2">
-                    <a href="{{ route('tasks.form', $task->task_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                    <a href="{{ route('tasks.form', $task->task_id) }}" class="text-accent hover:underline">
                         <i class="fa fa-edit"></i> {{ htmlspecialchars($task->task_name) }}
                     </a>
                 </td>
@@ -35,7 +35,7 @@
                 </td>
                 <td class="px-4 py-2">
 @if(!empty($task->project_id))
-                    <a href="{{ route('projects.view', $task->project_id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                    <a href="{{ route('projects.view', $task->project_id) }}" class="text-accent hover:underline">
                         {{ htmlspecialchars($task->project_name) }}
                     </a>
 @endif
@@ -44,16 +44,17 @@
                     {{ format_currency($task->task_price) }}
                 </td>
                 <td class="px-4 py-2">
-                    <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-                           data-toggle="dropdown" href="#">
+                    <div x-data="{ open: false }" class="relative inline-block text-left">
+                        <button @click="open = !open" type="button"
+                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-elevated border border-primary-dark rounded-md text-sm font-medium text-primary hover:bg-hover focus:outline-none focus:ring-2 focus:ring-primary transition-colors">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
-                        </a>
-                        <ul class="dropdown-menu bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                        </button>
+                        <ul x-show="open" @click.away="open = false" x-cloak
+                            class="absolute right-0 mt-1 w-40 bg-elevated border border-primary rounded-md shadow-lg z-50">
                             <li>
                                 <a href="{{ route('tasks.form', $task->task_id) }}"
                                    title="{{ trans('edit') }}"
-                                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                   class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                                     <i class="fa fa-edit fa-margin"></i> {{ trans('edit') }}
                                 </a>
                             </li>
@@ -62,7 +63,8 @@
                                 <form action="{{ route('tasks.delete', $task->task_id) }}"
                                       method="POST" class="w-full">
                                     @csrf
-                                    <button type="submit" class="dropdown-button w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    <button type="submit" 
+                                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-hover"
                                             onclick="return confirm('{{ $task->task_status == 4 ? trans('alert_task_delete') : trans('delete_record_warning') }}');">
                                         <i class="fa fa-trash-o fa-margin"></i> {{ trans('delete') }}
                                     </button>
