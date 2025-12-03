@@ -15,13 +15,13 @@
             // No Check No post
             if ( ! product_ids.length) return; // todo: why not animate checkboxes
 
-            $.post("<?php echo site_url('products/ajax/process_product_selections'); ?>", {
+            $.post("{{ route('products.ajax.process-selections') }}", {
                 product_ids: product_ids
             }, function (data) {
-                var items = json_parse(data, <?php echo (int) IP_DEBUG; ?>);
+                var items = json_parse(data, {{ (int) config('app.debug') }});
                 for (var key in items) {
                     // Set default tax rate id if empty
-                    if (!items[key].tax_rate_id) items[key].tax_rate_id = '<?php echo $default_item_tax_rate; ?>';
+                    if (!items[key].tax_rate_id) items[key].tax_rate_id = '{{ $default_item_tax_rate }}';
 
                     if ($('#item_table .item:last input[name=item_name]').val() !== '') {
                         $('#new_row').clone().appendTo('#item_table').removeAttr('id').addClass('item').show();
@@ -61,7 +61,7 @@
 
             product_table.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
 
-            var lookup_url = "<?php echo site_url('products/ajax/modal_product_lookups'); ?>/";
+            var lookup_url = "{{ route('products.ajax.modal-lookups', '') }}/";
             lookup_url += Math.floor(Math.random() * 1000) + '/?';
             lookup_url += "&reset_table=true";
 
@@ -89,7 +89,7 @@
 
             product_table.html('<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>');
 
-            var lookup_url = "<?php echo site_url('products/ajax/modal_product_lookups'); ?>/";
+            var lookup_url = "{{ route('products.ajax.modal-lookups', '') }}/";
             lookup_url += Math.floor(Math.random() * 1000) + '/?';
 
             if (filter_family) {
@@ -129,20 +129,18 @@
                 <div class="form-group filter-form">
                     <select name="filter_family" id="filter_family" class="form-control simple-select">
                         <option value="">{{ trans('any_family') }}</option>
-                        <?php foreach ($families as $family) { ?>
-                            <option value="<?php echo $family->family_id; ?>"
-                                <?php if (isset($filter_family) && $family->family_id == $filter_family) {
-                                    echo ' selected="selected"';
-                                } ?>>
-                                <?php _htmlsc($family->family_name); ?>
+                        @foreach ($families as $family)
+                            <option value="{{ $family->family_id }}"
+                                {{ (isset($filter_family) && $family->family_id == $filter_family) ? 'selected' : '' }}>
+                                {{ $family->family_name }}
                             </option>
-                        <?php } ?>
+                        @endforeach
                     </select>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="filter_product" id="filter_product"
                            placeholder="{{ trans('product_name') }}"
-                           value="<?php echo $filter_product ?>">
+                           value="{{ $filter_product ?? '' }}">
                 </div>
                 <button type="button" id="filter-button"
                         class="btn btn-default">{{ trans('search_product') }}</button>
@@ -154,7 +152,7 @@
             <br/>
 
             <div id="product-lookup-table">
-                <?php $this->layout->load_view('products/partial_product_table_modal'); ?>
+                @include('products::partial_product_table_modal')
             </div>
 
         </div>

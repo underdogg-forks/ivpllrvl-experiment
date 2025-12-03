@@ -96,7 +96,7 @@
                             <option value="">{{ trans('none') }}</option>
                             @foreach ($payment_methods as $payment_method)
                                 <option value="{{ $payment_method->payment_method_id }}"
-                                        {{ check_select(isset($invoice_payment_method) && $invoice_payment_method == $payment_method->payment_method_id) }}>
+                                        {{ (isset($invoice_payment_method) && $invoice_payment_method == $payment_method->payment_method_id) ? 'selected' : '' }}>
                                     {{ $payment_method->payment_method_name }}
                                 </option>
                             @endforeach

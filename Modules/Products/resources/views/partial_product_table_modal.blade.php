@@ -8,29 +8,29 @@
             <th>{{ trans('product_description') }}</th>
             <th class="amount">{{ trans('product_price') }}</th>
         </tr>
-        <?php foreach ($products as $product) { ?>
+        @foreach ($products as $product)
             <tr class="product">
                 <td class="text-left">
                     <input type="checkbox" name="product_ids[]"
-                           value="<?php echo $product->product_id; ?>">
+                           value="{{ $product->product_id }}">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php _htmlsc($product->product_sku); ?></b>
+                    <b>{{ $product->product_sku }}</b>
                 </td>
                 <td>
-                    <b><?php _htmlsc($product->family_name); ?></b>
+                    <b>{{ $product->family_name }}</b>
                 </td>
                 <td>
-                    <b><?php _htmlsc($product->product_name); ?></b>
+                    <b>{{ $product->product_name }}</b>
                 </td>
                 <td>
-                    <?php echo nl2br(htmlsc($product->product_description)); ?>
+                    {!! nl2br(e($product->product_description)) !!}
                 </td>
                 <td class="amount">
-                    <?php echo format_currency($product->product_price); ?>
+                    {{ format_currency($product->product_price) }}
                 </td>
             </tr>
-        <?php } ?>
+        @endforeach
 
     </table>
 </div>

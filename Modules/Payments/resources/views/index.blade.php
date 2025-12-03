@@ -8,7 +8,7 @@
     </div>
 
     <div class="headerbar-item pull-right">
-        {!! pager(route('payment-methods.index'), $payment_methods) !!}
+        {!! $payment_methods->links() !!}
     </div>
 
 </div>

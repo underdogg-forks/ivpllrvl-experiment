@@ -2,7 +2,7 @@
     <h1 class="headerbar-title">{{ trans('payment_logs') }}</h1>
 
     <div class="headerbar-item pull-right">
-        {!! pager(route('payments.online-logs'), $payment_logs) !!}
+        {!! $payment_logs->links() !!}
     </div>
 
 </div>
