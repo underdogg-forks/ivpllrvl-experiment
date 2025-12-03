@@ -119,7 +119,7 @@
                         @endif
                     </div>
 
-                    <a href="{{ route('users.form', ['id' => session('user_id')]) }}"
+                    <a href="{{ route('users.form', ['user_id' => session('user_id')]) }}"
                         class="block px-4 py-2 text-sm text-primary hover:bg-hover">
                         <div class="flex items-center">
                             <i class="fas fa-user-circle mr-2"></i>

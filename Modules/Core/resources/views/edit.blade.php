@@ -1,5 +1,5 @@
 <?php
-$href  = route('custom-fields.form', ['id' => $value->custom_field_id]);
+$href  = route('custom-fields.form', ['custom_field_id' => $value->custom_field_id]);
 $link  = anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($value->custom_field_label), ' class="btn btn-sm btn-default"');
 $alpha = strtr(mb_strtolower($value->custom_field_type), ['-' => '_']);
 $table = strtr($value->custom_field_table, ['ip_' => '', '_custom' => '']);
@@ -12,7 +12,7 @@ $table = strtr($value->custom_field_table, ['ip_' => '', '_custom' => '']);
         <h1 class="headerbar-title">{{ trans('custom_values_edit') }}</h1>
         <?php $this->layout->load_view('layout/header_buttons'); ?>
         <div class="headerbar-item pull-right">
-            <a href="{{ route('custom-values.field', ['id' => $value->custom_field_id]) ?>" class="btn btn-sm btn-default">
+            <a href="{{ route('custom-values.field', ['custom_field_id' => $value->custom_field_id]) ?>" class="btn btn-sm btn-default">
                                 <i class="fa fa-eye fa-margin"></i> {{ trans('values') }}</a>
         </div>
         <div class="visible-sm visible-md visible-lg headerbar-item pull-right">

@@ -51,7 +51,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <form action="{{ route('import.delete', ['id' => $import->import_id]) }}"
+                                    <form action="{{ route('import.delete', ['import_id' => $import->import_id]) }}"
                                           method="POST">
                                         <?php _csrf_field(); ?>
                                         <button type="submit" class="dropdown-button"
