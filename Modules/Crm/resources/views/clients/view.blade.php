@@ -26,8 +26,8 @@
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div class="md:col-span-4">
 @if(!empty($project->client_name))
-            <div class="panel panel-default bg-white dark:bg-gray-800 rounded-lg shadow">
-                <div class="panel-heading px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-semibold">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <strong>{{ htmlspecialchars(format_client($project)) }}</strong>
                 </div>
                 <div class="panel-body p-4">
@@ -42,8 +42,8 @@
         </div>
         <div class="md:col-span-8">
 
-            <div class="panel panel-default bg-white dark:bg-gray-800 rounded-lg shadow">
-                <div class="panel-heading px-4 py-3 border-b border-gray-200 dark:border-gray-700 font-semibold">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     {{ trans('tasks') }}
                 </div>
                 <div class="panel-body">

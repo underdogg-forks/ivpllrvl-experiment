@@ -34,15 +34,15 @@
                         <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.view', $invoice->invoice_id) }}">
                             <i class="fa fa-eye"></i> {{ trans('view') }}
                         </a>
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.generate-pdf', $invoice->invoice_id) }}">
+                        <a class="btn btn-default" target="_blank" href="{{ route('guest.generate-pdf', $invoice->invoice_id) }}">
                             <i class="fa fa-print"></i> {{ trans('pdf') }}
                         </a>
 @if($enable_online_payments && $invoice->invoice_balance > 0 && $invoice->invoice_status_id != 4)
-                        <a class="btn btn-primary inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600" href="{{ route('guest.form', $invoice->invoice_url_key) }}">
+                        <a class="btn-create" href="{{ route('guest.form', $invoice->invoice_url_key) }}">
                             <i class="fa fa-credit-card"></i> {{ trans('pay_now') }}
                         </a>
 @elseif($invoice->invoice_balance == 0)
-                        <button class="btn btn-success disabled inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white opacity-60 cursor-not-allowed">
+                        <button class="btn btn-success disabled opacity-60 cursor-not-allowed">
                             <i class="fa fa-check"></i> {{ trans('paid') }}
                         </button>
 @endif

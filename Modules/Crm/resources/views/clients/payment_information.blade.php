@@ -79,7 +79,7 @@
                 @include('core::layout.alerts', ['without_margin' => true])
             </div>
 
-            <div class="panel panel-default bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="panel panel-default">
 
                 <div class="panel-body p-4">
 
