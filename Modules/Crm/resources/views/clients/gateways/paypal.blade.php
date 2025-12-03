@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php _core_asset('css/paypal.css'); ?>" type="text/css">
+<link rel="stylesheet" href="{{ core_asset('css/paypal.css') }}" type="text/css">
 <div class="container">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
         <div class="payment-button-container">
@@ -6,9 +6,11 @@
         </div>
     </div>
 </div>
-<?php $adv_enabled   = ! empty($advanced_credit_cards); ?>
-<?php $venmo_enabled = ! empty($venmo); ?>
-<?php if ($adv_enabled): ?>
+@php
+    $adv_enabled = !empty($advanced_credit_cards);
+    $venmo_enabled = !empty($venmo);
+@endphp
+@if ($adv_enabled)
 <!-- OR Divider -->
 <div class="col-xs-12 col-md-6 col-md-offset-3">
     <div class="payment-or-container">
@@ -47,20 +49,20 @@
             </div>
         </div>
     </div>
-    <?php endif; ?>
+@endif
 </div>
 <script>
     // Prep PHP vars for use in JS
     window.PayPalConfig = {
-        advEnabled: <?php echo $adv_enabled ? 'true' : 'false'; ?>,
-        venmoEnabled: <?php echo $venmo_enabled ? 'true' : 'false'; ?>,
-        clientId: '<?php echo $paypal_client_id; ?>',
-        currency: '<?php echo $currency; ?>',
-        invoiceUrlKey: '<?php echo $invoice_url_key; ?>',
-        createOrderUrl: '<?php echo site_url('guest/gateways/paypal/paypal_create_order/' . $invoice_url_key); ?>',
-        capturePaymentUrl: '<?php echo site_url('guest/gateways/paypal/paypal_capture_payment/'); ?>',
-        successUrl: '<?php echo site_url('guest/view/invoice/' . $invoice_url_key); ?>',
-        errorUrl: '<?php echo site_url('guest/payment_information/form/' . $invoice_url_key . '/paypal'); ?>'
+        advEnabled: {{ $adv_enabled ? 'true' : 'false' }},
+        venmoEnabled: {{ $venmo_enabled ? 'true' : 'false' }},
+        clientId: '{{ $paypal_client_id }}',
+        currency: '{{ $currency }}',
+        invoiceUrlKey: '{{ $invoice_url_key }}',
+        createOrderUrl: '{{ route('guest.gateways.paypal.create-order', $invoice_url_key) }}',
+        capturePaymentUrl: '{{ route('guest.gateways.paypal.capture-payment', '') }}',
+        successUrl: '{{ route('guest.view.invoice', $invoice_url_key) }}',
+        errorUrl: '{{ route('guest.payment-information.form', [$invoice_url_key, 'paypal']) }}'
     };
 </script>
-<script src="<?php _core_asset('js/paypal.js'); ?>"></script>
+<script src="{{ core_asset('js/paypal.js') }}"></script>
