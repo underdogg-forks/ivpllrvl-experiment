@@ -1,17 +1,14 @@
 /**
  * InvoicePlane Styles - Orange Theme
  *
- * This is the Orange-themed stylesheet that combines:
- * 1. Tailwind CSS base, components, and utilities with Orange color palette
- * 2. Bootstrap-compatible classes implemented with Tailwind
- * 3. InvoicePlane custom styles with Orange theming
+ * This theme defines color variables and imports the central bootstrap-tailwind.css
  */
 
 @import "tailwindcss";
+@import "../../core/css/bootstrap-tailwind.css";
 
 /* ================================
  * Orange Color Variables
- * Based on warm orange palette
  * ================================ */
 :root {
     /* Gray scale */
@@ -24,16 +21,16 @@
     --gray-lightest: #f9f9f9;
 
     /* Brand colors - Orange palette */
-    --brand-primary: #F97316; /* orange-500 */
+    --brand-primary: #F97316;
     --brand-success: #5cb85c;
-    --brand-info: #FB923C; /* orange-400 */
-    --brand-warning: #FDBA74; /* orange-300 */
+    --brand-info: #FB923C;
+    --brand-warning: #FDBA74;
     --brand-danger: #d9534f;
 
-    /* Dark variants for alerts */
+    /* Dark variants */
     --dark-success: #3c763d;
-    --dark-info: #C2410C; /* orange-700 */
-    --dark-warning: #EA580C; /* orange-600 */
+    --dark-info: #C2410C;
+    --dark-warning: #EA580C;
     --dark-danger: #a94442;
 
     /* Scaffolding */
@@ -65,16 +62,8 @@
     --color-border-dark: #D1D5DB;
 }
 
-/* Dark mode for Orange theme */
+/* Dark mode */
 .dark {
-    --gray-base: #FFF;
-    --gray-darker: #ECEFF4;
-    --gray-dark: #D8DEE9;
-    --gray: #AAAAAA;
-    --gray-light: #555;
-    --gray-lighter: #333;
-    --gray-lightest: #222;
-
     --body-bg: #1F2937;
     --text-color: #E5E7EB;
     --link-color: #FB923C;
@@ -90,37 +79,4 @@
     
     --color-border: #374151;
     --color-border-dark: #4B5563;
-}
-
-@layer components {
-    /* ================================
-     * BUTTONS
-     * ================================ */
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border-radius: 0.25rem;
-        border-width: 1px;
-        border-style: solid;
-        transition: all 150ms ease-in-out;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        line-height: 1.25rem;
-    }
-
-    .btn-primary {
-        background-color: var(--brand-primary);
-        color: white;
-        border-color: var(--color-primary-dark);
-    }
-
-    .btn-primary:hover {
-        background-color: var(--color-primary-hover);
-        border-color: var(--color-primary-dark);
-    }
-
-    /* Additional button styles follow existing pattern... */
 }

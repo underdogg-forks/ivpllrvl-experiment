@@ -1,17 +1,14 @@
 /**
  * InvoicePlane Styles - Reddit Theme
  *
- * This is the Reddit-themed stylesheet that combines:
- * 1. Tailwind CSS base, components, and utilities with Reddit color palette
- * 2. Bootstrap-compatible classes implemented with Tailwind
- * 3. InvoicePlane custom styles with Reddit theming
+ * This theme defines color variables and imports the central bootstrap-tailwind.css
  */
 
 @import "tailwindcss";
+@import "../../core/css/bootstrap-tailwind.css";
 
 /* ================================
  * Reddit Color Variables
- * Based on Reddit's brand colors
  * ================================ */
 :root {
     /* Gray scale */
@@ -24,13 +21,13 @@
     --gray-lightest: #F6F7F8;
 
     /* Brand colors - Reddit palette */
-    --brand-primary: #FF4500; /* Reddit Orange */
+    --brand-primary: #FF4500;
     --brand-success: #46D160;
-    --brand-info: #0079D3; /* Reddit Blue */
+    --brand-info: #0079D3;
     --brand-warning: #FFB000;
     --brand-danger: #EA0027;
 
-    /* Dark variants for alerts */
+    /* Dark variants */
     --dark-success: #2E7D32;
     --dark-info: #005A9E;
     --dark-warning: #CC8E00;
@@ -65,16 +62,8 @@
     --color-border-dark: #999;
 }
 
-/* Dark mode for Reddit theme */
+/* Dark mode */
 .dark {
-    --gray-base: #D7DADC;
-    --gray-darker: #D7DADC;
-    --gray-dark: #818384;
-    --gray: #818384;
-    --gray-light: #343536;
-    --gray-lighter: #272729;
-    --gray-lightest: #1A1A1B;
-
     --body-bg: #030303;
     --text-color: #D7DADC;
     --link-color: #4FBCFF;
@@ -90,39 +79,4 @@
     
     --color-border: #343536;
     --color-border-dark: #474748;
-}
-
-@layer components {
-    /* ================================
-     * BUTTONS
-     * ================================ */
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border-radius: 9999px; /* Reddit uses fully rounded buttons */
-        border-width: 1px;
-        border-style: solid;
-        transition: all 150ms ease-in-out;
-        padding: 0.375rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 700;
-        line-height: 1.25rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .btn-primary {
-        background-color: var(--brand-primary);
-        color: white;
-        border-color: var(--brand-primary);
-    }
-
-    .btn-primary:hover {
-        background-color: var(--color-primary-hover);
-        border-color: var(--color-primary-hover);
-    }
-
-    /* Additional button styles follow existing pattern... */
 }
