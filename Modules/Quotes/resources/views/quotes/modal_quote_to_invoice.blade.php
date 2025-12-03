@@ -90,10 +90,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="btn btn-success" id="quote_to_invoice_confirm" type="button">
+                <button class="fi-btn fi-btn-success" id="quote_to_invoice_confirm" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

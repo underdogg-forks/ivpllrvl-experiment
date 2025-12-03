@@ -170,6 +170,62 @@
     }
 
     /* ================================
+     * FILAMENT FORM INPUTS
+     * Following Filament v4 naming conventions for form elements
+     * ================================ */
+    
+    /* Filament Input */
+    .fi-input {
+        @apply block w-full rounded border;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.25;
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-elevated);
+        border-color: var(--color-border);
+        transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+    }
+    
+    .fi-input:focus {
+        border-color: var(--brand-primary);
+        outline: none;
+        box-shadow: 0 0 0 1px var(--brand-primary);
+    }
+    
+    .fi-input:disabled {
+        @apply opacity-50 cursor-not-allowed;
+        background-color: var(--color-bg-base);
+    }
+    
+    /* Filament Select */
+    .fi-select {
+        @apply fi-input;
+        padding-right: 2.5rem;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+    }
+    
+    /* Filament Textarea */
+    .fi-textarea {
+        @apply fi-input;
+        min-height: 4rem;
+        resize: vertical;
+    }
+    
+    /* Filament Label */
+    .fi-label {
+        @apply inline-block mb-1 text-sm font-medium;
+        color: var(--color-text-primary);
+    }
+    
+    /* Filament Field Wrapper */
+    .fi-field-wrp {
+        margin-bottom: 1rem;
+    }
+
+    /* ================================
      * TABLES
      * ================================ */
     .table {
@@ -274,6 +330,42 @@
     }
 
     /* ================================
+     * FILAMENT SECTIONS/CARDS
+     * Following Filament v4 naming conventions for panels/cards
+     * ================================ */
+    
+    /* Filament Section (equivalent to panel) */
+    .fi-section {
+        @apply rounded-lg shadow;
+        background-color: var(--color-bg-elevated);
+        margin-bottom: 1.25rem;
+        border-width: 1px;
+        border-color: var(--color-border);
+    }
+    
+    .fi-section-header {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--color-border);
+        font-weight: 600;
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-hover);
+    }
+    
+    .fi-section-body,
+    .fi-section-content {
+        padding: 1rem;
+    }
+    
+    /* Filament Card (cleaner, no header by default) */
+    .fi-card {
+        @apply rounded-lg shadow;
+        background-color: var(--color-bg-elevated);
+        padding: 1rem;
+        border-width: 1px;
+        border-color: var(--color-border);
+    }
+
+    /* ================================
      * UTILITIES
      * ================================ */
     .pull-left {
@@ -368,34 +460,115 @@
         @apply transition-colors;
     }
 
-    /* Create/Action Button (Primary) */
+    /* ================================
+     * FILAMENT BUTTON COMPONENTS
+     * Following Filament v4 naming conventions
+     * 
+     * Filament Design System Standards:
+     * - Primary buttons: fi-btn fi-btn-primary (create, save, submit actions)
+     * - Secondary buttons: fi-btn fi-btn-secondary (cancel, back actions)
+     * - Danger buttons: fi-btn fi-btn-danger (delete, remove actions)  
+     * - Success buttons: fi-btn fi-btn-success (approve, confirm actions)
+     * - Icon buttons: fi-icon-btn (icon-only buttons)
+     * - Link buttons: fi-link (text-only links)
+     * - Tabs/Filters: fi-tabs-item, fi-tabs-item-active
+     * 
+     * Legacy classes (btn-create, btn-action-primary, btn-status-*) are aliased
+     * for backward compatibility but should be replaced with fi-btn classes.
+     * ================================ */
+    
+    /* Base Filament Button */
+    .fi-btn {
+        @apply inline-flex items-center gap-2 px-3 py-1.5 border rounded-md text-sm font-medium;
+        @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+        @apply transition-colors duration-150;
+        @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+    
+    /* Primary Action Button (Create, Save, Submit) */
+    .fi-btn-primary,
     .btn-create,
     .btn-action-primary {
-        @apply inline-flex items-center gap-2 px-3 py-1.5 border border-transparent rounded-md text-sm font-medium text-white;
+        @apply fi-btn border-transparent text-white;
         @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)];
         @apply hover:bg-[var(--color-primary-hover)] dark:hover:bg-[var(--color-primary-hover)];
-        @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)];
-        @apply transition-colors;
+        @apply focus:ring-[var(--brand-primary)];
     }
-
-    /* Status Filter Button (Active) */
-    .btn-status-active {
-        @apply inline-flex items-center gap-2 px-4 py-2 border rounded-md text-sm font-medium;
-        @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)] text-white border-transparent;
-        @apply hover:bg-[var(--color-primary-hover)] dark:hover:bg-[var(--color-primary-hover)];
-        @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)];
-        @apply transition-colors;
-    }
-
-    /* Status Filter Button (Inactive) */
-    .btn-status-inactive {
-        @apply inline-flex items-center gap-2 px-4 py-2 border rounded-md text-sm font-medium;
+    
+    /* Secondary Button */
+    .fi-btn-secondary {
+        @apply fi-btn;
         @apply bg-[var(--color-bg-elevated)] dark:bg-[var(--color-bg-elevated)];
         @apply text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)];
         @apply border-[var(--color-border)] dark:border-[var(--color-border-dark)];
         @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
+        @apply focus:ring-[var(--brand-primary)];
+    }
+    
+    /* Danger/Delete Button */
+    .fi-btn-danger {
+        @apply fi-btn border-transparent text-white;
+        @apply bg-[var(--brand-danger)] dark:bg-[var(--brand-danger)];
+        @apply hover:bg-[var(--dark-danger)] dark:hover:bg-[var(--dark-danger)];
+        @apply focus:ring-[var(--brand-danger)];
+    }
+    
+    /* Success Button */
+    .fi-btn-success {
+        @apply fi-btn border-transparent text-white;
+        @apply bg-[var(--brand-success)] dark:bg-[var(--brand-success)];
+        @apply hover:bg-[var(--dark-success)] dark:hover:bg-[var(--dark-success)];
+        @apply focus:ring-[var(--brand-success)];
+    }
+    
+    /* Icon Button */
+    .fi-icon-btn {
+        @apply inline-flex items-center justify-center p-2 rounded-md;
+        @apply text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)];
+        @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
         @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)];
-        @apply transition-colors;
+        @apply transition-colors duration-150;
+    }
+    
+    /* Button Sizes */
+    .fi-btn-sm, .fi-btn.fi-size-sm {
+        @apply px-2 py-1 text-xs;
+    }
+    
+    .fi-btn-lg, .fi-btn.fi-size-lg {
+        @apply px-4 py-2.5 text-base;
+    }
+    
+    /* Link Button */
+    .fi-link {
+        @apply inline-flex items-center gap-1 text-sm font-medium;
+        @apply text-[var(--brand-primary)] dark:text-[var(--brand-primary)];
+        @apply hover:text-[var(--color-primary-hover)] dark:hover:text-[var(--color-primary-hover)];
+        @apply hover:underline;
+        @apply transition-colors duration-150;
+    }
+    
+    .fi-link-danger {
+        @apply fi-link;
+        @apply text-[var(--brand-danger)] dark:text-[var(--brand-danger)];
+        @apply hover:text-[var(--dark-danger)] dark:hover:text-[var(--dark-danger)];
+    }
+
+    /* Filament Tabs/Filter Buttons */
+    .fi-tabs-item-active,
+    .btn-status-active {
+        @apply fi-btn border-transparent text-white;
+        @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)];
+        @apply hover:bg-[var(--color-primary-hover)] dark:hover:bg-[var(--color-primary-hover)];
+    }
+
+    .fi-tabs-item,
+    .btn-status-inactive {
+        @apply fi-btn;
+        @apply bg-[var(--color-bg-elevated)] dark:bg-[var(--color-bg-elevated)];
+        @apply text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)];
+        @apply border-[var(--color-border)] dark:border-[var(--color-border-dark)];
+        @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
     }
 
     /* Headerbar */
@@ -453,6 +626,57 @@
 
     .border-primary-dark {
         border-color: var(--color-border-dark);
+    }
+
+    /* ================================
+     * FILAMENT BADGES
+     * Status indicators and labels following Filament v4 conventions
+     * ================================ */
+    
+    /* Base Badge */
+    .fi-badge {
+        @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium;
+        @apply transition-colors duration-150;
+    }
+    
+    /* Badge Variants */
+    .fi-badge-primary {
+        @apply fi-badge;
+        background-color: var(--brand-primary);
+        color: white;
+    }
+    
+    .fi-badge-success {
+        @apply fi-badge;
+        background-color: var(--brand-success);
+        color: white;
+    }
+    
+    .fi-badge-danger {
+        @apply fi-badge;
+        background-color: var(--brand-danger);
+        color: white;
+    }
+    
+    .fi-badge-warning {
+        @apply fi-badge;
+        background-color: var(--brand-warning);
+        color: white;
+    }
+    
+    .fi-badge-info {
+        @apply fi-badge;
+        background-color: var(--brand-info);
+        color: white;
+    }
+    
+    /* Badge Sizes */
+    .fi-badge-sm {
+        @apply px-1.5 py-0.5 text-xs;
+    }
+    
+    .fi-badge-lg {
+        @apply px-3 py-1 text-sm;
     }
 
 }

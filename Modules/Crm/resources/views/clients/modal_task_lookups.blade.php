@@ -89,11 +89,11 @@
 
         <div class="modal-footer px-4 py-3 border-t border-gray-200 dark:border-gray-700">
             <div class="btn-group flex gap-2">
-                <button id="task-modal-submit" class="select-items-confirm btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600" type="button">
+                <button id="task-modal-submit" class="select-items-confirm fi-btn fi-btn-success" type="button">
                     <i class="fa fa-check"></i>
                     {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger inline-flex items-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600" type="button" data-dismiss="modal">
+                <button class="fi-btn fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
                     {{ trans('cancel') }}
                 </button>

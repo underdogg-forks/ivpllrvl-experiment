@@ -19,7 +19,7 @@ if ($invoice_tax_rates) {
             </button>
 @elseif($enable_online_payments)
             <a href="{{ route('guest.form', $invoice->invoice_url_key) }}"
-               class="btn-create">
+               class="fi-btn fi-btn-primary">
                 <i class="fa fa-credit-card"></i>
                 {{ trans('pay_now') }}
             </a>

@@ -60,7 +60,7 @@
         </div>
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="fi-btn fi-btn-primary">
                 <i class="fa fa-save"></i> {{ trans('save') }}
             </button>
             <a href="{{ route('tasks.index') }}" class="btn btn-default">

@@ -12,7 +12,7 @@
                 <i class="fa fa-bars"></i> @lang('submenu')
             </button>
 
-            <a class="btn-create"
+            <a class="fi-btn fi-btn-primary"
                href="{{ route('quotes.ajax.modal.create') }}">
                 <i class="fa fa-plus"></i> @lang('new')
             </a>
@@ -26,7 +26,7 @@
             <div class="inline-flex rounded-md shadow-sm index-options [&>*]:px-3 [&>*]:py-1.5 [&>*]:text-sm">
                 @foreach (['all','draft','sent','viewed','approved','rejected','canceled'] as $s)
                     <a href="{{ route('quotes.status.'. $s) }}"
-                       class="{{ request('status', 'all') === $s ? 'btn-status-active' : 'btn-status-inactive' }}">
+                       class="{{ request('status', 'all') === $s ? 'fi-tabs-item-active' : 'fi-tabs-item' }}">
                         @lang($s)
                     </a>
                 @endforeach
@@ -46,7 +46,7 @@
                 <div class="inline-flex rounded-md shadow-sm index-options [&>*]:px-3 [&>*]:py-1.5 [&>*]:text-sm">
                     @foreach (['all','draft','sent','viewed','approved','rejected','canceled'] as $s)
                         <a href="{{ route('quotes.status.'.$s) }}"
-                           class="{{ request('status', 'all') === $s ? 'btn-status-active' : 'btn-status-inactive' }}">
+                           class="{{ request('status', 'all') === $s ? 'fi-tabs-item-active' : 'fi-tabs-item' }}">
                             @lang($s)
                         </a>
                     @endforeach

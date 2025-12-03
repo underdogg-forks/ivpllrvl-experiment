@@ -41,7 +41,7 @@
             <div id="card-cvv-field-container" class="form-group"></div>
 
             <div class="card-submit-container">
-                <button id="card-submit" type="button" class="btn btn-primary">Process Card Payment</button>
+                <button id="card-submit" type="button" class="fi-btn fi-btn-primary">Process Card Payment</button>
                 <span id="card-spinner" role="status" aria-live="polite" aria-label="Processing…">
                     <span class="spinner-icon"></span>
                     <span class="spinner-text">Processing…</span>

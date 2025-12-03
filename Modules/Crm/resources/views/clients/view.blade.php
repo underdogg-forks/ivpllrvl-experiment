@@ -12,7 +12,7 @@
             <a href="{{ route('projects.edit', $project->project_id) }}" class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <i class="fa fa-edit"></i> {{ trans('edit') }}
             </a>
-            <a class="btn btn-danger inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600"
+            <a class="fi-btn fi-btn-danger"
                href="{{ route('projects.destroy', $project->project_id) }}"
                onclick="return confirm('{{ trans('delete_record_warning') }}');">
                 <i class="fa fa-trash-o"></i> {{ trans('delete') }}
