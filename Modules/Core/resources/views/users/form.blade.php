@@ -104,7 +104,9 @@ if ( ! $id) {
                                     {{ trans('change_password') }}
                                 </a>
                             </div>
-@endif
+<?php
+}
+?>
                             <div class="form-group">
                                 <label for="user_language">{{ trans('language') }}</label>
                                 <select name="user_language" id="user_language" class="form-control simple-select" required>
