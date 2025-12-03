@@ -12,13 +12,13 @@
         </div>
         <div class="modal-footer">
 
-            <form action="<?php echo site_url('invoices/delete/' . $invoice->invoice_id); ?>"
+            <form action="{{ route('invoices.delete', $invoice->invoice_id) }}"
                   method="POST">
-                <?php _csrf_field(); ?>
+                @csrf
 
                 <div class="btn-group">
                     <button type="submit" class="btn btn-danger">
-                        <i class="fa fa-trash-o fa-margin"></i> <?php echo trans('confirm_deletion') ?>
+                        <i class="fa fa-trash-o fa-margin"></i> {{ trans('confirm_deletion') }}
                     </button>
                     <a href="#" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times"></i> {{ trans('cancel') }}
