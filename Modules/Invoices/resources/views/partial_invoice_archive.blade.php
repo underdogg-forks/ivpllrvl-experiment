@@ -9,22 +9,21 @@
         </thead>
 
         <tbody>
-        <?php foreach ($invoices_archive as $invoice) {
-            ?>
+        @foreach ($invoices_archive as $invoice)
             <tr>
                 <td>
-                    <a href="<?php echo site_url('invoices/download/' . basename($invoice)); ?>"
+                    <a href="{{ route('invoices.download', basename($invoice)) }}"
                        title="{{ trans('invoice') }}">
-                        <?php echo basename($invoice); ?>
+                        {{ basename($invoice) }}
                     </a>
                 </td>
 
                 <td>
-                    <?php echo date('F d Y H:i:s.', filemtime($invoice)); ?>
+                    {{ date('F d Y H:i:s.', filemtime($invoice)) }}
                 </td>
 
             </tr>
-        <?php } ?>
+        @endforeach
         </tbody>
 
     </table>
