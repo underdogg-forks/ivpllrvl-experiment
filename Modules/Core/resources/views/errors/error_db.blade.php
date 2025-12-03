@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $heading; ?> - InvoicePlane</title>
+    <title>{{ $heading }} - InvoicePlane</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
@@ -33,13 +33,13 @@
         }
 
         p {
-            margin: 1em auto;
-            width: 95%;
+            margin: 0 auto;
+            width: 280px;
         }
 
         @media only screen and (max-width: 280px) {
 
-            body {
+            body, p {
                 width: 95%;
             }
 
@@ -53,7 +53,7 @@
     </style>
 </head>
 <body>
-<h1><?php echo $heading; ?></h1>
-<?php echo $message; ?>
+<h1>{{ $heading }}</h1>
+{!! $message !!}
 </body>
 </html>
