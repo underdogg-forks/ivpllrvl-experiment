@@ -9,11 +9,11 @@
 
     @include('core::layout.alerts')
 
-    <div class="panel panel-default">
+    <div class="fi-section">
 
-        <div class="panel-heading">{{ trans('quotes_requiring_approval') }}</div>
+        <div class="fi-section-header">{{ trans('quotes_requiring_approval') }}</div>
 
-        <div class="panel-body">
+        <div class="fi-section-body">
 
 @if($open_quotes)
             @include('crm::clients.partial_quotes_table', ['quotes' => $open_quotes])
@@ -24,9 +24,9 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">{{ trans('overdue_invoices') }}</div>
-        <div class="panel-body">
+    <div class="fi-section">
+        <div class="fi-section-header">{{ trans('overdue_invoices') }}</div>
+        <div class="fi-section-body">
 @if($overdue_invoices)
             @include('crm::clients.partial_invoices_table', ['invoices' => $overdue_invoices])
 @else
@@ -36,11 +36,11 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="fi-section">
 
-        <div class="panel-heading">{{ trans('open_invoices') }}</div>
+        <div class="fi-section-header">{{ trans('open_invoices') }}</div>
 
-        <div class="panel-body">
+        <div class="fi-section-body">
 
 @if($open_invoices)
             @include('crm::clients.partial_invoices_table', ['invoices' => $open_invoices])

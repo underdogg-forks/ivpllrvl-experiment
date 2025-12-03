@@ -14,7 +14,7 @@
                 <td><a href="{{ route('families.form', $family->family_id) }}"><i class="fa fa-edit"></i> {{ $family->family_name }}</a></td>
                 <td>
                     <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle"
+                        <a class="fi-btn-secondary fi-size-sm dropdown-toggle"
                            data-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>

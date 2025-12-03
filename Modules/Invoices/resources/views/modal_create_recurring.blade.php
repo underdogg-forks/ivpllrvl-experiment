@@ -54,13 +54,13 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('create_recurring') }}</h4>
+            <h4 class="fi-section-title">{{ trans('create_recurring') }}</h4>
         </div>
         <div class="modal-body">
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="recur_frequency">{{ trans('every') }}</label>
-                <select name="recur_frequency" id="recur_frequency" class="form-control simple-select">
+                <select name="recur_frequency" id="recur_frequency" class="fi-input simple-select">
                     @foreach ($recur_frequencies as $key => $lang)
                         <option value="{{ $key }}">
                             {{ trans($lang) }}
@@ -69,23 +69,23 @@
                 </select>
             </div>
 
-            <div class="form-group has-feedback">
+            <div class="fi-field-wrp has-feedback">
                 <label for="recur_start_date">{{ trans('start_date') }}</label>
                 <div class="input-group">
                     <input name="recur_start_date" id="recur_start_date"
-                           class="form-control datepicker">
+                           class="fi-input datepicker">
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
                     </span>
                 </div>
             </div>
 
-            <div class="form-group has-feedback">
+            <div class="fi-field-wrp has-feedback">
                 <label for="recur_end_date">{{ trans('end_date') }} ({{ trans('optional') }})</label>
 
                 <div class="input-group">
                     <input name="recur_end_date" id="recur_end_date"
-                           class="form-control datepicker">
+                           class="fi-input datepicker">
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
                     </span>
@@ -96,10 +96,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="btn btn-success" id="create_recurring_confirm" type="button">
+                <button class="fi-btn-success" id="create_recurring_confirm" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>

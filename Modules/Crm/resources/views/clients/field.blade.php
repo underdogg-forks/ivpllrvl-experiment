@@ -6,10 +6,10 @@
 
     <div class="headerbar-item">
         <div class="btn-group btn-group-sm flex gap-2">
-            <a class="btn btn-default" href="{{ route('users.index') }}">
+            <a class="fi-btn-secondary" href="{{ route('users.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="fi-btn fi-btn-primary" href="{{ route('users.modal-add-user-client', $id) }}">
+            <a class="fi-btn-primary" href="{{ route('users.modal-add-user-client', $id) }}">
                 <i class="fa fa-plus"></i> {{ trans('new')}}
             </a>
         </div>
@@ -23,12 +23,12 @@
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div class="md:col-span-6 md:col-start-4">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="fi-section">
+                <div class="fi-section-header">
                     {{ trans('user') }}: {{ htmlspecialchars($user->user_name) }}
                 </div>
 
-                <div class="panel-body table-content">
+                <div class="fi-section-body table-content">
                     <div class="overflow-x-auto no-margin">
                         <table class="table table-hover table-striped no-margin w-full">
 
@@ -52,7 +52,7 @@
                                             action="{{ route('users.delete-user-client', $user_client->user_client_id) }}"
                                             method="POST">
                                             @csrf
-                                            <button type="submit" class="btn btn-default btn-sm inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                            <button type="submit" class="fi-btn-secondary fi-size-sm inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
                                                     onclick="return confirm('{{ trans('delete_user_client_warning') }}');">
                                                 <i class="fa fa-trash-o fa-margin"></i> {{ trans('remove') }}
                                             </button>

@@ -24,7 +24,7 @@
 <script src="<?php _core_asset('js/zxcvbn.js'); ?>"></script>
 
 <div class="container">
-    <div class="install-panel">
+    <div class="install-fi-section">
 
         <h1 id="logo"><span>InvoicePlane</span></h1>
 
@@ -40,30 +40,30 @@
 
             <p>{{ trans('setup_create_user_message') }}</p>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="user_email">
                     {{ trans('email_address') }}
                 </label>
-                <input type="email" name="user_email" id="user_email" class="form-control"
+                <input type="email" name="user_email" id="user_email" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_email', true) }}">
                 <span class="help-block">{{ trans('setup_user_email_info') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="user_name">
                     {{ trans('name') }}
                 </label>
-                <input type="text" name="user_name" id="user_name" class="form-control"
+                <input type="text" name="user_name" id="user_name" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_name', true) }}">
                 <span class="help-block">{{ trans('setup_user_name_info') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="user_password">
                     {{ trans('password') }}
                 </label>
                 <input type="password" name="user_password" id="user_password"
-                       class="form-control passwordmeter-input">
+                       class="fi-input passwordmeter-input">
                 <div class="progress" style="height:3px;">
                     <div class="progress-bar progress-bar-danger passmeter passmeter-1" style="width: 33%"></div>
                     <div class="progress-bar progress-bar-warning passmeter passmeter-2"
@@ -75,19 +75,19 @@
                 <span class="help-block">{{ trans('setup_user_password_info') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="user_passwordv">
                     {{ trans('verify_password') }}
                 </label>
-                <input type="password" name="user_passwordv" id="user_passwordv" class="form-control">
+                <input type="password" name="user_passwordv" id="user_passwordv" class="fi-input">
                 <span class="help-block">{{ trans('setup_user_password_verify_info') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="user_language">
                     {{ trans('language') }}
                 </label>
-                <select name="user_language" id="user_language" class="form-control simple-select">
+                <select name="user_language" id="user_language" class="fi-input simple-select">
                     <option value="system">
                         {{ trans('use_system_language') ?>
                     </option>
@@ -102,55 +102,55 @@
             <legend>{{ trans('address') }}</legend>
             <p>{{ trans('setup_user_address_info') }}</p>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('street_address') }}
                 </label>
-                <input type="text" name="user_address_1" id="user_address_1" class="form-control"
+                <input type="text" name="user_address_1" id="user_address_1" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_address_1', true) }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('street_address_2') }}
                 </label>
-                <input type="text" name="user_address_2" id="user_address_2" class="form-control"
+                <input type="text" name="user_address_2" id="user_address_2" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_address_2', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('city') }}
                 </label>
-                <input type="text" name="user_city" id="user_city" class="form-control"
+                <input type="text" name="user_city" id="user_city" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_city', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('state') }}
                 </label>
-                <input type="text" name="user_state" id="user_state" class="form-control"
+                <input type="text" name="user_state" id="user_state" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_state', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('zip_code') }}
                 </label>
-                <input type="text" name="user_zip" id="user_zip" class="form-control"
+                <input type="text" name="user_zip" id="user_zip" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_zip', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('country') }}
                 </label>
-                <select name="user_country" class="form-control simple-select">
+                <select name="user_country" class="fi-input simple-select">
                     <option value="">{{ trans('none') }}</option>
                     @foreach($countries as $cldr => $country)
                         <option value="{{ $cldr }}"
@@ -165,43 +165,43 @@
 
             <p>{{ trans('setup_user_contact_info') }}</p>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('phone') }}
                 </label>
-                <input type="text" name="user_phone" id="user_phone" class="form-control"
+                <input type="text" name="user_phone" id="user_phone" class="fi-input"
                        value="<?php echo $this->mdl_users->form_value('user_phone', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('fax') }}
                 </label>
-                <input type="text" name="user_fax" id="user_fax" class="form-control"
+                <input type="text" name="user_fax" id="user_fax" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_fax', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('mobile') }}
                 </label>
-                <input type="text" name="user_mobile" id="user_mobile" class="form-control"
+                <input type="text" name="user_mobile" id="user_mobile" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_mobile', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label>
                     {{ trans('web') }}
                 </label>
-                <input type="text" name="user_web" id="user_web" class="form-control"
+                <input type="text" name="user_web" id="user_web" class="fi-input"
                        value="{{ $this->mdl_users->form_value('user_web', true) }}"
                        placeholder="{{ trans('optional') }}">
             </div>
 
-            <input type="submit" class="btn btn-success" name="btn_continue"
+            <input type="submit" class="fi-btn-success" name="btn_continue"
                    value="{{ trans('continue') }}">
 
         </form>

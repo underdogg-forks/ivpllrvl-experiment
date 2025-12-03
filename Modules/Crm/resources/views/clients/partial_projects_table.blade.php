@@ -20,7 +20,7 @@
                 <td class="px-4 py-2">{{ $project->client_id ? htmlspecialchars(format_client($project)) : trans('none') }}</td>
                 <td class="px-4 py-2">
                     <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                        <a class="fi-btn-secondary fi-size-sm dropdown-toggle inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
                            data-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>

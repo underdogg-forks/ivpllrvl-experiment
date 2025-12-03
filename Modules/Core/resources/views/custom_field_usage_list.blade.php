@@ -16,17 +16,17 @@ if ($custom_field_usage) {
     ?>
 
     <div id="used{{ $what }}" class="col-xs-12 col-md-6 col-md-offset-3">
-        <div class="panel-group" id="accordion{{ $what }}" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-info">
-                <div class="panel-heading no-padding rounded" role="tab" id="heading{{ $what }}">
-                    <h5 class="panel-title" role="button" data-toggle="collapse" aria-expanded="true" style="padding:1rem 8px"
+        <div class="fi-section-group" id="accordion{{ $what }}" role="tablist" aria-multiselectable="true">
+            <div class="panel fi-section-info">
+                <div class="fi-section-header no-padding rounded" role="tab" id="heading{{ $what }}">
+                    <h5 class="fi-section-title" role="button" data-toggle="collapse" aria-expanded="true" style="padding:1rem 8px"
                         data-parent="#accordion{{ $what }}" href="#collapse{{ $what }}" aria-controls="collapse{{ $what }}">
                         <i class="more-less fa pull-right fa-chevron-down"></i>
                         {{ trans('custom_used_in') }}
                     </h5>
                 </div>
-                <div id="collapse{{ $what }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ $what }}">
-                    <div class="panel-body">
+                <div id="collapse{{ $what }}" class="fi-section-collapse collapse" role="tabpanel" aria-labelledby="heading{{ $what }}">
+                    <div class="fi-section-body">
 <?php
         // Build links from custom field usage data
         // If display values were pre-fetched, use them; otherwise use IDs

@@ -12,20 +12,20 @@
 
             @include('core::layout.alerts')
 
-            <div id="report_options" class="panel panel-default">
+            <div id="report_options" class="fi-section">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <i class="fa fa-print"></i>
                     {{ trans('report_options') }}
                 </div>
 
-                <div class="panel-body p-4">
+                <div class="fi-section-body p-4">
                     <form method="post" action="{{ route('dashboard.index') }}"
                         {{ get_setting('reports_in_new_tab', false) ? 'target="_blank"' : '' }}>
 
                         @csrf
 
-                        <input type="submit" class="btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600"
+                        <input type="submit" class="fi-btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600"
                                name="btn_submit" value="{{ trans('run_report') }}">
 
                     </form>

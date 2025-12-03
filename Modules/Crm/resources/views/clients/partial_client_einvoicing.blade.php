@@ -28,11 +28,11 @@
 <div class="grid grid-cols-1 md:grid-cols-12 gap-4{{ $xml_templates ? '' : ' hidden' }}">
     <div class="md:col-span-6">
 
-        <div class="form-group mb-4">
+        <div class="fi-field-wrp mb-4">
             <label for="client_start_einvoicing" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {{ trans('einvoicing_start') }}
             </label>
-            <select name="client_start_einvoicing" class="form-control simple-select w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            <select name="client_start_einvoicing" class="fi-input simple-select w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 id="client_start_einvoicing" data-minimum-results-for-search="Infinity">
                 @php $active = (old('client_einvoicing_version', $client->client_einvoicing_version ?? '') == '') ? '0' : '1'; @endphp
                 <option value="0" {{ $active == '0' ? 'selected' : '' }}>
@@ -60,10 +60,10 @@ if ($req_einvoicing->users[session('user_id')]->show_table > 0) {
     <div class="toggle_einvoicing">
         <div class="md:col-span-6">
 
-            <div class="form-group mb-4">
+            <div class="fi-field-wrp mb-4">
                 <label for="client_einvoicing_version" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'UBL / CII ' . trans('version') }}</label>
 
-                <select name="client_einvoicing_version" id="client_einvoicing_version" class="form-control simple-select w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"{{ $disabled }}>
+                <select name="client_einvoicing_version" id="client_einvoicing_version" class="fi-input simple-select w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"{{ $disabled }}>
                     <option value="">{{ trans('none') }}</option>
 @foreach($xml_templates as $xml_key => $xml_template)
                     <option value="{{ $xml_key }}" {{ $xml_key == $client_einvoicing_version ? 'selected' : '' }}>
@@ -92,7 +92,7 @@ foreach ($req_einvoicing->users as $user_id => $user) {
 @endphp
         <!-- Check if mandatory eInvoicing fields are empty -->
         <div class="md:col-span-6 einvoice-user-check-lists collapse{{ $open ? ' in" aria-expanded="true' : '" aria-expanded="false' }}">
-            <div class="form-group mb-4" data-toggle="tooltip" data-placement="top" title="{{ htmlspecialchars($user->user_name) }}">
+            <div class="fi-field-wrp mb-4" data-toggle="tooltip" data-placement="top" title="{{ htmlspecialchars($user->user_name) }}">
                 <div class="overflow-x-auto">
                     <table class="table table-hover table-condensed table-bordered no-margin w-full">
                         <thead class="text-center">

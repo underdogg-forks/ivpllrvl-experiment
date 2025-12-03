@@ -26,7 +26,7 @@
 <div class="container mx-auto px-4">
 
     <div id="password_reset"
-         class="panel panel-default panel-body max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+         class="fi-section fi-section-body max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-6">
 
         <div class="row">@include('core::layout.alerts')</div>
 
@@ -40,15 +40,15 @@
 
             @csrf
 
-            <div class="form-group mb-4">
+            <div class="fi-field-wrp mb-4">
                 <label for="email" class="hidden">{{ trans('email') }}</label>
-                <input type="text" name="email" id="email" class="form-control w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                <input type="text" name="email" id="email" class="fi-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
                        placeholder="{{ trans('email') }}" required autofocus>
             </div>
 
             <input type="hidden" name="btn_reset" value="true">
 
-            <button type="submit" class="btn btn-danger inline-flex items-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600">
+            <button type="submit" class="fi-btn-danger inline-flex items-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600">
                 <i class="fa fa-key fa-margin"></i> {{ trans('reset_password') }}
             </button>
 

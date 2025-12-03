@@ -5,7 +5,7 @@
     <h1 class="headerbar-title">{{ trans('payment_methods') }}</h1>
 
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="{{ route('payment-methods.form') }}">
+        <a class="btn fi-size-sm fi-btn-primary" href="{{ route('payment-methods.form') }}">
             <i class="fa fa-plus"></i> {{ trans('new') }}
         </a>
     </div>
@@ -36,7 +36,7 @@
                     <td>{{ $payment_method->payment_method_name }}</td>
                     <td>
                         <div class="options btn-group">
-                            <a class="btn btn-default btn-sm dropdown-toggle"
+                            <a class="fi-btn-secondary fi-size-sm dropdown-toggle"
                                data-toggle="dropdown" href="#">
                                 <i class="fa fa-cog"></i>
                                 {{ trans('options') }}

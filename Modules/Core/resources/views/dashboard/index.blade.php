@@ -7,26 +7,26 @@
     <div class="row{{ (get_setting('disable_quickactions') == 1) ? ' hidden' : '' }}">
         <div class="col-xs-12">
 
-            <div id="panel-quick-actions" class="panel panel-default quick-actions">
+            <div id="panel-quick-actions" class="fi-section quick-actions">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <b>{{ trans('quick_actions') }}</b>
                 </div>
 
                 <div class="btn-group btn-group-justified no-margin">
-                    <a href="{{ route('clients.form') }}" class="btn btn-default">
+                    <a href="{{ route('clients.form') }}" class="fi-btn-secondary">
                         <i class="fa fa-user fa-margin"></i>
                         <span class="hidden-xs">{{ trans('add_client') }}</span>
                     </a>
-                    <a href="javascript:void(0)" class="create-quote btn btn-default">
+                    <a href="javascript:void(0)" class="create-quote fi-btn-secondary">
                         <i class="fa fa-file fa-margin"></i>
                         <span class="hidden-xs">{{ trans('create_quote') }}</span>
                     </a>
-                    <a href="javascript:void(0)" class="create-invoice btn btn-default">
+                    <a href="javascript:void(0)" class="create-invoice fi-btn-secondary">
                         <i class="fa fa-file-text fa-margin"></i>
                         <span class="hidden-xs">{{ trans('create_invoice') }}</span>
                     </a>
-                    <a href="{{ route('payments.form') }}" class="btn btn-default">
+                    <a href="{{ route('payments.form') }}" class="fi-btn-secondary">
                         <i class="fa fa-credit-card fa-margin"></i>
                         <span class="hidden-xs">{{ trans('enter_payment') }}</span>
                     </a>
@@ -39,9 +39,9 @@
     <div class="row">
         <div class="col-xs-12 col-md-6">
 
-            <div id="panel-quote-overview" class="panel panel-default overview">
+            <div id="panel-quote-overview" class="fi-section overview">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <b><i class="fa fa-bar-chart fa-margin"></i> {{ trans('quote_overview') }}</b>
                     <span class="pull-right text-muted">{{ lang($quote_status_period) }}</span>
                 </div>
@@ -67,9 +67,9 @@
         </div>
         <div class="col-xs-12 col-md-6">
 
-            <div id="panel-invoice-overview" class="panel panel-default overview">
+            <div id="panel-invoice-overview" class="fi-section overview">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <b><i class="fa fa-bar-chart fa-margin"></i> {{ trans('invoice_overview') }}</b>
                     <span class="pull-right text-muted">{{ lang($invoice_status_period) }}</span>
                 </div>
@@ -92,7 +92,7 @@
                 </table>
             </div>
 @if(empty($overdue_invoices))
-            <div class="panel panel-default panel-heading">
+            <div class="fi-section fi-section-header">
                 <span class="text-muted">{{ trans('no_overdue_invoices') }}</span>
             </div>
 @else
@@ -102,7 +102,7 @@
                     $overdue_invoices_total += $invoice->invoice_balance;
                 }
             @endphp
-            <div class="panel panel-danger panel-heading">
+            <div class="panel fi-section-danger fi-section-header">
                 <a href="{{ route('invoices.status.overdue') }}" class="text-danger">
                     <i class="fa fa-external-link"></i> {{ trans('overdue_invoices') }}
                 </a>
@@ -117,9 +117,9 @@
     <div class="row">
         <div class="col-xs-12 col-md-6">
 
-            <div id="panel-recent-quotes" class="panel panel-default">
+            <div id="panel-recent-quotes" class="fi-section">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <b><i class="fa fa-history fa-margin"></i> {{ trans('recent_quotes') }}</b>
                 </div>
                 <div class="table-responsive">
@@ -176,9 +176,9 @@
         </div>
         <div class="col-xs-12 col-md-6">
 
-            <div id="panel-recent-invoices" class="panel panel-default">
+            <div id="panel-recent-invoices" class="fi-section">
 
-                <div class="panel-heading">
+                <div class="fi-section-header">
                     <b><i class="fa fa-history fa-margin"></i> {{ trans('recent_invoices') }}</b>
                 </div>
 
@@ -264,9 +264,9 @@
         <div class="row">
             <div class="col-xs-12 col-md-6">
 
-                <div id="panel-projects" class="panel panel-default">
+                <div id="panel-projects" class="fi-section">
 
-                    <div class="panel-heading">
+                    <div class="fi-section-header">
                         <b><i class="fa fa-list fa-margin"></i> {{ trans('projects') }}</b>
                     </div>
                     <div class="table-responsive">
@@ -307,9 +307,9 @@
             </div>
             <div class="col-xs-12 col-md-6">
 
-                <div id="panel-recent-invoices" class="panel panel-default">
+                <div id="panel-recent-invoices" class="fi-section">
 
-                    <div class="panel-heading">
+                    <div class="fi-section-header">
                         <b><i class="fa fa-check-square-o fa-margin"></i> {{ trans('tasks') }}</b>
                     </div>
 

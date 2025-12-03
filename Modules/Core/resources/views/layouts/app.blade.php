@@ -39,7 +39,7 @@
 
     @stack('styles')
 </head>
-<body class="fi-body fi-panel-admin bg-base" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
+<body class="fi-body fi-fi-section-admin bg-base" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }" x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         @include('core::layouts.partials.sidebar')

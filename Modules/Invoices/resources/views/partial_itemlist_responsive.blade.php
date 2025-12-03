@@ -4,22 +4,22 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
 
 <div class="row">
     <div id="item_table" class="items table col-xs-12">
-        <div id="new_row" class="form-group details-box" style="display: none;">
+        <div id="new_row" class="fi-field-wrp details-box" style="display: none;">
             <div class="row">
                 <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
                     <div class="row">
                         <div class="col-xs-12 col-sm-1">
-                            <button type="button" class="btn btn-link up" title="{{ trans('move_up') }}">
+                            <button type="button" class="btn fi-btn-link up" title="{{ trans('move_up') }}">
                                 <i class="fa fa-chevron-up"></i>
                             </button>
-                            <button type="button" class="btn btn-link down" title="{{ trans('move_down') }}">
+                            <button type="button" class="btn fi-btn-link down" title="{{ trans('move_down') }}">
                                 <i class="fa fa-chevron-down"></i>
                             </button>
 @if($invoice->invoice_is_recurring)
                                 <i title="{{ trans('recurring') }}" class="js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted"></i>
                                 <input type="hidden" name="item_is_recurring" value=""/>
 @endif
-                            <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}">
+                            <button type="button" class="btn_delete_item fi-link fi-size-sm" title="{{ trans('delete') }}">
                                 <i class="fa fa-trash-o text-danger"></i>
                             </button>
                         </div>
@@ -27,15 +27,15 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                         <div class="col-xs-12 col-sm-11">
                             <div class="input-group flex">
                                 <label for="item_name" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('item') }}</label>
-                                <input type="text" name="item_name" id="item_name" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="">
+                                <input type="text" name="item_name" id="item_name" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="">
                             </div>
                             <div class="input-group flex">
 @if($invoice->sumex_id == '')
                                 <label for="item_description" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('description') }}</label>
-                                <textarea name="item_description" id="item_description" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"></textarea>
+                                <textarea name="item_description" id="item_description" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"></textarea>
 @else
                                 <label for="item_date" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('date') }}</label>
-                                <input type="text" name="item_date" id="item_date" class="form-control datepicker flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"
+                                <input type="text" name="item_date" id="item_date" class="fi-input datepicker flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"
                                        value="{{ format_date(date('y-m-d')) }}"{{ $invoice_disabled }}>
 @endif
                             </div>
@@ -48,11 +48,11 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                         <div class="col-xs-12 col-lg-6">
                             <div class="input-group flex">
                                 <label for="item_quantity" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('quantity') }}</label>
-                                <input type="text" name="item_quantity" id="item_quantity" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="">
+                                <input type="text" name="item_quantity" id="item_quantity" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="">
                             </div>
                             <div class="input-group flex">
                                 <label for="item_product_unit_id" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('product_unit') }}</label>
-                                <select name="item_product_unit_id" id="item_product_unit_id" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md">
+                                <select name="item_product_unit_id" id="item_product_unit_id" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md">
                                     <option value="0">{{ trans('none') }}</option>
 @foreach($units as $unit)
                                     <option value="{{ $unit->unit_id }}">
@@ -63,7 +63,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                             </div>
                             <div class="input-group flex">
                                 <label for="item_price" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('price') }}</label>
-                                <input type="text" name="item_price" id="item_price" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" value="">
+                                <input type="text" name="item_price" id="item_price" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" value="">
                                 <div class="input-group-addon px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-r-md">{{ get_setting('currency_symbol') }}</div>
                             </div>
 @if(!$legacy_calculation)
@@ -71,7 +71,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
 @endif
                             <div class="input-group flex">
                                 <label for="item_tax_rate_id" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('tax_rate') }}</label>
-                                <select name="item_tax_rate_id" id="item_tax_rate_id" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md">
+                                <select name="item_tax_rate_id" id="item_tax_rate_id" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md">
                                     <option value="0">{{ trans('none') }}</option>
 @foreach($tax_rates as $tax_rate)
                                     <option value="{{ $tax_rate->tax_rate_id }}"
@@ -131,15 +131,15 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
         </div>
 
 @foreach($items as $item)
-        <div class="form-group details-box item">
+        <div class="fi-field-wrp details-box item">
             <div class="row">
                 <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
                     <div class="row">
                         <div class="col-xs-12 col-sm-1">
-                            <button type="button" class="btn btn-link up" title="{{ trans('move_up') }}"{{ $invoice_disabled }}>
+                            <button type="button" class="btn fi-btn-link up" title="{{ trans('move_up') }}"{{ $invoice_disabled }}>
                                 <i class="fa fa-chevron-up"></i>
                             </button>
-                            <button type="button" class="btn btn-link down" title="{{ trans('move_down') }}"{{ $invoice_disabled }}>
+                            <button type="button" class="btn fi-btn-link down" title="{{ trans('move_down') }}"{{ $invoice_disabled }}>
                                 <i class="fa fa-chevron-down"></i>
                             </button>
 @if($invoice->invoice_is_recurring)
@@ -158,7 +158,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                             <input type="hidden" name="item_is_recurring" value="{{ $item_recurrence_state }}"/>
 @endif
 @if($invoice->is_read_only != 1)
-                            <button type="button" class="btn_delete_item btn btn-link" title="{{ trans('delete') }}" data-item-id="{{ $item->item_id }}">
+                            <button type="button" class="btn_delete_item btn fi-btn-link" title="{{ trans('delete') }}" data-item-id="{{ $item->item_id }}">
                                 <i class="fa fa-trash-o text-danger"></i>
                             </button>
 @endif
@@ -172,16 +172,16 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
 
                             <div class="input-group flex">
                                 <label for="item_name_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('item') }}</label>
-                                <input type="text" name="item_name" id="item_name_{{ $item->item_id }}" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="{{ htmlspecialchars($item->item_name) }}"{{ $invoice_disabled }}>
+                                <input type="text" name="item_name" id="item_name_{{ $item->item_id }}" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="{{ htmlspecialchars($item->item_name) }}"{{ $invoice_disabled }}>
                             </div>
 
                             <div class="input-group flex">
 @if($invoice->sumex_id == '')
                                 <label for="item_description_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('description') }}</label>
-                                <textarea name="item_description" id="item_description_{{ $item->item_id }}" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"{{ $invoice_disabled }}>{{ htmlspecialchars($item->item_description) }}</textarea>
+                                <textarea name="item_description" id="item_description_{{ $item->item_id }}" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"{{ $invoice_disabled }}>{{ htmlspecialchars($item->item_description) }}</textarea>
 @else
                                 <label for="item_date_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('date') }}</label>
-                                <input type="text" name="item_date" id="item_date_{{ $item->item_id }}" class="form-control datepicker flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="{{ format_date($item->item_date) }}"{{ $invoice_disabled }}>
+                                <input type="text" name="item_date" id="item_date_{{ $item->item_id }}" class="fi-input datepicker flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="{{ format_date($item->item_date) }}"{{ $invoice_disabled }}>
 @endif
                             </div>
                         </div>
@@ -193,11 +193,11 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                         <div class="col-xs-12 col-lg-6">
                             <div class="input-group flex">
                                 <label for="item_quantity_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('quantity') }}</label>
-                                <input type="text" name="item_quantity" id="item_quantity_{{ $item->item_id }}" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="{{ format_quantity($item->item_quantity) }}"{{ $invoice_disabled }}>
+                                <input type="text" name="item_quantity" id="item_quantity_{{ $item->item_id }}" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md" value="{{ format_quantity($item->item_quantity) }}"{{ $invoice_disabled }}>
                             </div>
                             <div class="input-group flex">
                                 <label for="item_product_unit_id_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('product_unit') }}</label>
-                                <select name="item_product_unit_id" id="item_product_unit_id_{{ $item->item_id }}" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"{{ $invoice_disabled }}>
+                                <select name="item_product_unit_id" id="item_product_unit_id_{{ $item->item_id }}" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"{{ $invoice_disabled }}>
                                     <option value="0">{{ trans('none') }}</option>
 @foreach($units as $unit)
                                     <option value="{{ $unit->unit_id }}"
@@ -209,7 +209,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                             </div>
                             <div class="input-group flex">
                                 <label for="item_price_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('price') }}</label>
-                                <input type="text" name="item_price" id="item_price_{{ $item->item_id }}" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                <input type="text" name="item_price" id="item_price_{{ $item->item_id }}" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                        value="{{ format_amount($item->item_price) }}"{{ $invoice_disabled }}>
                                 <div class="input-group-addon px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-r-md">{{ get_setting('currency_symbol') }}</div>
                             </div>
@@ -218,7 +218,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
 @endif
                             <div class="input-group flex">
                                 <label for="item_tax_rate_id_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md">{{ trans('tax_rate') }}</label>
-                                <select name="item_tax_rate_id" id="item_tax_rate_id_{{ $item->item_id }}" class="form-control flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"{{ $invoice_disabled }}>
+                                <select name="item_tax_rate_id" id="item_tax_rate_id_{{ $item->item_id }}" class="fi-input flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-r-md"{{ $invoice_disabled }}>
                                     <option value="0">{{ trans('none') }}</option>
 @foreach($tax_rates as $tax_rate)
                                     <option value="{{ $tax_rate->tax_rate_id }}"
@@ -278,14 +278,14 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
     <div class="col-xs-12 col-md-4">
         <div class="btn-group flex gap-2">
 @if($invoice->is_read_only != 1)
-            <a href="javascript:void(0);" class="btn_add_row btn btn-sm btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50">
+            <a href="javascript:void(0);" class="btn_add_row btn fi-size-sm fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50">
                 <i class="fa fa-plus"></i> {{ trans('add_new_row') }}
             </a>
-            <a href="javascript:void(0);" class="btn_add_product btn btn-sm btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50">
+            <a href="javascript:void(0);" class="btn_add_product btn fi-size-sm fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50">
                 <i class="fa fa-database"></i>
                 {{ trans('add_product') }}
             </a>
-            <a href="javascript:void(0);" class="btn_add_task btn btn-sm btn-default{{ get_setting('projects_enabled') == 1 ? '' : ' hidden' }} inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50">
+            <a href="javascript:void(0);" class="btn_add_task btn fi-size-sm fi-btn-secondary{{ get_setting('projects_enabled') == 1 ? '' : ' hidden' }} inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50">
                 <i class="fa fa-database"></i> {{ trans('add_task') }}
             </a>
 @endif
@@ -323,7 +323,7 @@ $invoice_disabled = $invoice->is_read_only != 1 ? '' : ' disabled="disabled"';
                     <span class="text-muted">
                         {{ htmlspecialchars($invoice_tax_rate->invoice_tax_rate_name) }} {{ format_amount($invoice_tax_rate->invoice_tax_rate_percent) }}
                     </span>
-                    <button type="submit" class="btn btn-xs btn-link" onclick="var Y=confirm('{{ trans('delete_tax_warning') }}');if(Y)show_loader();return Y;">
+                    <button type="submit" class="btn fi-size-xs fi-btn-link" onclick="var Y=confirm('{{ trans('delete_tax_warning') }}');if(Y)show_loader();return Y;">
                         <i class="fa fa-trash-o"></i>
                     </button>
                 </form>

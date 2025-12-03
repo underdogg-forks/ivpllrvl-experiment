@@ -11,19 +11,19 @@
             @method('PUT')
         @endif
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="project_name">{{ trans('project_name') }} *</label>
             <input type="text"
                    name="project_name"
                    id="project_name"
-                   class="form-control"
+                   class="fi-input"
                    value="{{ $project->project_name ?? '' }}"
                    required>
         </div>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="client_id">{{ trans('client') }} *</label>
-            <select name="client_id" id="client_id" class="form-control" required>
+            <select name="client_id" id="client_id" class="fi-input" required>
                 <option value="">{{ trans('select_client') }}</option>
                 @if (isset($clients))
                     @foreach ($clients as $client)
@@ -36,11 +36,11 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <button type="submit" class="fi-btn fi-btn-primary">
+        <div class="fi-field-wrp">
+            <button type="submit" class="fi-btn-primary">
                 <i class="fa fa-save"></i> {{ trans('save') }}
             </button>
-            <a href="{{ route('projects.index') }}" class="btn btn-default">
+            <a href="{{ route('projects.index') }}" class="fi-btn-secondary">
                 <i class="fa fa-times"></i> {{ trans('cancel') }}
             </a>
         </div>

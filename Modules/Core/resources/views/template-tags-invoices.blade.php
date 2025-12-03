@@ -1,6 +1,6 @@
-<div class="form-group">
+<div class="fi-field-wrp">
     <label for="tags_invoice">{{ trans('invoices') }}</label>
-    <select id="tags_invoice" class="tag-select form-control">
+    <select id="tags_invoice" class="tag-select fi-input">
         <option value="{{{invoice_number}}}">
             {{ trans('id') }}
         </option>

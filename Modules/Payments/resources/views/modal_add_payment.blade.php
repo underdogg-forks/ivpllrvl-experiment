@@ -59,22 +59,22 @@
 
                 <input type="hidden" name="invoice_id" id="invoice_id" value="{{ $invoice_id }}">
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="payment_amount">{{ trans('amount') }}</label>
 
                     <div class="controls">
-                        <input type="text" name="payment_amount" id="payment_amount" class="form-control"
+                        <input type="text" name="payment_amount" id="payment_amount" class="fi-input"
                                value="{{ isset($invoice_balance) ? format_amount($invoice_balance) : '' }}">
                     </div>
                 </div>
 
-                <div class="form-group has-feedback">
+                <div class="fi-field-wrp has-feedback">
 
                     <label class="payment_date">{{ trans('payment_date') }}</label>
 
                     <div class="input-group">
                         <input name="payment_date" id="payment_date"
-                               class="form-control datepicker"
+                               class="fi-input datepicker"
                                value="{{ date(date_format_setting()) }}">
                         <span class="input-group-addon">
                             <i class="fa fa-calendar fa-fw"></i>
@@ -83,7 +83,7 @@
 
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="payment_method_id">{{ trans('payment_method') }}</label>
 
                     <div class="controls">
@@ -91,7 +91,7 @@
                             <input type="hidden" name="payment_method_id" class="hidden"
                                    value="{{ $payment_method_id }}">
                         @endif
-                        <select name="payment_method_id" id="payment_method_id" class="form-control simple-select"
+                        <select name="payment_method_id" id="payment_method_id" class="fi-input simple-select"
                                 {{ empty($invoice_payment_method) ? '' : 'disabled="disabled"' }}>
                             <option value="">{{ trans('none') }}</option>
                             @foreach ($payment_methods as $payment_method)
@@ -104,11 +104,11 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="payment_note">{{ trans('note') }}</label>
 
                     <div class="controls">
-                        <textarea name="payment_note" id="payment_note" class="form-control"></textarea>
+                        <textarea name="payment_note" id="payment_note" class="fi-input"></textarea>
                     </div>
                 </div>
 
@@ -120,11 +120,11 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="btn btn-success" id="btn_modal_payment_submit" type="button">
+                <button class="fi-btn-success" id="btn_modal_payment_submit" type="button">
                     <i class="fa fa-check"></i>
                     {{ trans('submit') }}
                 </button>
-                <button class="btn btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
                     {{ trans('cancel') }}
                 </button>

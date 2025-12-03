@@ -219,7 +219,7 @@ if ($change_user) {
     <div class="headerbar-item pull-right{{ ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) ? ' btn-group' : '' }}">
 
         <div class="options btn-group pull-left">
-            <a class="btn btn-sm btn-default dropdown-toggle"
+            <a class="btn fi-size-sm fi-btn-secondary dropdown-toggle"
                data-toggle="dropdown" href="#">
                 <i class="fa fa-caret-down no-margin"></i> {{ trans('options') }}
             </a>
@@ -297,7 +297,7 @@ if ($legacy_calculation && $invoice->is_read_only != 1) { // Legacy calculation 
         </div>
 
 @if($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4)
-        <a href="#" class="btn btn-sm btn-success ajax-loader" id="btn_save_invoice">
+        <a href="#" class="btn fi-size-sm fi-btn-success ajax-loader" id="btn_save_invoice">
             <i class="fa fa-check"></i> {{ trans('save') }}
         </a>
 @endforeach
@@ -378,7 +378,7 @@ $invoice->sumex_casedate       = $invoice->sumex_casedate == '0000-00-00' ? date
                                         <div class="input-group">
                                             <span class="input-group-addon">{{ trans('start') }}</span>
                                             <input id="invoice_sumex_treatmentstart" name="sumex_treatmentstart"
-                                                   class="form-control datepicker"
+                                                   class="fi-input datepicker"
                                                    value="{{ date_from_mysql($invoice->sumex_treatmentstart) }}"
                                                    type="text">
                                         </div>
@@ -389,7 +389,7 @@ $invoice->sumex_casedate       = $invoice->sumex_casedate == '0000-00-00' ? date
                                         <div class="input-group">
                                             <span class="input-group-addon">{{ trans('end') }}</span>
                                             <input id="invoice_sumex_treatmentend" name="sumex_treatmentend"
-                                                   class="form-control datepicker"
+                                                   class="fi-input datepicker"
                                                    value="{{ date_from_mysql($invoice->sumex_treatmentend) }}"
                                                    type="text">
                                         </div>
@@ -400,7 +400,7 @@ $invoice->sumex_casedate       = $invoice->sumex_casedate == '0000-00-00' ? date
                                         <div class="input-group">
                                             <span class="input-group-addon">{{ trans('reason') }}</span>
                                             <select name="invoice_sumex_reason" id="invoice_sumex_reason"
-                                                    class="form-control simple-select">
+                                                    class="fi-input simple-select">
 <?php
 $reasons = [
     'accident',
@@ -428,7 +428,7 @@ foreach ($reasons as $key => $reason) {
                                         <div class="input-group">
                                             <span class="input-group-addon">{{ trans('case_date') }}</span>
                                             <input id="invoice_sumex_casedate" name="sumex_casedate"
-                                                   class="form-control datepicker"
+                                                   class="fi-input datepicker"
                                                    value="{{ date_from_mysql($invoice->sumex_casedate) }}"
                                                    type="text">
                                         </div>
@@ -439,7 +439,7 @@ foreach ($reasons as $key => $reason) {
                                         <div class="input-group">
                                             <span class="input-group-addon">{{ trans('case_number') }}</span>
                                             <input id="invoice_sumex_casenumber" name="sumex_casenumber"
-                                                   class="form-control"
+                                                   class="fi-input"
                                                    value="<?php _htmle($invoice->sumex_casenumber); ?>"
                                                    type="text">
                                         </div>
@@ -450,7 +450,7 @@ foreach ($reasons as $key => $reason) {
                                         <div class="input-group">
                                             <span class="input-group-addon">{{ trans('invoice_sumex_diagnosis') }}</span>
                                             <input id="invoice_sumex_diagnosis" name="invoice_sumex_diagnosis"
-                                                   class="form-control"
+                                                   class="fi-input"
                                                    value="<?php _htmle($invoice->sumex_diagnosis); ?>"
                                                    type="text" maxlength="500">
                                         </div>
@@ -488,7 +488,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 ?>
                                     </label>
                                     <select name="invoice_status_id" id="invoice_status_id"
-                                            class="form-control simple-select"
+                                            class="fi-input simple-select"
                                             {{ ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : '' }}
                                     >
 @foreach($invoice_statuses as $key => $status)
@@ -504,7 +504,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
                                 <div class="invoice-properties">
                                     <label>{{ trans('invoice') }} #</label>
                                     <input type="text" id="invoice_number"
-                                           class="form-control"
+                                           class="fi-input"
                                         <?php if ($invoice->invoice_number) : ?>
                                             value="{{ $invoice->invoice_number }}"
                                         <?php else : ?>
@@ -519,7 +519,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 
                                     <div class="input-group">
                                         <input name="invoice_date_created" id="invoice_date_created"
-                                               class="form-control datepicker"
+                                               class="fi-input datepicker"
                                                value="{{ date_from_mysql($invoice->invoice_date_created) }}"
                                                {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                                         >
@@ -534,7 +534,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 
                                     <div class="input-group">
                                         <input name="invoice_date_due" id="invoice_date_due"
-                                               class="form-control datepicker"
+                                               class="fi-input datepicker"
                                                value="{{ date_from_mysql($invoice->invoice_date_due) }}"
                                                {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                                         >
@@ -548,7 +548,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
                                 <div class="invoice-properties">
                                     <label>{{ trans('payment_method') }}</label>
                                     <select name="payment_method" id="payment_method"
-                                            class="form-control simple-select"
+                                            class="fi-input simple-select"
                                             {{ ($invoice->is_read_only == 1 && $invoice->invoice_status_id == 4) ? 'disabled="disabled"' : '' }}
                                     >
                                         <option value="0">{{ trans('select_payment_method') }}</option>
@@ -565,7 +565,7 @@ if ($invoice->is_read_only != 1 || $invoice->invoice_status_id != 4) {
 
                                 <div class="invoice-properties">
                                     <label>{{ trans('invoice_password') }}</label>
-                                    <input type="text" id="invoice_password" class="form-control"
+                                    <input type="text" id="invoice_password" class="fi-input"
                                            value="<?php _htmlsc($invoice->invoice_password); ?>"
                                            {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}>
                                 </div>
@@ -586,10 +586,10 @@ foreach ($custom_fields as $custom_field) {
 
 @if($invoice->invoice_status_id != 1)
                             <div class="col-xs-12">
-                                <div class="form-group">
+                                <div class="fi-field-wrp">
                                     <label for="invoice-guest-url">{{ trans('guest_url') }}</label>
                                     <div class="input-group">
-                                        <input type="text" id="invoice-guest-url" readonly class="form-control"
+                                        <input type="text" id="invoice-guest-url" readonly class="fi-input"
                                                value="{{ route('guest.view', ['invoice_url_key' => $invoice->invoice_url_key]) ?>">
                                         <span class="input-group-addon to-clipboard cursor-pointer"
                                               data-clipboard-target="#invoice-guest-url">
@@ -615,12 +615,12 @@ foreach ($custom_fields as $custom_field) {
             <div class="row">
                 <div class="col-xs-12 col-md-4">
 
-                    <div class="panel panel-default no-margin">
-                        <div class="panel-heading">
+                    <div class="fi-section no-margin">
+                        <div class="fi-section-header">
                             {{ trans('sumex_observations') }}
                         </div>
-                        <div class="panel-body">
-                            <textarea id="invoice_sumex_observations" name="invoice_sumex_observations" class="form-control" rows="3"
+                        <div class="fi-section-body">
+                            <textarea id="invoice_sumex_observations" name="invoice_sumex_observations" class="fi-input" rows="3"
                                       {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                             >{{ $invoice->sumex_observations }}</textarea>
                         </div>
@@ -630,12 +630,12 @@ foreach ($custom_fields as $custom_field) {
 
                 <div class="col-xs-12 col-md-4">
 
-                    <div class="panel panel-default no-margin">
-                        <div class="panel-heading">
+                    <div class="fi-section no-margin">
+                        <div class="fi-section-header">
                             {{ trans('invoice_terms') }}
                         </div>
-                        <div class="panel-body">
-                            <textarea id="invoice_terms" name="invoice_terms" class="form-control" rows="3"
+                        <div class="fi-section-body">
+                            <textarea id="invoice_terms" name="invoice_terms" class="fi-input" rows="3"
                                       {{ $invoice->is_read_only ? 'disabled="disabled"' : '' }}
                             ><?php _htmlsc($invoice->invoice_terms); ?></textarea>
                         </div>
@@ -659,9 +659,9 @@ foreach ($custom_fields as $custom_field) {
 
                     <hr>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{{ trans('custom_fields') }}</div>
-                        <div class="panel-body">
+                    <div class="fi-section">
+                        <div class="fi-section-header">{{ trans('custom_fields') }}</div>
+                        <div class="fi-section-body">
                             <div class="row">
 <?php
         $classes = ['control-label', 'controls', '', 'form-group col-xs-12 col-sm-6'];

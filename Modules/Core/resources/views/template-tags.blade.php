@@ -1,12 +1,12 @@
-<div class="panel panel-default">
-    <div class="panel-heading">{{ trans('email_template_tags') }}</div>
-    <div class="panel-body">
+<div class="fi-section">
+    <div class="fi-section-header">{{ trans('email_template_tags') }}</div>
+    <div class="fi-section-body">
 
         <p class="small">{{ trans('email_template_tags_instructions') }}</p>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="tags_client">{{ trans('client') }}</label>
-            <select id="tags_client" class="tag-select form-control">
+            <select id="tags_client" class="tag-select fi-input">
                 <option value="{{{client_name}}}">
                     {{ trans('client_name') }}
                 </option>
@@ -88,9 +88,9 @@ if ($custom_fields['ip_client_custom']) {
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="tags_user">{{ trans('user') }}</label>
-            <select id="tags_user" class="tag-select form-control">
+            <select id="tags_user" class="tag-select fi-input">
                 <option value="{{{user_name}}}">
                     {{ trans('name') }}
                 </option>
@@ -182,9 +182,9 @@ if ($custom_fields['ip_user_custom']) {
 
         <?php $this->layout->load_view('email_templates/template-tags-invoices'); ?>
 
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="tags_quote">{{ trans('quotes') }}</label>
-            <select id="tags_quote" class="tag-select form-control">
+            <select id="tags_quote" class="tag-select fi-input">
                 <option value="{{{quote_number}}}">
                     {{ trans('id') }}
                 </option>
@@ -229,9 +229,9 @@ if ($custom_fields['ip_user_custom']) {
             </select>
         </div>
 @if($sumex)
-        <div class="form-group">
+        <div class="fi-field-wrp">
             <label for="tags_sumex">{{ trans('invoice_sumex') }}</label>
-            <select id="tags_sumex" class="tag-select form-control">
+            <select id="tags_sumex" class="tag-select fi-input">
                 <option value="{{{sumex_reason}}}">
                     {{ trans('reason') }}
                 </option>

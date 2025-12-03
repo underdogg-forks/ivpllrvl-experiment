@@ -9,7 +9,7 @@
                         <div class="input-group input-group-sm">
                             <input id="invoice_discount_amount" name="invoice_discount_amount" aria-label="{{ trans('global_discount') }}"
                                    value="{{ format_amount($invoice->invoice_discount_amount != 0 ? $invoice->invoice_discount_amount : '') }}"
-                                   class="discount-option form-control amount"{!! $invoice_disabled !!}>
+                                   class="discount-option fi-input amount"{!! $invoice_disabled !!}>
                             <span class="input-group-addon">{{ get_setting('currency_symbol') }}</span>
                         </div>
                     </div>
@@ -17,7 +17,7 @@
                         <div class="input-group input-group-sm">
                             <input id="invoice_discount_percent" name="invoice_discount_percent" aria-label="{{ trans('global_discount') }} %"
                                    value="{{ format_amount($invoice->invoice_discount_percent != 0 ? $invoice->invoice_discount_percent : '') }}"
-                                   class="discount-option form-control amount"{!! $invoice_disabled !!}>
+                                   class="discount-option fi-input amount"{!! $invoice_disabled !!}>
                             <span class="input-group-addon">%</span>
                         </div>
                     </div>

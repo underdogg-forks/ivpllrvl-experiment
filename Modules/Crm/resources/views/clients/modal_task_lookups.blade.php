@@ -79,7 +79,7 @@
      role="dialog" aria-labelledby="modal-choose-items" aria-hidden="true">
     <form class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl">
         <div class="modal-header px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h4 class="panel-title text-lg font-semibold">{{ trans('add_task') }}</h4>
+            <h4 class="fi-section-title text-lg font-semibold">{{ trans('add_task') }}</h4>
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
         </div>
 
@@ -89,11 +89,11 @@
 
         <div class="modal-footer px-4 py-3 border-t border-gray-200 dark:border-gray-700">
             <div class="btn-group flex gap-2">
-                <button id="task-modal-submit" class="select-items-confirm fi-btn fi-btn-success" type="button">
+                <button id="task-modal-submit" class="select-items-confirm fi-btn-success" type="button">
                     <i class="fa fa-check"></i>
                     {{ trans('submit') }}
                 </button>
-                <button class="fi-btn fi-btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i>
                     {{ trans('cancel') }}
                 </button>

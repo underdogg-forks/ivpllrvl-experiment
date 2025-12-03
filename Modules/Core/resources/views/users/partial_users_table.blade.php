@@ -20,13 +20,13 @@
                         <div class="options btn-group btn-group-sm">
 @if($user->user_type == 2)
                         <a href="{{ route('users.load-user-client-table', ['user_id' => $user->user_id]) }}"
-                           class="btn btn-default">
+                           class="fi-btn-secondary">
                             <i class="fa fa-list fa-margin"></i> {{ trans('assigned_clients') }}
                         </a>
 <?php
         } // Endif
     ?>
-                            <a class="btn btn-default dropdown-toggle"
+                            <a class="fi-btn-secondary dropdown-toggle"
                                data-toggle="dropdown" href="#">
                                 <i class="fa fa-cog"></i> {{ trans('options') }}
                             </a>

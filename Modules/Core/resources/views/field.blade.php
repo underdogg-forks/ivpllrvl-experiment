@@ -1,6 +1,6 @@
 <?php
 $href  = route('custom-fields.form', ['custom_field_id' => $field->custom_field_id]);
-$link  = anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($field->custom_field_label), ' class="btn btn-sm btn-default"');
+$link  = anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($field->custom_field_label), ' class="btn fi-size-sm fi-btn-secondary"');
 $alpha = strtr(mb_strtolower($field->custom_field_type), ['-' => '_']);
 $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
 ?>
@@ -10,10 +10,10 @@ $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-            <a class="btn btn-default" href="{{ route('custom-values.index') }}">
+            <a class="fi-btn-secondary" href="{{ route('custom-values.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="btn btn-primary" href="{{ route('custom-values.create', ['custom_field_id' => $id]) }}">
+            <a class="fi-btn-primary" href="{{ route('custom-values.create', ['custom_field_id' => $id]) }}">
                 <i class="fa fa-plus"></i> {{ trans('new') }}
             </a>
         </div>
@@ -32,7 +32,7 @@ $table = strtr($field->custom_field_table, ['ip_' => '', '_custom' => '']);
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <div id="filter_results">
 <?php
 $this->layout->load_view('custom_values/partial_custom_values_field');
@@ -42,19 +42,19 @@ $this->layout->load_view('custom_values/partial_custom_values_field');
 
             <div class="row visible-xs">
                 <div class="col-xs-12">
-                    <div class="form-group">{{ trans('field') }}: {{ $link }}</div>
+                    <div class="fi-field-wrp">{{ trans('field') }}: {{ $link }}</div>
                 </div>
 
                 <div class="col-xs-12">
-                    <div class="form-group badge">{{ trans('table') }}: {{ trans($table) }}</div>
+                    <div class="fi-field-wrp badge">{{ trans('table') }}: {{ trans($table) }}</div>
                 </div>
 
                 <div class="col-xs-12">
-                    <div class="form-group badge">{{ trans('position') }}: {{ $position }}</div>
+                    <div class="fi-field-wrp badge">{{ trans('position') }}: {{ $position }}</div>
                 </div>
 
                 <div class="col-xs-12">
-                    <div class="form-group badge">{{ trans('type') }}: {{ trans($alpha) }}</div>
+                    <div class="fi-field-wrp badge">{{ trans('type') }}: {{ trans($alpha) }}</div>
                 </div>
             </div>
 

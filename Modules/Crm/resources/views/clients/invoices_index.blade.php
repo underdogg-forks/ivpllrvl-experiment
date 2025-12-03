@@ -9,19 +9,19 @@
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm index-options">
             <a href="{{ route('guest.status', 'open') }}"
-               class="btn {{ $status == 'open' ? 'btn-primary' : 'btn-default' }}">
+               class="btn {{ $status == 'open' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('open') }}
             </a>
             <a href="{{ route('guest.status', 'overdue') }}"
-               class="btn {{ $status == 'overdue' ? 'btn-primary' : 'btn-default' }}">
+               class="btn {{ $status == 'overdue' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('overdue') }}
             </a>
             <a href="{{ route('guest.status', 'paid') }}"
-               class="btn  {{ $status == 'paid' ? 'btn-primary' : 'btn-default' }}">
+               class="btn  {{ $status == 'paid' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('paid') }}
             </a>
             <a href="{{ route('guest.status', 'all') }}"
-               class="btn  {{ $status == 'all' ? 'btn-primary' : 'btn-default' }}">
+               class="btn  {{ $status == 'all' ? 'fi-btn-primary' : 'fi-btn-secondary' }}">
                 {{ trans('all') }}
             </a>
         </div>

@@ -23,14 +23,14 @@ foreach ($custom_values as $custom_values) {
     ?>
             <tr>
                 <td>{{ anchor($href, $custom_values->custom_field_id, ' title="' . trans('edit') . '"') }}</td>
-                <td>{{ anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($custom_values->custom_field_label), ' class="btn btn-sm btn-default"') }}</td>
+                <td>{{ anchor($href, '<i class="fa fa-edit fa-margin"></i> ' . htmlsc($custom_values->custom_field_label), ' class="btn fi-size-sm fi-btn-secondary"') }}</td>
                 <td>{{ $custom_values->count }}</td>
                 <td>{{ trans($custom_tables[$custom_values->custom_field_table]) }}</td>
                 <td>{{ $position }}</td>
                 <td>{{ trans($alpha) }}</td>
                 <td>
                     <div class="options btn-group">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                        <a class="fi-btn-secondary fi-size-sm dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">

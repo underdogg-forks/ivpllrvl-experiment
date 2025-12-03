@@ -14,18 +14,18 @@ if ($invoice_tax_rates) {
     <div class="headerbar-item">
         <div class="btn-group btn-group-sm flex gap-2">
 @if($invoice->invoice_balance == 0 || $invoice->invoice_status_id >= 4)
-            <button class="btn btn-success disabled opacity-60 cursor-not-allowed">
+            <button class="fi-btn-success disabled opacity-60 cursor-not-allowed">
                 <i class="fa fa-check"></i> {{ trans('paid') }}
             </button>
 @elseif($enable_online_payments)
             <a href="{{ route('guest.form', $invoice->invoice_url_key) }}"
-               class="fi-btn fi-btn-primary">
+               class="fi-btn-primary">
                 <i class="fa fa-credit-card"></i>
                 {{ trans('pay_now') }}
             </a>
 @endif
             <a href="{{ route('guest.generate-pdf', $invoice->invoice_id) }}"
-               class="btn btn-default" id="btn_generate_pdf" target="_blank">
+               class="fi-btn-secondary" id="btn_generate_pdf" target="_blank">
                 <i class="fa fa-print"></i> {{ trans('download_pdf') }}
             </a>
         </div>

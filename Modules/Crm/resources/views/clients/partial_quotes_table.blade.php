@@ -33,17 +33,17 @@
                 <td class="px-4 py-2">{{ format_currency($quote->quote_total) }}</td>
                 <td class="px-4 py-2">
                     <div class="options btn-group btn-group-sm flex gap-2">
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.view', $quote->quote_id) }}">
+                        <a class="fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" href="{{ route('guest.view', $quote->quote_id) }}">
                             <i class="fa fa-eye"></i> {{ trans('view') }}
                         </a>
-                        <a class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.generate-pdf', $quote->quote_id) }}">
+                        <a class="fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600" target="_blank" href="{{ route('guest.generate-pdf', $quote->quote_id) }}">
                             <i class="fa fa-print"></i> {{ trans('pdf') }}
                         </a>
 @if(in_array($quote->quote_status_id, [2, 3]))
-                        <a class="fi-btn fi-btn-success" href="{{ route('guest.approve', $quote->quote_id) }}">
+                        <a class="fi-btn-success" href="{{ route('guest.approve', $quote->quote_id) }}">
                             <i class="fa fa-check"></i> {{ trans('approve') }}
                         </a>
-                        <a class="fi-btn fi-btn-danger" href="{{ route('guest.reject', $quote->quote_id) }}">
+                        <a class="fi-btn-danger" href="{{ route('guest.reject', $quote->quote_id) }}">
                             <i class="fa fa-ban"></i> {{ trans('reject') }}
                         </a>
 @endif

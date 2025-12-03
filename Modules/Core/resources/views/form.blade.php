@@ -16,14 +16,14 @@
         <div class="row">
             <div class="col-xs-12 col-md-8 col-md-offset-2">
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_title" class="control-label">{{ trans('title') }}</label>
                     <input type="text" name="email_template_title" id="email_template_title"
                            value="{{ $this->mdl_email_templates->form_value('email_template_title', true) }}"
-                           class="form-control" required>
+                           class="fi-input" required>
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_type" class="control-label">{{ trans('type') }}</label>
                     <div class="radio">
                         <label>
@@ -43,51 +43,51 @@
 
                 <hr>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_from_name" class="control-label">
                         {{ trans('from_name') }}
                     </label>
                     <input type="text" name="email_template_from_name" id="email_template_from_name"
-                           class="form-control taggable"
+                           class="fi-input taggable"
                            value="{{ $this->mdl_email_templates->form_value('email_template_from_name', true) }}">
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_from_email" class="control-label">
                         {{ trans('from_email') }}
                     </label>
                     <input type="text" name="email_template_from_email" id="email_template_from_email"
-                           class="form-control taggable"
+                           class="fi-input taggable"
                            value="{{ $this->mdl_email_templates->form_value('email_template_from_email', true) }}">
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_cc" class="control-label">{{ trans('cc') }}</label>
-                    <input type="text" name="email_template_cc" id="email_template_cc" class="form-control taggable"
+                    <input type="text" name="email_template_cc" id="email_template_cc" class="fi-input taggable"
                            value="{{ $this->mdl_email_templates->form_value('email_template_cc', true) }}">
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_bcc" class="control-label">{{ trans('bcc') }}: </label>
-                    <input type="text" name="email_template_bcc" id="email_template_bcc" class="form-control taggable"
+                    <input type="text" name="email_template_bcc" id="email_template_bcc" class="fi-input taggable"
                            value="{{ $this->mdl_email_templates->form_value('email_template_bcc', true) }}">
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_subject" class="control-label">
                         {{ trans('subject') }}
                     </label>
                     <input type="text" name="email_template_subject" id="email_template_subject"
-                           class="form-control taggable"
+                           class="fi-input taggable"
                            value="{{ $this->mdl_email_templates->form_value('email_template_subject', true) }}">
                 </div>
 
-                <div class="form-group">
+                <div class="fi-field-wrp">
                     <label for="email_template_pdf_template" class="control-label">
                         {{ trans('pdf_template') }}:
                     </label>
                     <select name="email_template_pdf_template" id="email_template_pdf_template"
-                            class="form-control simple-select">
+                            class="fi-input simple-select">
                         <option value="">{{ trans('none') }}</option>
 
                         <optgroup label="{{ trans('invoices') }}">
@@ -115,39 +115,39 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
 
-                        <div class="form-group">
+                        <div class="fi-field-wrp">
                             <label for="email_template_body">{{ trans('body') }}</label>
 
                             <br>
 
                             <div class="html-tags btn-group btn-group-sm">
-                                <span class="html-tag btn btn-default" data-tag-type="text-paragraph">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-paragraph">
                                     <i class="fa fa-fw fa-paragraph"></i>
                                 </span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-linebreak">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-linebreak">
                                     &lt;br&gt;
                                 </span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-bold">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-bold">
                                     <i class="fa fa-fw fa-bold"></i>
                                 </span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-italic">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-italic">
                                     <i class="fa fa-fw fa-italic"></i>
                                 </span>
                             </div>
                             <div class="html-tags btn-group btn-group-sm">
-                                <span class="html-tag btn btn-default" data-tag-type="text-h1">H1</span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-h2">H2</span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-h3">H3</span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-h4">H4</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h1">H1</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h2">H2</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h3">H3</span>
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-h4">H4</span>
                             </div>
                             <div class="html-tags btn-group btn-group-sm">
-                                <span class="html-tag btn btn-default" data-tag-type="text-code">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-code">
                                     <i class="fa fa-fw fa-code"></i>
                                 </span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-hr">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-hr">
                                     &lt;hr/&gt;
                                 </span>
-                                <span class="html-tag btn btn-default" data-tag-type="text-css">
+                                <span class="html-tag fi-btn-secondary" data-tag-type="text-css">
                                     CSS
                                 </span>
                             </div>
@@ -156,19 +156,19 @@
                                 name="email_template_body"
                                 id="email_template_body"
                                 rows="8"
-                                class="email-template-body form-control taggable"
+                                class="email-template-body fi-input taggable"
                             >{{ $this->mdl_email_templates->form_value('email_template_body', true) }}</textarea>
 
                             <br>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                            <div class="fi-section">
+                                <div class="fi-section-header">
                                     {{ trans('preview') }}
                                     <span id="email-template-preview-reload" class="pull-right cursor-pointer">
                                         <i class="fa fa-refresh"></i>
                                     </span>
                                 </div>
-                                <div class="panel-body">
+                                <div class="fi-section-body">
                                     <iframe id="email-template-preview"></iframe>
                                 </div>
                             </div>

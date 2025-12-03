@@ -15,7 +15,7 @@
                             <td><?php _htmlsc($element->custom_values_value); ?></td>
                             <td>
                                 <div class="options btn-group">
-                                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                    <a class="fi-btn-secondary fi-size-sm dropdown-toggle" data-toggle="dropdown"
                                        href="#">
                                         <i class="fa fa-cog"></i> {{ trans('options') }}
                                     </a>

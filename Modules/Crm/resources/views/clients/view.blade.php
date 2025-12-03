@@ -6,13 +6,13 @@
 
     <div class="headerbar-item">
         <div class="btn-group btn-group-sm flex gap-2">
-            <a href="{{ route('tasks.form') }}" class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <a href="{{ route('tasks.form') }}" class="fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <i class="fa fa-check-square-o fa-margin"></i>{{ trans('new_task') }}
             </a>
-            <a href="{{ route('projects.edit', $project->project_id) }}" class="btn btn-default inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <a href="{{ route('projects.edit', $project->project_id) }}" class="fi-btn-secondary inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <i class="fa fa-edit"></i> {{ trans('edit') }}
             </a>
-            <a class="fi-btn fi-btn-danger"
+            <a class="fi-btn-danger"
                href="{{ route('projects.destroy', $project->project_id) }}"
                onclick="return confirm('{{ trans('delete_record_warning') }}');">
                 <i class="fa fa-trash-o"></i> {{ trans('delete') }}
@@ -26,11 +26,11 @@
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div class="md:col-span-4">
 @if(!empty($project->client_name))
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="fi-section">
+                <div class="fi-section-header">
                     <strong>{{ htmlspecialchars(format_client($project)) }}</strong>
                 </div>
-                <div class="panel-body p-4">
+                <div class="fi-section-body p-4">
                     <div class="client-address">
                         @include('crm::clients.partial_client_address', ['client' => $project])
                     </div>
@@ -42,11 +42,11 @@
         </div>
         <div class="md:col-span-8">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="fi-section">
+                <div class="fi-section-header">
                     {{ trans('tasks') }}
                 </div>
-                <div class="panel-body">
+                <div class="fi-section-body">
 
                     <div class="overflow-x-auto">
                         <table class="table table-hover table-striped no-margin w-full">
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 @if(empty($tasks))
-                <div class="panel-body p-4">
+                <div class="fi-section-body p-4">
                     <div class="alert alert-info no-margin bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-3 rounded">{{ trans('alert_no_tasks_found') }}</div>
                 </div>
 @endif

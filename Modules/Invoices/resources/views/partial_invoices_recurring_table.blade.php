@@ -36,7 +36,7 @@
                 <td>{{ date_from_mysql($invoice->recur_next_date) }}</td>
                 <td>
                     <div class="options btn-group">
-                        <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <a href="#" class="fi-btn-secondary fi-size-sm dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-cog"></i> {{ trans('options') }}
                         </a>
                         <ul class="dropdown-menu">

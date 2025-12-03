@@ -1,28 +1,28 @@
 <div class="row">
     <div id="item_table" class="items table col-xs-12">
-        <div id="new_row" class="form-group details-box" style="display: none;">
+        <div id="new_row" class="fi-field-wrp details-box" style="display: none;">
             <div class="row">
                 <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
                     <div class="row">
                         <div class="col-xs-12 col-sm-1">
-                            <button type="button" class="btn btn-link up" title="{{ trans('move_up') }}">
+                            <button type="button" class="btn fi-btn-link up" title="{{ trans('move_up') }}">
                                 <i class="fa fa-chevron-up"></i>
                             </button>
-                            <button type="button" class="btn btn-link down" title="{{ trans('move_down') }}">
+                            <button type="button" class="btn fi-btn-link down" title="{{ trans('move_down') }}">
                                 <i class="fa fa-chevron-down"></i>
                             </button>
-                            <button type="button" class="btn_delete_item btn btn-link btn-sm" title="{{ trans('delete') }}">
+                            <button type="button" class="btn_delete_item fi-link fi-size-sm" title="{{ trans('delete') }}">
                                 <i class="fa fa-trash-o text-danger"></i>
                             </button>
                         </div>
                         <div class="col-xs-12 col-sm-11">
                             <div class="input-group">
                                 <label for="item_name" class="input-group-addon ig-addon-aligned">{{ trans('item') }}</label>
-                                <input type="text" name="item_name" id="item_name" class="form-control" value="">
+                                <input type="text" name="item_name" id="item_name" class="fi-input" value="">
                             </div>
                             <div class="input-group">
                                 <label for="item_description" class="input-group-addon ig-addon-aligned">{{ trans('description') }}</label>
-                                <textarea name="item_description" id="item_description" class="form-control"></textarea>
+                                <textarea name="item_description" id="item_description" class="fi-input"></textarea>
                             </div>
                         </div>
                     </div>
@@ -32,11 +32,11 @@
                         <div class="col-xs-12 col-lg-6">
                             <div class="input-group">
                                 <label for="item_quantity" class="input-group-addon ig-addon-aligned">{{ trans('quantity') }}</label>
-                                <input type="text" name="item_quantity" id="item_quantity" class="form-control" value="">
+                                <input type="text" name="item_quantity" id="item_quantity" class="fi-input" value="">
                             </div>
                             <div class="input-group">
                                 <label for="item_product_unit_id" class="input-group-addon ig-addon-aligned">{{ trans('product_unit') }}</label>
-                                <select name="item_product_unit_id" id="item_product_unit_id" class="form-control">
+                                <select name="item_product_unit_id" id="item_product_unit_id" class="fi-input">
                                     <option value="0">{{ trans('none') }}</option>
                                     @foreach($units as $unit)
                                         <option value="{{ $unit->unit_id }}">{{ $unit->unit_name }}/{{ $unit->unit_name_plrl }}</option>
@@ -45,13 +45,13 @@
                             </div>
                             <div class="input-group">
                                 <label for="item_price" class="input-group-addon ig-addon-aligned">{{ trans('price') }}</label>
-                                <input type="text" name="item_price" id="item_price" class="form-control" value="">
+                                <input type="text" name="item_price" id="item_price" class="fi-input" value="">
                                 <div class="input-group-addon">{{ get_setting('currency_symbol') }}</div>
                             </div>
                             @includeWhen(! $legacy_calculation, 'core::partial.itemlist_responsive_item_discount_input')
                             <div class="input-group">
                                 <label for="item_tax_rate_id" class="input-group-addon ig-addon-aligned">{{ trans('tax_rate') }}</label>
-                                <select name="item_tax_rate_id" id="item_tax_rate_id" class="form-control">
+                                <select name="item_tax_rate_id" id="item_tax_rate_id" class="fi-input">
                                     <option value="0">{{ trans('none') }}</option>
                                     @foreach($tax_rates as $tax_rate)
                                         <option value="{{ $tax_rate->tax_rate_id }}" {{ check_select(get_setting('default_item_tax_rate'), $tax_rate->tax_rate_id) }}>
@@ -91,18 +91,18 @@
         </div>
 
         @foreach($items as $item)
-            <div class="form-group details-box item">
+            <div class="fi-field-wrp details-box item">
                 <div class="row">
                     <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
                         <div class="row">
                             <div class="col-xs-12 col-sm-1">
-                                <button type="button" class="btn btn-link up" title="{{ trans('move_up') }}">
+                                <button type="button" class="btn fi-btn-link up" title="{{ trans('move_up') }}">
                                     <i class="fa fa-chevron-up"></i>
                                 </button>
-                                <button type="button" class="btn btn-link down" title="{{ trans('move_down') }}">
+                                <button type="button" class="btn fi-btn-link down" title="{{ trans('move_down') }}">
                                     <i class="fa fa-chevron-down"></i>
                                 </button>
-                                <button type="button" class="btn_delete_item btn btn-link" title="{{ trans('delete') }}" data-item-id="{{ $item->item_id }}">
+                                <button type="button" class="btn_delete_item btn fi-btn-link" title="{{ trans('delete') }}" data-item-id="{{ $item->item_id }}">
                                     <i class="fa fa-trash-o text-danger"></i>
                                 </button>
                             </div>
@@ -113,11 +113,11 @@
                                 <input type="hidden" name="item_product_id" value="{{ $item->item_product_id }}">
                                 <div class="input-group">
                                     <label for="item_name_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned">{{ trans('item') }}</label>
-                                    <input type="text" name="item_name" id="item_name_{{ $item->item_id }}" class="form-control" value="{{ _htmlsc($item->item_name) }}">
+                                    <input type="text" name="item_name" id="item_name_{{ $item->item_id }}" class="fi-input" value="{{ _htmlsc($item->item_name) }}">
                                 </div>
                                 <div class="input-group">
                                     <label for="item_description_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned">{{ trans('description') }}</label>
-                                    <textarea name="item_description" id="item_description_{{ $item->item_id }}" class="form-control">{{ htmlsc($item->item_description) }}</textarea>
+                                    <textarea name="item_description" id="item_description_{{ $item->item_id }}" class="fi-input">{{ htmlsc($item->item_description) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -127,11 +127,11 @@
                             <div class="col-xs-12 col-lg-6">
                                 <div class="input-group">
                                     <label for="item_quantity_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned">{{ trans('quantity') }}</label>
-                                    <input type="text" name="item_quantity" id="item_quantity_{{ $item->item_id }}" class="form-control" value="{{ format_quantity($item->item_quantity) }}">
+                                    <input type="text" name="item_quantity" id="item_quantity_{{ $item->item_id }}" class="fi-input" value="{{ format_quantity($item->item_quantity) }}">
                                 </div>
                                 <div class="input-group">
                                     <label for="item_product_unit_id_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned">{{ trans('product_unit') }}</label>
-                                    <select name="item_product_unit_id" id="item_product_unit_id_{{ $item->item_id }}" class="form-control">
+                                    <select name="item_product_unit_id" id="item_product_unit_id_{{ $item->item_id }}" class="fi-input">
                                         <option value="0">{{ trans('none') }}</option>
                                         @foreach($units as $unit)
                                             <option value="{{ $unit->unit_id }}" {{ check_select($item->item_product_unit_id, $unit->unit_id) }}>
@@ -142,13 +142,13 @@
                                 </div>
                                 <div class="input-group">
                                     <label for="item_price_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned">{{ trans('price') }}</label>
-                                    <input type="text" name="item_price" id="item_price_{{ $item->item_id }}" class="form-control" value="{{ format_amount($item->item_price) }}">
+                                    <input type="text" name="item_price" id="item_price_{{ $item->item_id }}" class="fi-input" value="{{ format_amount($item->item_price) }}">
                                     <div class="input-group-addon">{{ get_setting('currency_symbol') }}</div>
                                 </div>
                                 @includeWhen(! $legacy_calculation, 'core::partial.itemlist_responsive_item_discount_input', ['item' => $item])
                                 <div class="input-group">
                                     <label for="item_tax_rate_id_{{ $item->item_id }}" class="input-group-addon ig-addon-aligned">{{ trans('tax_rate') }}</label>
-                                    <select name="item_tax_rate_id" id="item_tax_rate_id_{{ $item->item_id }}" class="form-control">
+                                    <select name="item_tax_rate_id" id="item_tax_rate_id_{{ $item->item_id }}" class="fi-input">
                                         <option value="0">{{ trans('none') }}</option>
                                         @foreach($tax_rates as $tax_rate)
                                             <option value="{{ $tax_rate->tax_rate_id }}" {{ check_select($item->item_tax_rate_id, $tax_rate->tax_rate_id) }}>
@@ -189,10 +189,10 @@
 <div class="row">
     <div class="col-xs-12 col-md-4">
         <div class="btn-group">
-            <a href="javascript:void(0);" class="btn_add_row btn btn-sm btn-default">
+            <a href="javascript:void(0);" class="btn_add_row btn fi-size-sm fi-btn-secondary">
                 <i class="fa fa-plus"></i>{{ trans('add_new_row') }}
             </a>
-            <a href="javascript:void(0);" class="btn_add_product btn btn-sm btn-default">
+            <a href="javascript:void(0);" class="btn_add_product btn fi-size-sm fi-btn-secondary">
                 <i class="fa fa-database"></i>{{ trans('add_product') }}
             </a>
         </div>
@@ -220,7 +220,7 @@
                                 @csrf
                                 <span class="amount">{{ format_currency($quote_tax_rate->quote_tax_rate_amount) }}</span>
                                 <span class="text-muted">{{ htmlsc($quote_tax_rate->quote_tax_rate_name) }} {{ format_amount($quote_tax_rate->quote_tax_rate_percent) }}</span>
-                                <button type="submit" class="btn btn-xs btn-link" onclick="return confirm('{{ trans('delete_tax_warning') }}') ? show_loader() : false;">
+                                <button type="submit" class="btn fi-size-xs fi-btn-link" onclick="return confirm('{{ trans('delete_tax_warning') }}') ? show_loader() : false;">
                                     <i class="fa fa-trash-o"></i>
                                 </button>
                             </form>

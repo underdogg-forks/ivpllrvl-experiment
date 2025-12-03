@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="install-panel">
+    <div class="install-fi-section">
 
         <h1 id="logo"><span>InvoicePlane</span></h1>
         <form method="post" class="form-horizontal" action="{{ route($this->uri->uri_string()) }}">
@@ -34,11 +34,11 @@ foreach ($basics as $basic) {
 } ?>
 
 @if($errors)
-            <a href="javascript:history.go(0)" class="btn btn-danger">
+            <a href="javascript:history.go(0)" class="fi-btn-danger">
                 {{ trans('try_again') }}
             </a>
 @else
-            <input class="btn btn-success" type="submit" name="btn_continue"
+            <input class="fi-btn-success" type="submit" name="btn_continue"
                    value="{{ trans('continue') }}">
 @endif
         </form>

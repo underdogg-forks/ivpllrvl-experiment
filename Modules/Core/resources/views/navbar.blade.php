@@ -112,8 +112,8 @@
             @if(isset($filter_display) && $filter_display == true)
                 <?php $this->layout->load_view('filter/jquery_filter'); ?>
                 <form class="navbar-form navbar-left" role="search" onsubmit="return false;">
-                    <div class="form-group">
-                        <input id="filter" type="text" class="search-query form-control"
+                    <div class="fi-field-wrp">
+                        <input id="filter" type="text" class="search-query fi-input"
                                placeholder="{{ $filter_placeholder }}">
                     </div>
                 </form>

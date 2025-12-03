@@ -1,5 +1,5 @@
 <div class="container mx-auto px-4 py-8">
-    <div class="install-panel max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-8">
+    <div class="install-fi-section max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-8">
 
         <h1 id="logo" class="text-4xl font-bold text-center mb-6"><span>InvoicePlane</span></h1>
 
@@ -17,10 +17,10 @@
                 {{ trans('setup_calculation_info_note') }}
             </p>
 
-            <input type="submit" class="btn btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600 mr-2" name="btn_agree"
+            <input type="submit" class="fi-btn-success inline-flex items-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 dark:hover:bg-green-600 mr-2" name="btn_agree"
                    value="{{ trans('setup_calculation_info_btn_agree') }}">
 
-            <input type="submit" class="btn btn-warning inline-flex items-center gap-2 px-4 py-2 bg-yellow-600 dark:bg-yellow-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-yellow-700 dark:hover:bg-yellow-600" name="btn_continue"
+            <input type="submit" class="fi-btn-warning inline-flex items-center gap-2 px-4 py-2 bg-yellow-600 dark:bg-yellow-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-yellow-700 dark:hover:bg-yellow-600" name="btn_continue"
                    value="{{ trans('setup_calculation_info_btn_disagree') }}">
 
         </form>

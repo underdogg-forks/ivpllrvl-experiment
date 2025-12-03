@@ -43,7 +43,7 @@
     <form class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close"></i></button>
-            <h4 class="panel-title">{{ trans('quote_to_invoice') }}</h4>
+            <h4 class="fi-section-title">{{ trans('quote_to_invoice') }}</h4>
         </div>
         <div class="modal-body">
 
@@ -52,32 +52,32 @@
             <input type="hidden" name="user_id" id="user_id"
                    value="{{ $quote->user_id }}">
 
-            <div class="form-group has-feedback">
+            <div class="fi-field-wrp has-feedback">
                 <label for="invoice_date_created">
                     {{ trans('invoice_date') }}
                 </label>
 
                 <div class="input-group">
                     <input name="invoice_date_created" id="invoice_date_created"
-                           class="form-control datepicker">
+                           class="fi-input datepicker">
                     <span class="input-group-addon">
                         <i class="fa fa-calendar fa-fw"></i>
                     </span>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="invoice_password">{{ trans('invoice_password') }}</label>
-                <input type="text" name="invoice_password" id="invoice_password" class="form-control"
+                <input type="text" name="invoice_password" id="invoice_password" class="fi-input"
                        value="{{ get_setting('invoice_pre_password') == '' ? '' : get_setting('invoice_pre_password') }}"
                        autocomplete="off">
             </div>
 
-            <div class="form-group">
+            <div class="fi-field-wrp">
                 <label for="invoice_group_id">
                     {{ trans('invoice_group') }}
                 </label>
-                <select name="invoice_group_id" id="invoice_group_id" class="form-control simple-select">
+                <select name="invoice_group_id" id="invoice_group_id" class="fi-input simple-select">
                     @foreach ($invoice_groups as $invoice_group)
                         <option value="{{ $invoice_group->invoice_group_id }}"
                             {{ check_select(get_setting('default_invoice_group'), $invoice_group->invoice_group_id) }}>
@@ -90,10 +90,10 @@
 
         <div class="modal-footer">
             <div class="btn-group">
-                <button class="fi-btn fi-btn-success" id="quote_to_invoice_confirm" type="button">
+                <button class="fi-btn-success" id="quote_to_invoice_confirm" type="button">
                     <i class="fa fa-check"></i> {{ trans('submit') }}
                 </button>
-                <button class="fi-btn fi-btn-danger" type="button" data-dismiss="modal">
+                <button class="fi-btn-danger" type="button" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ trans('cancel') }}
                 </button>
             </div>
