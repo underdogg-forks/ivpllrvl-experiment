@@ -9,8 +9,8 @@
             <a class="btn btn-default" href="{{ route('users.index') }}">
                 <i class="fa fa-arrow-left"></i> {{ trans('back') }}
             </a>
-            <a class="btn-create" href="{{ route('users.modal-add-user-client', $id) }}">
-                <i class="fa fa-plus"></i> {{ trans('new') }}
+            <a class="fi-btn fi-btn-primary" href="{{ route('users.modal-add-user-client', $id) }}">
+                <i class="fa fa-plus"></i> {{ trans('new')}}
             </a>
         </div>
     </div>

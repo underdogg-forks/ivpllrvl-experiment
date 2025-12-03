@@ -17,22 +17,22 @@ if ($quote_tax_rates) {
         <div class="btn-group btn-group-sm flex gap-2">
 @if(in_array($quote->quote_status_id, [2, 3]))
             <a href="{{ route('guest.approve', $quote->quote_id) }}"
-               class="btn btn-success inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 dark:bg-green-500 rounded-md text-sm font-medium text-white hover:bg-green-700">
+               class="fi-btn fi-btn-success">
                 <i class="fa fa-check"></i>
                 {{ trans('approve_this_quote') }}
             </a>
             <a href="{{ route('guest.reject', $quote->quote_id) }}"
-               class="btn btn-danger inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 dark:bg-red-500 rounded-md text-sm font-medium text-white hover:bg-red-700">
+               class="fi-btn fi-btn-danger">
                 <i class="fa fa-times-circle"></i>
                 {{ trans('reject_this_quote') }}
             </a>
 @elseif($quote->quote_status_id == 4)
-            <a href="#" class="btn btn-success disabled inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 rounded-md text-sm font-medium text-white opacity-60 cursor-not-allowed">
+            <a href="#" class="fi-btn fi-btn-success disabled:opacity-60 disabled:cursor-not-allowed" disabled>
                 <i class="fa fa-check"></i>
                 {{ trans('quote_approved') }}
             </a>
 @elseif($quote->quote_status_id == 5)
-            <a href="#" class="btn btn-danger disabled inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium text-white opacity-60 cursor-not-allowed">
+            <a href="#" class="fi-btn fi-btn-danger disabled:opacity-60 disabled:cursor-not-allowed" disabled>
                 <i class="fa fa-times-circle"></i>
                 {{ trans('quote_rejected') }}
             </a>

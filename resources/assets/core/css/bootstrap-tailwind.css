@@ -368,34 +368,115 @@
         @apply transition-colors;
     }
 
-    /* Create/Action Button (Primary) */
+    /* ================================
+     * FILAMENT BUTTON COMPONENTS
+     * Following Filament v4 naming conventions
+     * 
+     * Filament Design System Standards:
+     * - Primary buttons: fi-btn fi-btn-primary (create, save, submit actions)
+     * - Secondary buttons: fi-btn fi-btn-secondary (cancel, back actions)
+     * - Danger buttons: fi-btn fi-btn-danger (delete, remove actions)  
+     * - Success buttons: fi-btn fi-btn-success (approve, confirm actions)
+     * - Icon buttons: fi-icon-btn (icon-only buttons)
+     * - Link buttons: fi-link (text-only links)
+     * - Tabs/Filters: fi-tabs-item, fi-tabs-item-active
+     * 
+     * Legacy classes (btn-create, btn-action-primary, btn-status-*) are aliased
+     * for backward compatibility but should be replaced with fi-btn classes.
+     * ================================ */
+    
+    /* Base Filament Button */
+    .fi-btn {
+        @apply inline-flex items-center gap-2 px-3 py-1.5 border rounded-md text-sm font-medium;
+        @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+        @apply transition-colors duration-150;
+        @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+    
+    /* Primary Action Button (Create, Save, Submit) */
+    .fi-btn-primary,
     .btn-create,
     .btn-action-primary {
-        @apply inline-flex items-center gap-2 px-3 py-1.5 border border-transparent rounded-md text-sm font-medium text-white;
+        @apply fi-btn border-transparent text-white;
         @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)];
         @apply hover:bg-[var(--color-primary-hover)] dark:hover:bg-[var(--color-primary-hover)];
-        @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)];
-        @apply transition-colors;
+        @apply focus:ring-[var(--brand-primary)];
     }
-
-    /* Status Filter Button (Active) */
-    .btn-status-active {
-        @apply inline-flex items-center gap-2 px-4 py-2 border rounded-md text-sm font-medium;
-        @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)] text-white border-transparent;
-        @apply hover:bg-[var(--color-primary-hover)] dark:hover:bg-[var(--color-primary-hover)];
-        @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)];
-        @apply transition-colors;
-    }
-
-    /* Status Filter Button (Inactive) */
-    .btn-status-inactive {
-        @apply inline-flex items-center gap-2 px-4 py-2 border rounded-md text-sm font-medium;
+    
+    /* Secondary Button */
+    .fi-btn-secondary {
+        @apply fi-btn;
         @apply bg-[var(--color-bg-elevated)] dark:bg-[var(--color-bg-elevated)];
         @apply text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)];
         @apply border-[var(--color-border)] dark:border-[var(--color-border-dark)];
         @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
+        @apply focus:ring-[var(--brand-primary)];
+    }
+    
+    /* Danger/Delete Button */
+    .fi-btn-danger {
+        @apply fi-btn border-transparent text-white;
+        @apply bg-[var(--brand-danger)] dark:bg-[var(--brand-danger)];
+        @apply hover:bg-[var(--dark-danger)] dark:hover:bg-[var(--dark-danger)];
+        @apply focus:ring-[var(--brand-danger)];
+    }
+    
+    /* Success Button */
+    .fi-btn-success {
+        @apply fi-btn border-transparent text-white;
+        @apply bg-[var(--brand-success)] dark:bg-[var(--brand-success)];
+        @apply hover:bg-[var(--dark-success)] dark:hover:bg-[var(--dark-success)];
+        @apply focus:ring-[var(--brand-success)];
+    }
+    
+    /* Icon Button */
+    .fi-icon-btn {
+        @apply inline-flex items-center justify-center p-2 rounded-md;
+        @apply text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)];
+        @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
         @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-primary)];
-        @apply transition-colors;
+        @apply transition-colors duration-150;
+    }
+    
+    /* Button Sizes */
+    .fi-btn-sm, .fi-btn.fi-size-sm {
+        @apply px-2 py-1 text-xs;
+    }
+    
+    .fi-btn-lg, .fi-btn.fi-size-lg {
+        @apply px-4 py-2.5 text-base;
+    }
+    
+    /* Link Button */
+    .fi-link {
+        @apply inline-flex items-center gap-1 text-sm font-medium;
+        @apply text-[var(--brand-primary)] dark:text-[var(--brand-primary)];
+        @apply hover:text-[var(--color-primary-hover)] dark:hover:text-[var(--color-primary-hover)];
+        @apply hover:underline;
+        @apply transition-colors duration-150;
+    }
+    
+    .fi-link-danger {
+        @apply fi-link;
+        @apply text-[var(--brand-danger)] dark:text-[var(--brand-danger)];
+        @apply hover:text-[var(--dark-danger)] dark:hover:text-[var(--dark-danger)];
+    }
+
+    /* Filament Tabs/Filter Buttons */
+    .fi-tabs-item-active,
+    .btn-status-active {
+        @apply fi-btn border-transparent text-white;
+        @apply bg-[var(--brand-primary)] dark:bg-[var(--brand-primary)];
+        @apply hover:bg-[var(--color-primary-hover)] dark:hover:bg-[var(--color-primary-hover)];
+    }
+
+    .fi-tabs-item,
+    .btn-status-inactive {
+        @apply fi-btn;
+        @apply bg-[var(--color-bg-elevated)] dark:bg-[var(--color-bg-elevated)];
+        @apply text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)];
+        @apply border-[var(--color-border)] dark:border-[var(--color-border-dark)];
+        @apply hover:bg-[var(--color-bg-hover)] dark:hover:bg-[var(--color-bg-hover)];
     }
 
     /* Headerbar */

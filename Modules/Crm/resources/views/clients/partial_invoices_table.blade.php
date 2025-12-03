@@ -38,7 +38,7 @@
                             <i class="fa fa-print"></i> {{ trans('pdf') }}
                         </a>
 @if($enable_online_payments && $invoice->invoice_balance > 0 && $invoice->invoice_status_id != 4)
-                        <a class="btn-create" href="{{ route('guest.form', $invoice->invoice_url_key) }}">
+                        <a class="fi-btn fi-btn-primary" href="{{ route('guest.form', $invoice->invoice_url_key) }}">
                             <i class="fa fa-credit-card"></i> {{ trans('pay_now') }}
                         </a>
 @elseif($invoice->invoice_balance == 0)
