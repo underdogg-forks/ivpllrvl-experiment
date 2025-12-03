@@ -1,8 +1,4 @@
 import "./bootstrap";
 
-// Import Alpine.js for interactive components
-import Alpine from 'alpinejs';
-
-// Start Alpine
-window.Alpine = Alpine;
-Alpine.start();
+// Alpine.js is provided by Filament
+// It's already initialized and available as window.Alpine
