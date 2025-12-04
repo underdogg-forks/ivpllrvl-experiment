@@ -2,10 +2,14 @@
 
 namespace Modules\Core\Controllers;
 
+use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Modules\Core\Services\SessionsService;
 use Modules\Core\Services\UserService;
 use Modules\Core\Support\SettingsHelper;
@@ -46,101 +50,143 @@ class SessionsController
     }
 
     /**
-     * Handle display and processing of the login form.
+     * Display the login form.
      *
-     * Processes submitted credentials, sets flash messages for errors, redirects
-     * on successful authentication according to user type, and returns the login
-     * view when rendering the form.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|\Illuminate\View\View a redirect response after form processing or the login view when displaying the form
+     * @return \Illuminate\View\View
      *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function login
      */
-    public function login(Request $request): \Illuminate\View\View|RedirectResponse
+    public function login(): \Illuminate\View\View
     {
         $view_data = ['login_logo' => SettingsHelper::getSetting('login_logo')];
-
-        if (request()->input('btn_login')) {
-            DB::where('user_email', request()->input('email'));
-            $query = DB::get('ip_users');
-            $user  = $query->row();
-            // Check if the user exists
-
-            if (empty($user)) {
-                session()->flash('alert_error', trans('loginalert_user_not_found'));
-                redirect()->route('sessions.login');
-            } elseif ($user->user_active === 0) {
-                // Check if the user is marked as active (not implemented: Todo?)
-                session()->flash('alert_error', trans('loginalert_user_inactive'));
-                redirect()->route('sessions.login');
-            } elseif ($this->authenticate()) {
-                dd('temp');
-                // Redirect to the appropriate dashboard based on user type
-                if (session('user_type') === 1) {
-                    dd('yessss?');
-                    redirect()->route('dashboard.index');
-                } elseif (session('user_type') === 2) {
-                    redirect()->route('guest.index');
-                }
-            } else {
-                session()->flash('alert_error', trans('loginalert_credentials_incorrect'));
-                redirect()->route('sessions.login');
-            }
-        }
 
         return view('core::users.session_login', $view_data);
     }
 
     /**
-     * Validate user credentials while enforcing login-attempt throttling.
+     * Handle an authentication attempt with rate limiting.
      *
-     * Attempts authentication only if the recorded failed attempts for the given
-     * email are below the configured threshold; on success the failed-attempt
-     * log for the email is cleared, on failure a failed-attempt is recorded.
+     * Validates credentials, enforces rate limiting similar to Laravel's Auth::attempt,
+     * verifies password using InvoicePlane's MD5/crypt method, and regenerates session
+     * on success. Follows Laravel authentication patterns while preserving InvoicePlane's
+     * password hashing mechanism.
      *
-     * @param string $email_address the user's email address used to identify the account
-     * @param string $password      the plaintext password to verify for the account
+     * @param Request $request
      *
-     * @return RedirectResponse `true` if authentication succeeds and the failure log is reset, `false` otherwise
+     * @return RedirectResponse
+     *
+     * @throws ValidationException
      *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function authenticate
      */
-    public function authenticate()
+    public function authenticate(Request $request): RedirectResponse
     {
-        $email_address = request()->input('email');
-        $password      = request()->input('password');
+        // Validate input
+        $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ]);
 
-        return redirect()->route('dashboard.index');
-        //check if user is banned
-        //$login_log = $this->loginLogCheck($email_address);
-        //if (empty($login_log) || $login_log->log_count < 10) {
-        //return (bool) ($this->sessionsService->auth($email_address, $password));
-        //$this->loginLogReset($email_address);
+        // Ensure the request is not rate limited
+        $this->ensureIsNotRateLimited($request);
 
-        //track failed attempt
-        //$this->loginLogAddfailure($email_address);
-        //}
+        // Attempt to authenticate using the SessionsService
+        if ($this->sessionsService->auth($request->input('email'), $request->input('password'))) {
+            // Clear the rate limiter on successful login
+            RateLimiter::clear($this->throttleKey($request));
+
+            // Regenerate the session to prevent fixation attacks
+            $request->session()->regenerate();
+
+            // Redirect to the appropriate dashboard based on user type
+            if (session('user_type') === 1) {
+                return redirect()->intended(route('dashboard.index'));
+            } elseif (session('user_type') === 2) {
+                return redirect()->intended(route('guest.index'));
+            }
+
+            // Default redirect to dashboard
+            return redirect()->intended(route('dashboard.index'));
+        }
+
+        // Authentication failed - increment rate limiter
+        RateLimiter::hit($this->throttleKey($request));
+
+        // Throw validation exception with error message
+        throw ValidationException::withMessages([
+            'email' => trans('loginalert_credentials_incorrect'),
+        ]);
+    }
+
+    /**
+     * Ensure the login request is not rate limited.
+     *
+     * @param Request $request
+     *
+     * @return void
+     *
+     * @throws ValidationException
+     */
+    protected function ensureIsNotRateLimited(Request $request): void
+    {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
+            return;
+        }
+
+        event(new Lockout($request));
+
+        $seconds = RateLimiter::availableIn($this->throttleKey($request));
+
+        throw ValidationException::withMessages([
+            'email' => trans('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]),
+        ]);
+    }
+
+    /**
+     * Get the rate limiting throttle key for the request.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    protected function throttleKey(Request $request): string
+    {
+        return Str::transliterate(Str::lower($request->string('email')).'|'.$request->ip());
     }
 
     /**
      * Log out the current user and redirect to login page.
      *
-     * @return void
+     * Follows Laravel's logout pattern: flush session data, invalidate session,
+     * and regenerate CSRF token for security.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
      *
      * @legacy-file application/modules/sessions/controllers/Sessions.php
      *
      * @legacy-function logout
      */
-    public function logout(): void
+    public function logout(Request $request): RedirectResponse
     {
-        session()->flush();
-        redirect()->route('sessions/login');
+        // Flush all session data
+        $request->session()->flush();
+
+        // Invalidate the session
+        $request->session()->invalidate();
+
+        // Regenerate CSRF token
+        $request->session()->regenerateToken();
+
+        return redirect()->route('sessions.login');
     }
 
     /**

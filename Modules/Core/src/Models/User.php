@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 /**
@@ -12,6 +13,8 @@ use Illuminate\Support\Str;
  */
 class User extends BaseModel
 {
+    use HasFactory;
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -160,5 +163,13 @@ class User extends BaseModel
             ->explode(' ')
             ->map(fn (string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Modules\Core\Database\Factories\UserFactory::new();
     }
 }
