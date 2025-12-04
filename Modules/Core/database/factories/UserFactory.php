@@ -48,8 +48,8 @@ class UserFactory extends Factory
             'user_fax' => '',
             'user_mobile' => fake()->phoneNumber(),
             'user_web' => fake()->url(),
-            'user_vat_id' => '',
-            'user_tax_code' => '',
+            'user_vat_id' => fake()->optional(0.7)->lexify('??########'), // e.g., "GB123456789" or empty
+            'user_tax_code' => fake()->optional(0.7)->bothify('TAX-####-????'), // e.g., "TAX-1234-ABCD" or empty
             'user_language' => 'system',
             'user_all_clients' => true,
             'user_active' => 1,

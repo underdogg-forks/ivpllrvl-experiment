@@ -100,6 +100,8 @@ class SessionsController
             RateLimiter::clear($this->throttleKey($request));
 
             // Regenerate the session to prevent fixation attacks
+            // Note: Laravel's regenerate() preserves session data, only changes the session ID
+            // This is the correct behavior - session data set in auth() is maintained
             $request->session()->regenerate();
 
             // Redirect to the appropriate dashboard based on user type
