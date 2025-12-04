@@ -23,14 +23,30 @@ class SessionsService extends BaseService
     {
         $user = User::query()->where('user_email', $email)->first();
 
-        if ($user) {
-            if ((new Crypt())->check_password($user->user_password, $password)) {
-                $session_data = ['user_type' => $user->user_type, 'user_id' => $user->user_id, 'user_name' => $user->user_name, 'user_email' => $user->user_email, 'user_company' => $user->user_company, 'user_language' => $user->user_language ?? 'system'];
+        // Check if user exists
+        if (! $user) {
+            return false;
+        }
 
-                session()->put($session_data);
+        // Check if user is active
+        if (! $user->user_active) {
+            return false;
+        }
 
-                return true;
-            }
+        // Verify password using MD5/crypt verification
+        if ((new Crypt())->check_password($user->user_password, $password)) {
+            $session_data = [
+                'user_type' => $user->user_type,
+                'user_id' => $user->user_id,
+                'user_name' => $user->user_name,
+                'user_email' => $user->user_email,
+                'user_company' => $user->user_company,
+                'user_language' => $user->user_language ?? 'system',
+            ];
+
+            session()->put($session_data);
+
+            return true;
         }
 
         return false;
