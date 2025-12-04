@@ -3,6 +3,7 @@
 namespace Modules\Core\Tests\Feature;
 
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Controllers\SessionsController;
 use Modules\Core\Libraries\Crypt;
@@ -20,6 +21,18 @@ use Tests\Feature\FeatureTestCase;
 #[CoversClass(SessionsController::class)]
 class SessionsControllerTest extends FeatureTestCase
 {
+    /**
+     * Generate a throttle key matching the format used by SessionsController.
+     *
+     * @param string $email
+     * @param string $ip
+     *
+     * @return string
+     */
+    protected function getThrottleKey(string $email, string $ip = '127.0.0.1'): string
+    {
+        return Str::transliterate(Str::lower($email).'|'.$ip);
+    }
     /**
      * Test index redirects to login page.
      */
@@ -235,8 +248,9 @@ class SessionsControllerTest extends FeatureTestCase
             'user_active' => 1,
         ]);
 
-        // Clear any existing rate limits
-        RateLimiter::clear($email.'|127.0.0.1');
+        // Clear any existing rate limits using the properly formatted throttle key
+        $throttleKey = $this->getThrottleKey($email);
+        RateLimiter::clear($throttleKey);
 
         /** Act */
         // Make 5 failed attempts (the rate limit threshold)
@@ -310,7 +324,8 @@ class SessionsControllerTest extends FeatureTestCase
             'user_active' => 1,
         ]);
 
-        $throttleKey = 'test@example.com|127.0.0.1';
+        // Generate throttle key using the same format as the controller
+        $throttleKey = $this->getThrottleKey('test@example.com');
 
         // Simulate some failed attempts
         RateLimiter::hit($throttleKey);
